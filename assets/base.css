@@ -1,10 +1,13 @@
 /* system.kristianpaulsen.com — shared site chrome (mechanics, not per-project brand) */
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
 :root {
   color-scheme: light dark;
   --radius: 10px;
   --nav-h: 56px;
-  --font: -apple-system, blinkmacsystemfont, "Inter", "Helvetica Neue", arial, sans-serif;
+  --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
+  --font: "Inter", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
   --mono: ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
 
   /* Dark theme (default) */
@@ -133,7 +136,7 @@ h1 {
 .lede {
   color: var(--muted);
   margin: 0;
-  max-width: 48ch;
+  max-width: var(--measure);
 }
 
 .toolbar {
@@ -178,7 +181,7 @@ h2 {
 .section-note {
   color: var(--muted);
   font-size: 0.9375rem;
-  max-width: 60ch;
+  max-width: var(--measure);
   margin: 0 0 1.25rem;
 }
 
@@ -377,7 +380,6 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
-  font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--muted);
 }
@@ -386,36 +388,41 @@ h2 {
   color: var(--text);
 }
 
+/* Only the live numbers are mono; the token name stays Inter */
+.type-row__meta [data-spec] {
+  font-family: var(--mono);
+}
+
 /* Role definitions — reference the type tokens */
 .t-display {
   font-size: var(--font-display-size);
-  line-height: var(--leading-tight);
+  line-height: var(--font-display-leading);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-tight);
 }
 
 .t-h1 {
   font-size: var(--font-h1-size);
-  line-height: var(--leading-tight);
+  line-height: var(--font-h1-leading);
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-tight);
 }
 
 .t-h2 {
   font-size: var(--font-h2-size);
-  line-height: var(--leading-snug);
+  line-height: var(--font-h2-leading);
   font-weight: var(--weight-semibold);
 }
 
 .t-body {
   font-size: var(--font-body-size);
-  line-height: var(--leading-normal);
+  line-height: var(--font-body-leading);
   font-weight: var(--weight-regular);
 }
 
 .t-small {
   font-size: var(--font-small-size);
-  line-height: var(--leading-normal);
+  line-height: var(--font-small-leading);
   font-weight: var(--weight-regular);
   color: var(--muted);
 }

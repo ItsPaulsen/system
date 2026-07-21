@@ -138,9 +138,8 @@ function hydrateType() {
     if (!sample) return;
     const cs = getComputedStyle(sample);
     const sizePx = parseFloat(cs.fontSize);
-    const ratio = parseFloat(cs.lineHeight) / sizePx;
     setSpec(row, "size", `${Math.round(sizePx)}px`);
-    setSpec(row, "lh", `lh ${ratio.toFixed(2)}`);
+    setSpec(row, "lh", `lh ${Math.round(parseFloat(cs.lineHeight))}px`);
     setSpec(row, "weight", `w ${cs.fontWeight}`);
     const { token } = row.dataset;
     if (token) row.dataset.copy = rootStyle.getPropertyValue(`--${token}`).trim();

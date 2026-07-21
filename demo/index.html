@@ -124,73 +124,10 @@
         </div>
       </header>
 
-      <section aria-labelledby="primitives-h">
-        <h2 id="primitives-h">Primitives</h2>
+      <section aria-labelledby="colors-h">
+        <h2 id="colors-h">Colors</h2>
         <p class="section-note">
-          Raw color values. The source palette — reference these via aliases.
-        </p>
-        <ul class="tokens">
-          <li>
-            <button class="swatch" type="button" data-token="violet-400">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">violet-400</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="violet-600">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">violet-600</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="violet-800">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">violet-800</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="neutral-0">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">neutral-0</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="neutral-500">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">neutral-500</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="neutral-950">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">neutral-950</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-        </ul>
-      </section>
-
-      <section aria-labelledby="semantic-h">
-        <h2 id="semantic-h">Semantic</h2>
-        <p class="section-note">
-          Aliases used in components. Point these at primitives, not raw values.
+          Semantic tokens — use these in components. Each points at a raw primitive below.
         </p>
         <ul class="tokens">
           <li>
@@ -240,6 +177,67 @@
                 <span class="swatch__name">color-muted</span>
                 <span class="swatch__value"></span>
                 <span class="swatch__alias">→ neutral-500</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Primitives — the raw source</h3>
+        <p class="section-note">
+          The palette semantic tokens point at. Define once; don't use directly in components.
+        </p>
+        <ul class="palette">
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-400">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">violet-400</span>
+                <span class="palette__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-600">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">violet-600</span>
+                <span class="palette__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-800">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">violet-800</span>
+                <span class="palette__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-0">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">neutral-0</span>
+                <span class="palette__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-500">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">neutral-500</span>
+                <span class="palette__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-950">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__meta">
+                <span class="palette__name">neutral-950</span>
+                <span class="palette__value"></span>
               </span>
             </button>
           </li>

@@ -245,6 +245,68 @@ h2 {
   color: var(--muted);
 }
 
+/* Compact primitive palette (the raw source under semantic colors) */
+.palette {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.palette__chip {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.palette__chip:hover {
+  border-color: var(--border-hover);
+}
+
+.palette__chip:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.palette__color {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.palette__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.palette__name {
+  font-size: 0.8125rem;
+}
+
+.palette__value {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Subheads inside a section */
 .subhead {
   font-size: 0.9375rem;
@@ -591,6 +653,7 @@ h2 {
 
 @media (prefers-reduced-motion: reduce) {
   .swatch,
+  .palette__chip,
   .type-row,
   .token-chip,
   .space-row,

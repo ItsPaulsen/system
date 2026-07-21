@@ -197,6 +197,10 @@ function init() {
   injectNav();
   hydrateSwatches();
   hydrateTokenChips();
+  hydratePreview(".palette__chip", ".palette__value", (el, value) => {
+    const color = el.querySelector(".palette__color");
+    if (color) color.style.background = value;
+  });
   hydratePreview(".space-row", ".space-row__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");
     if (bar) bar.style.width = value;

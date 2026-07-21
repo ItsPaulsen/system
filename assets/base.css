@@ -352,13 +352,18 @@ h2 {
   padding: 0 0.75rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
 .swatch__name {
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.swatch__desc {
+  font-size: 0.875rem;
+  color: var(--ui-muted);
 }
 
 .swatch__value {

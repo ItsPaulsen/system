@@ -188,57 +188,69 @@
       <section data-nav-group="Foundations" aria-labelledby="colors-h">
         <h2 id="colors-h">Colors</h2>
         <p class="section-note">
-          Use these — not the primitives. Each fill pairs with a foreground for text on it.
+          Semantic tokens — use these in components, never the primitives directly. Fills and their
+          text pair by name (primary → primary-foreground).
         </p>
 
-        <h3 class="subhead">Surfaces &amp; text</h3>
+        <h3 class="subhead">Base</h3>
         <ul class="tokens">
           <li>
-            <button class="swatch" type="button" data-token="background" data-on="foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="background">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">background</span>
-                <span class="swatch__alias">on foreground</span>
+                <span class="swatch__desc">App background</span>
+                <span class="swatch__alias">→ neutral-0</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="card" data-on="card-foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">foreground</span>
+                <span class="swatch__desc">Default text</span>
+                <span class="swatch__alias">→ neutral-950</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="card">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">card</span>
-                <span class="swatch__alias">on card-foreground</span>
+                <span class="swatch__desc">Card / sheet surface</span>
+                <span class="swatch__alias">→ neutral-0</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="muted" data-on="muted-foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="card-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">card-foreground</span>
+                <span class="swatch__desc">Text on cards</span>
+                <span class="swatch__alias">→ neutral-950</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="muted">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">muted</span>
-                <span class="swatch__alias">on muted-foreground</span>
+                <span class="swatch__desc">Muted surface (quiet fills)</span>
+                <span class="swatch__alias">→ neutral-100</span>
               </span>
             </button>
           </li>
           <li>
-            <button
-              class="swatch"
-              type="button"
-              data-token="secondary"
-              data-on="secondary-foreground"
-            >
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="muted-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
-                <span class="swatch__name">secondary</span>
-                <span class="swatch__alias">on secondary-foreground</span>
+                <span class="swatch__name">muted-foreground</span>
+                <span class="swatch__desc">Muted text (hints, captions)</span>
+                <span class="swatch__alias">→ neutral-500</span>
               </span>
             </button>
           </li>
@@ -247,13 +259,22 @@
         <h3 class="subhead">Brand</h3>
         <ul class="tokens">
           <li>
-            <button class="swatch" type="button" data-token="primary" data-on="primary-foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="primary">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">primary</span>
-                <span class="swatch__alias">on primary-foreground</span>
+                <span class="swatch__desc">Primary button / CTA</span>
+                <span class="swatch__alias">→ violet-600</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="primary-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">primary-foreground</span>
+                <span class="swatch__desc">Text / icon on primary</span>
+                <span class="swatch__alias">→ neutral-0</span>
               </span>
             </button>
           </li>
@@ -262,6 +283,28 @@
               <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">primary-hover</span>
+                <span class="swatch__desc">Primary hover state</span>
+                <span class="swatch__alias">→ violet-700</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="secondary">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">secondary</span>
+                <span class="swatch__desc">Secondary button fill</span>
+                <span class="swatch__alias">→ neutral-100</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="secondary-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">secondary-foreground</span>
+                <span class="swatch__desc">Text on secondary</span>
+                <span class="swatch__alias">→ neutral-900</span>
               </span>
             </button>
           </li>
@@ -270,6 +313,8 @@
               <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">ring</span>
+                <span class="swatch__desc">Focus ring outline</span>
+                <span class="swatch__alias">→ violet-600</span>
               </span>
             </button>
           </li>
@@ -278,40 +323,62 @@
         <h3 class="subhead">Feedback</h3>
         <ul class="tokens">
           <li>
-            <button class="swatch" type="button" data-token="success" data-on="success-foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="success">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">success</span>
-                <span class="swatch__alias">on success-foreground</span>
+                <span class="swatch__desc">Success / confirm</span>
+                <span class="swatch__alias">→ green-600</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="warning" data-on="warning-foreground">
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="success-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">success-foreground</span>
+                <span class="swatch__desc">Text on success</span>
+                <span class="swatch__alias">→ neutral-0</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="warning">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">warning</span>
-                <span class="swatch__alias">on warning-foreground</span>
+                <span class="swatch__desc">Warning / caution</span>
+                <span class="swatch__alias">→ amber-500</span>
               </span>
             </button>
           </li>
           <li>
-            <button
-              class="swatch"
-              type="button"
-              data-token="destructive"
-              data-on="destructive-foreground"
-            >
-              <span class="swatch__chip" aria-hidden="true"
-                ><span class="swatch__sample">Aa</span></span
-              >
+            <button class="swatch" type="button" data-token="warning-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">warning-foreground</span>
+                <span class="swatch__desc">Text on warning</span>
+                <span class="swatch__alias">→ neutral-950</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="destructive">
+              <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">destructive</span>
-                <span class="swatch__alias">on destructive-foreground</span>
+                <span class="swatch__desc">Delete / error</span>
+                <span class="swatch__alias">→ red-600</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="destructive-foreground">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">destructive-foreground</span>
+                <span class="swatch__desc">Text on destructive</span>
+                <span class="swatch__alias">→ neutral-0</span>
               </span>
             </button>
           </li>
@@ -324,6 +391,8 @@
               <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">border</span>
+                <span class="swatch__desc">Hairlines, dividers</span>
+                <span class="swatch__alias">→ neutral-200</span>
               </span>
             </button>
           </li>
@@ -332,6 +401,8 @@
               <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
                 <span class="swatch__name">input</span>
+                <span class="swatch__desc">Input &amp; control borders</span>
+                <span class="swatch__alias">→ neutral-200</span>
               </span>
             </button>
           </li>

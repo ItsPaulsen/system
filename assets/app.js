@@ -1,0 +1,228 @@
+// Shared page script for every project page:
+//   • injects the site nav (brand + theme toggle)
+//   • click-to-copy + toast
+//   • hydrates swatches / token chips / type rows from :root (the single source of truth)
+//   • tracks the active breakpoint on resize
+// Tokens are declared with data-token (the CSS custom-property name, sans "--").
+
+const toast = (() => {
+  let el;
+  let timer;
+  return (message) => {
+    if (!el) {
+      el = document.createElement("div");
+      el.className = "toast";
+      el.setAttribute("role", "status");
+      el.setAttribute("aria-live", "polite");
+      document.body.appendChild(el);
+    }
+    el.textContent = message;
+    el.classList.add("is-visible");
+    clearTimeout(timer);
+    timer = setTimeout(() => el.classList.remove("is-visible"), 1400);
+  };
+})();
+
+async function copyText(text, label) {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast(label);
+  } catch {
+    toast("Copy failed");
+  }
+}
+
+// Strip the common leading indentation from a block of text.
+function dedent(text) {
+  const lines = text.replace(/^\n+|\s+$/g, "").split("\n");
+  const indent = Math.min(...lines.filter((l) => l.trim()).map((l) => l.match(/^\s*/)[0].length));
+  return lines.map((l) => l.slice(indent)).join("\n");
+}
+
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+
+function currentTheme() {
+  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+}
+
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  try {
+    localStorage.setItem("theme", theme);
+  } catch {
+    /* storage may be unavailable; theme still applies for this page */
+  }
+  const btn = document.querySelector(".theme-toggle");
+  if (btn) btn.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
+}
+
+function injectNav() {
+  if (document.querySelector(".site-nav")) return;
+  const nav = document.createElement("header");
+  nav.className = "site-nav";
+  nav.innerHTML = `
+    <div class="site-nav__inner">
+      <a class="site-nav__brand" href="/">system</a>
+      <button class="theme-toggle" type="button" aria-label="Switch theme">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
+          <path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor" />
+        </svg>
+      </button>
+    </div>`;
+  document.body.prepend(nav);
+  setTheme(currentTheme());
+}
+
+/* ── Token hydration ───────────────────────────────────────────────────── */
+
+// Fill each swatch's chip, value and copy target from its :root token.
+function hydrateSwatches() {
+  const rootStyle = getComputedStyle(document.documentElement);
+  document.querySelectorAll(".swatch").forEach((sw) => {
+    const { token } = sw.dataset;
+    if (!token) return;
+    const value = rootStyle.getPropertyValue(`--${token}`).trim();
+    if (!value) return;
+
+    const chip = sw.querySelector(".swatch__chip");
+    if (chip) chip.style.background = value;
+
+    const valueEl = sw.querySelector(".swatch__value");
+    if (valueEl) valueEl.textContent = value;
+
+    sw.dataset.copy = value;
+  });
+}
+
+// Fill compact token chips (e.g. the size scale) from their :root token.
+function hydrateTokenChips() {
+  const rootStyle = getComputedStyle(document.documentElement);
+  document.querySelectorAll(".token-chip").forEach((chip) => {
+    const { token } = chip.dataset;
+    if (!token) return;
+    const value = rootStyle.getPropertyValue(`--${token}`).trim();
+    if (!value) return;
+    const valueEl = chip.querySelector(".token-chip__value");
+    if (valueEl) valueEl.textContent = value;
+    chip.dataset.copy = value;
+  });
+}
+
+function setSpec(row, name, text) {
+  const el = row.querySelector(`[data-spec="${name}"]`);
+  if (el) el.textContent = text;
+}
+
+// Read each type role's live computed metrics (they change across breakpoints).
+// The copy target is the role's token value (rem), not the resolved px.
+function hydrateType() {
+  const rootStyle = getComputedStyle(document.documentElement);
+  document.querySelectorAll(".type-row").forEach((row) => {
+    const sample = row.querySelector(".type-row__sample");
+    if (!sample) return;
+    const cs = getComputedStyle(sample);
+    const sizePx = parseFloat(cs.fontSize);
+    const ratio = parseFloat(cs.lineHeight) / sizePx;
+    setSpec(row, "size", `${Math.round(sizePx)}px`);
+    setSpec(row, "lh", `lh ${ratio.toFixed(2)}`);
+    setSpec(row, "weight", `w ${cs.fontWeight}`);
+    const { token } = row.dataset;
+    if (token) row.dataset.copy = rootStyle.getPropertyValue(`--${token}`).trim();
+  });
+}
+
+// Show the active viewport width and matching named breakpoint (read from tokens).
+function updateBreakpoint() {
+  const el = document.querySelector("[data-bp-indicator]");
+  if (!el) return;
+  const rootStyle = getComputedStyle(document.documentElement);
+  const width = window.innerWidth;
+  const names = ["xl", "lg", "md", "sm"];
+  let active = "base";
+  for (const name of names) {
+    const min = parseFloat(rootStyle.getPropertyValue(`--bp-${name}`));
+    if (width >= min) {
+      active = name;
+      break;
+    }
+  }
+  el.textContent = `${width}px · ${active}`;
+}
+
+// Rebuild the grid overlay's columns to match --grid-columns at the current breakpoint,
+// and label the outer margin bands with the current --grid-margin.
+function buildGridOverlay() {
+  const cols = document.querySelector("[data-grid-cols]");
+  if (!cols) return;
+  const rootStyle = getComputedStyle(document.documentElement);
+
+  const count = parseInt(rootStyle.getPropertyValue("--grid-columns"), 10);
+  if (count && cols.children.length !== count) {
+    cols.replaceChildren();
+    for (let i = 0; i < count; i += 1) {
+      const col = document.createElement("span");
+      col.className = "grid-overlay__col";
+      cols.appendChild(col);
+    }
+  }
+
+  const margin = rootStyle.getPropertyValue("--grid-margin").trim();
+  document.querySelectorAll("[data-grid-margin-label]").forEach((el) => {
+    el.textContent = margin;
+  });
+}
+
+function refreshResponsive() {
+  hydrateType();
+  hydrateTokenChips();
+  buildGridOverlay();
+  updateBreakpoint();
+}
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+
+function init() {
+  injectNav();
+  hydrateSwatches();
+  hydrateTokenChips();
+  refreshResponsive();
+
+  let frame;
+  window.addEventListener("resize", () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(refreshResponsive);
+  });
+
+  document.addEventListener("click", (event) => {
+    const themeBtn = event.target.closest(".theme-toggle");
+    if (themeBtn) {
+      setTheme(currentTheme() === "dark" ? "light" : "dark");
+      return;
+    }
+    const gridBtn = event.target.closest("[data-grid-toggle]");
+    if (gridBtn) {
+      const overlay = document.querySelector("[data-grid-overlay]");
+      if (!overlay) return;
+      const show = overlay.hidden;
+      overlay.hidden = !show;
+      gridBtn.setAttribute("aria-pressed", String(show));
+      gridBtn.textContent = show ? "Hide grid overlay" : "Show grid overlay";
+      return;
+    }
+    const cssBtn = event.target.closest("[data-copy-css]");
+    if (cssBtn) {
+      const block = document.getElementById(cssBtn.dataset.copyCss);
+      if (block) copyText(dedent(block.textContent), "Copied all tokens");
+      return;
+    }
+    const target = event.target.closest("[data-copy]");
+    if (target) copyText(target.dataset.copy, `Copied ${target.dataset.copy}`);
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}

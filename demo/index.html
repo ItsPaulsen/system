@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Demo — System</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <script>
+      // Set theme before first paint to avoid a flash (saved choice, else OS preference).
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style id="tokens">
+      /* ── Per-project tokens (Demo brand). Two-tier: primitives → semantic. ── */
+      :root {
+        /* Breakpoints */
+        --bp-sm: 480px;
+        --bp-md: 768px;
+        --bp-lg: 1024px;
+        --bp-xl: 1280px;
+
+        /* Color primitives — raw values */
+        --violet-400: oklch(72% 0.16 292);
+        --violet-600: oklch(58% 0.21 292);
+        --violet-800: oklch(42% 0.17 292);
+        --neutral-0: oklch(100% 0 0);
+        --neutral-500: oklch(64% 0.01 286);
+        --neutral-950: oklch(17% 0.005 286);
+
+        /* Color semantics — aliases that reference primitives */
+        --color-primary: var(--violet-600);
+        --color-primary-hover: var(--violet-400);
+        --color-bg: var(--neutral-950);
+        --color-text: var(--neutral-0);
+        --color-muted: var(--neutral-500);
+
+        /* Type primitives — size scale */
+        --text-sm: 0.875rem;
+        --text-base: 1rem;
+        --text-lg: 1.25rem;
+        --text-2xl: 1.5rem;
+        --text-3xl: 1.875rem;
+        --text-4xl: 2.25rem;
+        --text-5xl: 3rem;
+
+        /* Type primitives — line-height, weight, tracking */
+        --leading-tight: 1.1;
+        --leading-snug: 1.3;
+        --leading-normal: 1.5;
+        --weight-regular: 400;
+        --weight-medium: 500;
+        --weight-semibold: 600;
+        --tracking-tight: -0.02em;
+
+        /* Type semantics — role sizes (mobile-first) */
+        --font-display-size: var(--text-4xl);
+        --font-h1-size: var(--text-3xl);
+        --font-h2-size: var(--text-2xl);
+        --font-body-size: var(--text-base);
+        --font-small-size: var(--text-sm);
+
+        /* Grid (mobile-first) */
+        --container-max: 1200px;
+        --grid-columns: 4;
+        --grid-gutter: 16px;
+        --grid-margin: 20px;
+      }
+
+      /* md — type scales up, grid goes to 8 columns (px literals: media can't read vars) */
+      @media (min-width: 768px) {
+        :root {
+          --font-display-size: var(--text-5xl);
+          --font-h1-size: var(--text-4xl);
+          --font-h2-size: var(--text-3xl);
+          --grid-columns: 8;
+          --grid-gutter: 24px;
+          --grid-margin: 32px;
+        }
+      }
+
+      /* lg — grid goes to 12 columns */
+      @media (min-width: 1024px) {
+        :root {
+          --grid-columns: 12;
+          --grid-margin: 48px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <p class="eyebrow">Demo · Design</p>
+        <h1>Demo project</h1>
+        <p class="lede">
+          Placeholder project for reviewing the token mechanics. Click anything to copy its exact
+          value, or grab the whole set as CSS.
+        </p>
+        <div class="toolbar">
+          <button class="btn" type="button" data-copy-css="tokens">Copy all tokens as CSS</button>
+        </div>
+      </header>
+
+      <section aria-labelledby="primitives-h">
+        <h2 id="primitives-h">Primitives</h2>
+        <p class="section-note">
+          Raw color values. The source palette — reference these via aliases.
+        </p>
+        <ul class="tokens">
+          <li>
+            <button class="swatch" type="button" data-token="violet-400">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">violet-400</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="violet-600">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">violet-600</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="violet-800">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">violet-800</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="neutral-0">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">neutral-0</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="neutral-500">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">neutral-500</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="neutral-950">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">neutral-950</span>
+                <span class="swatch__value"></span>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="semantic-h">
+        <h2 id="semantic-h">Semantic</h2>
+        <p class="section-note">
+          Aliases used in components. Point these at primitives, not raw values.
+        </p>
+        <ul class="tokens">
+          <li>
+            <button class="swatch" type="button" data-token="color-primary">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">color-primary</span>
+                <span class="swatch__value"></span>
+                <span class="swatch__alias">→ violet-600</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="color-primary-hover">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">color-primary-hover</span>
+                <span class="swatch__value"></span>
+                <span class="swatch__alias">→ violet-400</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="color-bg">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">color-bg</span>
+                <span class="swatch__value"></span>
+                <span class="swatch__alias">→ neutral-950</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="color-text">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">color-text</span>
+                <span class="swatch__value"></span>
+                <span class="swatch__alias">→ neutral-0</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="color-muted">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">color-muted</span>
+                <span class="swatch__value"></span>
+                <span class="swatch__alias">→ neutral-500</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="type-h">
+        <h2 id="type-h">Type scale</h2>
+        <p class="section-note">
+          Resize the window — role sizes step up at the md breakpoint. Live values update as you go.
+        </p>
+        <p class="bp-indicator" data-bp-indicator aria-live="polite">—</p>
+
+        <h3 class="subhead">Roles</h3>
+        <ul class="type-list">
+          <li>
+            <button class="type-row" type="button" data-token="font-display-size">
+              <span class="type-row__sample t-display">Display</span>
+              <span class="type-row__meta">
+                <span class="type-row__name">font-display-size</span>
+                <span data-spec="size"></span>
+                <span data-spec="lh"></span>
+                <span data-spec="weight"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="type-row" type="button" data-token="font-h1-size">
+              <span class="type-row__sample t-h1">Heading 1</span>
+              <span class="type-row__meta">
+                <span class="type-row__name">font-h1-size</span>
+                <span data-spec="size"></span>
+                <span data-spec="lh"></span>
+                <span data-spec="weight"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="type-row" type="button" data-token="font-h2-size">
+              <span class="type-row__sample t-h2">Heading 2</span>
+              <span class="type-row__meta">
+                <span class="type-row__name">font-h2-size</span>
+                <span data-spec="size"></span>
+                <span data-spec="lh"></span>
+                <span data-spec="weight"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="type-row" type="button" data-token="font-body-size">
+              <span class="type-row__sample t-body"
+                >Body — the quick brown fox jumps over the lazy dog.</span
+              >
+              <span class="type-row__meta">
+                <span class="type-row__name">font-body-size</span>
+                <span data-spec="size"></span>
+                <span data-spec="lh"></span>
+                <span data-spec="weight"></span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="type-row" type="button" data-token="font-small-size">
+              <span class="type-row__sample t-small">Small — captions, labels, metadata.</span>
+              <span class="type-row__meta">
+                <span class="type-row__name">font-small-size</span>
+                <span data-spec="size"></span>
+                <span data-spec="lh"></span>
+                <span data-spec="weight"></span>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Size primitives</h3>
+        <ul class="token-scale">
+          <li>
+            <button class="token-chip" type="button" data-token="text-sm">
+              <span class="token-chip__name">text-sm</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-base">
+              <span class="token-chip__name">text-base</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-lg">
+              <span class="token-chip__name">text-lg</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-2xl">
+              <span class="token-chip__name">text-2xl</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-3xl">
+              <span class="token-chip__name">text-3xl</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-4xl">
+              <span class="token-chip__name">text-4xl</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="text-5xl">
+              <span class="token-chip__name">text-5xl</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="grid-h">
+        <h2 id="grid-h">Grid</h2>
+        <p class="section-note">
+          Responsive column grid. Toggle the overlay to see it over the page, then resize to watch
+          columns, gutters and margins adapt per breakpoint.
+        </p>
+        <div class="toolbar">
+          <button class="btn" type="button" data-grid-toggle aria-pressed="false">
+            Show grid overlay
+          </button>
+        </div>
+
+        <h3 class="subhead">Values (current breakpoint)</h3>
+        <ul class="token-scale">
+          <li>
+            <button class="token-chip" type="button" data-token="grid-columns">
+              <span class="token-chip__name">grid-columns</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="grid-gutter">
+              <span class="token-chip__name">grid-gutter</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="grid-margin">
+              <span class="token-chip__name">grid-margin</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="container-max">
+              <span class="token-chip__name">container-max</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Breakpoints</h3>
+        <ul class="token-scale">
+          <li>
+            <button class="token-chip" type="button" data-token="bp-sm">
+              <span class="token-chip__name">bp-sm</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="bp-md">
+              <span class="token-chip__name">bp-md</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="bp-lg">
+              <span class="token-chip__name">bp-lg</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="bp-xl">
+              <span class="token-chip__name">bp-xl</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <span class="grid-overlay__margin grid-overlay__margin--left">
+        <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+      </span>
+      <span class="grid-overlay__margin grid-overlay__margin--right">
+        <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+      </span>
+      <div class="grid-overlay__cols" data-grid-cols></div>
+    </div>
+
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

@@ -10,6 +10,7 @@
   /* Dark theme (default) */
   --bg: #0e0e10;
   --surface: #16161a;
+  --surface-2: #202027;
   --border: #26262c;
   --border-hover: #3a3a42;
   --text: #ededed;
@@ -25,6 +26,7 @@
   color-scheme: light;
   --bg: #fff;
   --surface: #f6f6f7;
+  --surface-2: #fff;
   --border: #e4e4e8;
   --border-hover: #cfcfd6;
   --text: #17171b;
@@ -161,7 +163,9 @@ h1 {
 }
 
 section {
-  margin-top: 3rem;
+  margin-top: 3.5rem;
+  padding-top: 3.5rem;
+  border-top: 1px solid var(--border);
 }
 
 h2 {
@@ -174,6 +178,7 @@ h2 {
 .section-note {
   color: var(--muted);
   font-size: 0.9375rem;
+  max-width: 60ch;
   margin: 0 0 1.25rem;
 }
 
@@ -551,7 +556,8 @@ h2 {
 .tile__demo {
   height: 64px;
   margin-bottom: 0.4rem;
-  background: color-mix(in srgb, var(--ring) 22%, var(--surface));
+  background: var(--surface-2);
+  border: 1px solid var(--border);
 }
 
 .tile__name {

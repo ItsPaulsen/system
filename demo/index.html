@@ -18,11 +18,9 @@
     <style id="tokens">
       /* ── Per-project tokens (Demo brand). Two-tier: primitives → semantic. ── */
       :root {
-        /* Breakpoints */
-        --bp-sm: 480px;
-        --bp-md: 768px;
-        --bp-lg: 1024px;
-        --bp-xl: 1280px;
+        /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
+        --bp-tablet: 640px;
+        --bp-desktop: 1024px;
 
         /* Color primitives — raw values */
         --violet-400: oklch(72% 0.16 292);
@@ -64,30 +62,50 @@
         --font-body-size: var(--text-base);
         --font-small-size: var(--text-sm);
 
-        /* Grid (mobile-first) */
+        /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
         --container-max: 1200px;
         --grid-columns: 4;
         --grid-gutter: 16px;
-        --grid-margin: 20px;
+        --grid-margin: 16px;
+
+        /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
+        --space-4: 0.25rem;
+        --space-8: 0.5rem;
+        --space-12: 0.75rem;
+        --space-16: 1rem;
+        --space-24: 1.5rem;
+        --space-32: 2rem;
+        --space-48: 3rem;
+        --space-64: 4rem;
+
+        /* Radii */
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --radius-full: 999px;
+
+        /* Shadows */
+        --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+        --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
+        --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.45);
       }
 
-      /* md — type scales up, grid goes to 8 columns (px literals: media can't read vars) */
-      @media (min-width: 768px) {
+      /* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
+      @media (min-width: 640px) {
         :root {
-          --font-display-size: var(--text-5xl);
-          --font-h1-size: var(--text-4xl);
-          --font-h2-size: var(--text-3xl);
-          --grid-columns: 8;
-          --grid-gutter: 24px;
-          --grid-margin: 32px;
+          --grid-columns: 12;
+          --grid-gutter: 20px;
+          --grid-margin: 24px;
         }
       }
 
-      /* lg — grid goes to 12 columns */
+      /* Desktop ≥1024 — wider margins, type scales up */
       @media (min-width: 1024px) {
         :root {
-          --grid-columns: 12;
-          --grid-margin: 48px;
+          --grid-margin: 32px;
+          --font-display-size: var(--text-5xl);
+          --font-h1-size: var(--text-4xl);
+          --font-h2-size: var(--text-3xl);
         }
       }
     </style>
@@ -231,7 +249,7 @@
       <section aria-labelledby="type-h">
         <h2 id="type-h">Type scale</h2>
         <p class="section-note">
-          Resize the window — role sizes step up at the md breakpoint. Live values update as you go.
+          Resize the window — role sizes step up at desktop (≥1024). Live values update as you go.
         </p>
         <p class="bp-indicator" data-bp-indicator aria-live="polite">—</p>
 
@@ -384,29 +402,148 @@
         </ul>
 
         <h3 class="subhead">Breakpoints</h3>
+        <p class="section-note">
+          Mobile is the base (&lt;640). Tablet and desktop are the two steps up.
+        </p>
         <ul class="token-scale">
           <li>
-            <button class="token-chip" type="button" data-token="bp-sm">
-              <span class="token-chip__name">bp-sm</span>
+            <button class="token-chip" type="button" data-token="bp-tablet">
+              <span class="token-chip__name">bp-tablet</span>
               <span class="token-chip__value"></span>
             </button>
           </li>
           <li>
-            <button class="token-chip" type="button" data-token="bp-md">
-              <span class="token-chip__name">bp-md</span>
+            <button class="token-chip" type="button" data-token="bp-desktop">
+              <span class="token-chip__name">bp-desktop</span>
               <span class="token-chip__value"></span>
             </button>
           </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="space-h">
+        <h2 id="space-h">Spacing</h2>
+        <p class="section-note">
+          Consistent spacing scale for padding, margins and gaps. Bars are drawn to scale.
+        </p>
+        <ul class="space-list">
           <li>
-            <button class="token-chip" type="button" data-token="bp-lg">
-              <span class="token-chip__name">bp-lg</span>
-              <span class="token-chip__value"></span>
+            <button class="space-row" type="button" data-token="space-4">
+              <span class="space-row__name">space-4</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
             </button>
           </li>
           <li>
-            <button class="token-chip" type="button" data-token="bp-xl">
-              <span class="token-chip__name">bp-xl</span>
-              <span class="token-chip__value"></span>
+            <button class="space-row" type="button" data-token="space-8">
+              <span class="space-row__name">space-8</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-12">
+              <span class="space-row__name">space-12</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-16">
+              <span class="space-row__name">space-16</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-24">
+              <span class="space-row__name">space-24</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-32">
+              <span class="space-row__name">space-32</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-48">
+              <span class="space-row__name">space-48</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="space-row" type="button" data-token="space-64">
+              <span class="space-row__name">space-64</span>
+              <span class="space-row__bar" data-space-bar></span>
+              <span class="space-row__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="radius-h">
+        <h2 id="radius-h">Radii</h2>
+        <p class="section-note">Corner radii. The preview shows each applied.</p>
+        <ul class="tile-grid">
+          <li>
+            <button class="tile" type="button" data-token="radius-sm">
+              <span class="tile__demo" data-radius-demo></span>
+              <span class="tile__name">radius-sm</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="tile" type="button" data-token="radius-md">
+              <span class="tile__demo" data-radius-demo></span>
+              <span class="tile__name">radius-md</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="tile" type="button" data-token="radius-lg">
+              <span class="tile__demo" data-radius-demo></span>
+              <span class="tile__name">radius-lg</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="tile" type="button" data-token="radius-full">
+              <span class="tile__demo" data-radius-demo></span>
+              <span class="tile__name">radius-full</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="shadow-h">
+        <h2 id="shadow-h">Shadows</h2>
+        <p class="section-note">Elevation. The preview shows each applied.</p>
+        <ul class="tile-grid">
+          <li>
+            <button class="tile" type="button" data-token="shadow-sm">
+              <span class="tile__demo" data-shadow-demo></span>
+              <span class="tile__name">shadow-sm</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="tile" type="button" data-token="shadow-md">
+              <span class="tile__demo" data-shadow-demo></span>
+              <span class="tile__name">shadow-md</span>
+              <span class="tile__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="tile" type="button" data-token="shadow-lg">
+              <span class="tile__demo" data-shadow-demo></span>
+              <span class="tile__name">shadow-lg</span>
+              <span class="tile__value"></span>
             </button>
           </li>
         </ul>

@@ -109,6 +109,21 @@ function hydrateTokenChips() {
   });
 }
 
+// Generic: fill a copyable preview element from its :root token, then optionally style a preview.
+function hydratePreview(selector, valueSelector, apply) {
+  const rootStyle = getComputedStyle(document.documentElement);
+  document.querySelectorAll(selector).forEach((el) => {
+    const { token } = el.dataset;
+    if (!token) return;
+    const value = rootStyle.getPropertyValue(`--${token}`).trim();
+    if (!value) return;
+    const valueEl = el.querySelector(valueSelector);
+    if (valueEl) valueEl.textContent = value;
+    el.dataset.copy = value;
+    if (apply) apply(el, value);
+  });
+}
+
 function setSpec(row, name, text) {
   const el = row.querySelector(`[data-spec="${name}"]`);
   if (el) el.textContent = text;
@@ -132,22 +147,18 @@ function hydrateType() {
   });
 }
 
-// Show the active viewport width and matching named breakpoint (read from tokens).
+// Show the active viewport width and matching tier (read thresholds from tokens).
 function updateBreakpoint() {
   const el = document.querySelector("[data-bp-indicator]");
   if (!el) return;
   const rootStyle = getComputedStyle(document.documentElement);
   const width = window.innerWidth;
-  const names = ["xl", "lg", "md", "sm"];
-  let active = "base";
-  for (const name of names) {
-    const min = parseFloat(rootStyle.getPropertyValue(`--bp-${name}`));
-    if (width >= min) {
-      active = name;
-      break;
-    }
-  }
-  el.textContent = `${width}px · ${active}`;
+  const tablet = parseFloat(rootStyle.getPropertyValue("--bp-tablet"));
+  const desktop = parseFloat(rootStyle.getPropertyValue("--bp-desktop"));
+  let tier = "mobile";
+  if (width >= desktop) tier = "desktop";
+  else if (width >= tablet) tier = "tablet";
+  el.textContent = `${width}px · ${tier}`;
 }
 
 // Rebuild the grid overlay's columns to match --grid-columns at the current breakpoint,
@@ -186,6 +197,16 @@ function init() {
   injectNav();
   hydrateSwatches();
   hydrateTokenChips();
+  hydratePreview(".space-row", ".space-row__value", (el, value) => {
+    const bar = el.querySelector("[data-space-bar]");
+    if (bar) bar.style.width = value;
+  });
+  hydratePreview(".tile", ".tile__value", (el, value) => {
+    const radius = el.querySelector("[data-radius-demo]");
+    if (radius) radius.style.borderRadius = value;
+    const shadow = el.querySelector("[data-shadow-demo]");
+    if (shadow) shadow.style.boxShadow = value;
+  });
   refreshResponsive();
 
   let frame;

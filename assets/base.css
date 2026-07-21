@@ -787,17 +787,16 @@ h2:has(+ .section-note),
   transform: translateX(-50%) translateY(0);
 }
 
-/* Desktop: content + grid overlay sit to the right of the persistent sidebar.
-   (Placed after the base .wrap / .grid-overlay rules so it wins the cascade.) */
+/* Desktop: reserve the sidebar width, then the content (and the grid overlay)
+   center within the remaining space — not jammed against the sidebar.
+   (After the base .wrap / .grid-overlay rules so it wins the cascade.) */
 @media (min-width: 1024px) {
-  .wrap {
-    margin-inline: 0;
+  .content-region {
     margin-left: var(--sidebar-w);
   }
 
   .grid-overlay {
     left: var(--sidebar-w);
-    margin-inline: 0;
   }
 }
 

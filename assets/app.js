@@ -87,6 +87,15 @@ function injectSidebar() {
   const sections = document.querySelectorAll("section[data-nav-group][aria-labelledby]");
   if (!sections.length || document.querySelector(".sidebar")) return;
 
+  // Wrap the content so it can center in the space beside the sidebar.
+  const wrap = document.querySelector(".wrap");
+  if (wrap && !wrap.closest(".content-region")) {
+    const region = document.createElement("div");
+    region.className = "content-region";
+    wrap.parentNode.insertBefore(region, wrap);
+    region.appendChild(wrap);
+  }
+
   const groups = [];
   sections.forEach((section) => {
     const name = section.dataset.navGroup;

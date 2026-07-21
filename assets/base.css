@@ -1,14 +1,14 @@
 /* system.kristianpaulsen.com — shared site chrome (mechanics, not per-project brand) */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap");
 
 :root {
   color-scheme: light dark;
   --radius: 10px;
   --nav-h: 56px;
   --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
-  --font: "Inter", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
-  --mono: ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
+  --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
+  --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
 
   /* Dark theme (default) */
   --bg: #0e0e10;
@@ -175,7 +175,7 @@ h2 {
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.75rem;
 }
 
 .section-note {
@@ -320,6 +320,13 @@ h2 {
   font-size: 0.9375rem;
   font-weight: 600;
   margin: 1.75rem 0 0.75rem;
+}
+
+/* A description note belongs to its heading, so pull it in tight;
+   a heading followed directly by content keeps the 0.75rem below. */
+h2:has(+ .section-note),
+.subhead:has(+ .section-note) {
+  margin-bottom: 0.25rem;
 }
 
 /* Breakpoint indicator */
@@ -565,6 +572,7 @@ h2 {
   margin-bottom: 0.4rem;
   background: var(--surface-2);
   border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px);
 }
 
 .tile__name {

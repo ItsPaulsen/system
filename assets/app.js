@@ -192,8 +192,13 @@ function hydrateSwatches() {
     const chip = sw.querySelector(".swatch__chip");
     if (chip) chip.style.background = value;
 
-    const valueEl = sw.querySelector(".swatch__value");
-    if (valueEl) valueEl.textContent = value;
+    // Paired tokens: render the sample text in the foreground colour on the fill.
+    const { on } = sw.dataset;
+    if (on) {
+      const sample = sw.querySelector(".swatch__sample");
+      const onValue = rootStyle.getPropertyValue(`--${on}`).trim();
+      if (sample && onValue) sample.style.color = onValue;
+    }
 
     sw.dataset.copy = value;
   });

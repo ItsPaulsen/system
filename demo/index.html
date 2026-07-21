@@ -22,20 +22,48 @@
         --bp-tablet: 640px;
         --bp-desktop: 1024px;
 
-        /* Color primitives — raw values */
-        --violet-400: oklch(72% 0.16 292);
-        --violet-600: oklch(58% 0.21 292);
-        --violet-800: oklch(42% 0.17 292);
+        /* Color primitives — raw ramps */
         --neutral-0: oklch(100% 0 0);
+        --neutral-50: oklch(98.5% 0.002 286);
+        --neutral-100: oklch(96.5% 0.003 286);
+        --neutral-200: oklch(92% 0.004 286);
+        --neutral-400: oklch(71% 0.01 286);
         --neutral-500: oklch(64% 0.01 286);
+        --neutral-700: oklch(44% 0.01 286);
+        --neutral-800: oklch(31% 0.008 286);
+        --neutral-900: oklch(24% 0.006 286);
         --neutral-950: oklch(17% 0.005 286);
+        --violet-400: oklch(72% 0.16 292);
+        --violet-500: oklch(65% 0.19 292);
+        --violet-600: oklch(58% 0.21 292);
+        --violet-700: oklch(50% 0.2 292);
+        --green-500: oklch(72% 0.17 150);
+        --green-600: oklch(64% 0.17 150);
+        --amber-500: oklch(80% 0.15 80);
+        --red-500: oklch(64% 0.22 25);
+        --red-600: oklch(58% 0.22 25);
 
-        /* Color semantics — aliases that reference primitives */
-        --color-primary: var(--violet-600);
-        --color-primary-hover: var(--violet-400);
-        --color-bg: var(--neutral-950);
-        --color-text: var(--neutral-0);
-        --color-muted: var(--neutral-500);
+        /* Color semantics — light. Every fill pairs with a -foreground for text on it. */
+        --background: var(--neutral-0);
+        --foreground: var(--neutral-950);
+        --card: var(--neutral-0);
+        --card-foreground: var(--neutral-950);
+        --primary: var(--violet-600);
+        --primary-foreground: var(--neutral-0);
+        --primary-hover: var(--violet-700);
+        --secondary: var(--neutral-100);
+        --secondary-foreground: var(--neutral-900);
+        --muted: var(--neutral-100);
+        --muted-foreground: var(--neutral-500);
+        --border: var(--neutral-200);
+        --input: var(--neutral-200);
+        --ring: var(--violet-600);
+        --success: var(--green-600);
+        --success-foreground: var(--neutral-0);
+        --warning: var(--amber-500);
+        --warning-foreground: var(--neutral-950);
+        --destructive: var(--red-600);
+        --destructive-foreground: var(--neutral-0);
 
         /* Type primitives — size scale */
         --text-sm: 0.875rem;
@@ -115,8 +143,31 @@
         }
       }
 
-      /* Dark mode: light shadows vanish on dark, so go darker/stronger as elevation rises */
+      /* Dark mode */
       :root[data-theme="dark"] {
+        /* Color semantics — dark */
+        --background: var(--neutral-950);
+        --foreground: var(--neutral-50);
+        --card: var(--neutral-900);
+        --card-foreground: var(--neutral-50);
+        --primary: var(--violet-500);
+        --primary-foreground: var(--neutral-0);
+        --primary-hover: var(--violet-400);
+        --secondary: var(--neutral-800);
+        --secondary-foreground: var(--neutral-50);
+        --muted: var(--neutral-800);
+        --muted-foreground: var(--neutral-400);
+        --border: var(--neutral-800);
+        --input: var(--neutral-800);
+        --ring: var(--violet-500);
+        --success: var(--green-500);
+        --success-foreground: var(--neutral-950);
+        --warning: var(--amber-500);
+        --warning-foreground: var(--neutral-950);
+        --destructive: var(--red-500);
+        --destructive-foreground: var(--neutral-0);
+
+        /* Light shadows vanish on dark, so go darker/stronger as elevation rises */
         --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
         --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
         --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
@@ -136,110 +187,311 @@
 
       <section data-nav-group="Foundations" aria-labelledby="colors-h">
         <h2 id="colors-h">Colors</h2>
-        <p class="section-note">Use these in components — each maps to a primitive.</p>
+        <p class="section-note">
+          Use these — not the primitives. Each fill pairs with a foreground for text on it.
+        </p>
+
+        <h3 class="subhead">Surfaces &amp; text</h3>
         <ul class="tokens">
           <li>
-            <button class="swatch" type="button" data-token="color-primary">
-              <span class="swatch__chip" aria-hidden="true"></span>
+            <button class="swatch" type="button" data-token="background" data-on="foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
               <span class="swatch__meta">
-                <span class="swatch__name">color-primary</span>
-                <span class="swatch__alias">→ violet-600</span>
+                <span class="swatch__name">background</span>
+                <span class="swatch__alias">on foreground</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="color-primary-hover">
-              <span class="swatch__chip" aria-hidden="true"></span>
+            <button class="swatch" type="button" data-token="card" data-on="card-foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
               <span class="swatch__meta">
-                <span class="swatch__name">color-primary-hover</span>
-                <span class="swatch__alias">→ violet-400</span>
+                <span class="swatch__name">card</span>
+                <span class="swatch__alias">on card-foreground</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="color-bg">
-              <span class="swatch__chip" aria-hidden="true"></span>
+            <button class="swatch" type="button" data-token="muted" data-on="muted-foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
               <span class="swatch__meta">
-                <span class="swatch__name">color-bg</span>
-                <span class="swatch__alias">→ neutral-950</span>
+                <span class="swatch__name">muted</span>
+                <span class="swatch__alias">on muted-foreground</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="color-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
+            <button
+              class="swatch"
+              type="button"
+              data-token="secondary"
+              data-on="secondary-foreground"
+            >
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
               <span class="swatch__meta">
-                <span class="swatch__name">color-text</span>
-                <span class="swatch__alias">→ neutral-0</span>
+                <span class="swatch__name">secondary</span>
+                <span class="swatch__alias">on secondary-foreground</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Brand</h3>
+        <ul class="tokens">
+          <li>
+            <button class="swatch" type="button" data-token="primary" data-on="primary-foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
+              <span class="swatch__meta">
+                <span class="swatch__name">primary</span>
+                <span class="swatch__alias">on primary-foreground</span>
               </span>
             </button>
           </li>
           <li>
-            <button class="swatch" type="button" data-token="color-muted">
+            <button class="swatch" type="button" data-token="primary-hover">
               <span class="swatch__chip" aria-hidden="true"></span>
               <span class="swatch__meta">
-                <span class="swatch__name">color-muted</span>
-                <span class="swatch__alias">→ neutral-500</span>
+                <span class="swatch__name">primary-hover</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="ring">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">ring</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Feedback</h3>
+        <ul class="tokens">
+          <li>
+            <button class="swatch" type="button" data-token="success" data-on="success-foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
+              <span class="swatch__meta">
+                <span class="swatch__name">success</span>
+                <span class="swatch__alias">on success-foreground</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="warning" data-on="warning-foreground">
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
+              <span class="swatch__meta">
+                <span class="swatch__name">warning</span>
+                <span class="swatch__alias">on warning-foreground</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="swatch"
+              type="button"
+              data-token="destructive"
+              data-on="destructive-foreground"
+            >
+              <span class="swatch__chip" aria-hidden="true"
+                ><span class="swatch__sample">Aa</span></span
+              >
+              <span class="swatch__meta">
+                <span class="swatch__name">destructive</span>
+                <span class="swatch__alias">on destructive-foreground</span>
+              </span>
+            </button>
+          </li>
+        </ul>
+
+        <h3 class="subhead">Borders</h3>
+        <ul class="tokens">
+          <li>
+            <button class="swatch" type="button" data-token="border">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">border</span>
+              </span>
+            </button>
+          </li>
+          <li>
+            <button class="swatch" type="button" data-token="input">
+              <span class="swatch__chip" aria-hidden="true"></span>
+              <span class="swatch__meta">
+                <span class="swatch__name">input</span>
               </span>
             </button>
           </li>
         </ul>
 
         <h3 class="subhead">Primitives</h3>
-        <p class="section-note">Don't use directly.</p>
+        <p class="section-note">
+          The raw ramps. Don't use directly — reference them through the tokens above.
+        </p>
         <ul class="palette">
           <li>
-            <button class="palette__chip" type="button" data-token="violet-400">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">violet-400</span>
-                <span class="palette__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="palette__chip" type="button" data-token="violet-600">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">violet-600</span>
-                <span class="palette__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="palette__chip" type="button" data-token="violet-800">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">violet-800</span>
-                <span class="palette__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
             <button class="palette__chip" type="button" data-token="neutral-0">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">neutral-0</span>
-                <span class="palette__value"></span>
-              </span>
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-0</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-50">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-50</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-100">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-100</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-200">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-200</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-400">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-400</span><span class="palette__value"></span
+              ></span>
             </button>
           </li>
           <li>
             <button class="palette__chip" type="button" data-token="neutral-500">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">neutral-500</span>
-                <span class="palette__value"></span>
-              </span>
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-500</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-700">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-700</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-800">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-800</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="neutral-900">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-900</span><span class="palette__value"></span
+              ></span>
             </button>
           </li>
           <li>
             <button class="palette__chip" type="button" data-token="neutral-950">
-              <span class="palette__color" aria-hidden="true"></span>
-              <span class="palette__meta">
-                <span class="palette__name">neutral-950</span>
-                <span class="palette__value"></span>
-              </span>
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">neutral-950</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-400">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">violet-400</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-500">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">violet-500</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-600">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">violet-600</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="violet-700">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">violet-700</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="green-500">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">green-500</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="green-600">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">green-600</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="amber-500">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">amber-500</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="red-500">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">red-500</span><span class="palette__value"></span
+              ></span>
+            </button>
+          </li>
+          <li>
+            <button class="palette__chip" type="button" data-token="red-600">
+              <span class="palette__color" aria-hidden="true"></span
+              ><span class="palette__meta"
+                ><span class="palette__name">red-600</span><span class="palette__value"></span
+              ></span>
             </button>
           </li>
         </ul>

@@ -62,7 +62,14 @@ function injectNav() {
   nav.className = "site-nav";
   nav.innerHTML = `
     <div class="site-nav__inner">
-      <a class="site-nav__brand" href="/">system</a>
+      <div class="site-nav__left">
+        <button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <a class="site-nav__brand" href="/">system</a>
+      </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
@@ -72,6 +79,94 @@ function injectNav() {
     </div>`;
   document.body.prepend(nav);
   setTheme(currentTheme());
+}
+
+// Build the sidebar from the page's sections. Each <section data-nav-group="…"
+// aria-labelledby="…"> becomes a link under its group, in document order.
+function injectSidebar() {
+  const sections = document.querySelectorAll("section[data-nav-group][aria-labelledby]");
+  if (!sections.length || document.querySelector(".sidebar")) return;
+
+  const groups = [];
+  sections.forEach((section) => {
+    const name = section.dataset.navGroup;
+    const headingId = section.getAttribute("aria-labelledby");
+    const heading = document.getElementById(headingId);
+    if (!heading) return;
+    let group = groups.find((g) => g.name === name);
+    if (!group) {
+      group = { name, links: [] };
+      groups.push(group);
+    }
+    group.links.push({ id: headingId, label: heading.textContent.trim() });
+  });
+
+  const aside = document.createElement("aside");
+  aside.className = "sidebar";
+  aside.innerHTML = groups
+    .map(
+      (g) => `
+      <div class="sidebar__group">
+        <p class="sidebar__group-title">${g.name}</p>
+        ${g.links
+          .map(
+            (l) => `<a class="sidebar__link" href="#${l.id}" data-nav-link="${l.id}">${l.label}</a>`
+          )
+          .join("")}
+      </div>`
+    )
+    .join("");
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "sidebar-backdrop";
+
+  document.body.append(aside, backdrop);
+  wireSidebar(aside, backdrop);
+  spyScroll(aside);
+}
+
+function wireSidebar(aside, backdrop) {
+  const menuBtn = document.querySelector(".site-nav__menu");
+  const close = () => {
+    aside.classList.remove("is-open");
+    backdrop.classList.remove("is-open");
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+  };
+  if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+      const open = !aside.classList.contains("is-open");
+      aside.classList.toggle("is-open", open);
+      backdrop.classList.toggle("is-open", open);
+      menuBtn.setAttribute("aria-expanded", String(open));
+    });
+  }
+  backdrop.addEventListener("click", close);
+  aside.addEventListener("click", (e) => {
+    if (e.target.closest(".sidebar__link")) close();
+  });
+}
+
+// Highlight the sidebar link for whichever section is currently in view.
+function spyScroll(aside) {
+  const links = new Map(
+    [...aside.querySelectorAll("[data-nav-link]")].map((a) => [a.dataset.navLink, a])
+  );
+  const setActive = (id) => {
+    links.forEach((a, key) => a.classList.toggle("is-active", key === id));
+  };
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visible = entries.filter((e) => e.isIntersecting);
+      if (visible.length) {
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        setActive(visible[0].target.getAttribute("aria-labelledby"));
+      }
+    },
+    { rootMargin: `-${80}px 0px -60% 0px` }
+  );
+  document
+    .querySelectorAll("section[data-nav-group][aria-labelledby]")
+    .forEach((s) => observer.observe(s));
 }
 
 /* ── Token hydration ───────────────────────────────────────────────────── */
@@ -194,6 +289,7 @@ function refreshResponsive() {
 
 function init() {
   injectNav();
+  injectSidebar();
   hydrateSwatches();
   hydrateTokenChips();
   hydratePreview(".palette__chip", ".palette__value", (el, value) => {

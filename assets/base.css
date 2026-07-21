@@ -6,6 +6,7 @@
   color-scheme: light dark;
   --radius: 10px;
   --nav-h: 56px;
+  --sidebar-w: 15rem;
   --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
   --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
@@ -72,6 +73,118 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.site-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-nav__menu {
+  display: none; /* mobile only */
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.site-nav__menu:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Sidebar (injected, auto-generated from the page's sections) */
+.sidebar {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  overflow-y: auto;
+  padding: 1.5rem 1rem 3rem;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+  z-index: 18;
+}
+
+.sidebar__group + .sidebar__group {
+  margin-top: 1.5rem;
+}
+
+.sidebar__group-title {
+  margin: 0 0 0.5rem;
+  padding-inline: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sidebar__link {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  line-height: 20px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.sidebar__link:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.sidebar__link.is-active {
+  color: var(--text);
+  background: var(--surface);
+  font-weight: 500;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* Mobile: sidebar is an off-canvas drawer toggled from the nav */
+@media (max-width: 1023px) {
+  .site-nav__menu {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    width: 16rem;
+    z-index: 30;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: 0 10px 40px rgb(0 0 0 / 0.3);
+  }
+
+  .sidebar.is-open {
+    transform: none;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: rgb(0 0 0 / 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .sidebar-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .site-nav__brand {
@@ -254,20 +367,20 @@ h2 {
   color: var(--muted);
 }
 
-/* Compact primitive palette (the raw source under semantic colors) */
+/* Primitive palette (the raw source under semantic colors) — full-width rows so values fit */
 .palette {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
 .palette__chip {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 0.75rem;
   width: 100%;
   font: inherit;
   text-align: left;
@@ -275,7 +388,7 @@ h2 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 0.4rem 0.5rem;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
   transition: border-color 0.15s ease;
 }
@@ -291,15 +404,17 @@ h2 {
 
 .palette__color {
   flex: none;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
   border: 1px solid var(--border);
 }
 
 .palette__meta {
   display: flex;
-  flex-direction: column;
+  flex: 1;
+  align-items: baseline;
+  gap: 1rem;
   min-width: 0;
 }
 
@@ -308,11 +423,10 @@ h2 {
 }
 
 .palette__value {
+  margin-left: auto;
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -673,6 +787,20 @@ h2:has(+ .section-note),
   transform: translateX(-50%) translateY(0);
 }
 
+/* Desktop: content + grid overlay sit to the right of the persistent sidebar.
+   (Placed after the base .wrap / .grid-overlay rules so it wins the cascade.) */
+@media (min-width: 1024px) {
+  .wrap {
+    margin-inline: 0;
+    margin-left: var(--sidebar-w);
+  }
+
+  .grid-overlay {
+    left: var(--sidebar-w);
+    margin-inline: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .swatch,
   .palette__chip,
@@ -683,6 +811,8 @@ h2:has(+ .section-note),
   .btn,
   .theme-toggle,
   .site-nav__brand,
+  .sidebar,
+  .sidebar-backdrop,
   .toast {
     transition: none;
   }

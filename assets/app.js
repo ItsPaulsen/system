@@ -172,17 +172,27 @@ function wireSidebar(aside, backdrop) {
 /* ── Token hydration ───────────────────────────────────────────────────── */
 
 // Fill each palette chip's colour + value from its :root token.
+// Sub-chips (hover / active) show just the suffix — the indent already ties
+// them to the base above.
 function hydratePalette() {
   const rootStyle = getComputedStyle(document.documentElement);
-  document.querySelectorAll(".palette__chip").forEach((chip) => {
-    const { token } = chip.dataset;
-    if (!token) return;
-    const value = rootStyle.getPropertyValue(`--${token}`).trim();
-    if (!value) return;
-    chip.style.setProperty("--c", value);
-    const valueEl = chip.querySelector(".palette__value");
-    if (valueEl) valueEl.textContent = value;
-    chip.dataset.copy = value;
+  document.querySelectorAll(".palette__row").forEach((row) => {
+    const chips = [...row.querySelectorAll(".palette__chip")];
+    const baseToken = chips[0]?.dataset.token || "";
+    chips.forEach((chip, i) => {
+      const { token } = chip.dataset;
+      if (!token) return;
+      const value = rootStyle.getPropertyValue(`--${token}`).trim();
+      if (!value) return;
+      chip.style.setProperty("--c", value);
+      const valueEl = chip.querySelector(".palette__value");
+      if (valueEl) valueEl.textContent = value;
+      const nameEl = chip.querySelector(".palette__name");
+      if (nameEl && i > 0 && token.startsWith(baseToken + "-")) {
+        nameEl.textContent = token.slice(baseToken.length);
+      }
+      chip.dataset.copy = value;
+    });
   });
 }
 

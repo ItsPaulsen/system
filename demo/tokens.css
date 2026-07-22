@@ -28,6 +28,9 @@
   --background-primary: rgb(255 255 255);
   --background-primary-hover: rgb(232 232 232);
   --background-primary-active: rgb(224 224 224);
+  --background-secondary: rgb(246 246 246);
+  --background-secondary-hover: rgb(223 223 223);
+  --background-secondary-active: rgb(215 215 215);
   --ink-primary: rgb(34 34 34);
   --ink-primary-hover: rgb(57 57 57);
   --ink-primary-active: rgb(65 65 65);
@@ -59,7 +62,7 @@
   /* Chrome mapping — the site UI eats its own dogfood.
      Update the project tokens above and the whole interface follows. */
   --ui-bg: var(--background-primary);
-  --ui-surface: var(--neutral-gray-4);
+  --ui-surface: var(--background-secondary);
   --ui-surface-2: var(--background-primary);
   --ui-border: var(--neutral-gray-3);
   --ui-border-hover: var(--neutral-gray-2);
@@ -152,6 +155,9 @@
   --background-primary: rgb(32 32 32);
   --background-primary-hover: rgb(55 55 55);
   --background-primary-active: rgb(63 63 63);
+  --background-secondary: rgb(46 46 46);
+  --background-secondary-hover: rgb(69 69 69);
+  --background-secondary-active: rgb(77 77 77);
   --neutral-gray-1: rgb(100 100 100);
   --neutral-gray-1-hover: rgb(123 123 123);
   --neutral-gray-1-active: rgb(131 131 131);

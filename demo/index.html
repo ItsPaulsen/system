@@ -22,38 +22,54 @@
         --bp-tablet: 640px;
         --bp-desktop: 1024px;
 
-        /* Colours — one family per row. Each base tone has -hover (subtle) and -active
-           (stronger) states for interactive use. Dev takes these names as-is. */
-        --background-primary: oklch(100% 0 0);
-        --background-primary-hover: oklch(96% 0.003 286);
-        --background-primary-active: oklch(92% 0.004 286);
-        --neutral-gray-1: oklch(96% 0.003 286);
-        --neutral-gray-1-hover: oklch(92% 0.004 286);
-        --neutral-gray-1-active: oklch(88% 0.005 286);
-        --neutral-gray-2: oklch(88% 0.005 286);
-        --neutral-gray-2-hover: oklch(83% 0.008 286);
-        --neutral-gray-2-active: oklch(78% 0.01 286);
-        --neutral-gray-3: oklch(64% 0.01 286);
-        --neutral-gray-3-hover: oklch(58% 0.01 286);
-        --neutral-gray-3-active: oklch(52% 0.01 286);
-        --neutral-gray-4: oklch(44% 0.01 286);
-        --neutral-gray-4-hover: oklch(38% 0.008 286);
-        --neutral-gray-4-active: oklch(32% 0.007 286);
-        --neutral-black: oklch(17% 0.005 286);
-        --neutral-black-hover: oklch(24% 0.006 286);
-        --neutral-black-active: oklch(31% 0.008 286);
-        --primary: oklch(58% 0.21 292);
-        --primary-hover: oklch(64% 0.2 292);
-        --primary-active: oklch(50% 0.2 292);
-        --success: oklch(64% 0.17 150);
-        --success-hover: oklch(70% 0.16 150);
-        --success-active: oklch(56% 0.17 150);
-        --warning: oklch(80% 0.15 80);
-        --warning-hover: oklch(85% 0.14 80);
-        --warning-active: oklch(72% 0.15 80);
-        --danger: oklch(58% 0.22 25);
-        --danger-hover: oklch(64% 0.21 25);
-        --danger-active: oklch(50% 0.22 25);
+        /* Colours — one family per row. Rule: hover = base ±23 per channel,
+           active = base ±31. Direction: light bases subtract, dark bases add.
+           Overlay uses alpha bumps. */
+        --background-primary: rgb(255, 255, 255);
+        --background-primary-hover: rgb(232, 232, 232);
+        --background-primary-active: rgb(224, 224, 224);
+        --neutral-gray-1: rgb(243, 244, 247);
+        --neutral-gray-1-hover: rgb(220, 221, 224);
+        --neutral-gray-1-active: rgb(212, 213, 216);
+        --neutral-gray-2: rgb(220, 222, 227);
+        --neutral-gray-2-hover: rgb(197, 199, 204);
+        --neutral-gray-2-active: rgb(189, 191, 196);
+        --neutral-gray-3: rgb(146, 149, 158);
+        --neutral-gray-3-hover: rgb(123, 126, 135);
+        --neutral-gray-3-active: rgb(115, 118, 127);
+        --neutral-gray-4: rgb(88, 91, 100);
+        --neutral-gray-4-hover: rgb(111, 114, 123);
+        --neutral-gray-4-active: rgb(119, 122, 131);
+        --neutral-black: rgb(16, 17, 22);
+        --neutral-black-hover: rgb(39, 40, 45);
+        --neutral-black-active: rgb(47, 48, 53);
+        --ink-primary: rgb(30, 32, 40);
+        --ink-primary-hover: rgb(53, 55, 63);
+        --ink-primary-active: rgb(61, 63, 71);
+        --ink-secondary: rgb(88, 91, 100);
+        --ink-secondary-hover: rgb(111, 114, 123);
+        --ink-secondary-active: rgb(119, 122, 131);
+        --ink-tertiary: rgb(128, 131, 141);
+        --ink-tertiary-hover: rgb(151, 154, 164);
+        --ink-tertiary-active: rgb(159, 162, 172);
+        --primary: rgb(122, 78, 234);
+        --primary-hover: rgb(145, 101, 255);
+        --primary-active: rgb(153, 109, 255);
+        --success: rgb(46, 174, 105);
+        --success-hover: rgb(69, 197, 128);
+        --success-active: rgb(77, 205, 136);
+        --warning: rgb(224, 178, 63);
+        --warning-hover: rgb(201, 155, 40);
+        --warning-active: rgb(193, 147, 32);
+        --danger: rgb(224, 60, 44);
+        --danger-hover: rgb(247, 83, 67);
+        --danger-active: rgb(255, 91, 75);
+        --focus: rgb(48, 140, 218);
+        --focus-hover: rgb(71, 163, 241);
+        --focus-active: rgb(79, 171, 249);
+        --overlay: rgb(16 17 22 / 0.45);
+        --overlay-hover: rgb(16 17 22 / 0.56);
+        --overlay-active: rgb(16 17 22 / 0.6);
 
         /* Type primitives — size scale */
         --text-sm: 0.875rem;
@@ -135,37 +151,42 @@
 
       /* Dark mode */
       :root[data-theme="dark"] {
-        /* Dark theme flips neutrals; accents shift lighter for contrast on dark surfaces. */
-        --background-primary: oklch(17% 0.005 286);
-        --background-primary-hover: oklch(22% 0.006 286);
-        --background-primary-active: oklch(28% 0.007 286);
-        --neutral-gray-1: oklch(24% 0.006 286);
-        --neutral-gray-1-hover: oklch(30% 0.007 286);
-        --neutral-gray-1-active: oklch(36% 0.008 286);
-        --neutral-gray-2: oklch(31% 0.008 286);
-        --neutral-gray-2-hover: oklch(37% 0.008 286);
-        --neutral-gray-2-active: oklch(43% 0.009 286);
-        --neutral-gray-3: oklch(58% 0.01 286);
-        --neutral-gray-3-hover: oklch(64% 0.01 286);
-        --neutral-gray-3-active: oklch(70% 0.01 286);
-        --neutral-gray-4: oklch(80% 0.008 286);
-        --neutral-gray-4-hover: oklch(85% 0.007 286);
-        --neutral-gray-4-active: oklch(90% 0.005 286);
-        --neutral-black: oklch(96% 0.003 286);
-        --neutral-black-hover: oklch(92% 0.004 286);
-        --neutral-black-active: oklch(88% 0.005 286);
-        --primary: oklch(65% 0.19 292);
-        --primary-hover: oklch(72% 0.16 292);
-        --primary-active: oklch(58% 0.21 292);
-        --success: oklch(72% 0.17 150);
-        --success-hover: oklch(78% 0.15 150);
-        --success-active: oklch(64% 0.17 150);
-        --warning: oklch(80% 0.15 80);
-        --warning-hover: oklch(85% 0.14 80);
-        --warning-active: oklch(72% 0.15 80);
-        --danger: oklch(64% 0.22 25);
-        --danger-hover: oklch(70% 0.2 25);
-        --danger-active: oklch(58% 0.22 25);
+        /* Dark theme: neutrals invert (now dark bases → states lighten toward white),
+           inks flip to light bases → states darken toward black. Chromatic bases below
+           inherit their -hover / -active formulas from :root and recompute automatically. */
+        --background-primary: rgb(28, 30, 38);
+        --background-primary-hover: rgb(51, 53, 61);
+        --background-primary-active: rgb(59, 61, 69);
+        --neutral-gray-1: rgb(42, 44, 52);
+        --neutral-gray-1-hover: rgb(65, 67, 75);
+        --neutral-gray-1-active: rgb(73, 75, 83);
+        --neutral-gray-2: rgb(56, 58, 66);
+        --neutral-gray-2-hover: rgb(79, 81, 89);
+        --neutral-gray-2-active: rgb(87, 89, 97);
+        --neutral-gray-3: rgb(128, 131, 141);
+        --neutral-gray-3-hover: rgb(151, 154, 164);
+        --neutral-gray-3-active: rgb(159, 162, 172);
+        --neutral-gray-4: rgb(190, 193, 200);
+        --neutral-gray-4-hover: rgb(167, 170, 177);
+        --neutral-gray-4-active: rgb(159, 162, 169);
+        --ink-primary: rgb(243, 244, 247);
+        --ink-primary-hover: rgb(220, 221, 224);
+        --ink-primary-active: rgb(212, 213, 216);
+        --ink-secondary: rgb(190, 193, 200);
+        --ink-secondary-hover: rgb(167, 170, 177);
+        --ink-secondary-active: rgb(159, 162, 169);
+        --ink-tertiary: rgb(146, 149, 158);
+        --ink-tertiary-hover: rgb(123, 126, 135);
+        --ink-tertiary-active: rgb(115, 118, 127);
+        --primary: rgb(150, 108, 245);
+        --primary-hover: rgb(173, 131, 255);
+        --primary-active: rgb(181, 139, 255);
+        --success: rgb(84, 195, 132);
+        --success-hover: rgb(107, 218, 155);
+        --success-active: rgb(115, 226, 163);
+        --danger: rgb(240, 90, 68);
+        --danger-hover: rgb(255, 113, 91);
+        --danger-active: rgb(255, 121, 99);
 
         /* Light shadows vanish on dark, so go darker/stronger as elevation rises */
         --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
@@ -189,6 +210,9 @@
         <h2 id="colors-h">Colors</h2>
         <p class="section-note">
           One family per row — base, hover, active. Click any value to copy.
+          <br /><span style="opacity: 0.6"
+            >For designer: +23 hover / +31 active per RGB channel.</span
+          >
         </p>
 
         <ul class="palette">
@@ -295,6 +319,57 @@
             </button>
           </li>
           <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="ink-primary">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-primary</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-primary-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-primary-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-primary-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-primary-active</span>
+              <span class="palette__value"></span>
+            </button>
+          </li>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="ink-secondary">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-secondary</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-secondary-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-secondary-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-secondary-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-secondary-active</span>
+              <span class="palette__value"></span>
+            </button>
+          </li>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="ink-tertiary">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-tertiary</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-tertiary-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-tertiary-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="ink-tertiary-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">ink-tertiary-active</span>
+              <span class="palette__value"></span>
+            </button>
+          </li>
+          <li class="palette__row">
             <button class="palette__chip" type="button" data-token="primary">
               <span class="palette__color" aria-hidden="true"></span>
               <span class="palette__name">primary</span>
@@ -359,6 +434,40 @@
             <button class="palette__chip" type="button" data-token="danger-active">
               <span class="palette__color" aria-hidden="true"></span>
               <span class="palette__name">danger-active</span>
+              <span class="palette__value"></span>
+            </button>
+          </li>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="focus">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">focus</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="focus-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">focus-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="focus-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">focus-active</span>
+              <span class="palette__value"></span>
+            </button>
+          </li>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="overlay">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">overlay</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="overlay-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">overlay-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="overlay-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">overlay-active</span>
               <span class="palette__value"></span>
             </button>
           </li>

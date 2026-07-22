@@ -1,7 +1,7 @@
 // Shared page script for every project page:
 //   • injects the site nav (brand + theme toggle)
 //   • click-to-copy + toast
-//   • hydrates swatches / token chips / type rows from :root (the single source of truth)
+//   • hydrates palette chips / token chips / type rows from :root (the single source of truth)
 //   • tracks the active breakpoint on resize
 // Tokens are declared with data-token (the CSS custom-property name, sans "--").
 
@@ -193,30 +193,18 @@ function spyScroll(aside) {
 
 /* ── Token hydration ───────────────────────────────────────────────────── */
 
-// Fill each swatch's chip, value and copy target from its :root token.
-function hydrateSwatches() {
+// Fill each palette chip's colour + value from its :root token.
+function hydratePalette() {
   const rootStyle = getComputedStyle(document.documentElement);
-  document.querySelectorAll(".swatch").forEach((sw) => {
-    const { token } = sw.dataset;
+  document.querySelectorAll(".palette__chip").forEach((chip) => {
+    const { token } = chip.dataset;
     if (!token) return;
     const value = rootStyle.getPropertyValue(`--${token}`).trim();
     if (!value) return;
-
-    const chip = sw.querySelector(".swatch__chip");
-    if (chip) chip.style.setProperty("--c", value);
-
-    const valueEl = sw.querySelector(".swatch__value");
+    chip.style.setProperty("--c", value);
+    const valueEl = chip.querySelector(".palette__value");
     if (valueEl) valueEl.textContent = value;
-
-    // Paired tokens: render the sample text in the foreground colour on the fill.
-    const { on } = sw.dataset;
-    if (on) {
-      const sample = sw.querySelector(".swatch__sample");
-      const onValue = rootStyle.getPropertyValue(`--${on}`).trim();
-      if (sample && onValue) sample.style.color = onValue;
-    }
-
-    sw.dataset.copy = value;
+    chip.dataset.copy = value;
   });
 }
 
@@ -320,7 +308,7 @@ function refreshResponsive() {
 function init() {
   injectNav();
   injectSidebar();
-  hydrateSwatches();
+  hydratePalette();
   hydrateTokenChips();
   hydratePreview(".space-row", ".space-row__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");

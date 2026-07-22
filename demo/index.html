@@ -22,46 +22,38 @@
         --bp-tablet: 640px;
         --bp-desktop: 1024px;
 
-        /* Color primitives — raw ramps */
-        --neutral-0: oklch(100% 0 0);
-        --neutral-50: oklch(98.5% 0.002 286);
-        --neutral-100: oklch(96.5% 0.003 286);
-        --neutral-200: oklch(92% 0.004 286);
-        --neutral-400: oklch(71% 0.01 286);
-        --neutral-500: oklch(64% 0.01 286);
-        --neutral-700: oklch(44% 0.01 286);
-        --neutral-800: oklch(31% 0.008 286);
-        --neutral-900: oklch(24% 0.006 286);
-        --neutral-950: oklch(17% 0.005 286);
-        --violet-400: oklch(72% 0.16 292);
-        --violet-500: oklch(65% 0.19 292);
-        --violet-600: oklch(58% 0.21 292);
-        --violet-700: oklch(50% 0.2 292);
-        --green-500: oklch(72% 0.17 150);
-        --green-600: oklch(64% 0.17 150);
-        --amber-500: oklch(80% 0.15 80);
-        --red-500: oklch(64% 0.22 25);
-        --red-600: oklch(58% 0.22 25);
-
-        /* Colour roles — light. Neutral tones (light→dark), then brand, secondary, feedback.
-           Each fill pairs with a matching text tone for content sitting on it. */
-        --surface: var(--neutral-0);
-        --surface-raised: var(--neutral-0);
-        --muted: var(--neutral-100);
-        --border: var(--neutral-200);
-        --text-muted: var(--neutral-500);
-        --text: var(--neutral-950);
-        --primary: var(--violet-600);
-        --primary-hover: var(--violet-700);
-        --primary-text: var(--neutral-0);
-        --secondary: var(--neutral-100);
-        --secondary-text: var(--neutral-900);
-        --success: var(--green-600);
-        --success-text: var(--neutral-0);
-        --warning: var(--amber-500);
-        --warning-text: var(--neutral-950);
-        --danger: var(--red-600);
-        --danger-text: var(--neutral-0);
+        /* Colours — one family per row. Each base tone has -hover (subtle) and -active
+           (stronger) states for interactive use. Dev takes these names as-is. */
+        --background-primary: oklch(100% 0 0);
+        --background-primary-hover: oklch(96% 0.003 286);
+        --background-primary-active: oklch(92% 0.004 286);
+        --neutral-gray-1: oklch(96% 0.003 286);
+        --neutral-gray-1-hover: oklch(92% 0.004 286);
+        --neutral-gray-1-active: oklch(88% 0.005 286);
+        --neutral-gray-2: oklch(88% 0.005 286);
+        --neutral-gray-2-hover: oklch(83% 0.008 286);
+        --neutral-gray-2-active: oklch(78% 0.01 286);
+        --neutral-gray-3: oklch(64% 0.01 286);
+        --neutral-gray-3-hover: oklch(58% 0.01 286);
+        --neutral-gray-3-active: oklch(52% 0.01 286);
+        --neutral-gray-4: oklch(44% 0.01 286);
+        --neutral-gray-4-hover: oklch(38% 0.008 286);
+        --neutral-gray-4-active: oklch(32% 0.007 286);
+        --neutral-black: oklch(17% 0.005 286);
+        --neutral-black-hover: oklch(24% 0.006 286);
+        --neutral-black-active: oklch(31% 0.008 286);
+        --primary: oklch(58% 0.21 292);
+        --primary-hover: oklch(64% 0.2 292);
+        --primary-active: oklch(50% 0.2 292);
+        --success: oklch(64% 0.17 150);
+        --success-hover: oklch(70% 0.16 150);
+        --success-active: oklch(56% 0.17 150);
+        --warning: oklch(80% 0.15 80);
+        --warning-hover: oklch(85% 0.14 80);
+        --warning-active: oklch(72% 0.15 80);
+        --danger: oklch(58% 0.22 25);
+        --danger-hover: oklch(64% 0.21 25);
+        --danger-active: oklch(50% 0.22 25);
 
         /* Type primitives — size scale */
         --text-sm: 0.875rem;
@@ -143,24 +135,37 @@
 
       /* Dark mode */
       :root[data-theme="dark"] {
-        /* Colour roles — dark */
-        --surface: var(--neutral-950);
-        --surface-raised: var(--neutral-900);
-        --muted: var(--neutral-800);
-        --border: var(--neutral-800);
-        --text-muted: var(--neutral-400);
-        --text: var(--neutral-50);
-        --primary: var(--violet-500);
-        --primary-hover: var(--violet-400);
-        --primary-text: var(--neutral-0);
-        --secondary: var(--neutral-800);
-        --secondary-text: var(--neutral-50);
-        --success: var(--green-500);
-        --success-text: var(--neutral-950);
-        --warning: var(--amber-500);
-        --warning-text: var(--neutral-950);
-        --danger: var(--red-500);
-        --danger-text: var(--neutral-0);
+        /* Dark theme flips neutrals; accents shift lighter for contrast on dark surfaces. */
+        --background-primary: oklch(17% 0.005 286);
+        --background-primary-hover: oklch(22% 0.006 286);
+        --background-primary-active: oklch(28% 0.007 286);
+        --neutral-gray-1: oklch(24% 0.006 286);
+        --neutral-gray-1-hover: oklch(30% 0.007 286);
+        --neutral-gray-1-active: oklch(36% 0.008 286);
+        --neutral-gray-2: oklch(31% 0.008 286);
+        --neutral-gray-2-hover: oklch(37% 0.008 286);
+        --neutral-gray-2-active: oklch(43% 0.009 286);
+        --neutral-gray-3: oklch(58% 0.01 286);
+        --neutral-gray-3-hover: oklch(64% 0.01 286);
+        --neutral-gray-3-active: oklch(70% 0.01 286);
+        --neutral-gray-4: oklch(80% 0.008 286);
+        --neutral-gray-4-hover: oklch(85% 0.007 286);
+        --neutral-gray-4-active: oklch(90% 0.005 286);
+        --neutral-black: oklch(96% 0.003 286);
+        --neutral-black-hover: oklch(92% 0.004 286);
+        --neutral-black-active: oklch(88% 0.005 286);
+        --primary: oklch(65% 0.19 292);
+        --primary-hover: oklch(72% 0.16 292);
+        --primary-active: oklch(58% 0.21 292);
+        --success: oklch(72% 0.17 150);
+        --success-hover: oklch(78% 0.15 150);
+        --success-active: oklch(64% 0.17 150);
+        --warning: oklch(80% 0.15 80);
+        --warning-hover: oklch(85% 0.14 80);
+        --warning-active: oklch(72% 0.15 80);
+        --danger: oklch(64% 0.22 25);
+        --danger-hover: oklch(70% 0.2 25);
+        --danger-active: oklch(58% 0.22 25);
 
         /* Light shadows vanish on dark, so go darker/stronger as elevation rises */
         --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
@@ -183,192 +188,178 @@
       <section data-nav-group="Foundations" aria-labelledby="colors-h">
         <h2 id="colors-h">Colors</h2>
         <p class="section-note">
-          The colours this project uses, by role — each with its live value. Click any to copy; hand
-          the set to a developer as-is. Fills and their text pair by name (primary → primary-text).
+          One family per row — base, hover, active. Click any value to copy.
         </p>
 
-        <h3 class="subhead">Neutral</h3>
-        <ul class="tokens">
-          <li>
-            <button class="swatch" type="button" data-token="surface">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">surface</span>
-                <span class="swatch__desc">Page background</span>
-                <span class="swatch__value"></span>
-              </span>
+        <ul class="palette">
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="background-primary">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">background-primary</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="background-primary-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">background-primary-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="background-primary-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">background-primary-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="surface-raised">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">surface-raised</span>
-                <span class="swatch__desc">Cards, sheets, popovers</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="neutral-gray-1">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-1</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-1-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-1-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-1-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-1-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="muted">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">muted</span>
-                <span class="swatch__desc">Quiet fills</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="neutral-gray-2">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-2</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-2-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-2-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-2-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-2-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch swatch--line" type="button" data-token="border">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">border</span>
-                <span class="swatch__desc">Hairlines, dividers</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="neutral-gray-3">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-3</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-3-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-3-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-3-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-3-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="text-muted">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">text-muted</span>
-                <span class="swatch__desc">Secondary text (hints, captions)</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="neutral-gray-4">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-4</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-4-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-4-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-gray-4-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-gray-4-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">text</span>
-                <span class="swatch__desc">Default text</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="neutral-black">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-black</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-black-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-black-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="neutral-black-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">neutral-black-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-        </ul>
-
-        <h3 class="subhead">Brand</h3>
-        <ul class="tokens">
-          <li>
-            <button class="swatch" type="button" data-token="primary">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">primary</span>
-                <span class="swatch__desc">Primary button / CTA</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="primary">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">primary</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="primary-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">primary-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="primary-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">primary-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="primary-hover">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">primary-hover</span>
-                <span class="swatch__desc">Primary hover state</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="success">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">success</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="success-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">success-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="success-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">success-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-          <li>
-            <button class="swatch" type="button" data-token="primary-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">primary-text</span>
-                <span class="swatch__desc">Text / icon on primary</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="warning">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">warning</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="warning-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">warning-hover</span>
+              <span class="palette__value"></span>
+            </button>
+            <button class="palette__chip" type="button" data-token="warning-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">warning-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
-        </ul>
-
-        <h3 class="subhead">Secondary</h3>
-        <ul class="tokens">
-          <li>
-            <button class="swatch" type="button" data-token="secondary">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">secondary</span>
-                <span class="swatch__desc">Secondary button fill</span>
-                <span class="swatch__value"></span>
-              </span>
+          <li class="palette__row">
+            <button class="palette__chip" type="button" data-token="danger">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">danger</span>
+              <span class="palette__value"></span>
             </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="secondary-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">secondary-text</span>
-                <span class="swatch__desc">Text on secondary</span>
-                <span class="swatch__value"></span>
-              </span>
+            <button class="palette__chip" type="button" data-token="danger-hover">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">danger-hover</span>
+              <span class="palette__value"></span>
             </button>
-          </li>
-        </ul>
-
-        <h3 class="subhead">Feedback</h3>
-        <ul class="tokens">
-          <li>
-            <button class="swatch" type="button" data-token="success">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">success</span>
-                <span class="swatch__desc">Success / confirm</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="success-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">success-text</span>
-                <span class="swatch__desc">Text on success</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="warning">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">warning</span>
-                <span class="swatch__desc">Warning / caution</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="warning-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">warning-text</span>
-                <span class="swatch__desc">Text on warning</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="danger">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">danger</span>
-                <span class="swatch__desc">Delete / error</span>
-                <span class="swatch__value"></span>
-              </span>
-            </button>
-          </li>
-          <li>
-            <button class="swatch" type="button" data-token="danger-text">
-              <span class="swatch__chip" aria-hidden="true"></span>
-              <span class="swatch__meta">
-                <span class="swatch__name">danger-text</span>
-                <span class="swatch__desc">Text on danger</span>
-                <span class="swatch__value"></span>
-              </span>
+            <button class="palette__chip" type="button" data-token="danger-active">
+              <span class="palette__color" aria-hidden="true"></span>
+              <span class="palette__name">danger-active</span>
+              <span class="palette__value"></span>
             </button>
           </li>
         </ul>

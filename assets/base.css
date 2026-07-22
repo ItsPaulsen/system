@@ -329,92 +329,71 @@ h2 {
   margin: 0 0 1.25rem;
 }
 
-/* Token grid */
-.tokens {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 0.75rem;
+/* Palette: one family per row (base, hover, active). Each chip is full-height
+   colour block + name + value. Rows stack vertically. */
+.palette {
   list-style: none;
   padding: 0;
   margin: 0;
-}
-
-.swatch {
   display: flex;
   flex-direction: column;
+  gap: 1.25rem;
+}
+
+.palette__row {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.palette__chip {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
   gap: 0.75rem;
-  padding: 0;
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  color: inherit;
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
-  border-radius: var(--radius);
-  overflow: hidden;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
-  font: inherit;
-  color: inherit;
-  text-align: left;
-  width: 100%;
   transition: border-color 0.15s ease;
 }
 
-.swatch:hover {
+.palette__chip:hover {
   border-color: var(--ui-border-hover);
 }
 
-.swatch:focus-visible {
+.palette__chip:focus-visible {
   outline: 2px solid var(--ui-ring);
   outline-offset: 2px;
 }
 
-.swatch__chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 64px;
+.palette__color {
+  width: 44px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--ui-border);
   background: var(--c);
 }
 
-/* Border-type tokens read clearer as an actual line than a filled block. */
-.swatch--line .swatch__chip {
-  background: var(--ui-bg);
-}
-
-.swatch--line .swatch__chip::after {
-  content: "";
-  width: 64%;
-  height: 2px;
-  background: var(--c);
-}
-
-.swatch__sample {
-  font-size: 1.125rem;
-  font-weight: 600;
-}
-
-.swatch__meta {
-  padding: 0 0.75rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+.palette__name {
+  font-size: 0.875rem;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.swatch__name {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.swatch__desc {
-  font-size: 0.875rem;
-  color: var(--ui-muted);
-}
-
-.swatch__value {
+.palette__value {
   font-family: var(--mono);
   font-size: 0.75rem;
   color: var(--ui-muted);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Subheads inside a section */
@@ -794,7 +773,6 @@ h2:has(+ .section-note),
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swatch,
   .palette__chip,
   .type-row,
   .token-chip,

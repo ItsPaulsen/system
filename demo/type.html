@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Type scale — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <p class="eyebrow">Demo · Design</p>
+        <h1>Type scale</h1>
+        <p class="lede">Resize — sizes step up at desktop.</p>
+        <p class="bp-indicator" data-bp-indicator aria-live="polite">—</p>
+      </header>
+
+      <ul class="type-list">
+        <li>
+          <button class="type-row" type="button" data-token="font-display-size">
+            <span class="type-row__sample t-display">Display</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-display-size</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="type-row" type="button" data-token="font-h1-size">
+            <span class="type-row__sample t-h1">Heading 1</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-h1-size</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="type-row" type="button" data-token="font-h2-size">
+            <span class="type-row__sample t-h2">Heading 2</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-h2-size</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="type-row" type="button" data-token="font-body-size">
+            <span class="type-row__sample t-body"
+              >Body — the quick brown fox jumps over the lazy dog.</span
+            >
+            <span class="type-row__meta">
+              <span class="type-row__name">font-body-size</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </button>
+        </li>
+        <li>
+          <button class="type-row" type="button" data-token="font-small-size">
+            <span class="type-row__sample t-small">Small — captions, labels, metadata.</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-small-size</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

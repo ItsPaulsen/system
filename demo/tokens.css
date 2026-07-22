@@ -1,0 +1,185 @@
+/* ── Per-project tokens (Demo brand). Two-tier: primitives → semantic. ── */
+:root {
+  /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
+  --bp-tablet: 640px;
+  --bp-desktop: 1024px;
+
+  /* Colours — one family per row. Rule: hover = base ±23 per channel,
+     active = base ±31. Direction: light bases subtract, dark bases add.
+     Overlay uses alpha bumps. */
+  --neutral-black: rgb(18 18 18);
+  --neutral-black-hover: rgb(41 41 41);
+  --neutral-black-active: rgb(49 49 49);
+  --neutral-gray-1: rgb(212 212 212);
+  --neutral-gray-1-hover: rgb(189 189 189);
+  --neutral-gray-1-active: rgb(181 181 181);
+  --neutral-gray-2: rgb(222 222 222);
+  --neutral-gray-2-hover: rgb(199 199 199);
+  --neutral-gray-2-active: rgb(191 191 191);
+  --neutral-gray-3: rgb(235 235 235);
+  --neutral-gray-3-hover: rgb(212 212 212);
+  --neutral-gray-3-active: rgb(204 204 204);
+  --neutral-gray-4: rgb(246 246 246);
+  --neutral-gray-4-hover: rgb(223 223 223);
+  --neutral-gray-4-active: rgb(215 215 215);
+  --neutral-white: rgb(255 255 255);
+  --neutral-white-hover: rgb(232 232 232);
+  --neutral-white-active: rgb(224 224 224);
+  --background-primary: rgb(255 255 255);
+  --background-primary-hover: rgb(232 232 232);
+  --background-primary-active: rgb(224 224 224);
+  --ink-primary: rgb(34 34 34);
+  --ink-primary-hover: rgb(57 57 57);
+  --ink-primary-active: rgb(65 65 65);
+  --ink-secondary: rgb(93 93 93);
+  --ink-secondary-hover: rgb(116 116 116);
+  --ink-secondary-active: rgb(124 124 124);
+  --ink-tertiary: rgb(133 133 133);
+  --ink-tertiary-hover: rgb(156 156 156);
+  --ink-tertiary-active: rgb(164 164 164);
+  --primary: rgb(122 78 234);
+  --primary-hover: rgb(145 101 255);
+  --primary-active: rgb(153 109 255);
+  --success: rgb(46 174 105);
+  --success-hover: rgb(69 197 128);
+  --success-active: rgb(77 205 136);
+  --warning: rgb(224 178 63);
+  --warning-hover: rgb(201 155 40);
+  --warning-active: rgb(193 147 32);
+  --danger: rgb(224 60 44);
+  --danger-hover: rgb(247 83 67);
+  --danger-active: rgb(255 91 75);
+  --focus: rgb(48 140 218);
+  --focus-hover: rgb(71 163 241);
+  --focus-active: rgb(79 171 249);
+  --overlay: rgb(16 17 22 / 0.45);
+  --overlay-hover: rgb(16 17 22 / 0.56);
+  --overlay-active: rgb(16 17 22 / 0.6);
+
+  /* Type primitives — size scale */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+  /* Type primitives — weight & tracking */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --tracking-tight: -0.02em;
+
+  /* Type semantics — size + line-height per role.
+     Line-height is px on the 4px grid, so it never lands on a sub-pixel. */
+  --font-display-size: var(--text-4xl);
+  --font-display-leading: 40px;
+  --font-h1-size: var(--text-3xl);
+  --font-h1-leading: 36px;
+  --font-h2-size: var(--text-2xl);
+  --font-h2-leading: 28px;
+  --font-body-size: var(--text-base);
+  --font-body-leading: 24px;
+  --font-small-size: var(--text-sm);
+  --font-small-leading: 20px;
+
+  /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
+  --container-max: 1200px;
+  --grid-columns: 4;
+  --grid-gutter: 16px;
+  --grid-margin: 16px;
+
+  /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-48: 3rem;
+  --space-64: 4rem;
+
+  /* Radii — on the spacing rhythm (8/16/24) */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* Shadows (Tailwind/shadcn scale — layered for realistic depth) */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
+@media (min-width: 640px) {
+  :root {
+    --grid-columns: 12;
+    --grid-gutter: 20px;
+    --grid-margin: 24px;
+  }
+}
+
+/* Desktop ≥1024 — wider margins, type scales up */
+@media (min-width: 1024px) {
+  :root {
+    --grid-margin: 32px;
+    --font-display-size: var(--text-5xl);
+    --font-display-leading: 56px;
+    --font-h1-size: var(--text-4xl);
+    --font-h1-leading: 44px;
+    --font-h2-size: var(--text-3xl);
+    --font-h2-leading: 36px;
+  }
+}
+
+/* Dark mode */
+:root[data-theme="dark"] {
+  /* Dark theme: neutrals invert (now dark bases → states lighten toward white),
+     inks flip to light bases → states darken toward black. */
+  --background-primary: rgb(32 32 32);
+  --background-primary-hover: rgb(55 55 55);
+  --background-primary-active: rgb(63 63 63);
+  --neutral-gray-1: rgb(100 100 100);
+  --neutral-gray-1-hover: rgb(123 123 123);
+  --neutral-gray-1-active: rgb(131 131 131);
+  --neutral-gray-2: rgb(84 84 84);
+  --neutral-gray-2-hover: rgb(107 107 107);
+  --neutral-gray-2-active: rgb(115 115 115);
+  --neutral-gray-3: rgb(76 76 76);
+  --neutral-gray-3-hover: rgb(99 99 99);
+  --neutral-gray-3-active: rgb(107 107 107);
+  --neutral-gray-4: rgb(67 67 67);
+  --neutral-gray-4-hover: rgb(90 90 90);
+  --neutral-gray-4-active: rgb(98 98 98);
+  --ink-primary: rgb(245 245 245);
+  --ink-primary-hover: rgb(222 222 222);
+  --ink-primary-active: rgb(214 214 214);
+  --ink-secondary: rgb(195 195 195);
+  --ink-secondary-hover: rgb(172 172 172);
+  --ink-secondary-active: rgb(164 164 164);
+  --ink-tertiary: rgb(149 149 149);
+  --ink-tertiary-hover: rgb(126 126 126);
+  --ink-tertiary-active: rgb(118 118 118);
+  --primary: rgb(150 108 245);
+  --primary-hover: rgb(173 131 255);
+  --primary-active: rgb(181 139 255);
+  --success: rgb(84 195 132);
+  --success-hover: rgb(107 218 155);
+  --success-active: rgb(115 226 163);
+  --danger: rgb(240 90 68);
+  --danger-hover: rgb(255 113 91);
+  --danger-active: rgb(255 121 99);
+  --warning: rgb(235 210 130);
+  --warning-hover: rgb(212 187 107);
+  --warning-active: rgb(204 179 99);
+  --overlay: rgb(0 0 0 / 0.64);
+  --overlay-hover: rgb(0 0 0 / 0.75);
+  --overlay-active: rgb(0 0 0 / 0.79);
+
+  /* Light shadows vanish on dark, so go darker/stronger as elevation rises */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}

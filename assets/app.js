@@ -84,15 +84,33 @@ function injectNav() {
   setTheme(currentTheme());
 }
 
-// Build the sidebar from the page's sections. Each <section data-nav-group="…"
-// aria-labelledby="…"> becomes a link under its group, in document order.
-function injectSidebar() {
-  const sections = document.querySelectorAll("section[data-nav-group][aria-labelledby]");
-  if (!sections.length || document.querySelector(".sidebar")) return;
+// The demo project's page nav. Each entry is a page; the current one is highlighted.
+// (One topic per page reads cleaner than one giant scrolling doc.)
+const DEMO_PAGES = [
+  {
+    group: "Foundations",
+    links: [
+      { label: "Introduction", href: "/demo/" },
+      { label: "Colors", href: "/demo/colors.html" },
+      { label: "Type scale", href: "/demo/type.html" },
+      { label: "Grid", href: "/demo/grid.html" },
+      { label: "Spacing", href: "/demo/spacing.html" },
+      { label: "Radii", href: "/demo/radii.html" },
+      { label: "Shadows", href: "/demo/shadows.html" }
+    ]
+  }
+];
 
-  // Build a centered shell that holds the sidebar and the content side by side,
-  // so the pair centers as one unit (shadcn-style) instead of the content
-  // drifting within the leftover space beside a viewport-pinned sidebar.
+function isCurrentPage(href) {
+  const here = location.pathname.replace(/\/index\.html$/, "/");
+  const there = href.replace(/\/index\.html$/, "/");
+  return here === there;
+}
+
+// Build the sidebar from DEMO_PAGES. Wrap the content in a shell so the sidebar
+// can sit beside it as a sticky left column (shadcn-style layout).
+function injectSidebar() {
+  if (document.querySelector(".sidebar")) return;
   const wrap = document.querySelector(".wrap");
   let region;
   if (wrap && !wrap.closest(".content-region")) {
@@ -105,46 +123,29 @@ function injectSidebar() {
     shell.appendChild(region);
   }
 
-  const groups = [];
-  sections.forEach((section) => {
-    const name = section.dataset.navGroup;
-    const headingId = section.getAttribute("aria-labelledby");
-    const heading = document.getElementById(headingId);
-    if (!heading) return;
-    let group = groups.find((g) => g.name === name);
-    if (!group) {
-      group = { name, links: [] };
-      groups.push(group);
-    }
-    group.links.push({ id: headingId, label: heading.textContent.trim() });
-  });
-
   const aside = document.createElement("aside");
   aside.className = "sidebar";
-  aside.innerHTML = groups
-    .map(
-      (g) => `
+  aside.innerHTML = DEMO_PAGES.map(
+    (g) => `
       <div class="sidebar__group">
-        <p class="sidebar__group-title">${g.name}</p>
+        <p class="sidebar__group-title">${g.group}</p>
         ${g.links
           .map(
-            (l) => `<a class="sidebar__link" href="#${l.id}" data-nav-link="${l.id}">${l.label}</a>`
+            (l) =>
+              `<a class="sidebar__link${isCurrentPage(l.href) ? " is-active" : ""}" href="${l.href}">${l.label}</a>`
           )
           .join("")}
       </div>`
-    )
-    .join("");
+  ).join("");
 
   const backdrop = document.createElement("div");
   backdrop.className = "sidebar-backdrop";
 
-  // Sidebar leads the shell (left column); backdrop stays body-level for the mobile drawer.
   const shell = region ? region.closest(".shell") : null;
   if (shell) shell.insertBefore(aside, region);
   else document.body.append(aside);
   document.body.append(backdrop);
   wireSidebar(aside, backdrop);
-  spyScroll(aside);
 }
 
 function wireSidebar(aside, backdrop) {
@@ -166,29 +167,6 @@ function wireSidebar(aside, backdrop) {
   aside.addEventListener("click", (e) => {
     if (e.target.closest(".sidebar__link")) close();
   });
-}
-
-// Highlight the sidebar link for whichever section is currently in view.
-function spyScroll(aside) {
-  const links = new Map(
-    [...aside.querySelectorAll("[data-nav-link]")].map((a) => [a.dataset.navLink, a])
-  );
-  const setActive = (id) => {
-    links.forEach((a, key) => a.classList.toggle("is-active", key === id));
-  };
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries.filter((e) => e.isIntersecting);
-      if (visible.length) {
-        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        setActive(visible[0].target.getAttribute("aria-labelledby"));
-      }
-    },
-    { rootMargin: `-${80}px 0px -60% 0px` }
-  );
-  document
-    .querySelectorAll("section[data-nav-group][aria-labelledby]")
-    .forEach((s) => observer.observe(s));
 }
 
 /* ── Token hydration ───────────────────────────────────────────────────── */
@@ -305,11 +283,9 @@ function refreshResponsive() {
 
 /* ── Init ──────────────────────────────────────────────────────────────── */
 
-function init() {
-  injectNav();
-  injectSidebar();
-  hydratePalette();
-  hydrateTokenChips();
+// Space bars + radius / shadow tiles — kept in a helper so theme changes can
+// re-run them (shadow values are theme-dependent).
+function hydratePreviews() {
   hydratePreview(".space-row", ".space-row__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");
     if (bar) bar.style.width = value;
@@ -320,6 +296,14 @@ function init() {
     const shadow = el.querySelector("[data-shadow-demo]");
     if (shadow) shadow.style.boxShadow = value;
   });
+}
+
+function init() {
+  injectNav();
+  injectSidebar();
+  hydratePalette();
+  hydrateTokenChips();
+  hydratePreviews();
   refreshResponsive();
 
   let frame;
@@ -332,6 +316,11 @@ function init() {
     const themeBtn = event.target.closest(".theme-toggle");
     if (themeBtn) {
       setTheme(currentTheme() === "dark" ? "light" : "dark");
+      // Re-read all token-driven previews so their swatches, values, and copy
+      // targets match the new theme.
+      refreshResponsive();
+      hydratePalette();
+      hydratePreviews();
       return;
     }
     const gridBtn = event.target.closest("[data-grid-toggle]");
@@ -346,8 +335,17 @@ function init() {
     }
     const cssBtn = event.target.closest("[data-copy-css]");
     if (cssBtn) {
-      const block = document.getElementById(cssBtn.dataset.copyCss);
-      if (block) copyText(dedent(block.textContent), "Copied all tokens");
+      const src = cssBtn.dataset.copyCss;
+      // Support both an element id (legacy) and a URL to fetch.
+      if (src.startsWith("/") || src.startsWith("http")) {
+        fetch(src)
+          .then((r) => r.text())
+          .then((text) => copyText(text.trim(), "Copied all tokens"))
+          .catch(() => toast("Copy failed"));
+      } else {
+        const block = document.getElementById(src);
+        if (block) copyText(dedent(block.textContent), "Copied all tokens");
+      }
       return;
     }
     const target = event.target.closest("[data-copy]");

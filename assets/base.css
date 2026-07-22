@@ -309,7 +309,7 @@ h1 {
   outline-offset: 2px;
 }
 
-section {
+section + section {
   margin-top: 3.5rem;
   padding-top: 3.5rem;
   border-top: 1px solid var(--ui-border);
@@ -324,9 +324,9 @@ h2 {
 
 .section-note {
   color: var(--ui-muted);
-  font-size: 1rem;
+  font-size: 0.875rem;
   max-width: var(--measure);
-  margin: 0 0 1.25rem;
+  margin: 0 0 1rem;
 }
 
 /* Palette: one family per row (base, hover, active). Each chip is full-height
@@ -407,7 +407,7 @@ h2 {
    a heading followed directly by content keeps the 0.75rem below. */
 h2:has(+ .section-note),
 .subhead:has(+ .section-note) {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0;
 }
 
 /* Breakpoint indicator */

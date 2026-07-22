@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Grid — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <p class="eyebrow">Demo · Design</p>
+        <h1>Grid</h1>
+        <p class="lede">Toggle the overlay; resize to watch it adapt.</p>
+        <div class="toolbar">
+          <button class="btn" type="button" data-grid-toggle aria-pressed="false">
+            Show grid overlay
+          </button>
+        </div>
+      </header>
+
+      <section>
+        <h3 class="subhead">Values (current breakpoint)</h3>
+        <ul class="token-scale">
+          <li>
+            <button class="token-chip" type="button" data-token="grid-columns">
+              <span class="token-chip__name">grid-columns</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="grid-gutter">
+              <span class="token-chip__name">grid-gutter</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="grid-margin">
+              <span class="token-chip__name">grid-margin</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="container-max">
+              <span class="token-chip__name">container-max</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="subhead">Breakpoints</h3>
+        <p class="section-note">Mobile, then tablet (≥640) and desktop (≥1024).</p>
+        <ul class="token-scale">
+          <li>
+            <button class="token-chip" type="button" data-token="bp-tablet">
+              <span class="token-chip__name">bp-tablet</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+          <li>
+            <button class="token-chip" type="button" data-token="bp-desktop">
+              <span class="token-chip__name">bp-desktop</span>
+              <span class="token-chip__value"></span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <div class="grid-overlay__inner">
+        <span class="grid-overlay__margin grid-overlay__margin--left">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <span class="grid-overlay__margin grid-overlay__margin--right">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <div class="grid-overlay__cols" data-grid-cols></div>
+      </div>
+    </div>
+
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

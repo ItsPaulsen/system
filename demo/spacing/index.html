@@ -35,64 +35,82 @@
         </div>
       </header>
 
-      <ul class="space-list">
-        <li>
-          <button class="space-row" type="button" data-token="space-4">
-            <span class="space-row__name">space-4</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+      <article class="token-list">
+        <!-- Rendered rows share the token-list row markup; the copy icon is the
+             same SVG pair as the preview cards to keep the shell dependency-free. -->
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-4">
+          <span class="token-list__name">var(--space-4)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-4)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-8">
-            <span class="space-row__name">space-8</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-8">
+          <span class="token-list__name">var(--space-8)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-8)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-12">
-            <span class="space-row__name">space-12</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-12">
+          <span class="token-list__name">var(--space-12)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-12)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-16">
-            <span class="space-row__name">space-16</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-16">
+          <span class="token-list__name">var(--space-16)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-16)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-24">
-            <span class="space-row__name">space-24</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-24">
+          <span class="token-list__name">var(--space-24)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-24)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-32">
-            <span class="space-row__name">space-32</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-32">
+          <span class="token-list__name">var(--space-32)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-32)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-48">
-            <span class="space-row__name">space-48</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-48">
+          <span class="token-list__name">var(--space-48)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-48)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-        <li>
-          <button class="space-row" type="button" data-token="space-64">
-            <span class="space-row__name">space-64</span>
-            <span class="space-row__bar" data-space-bar></span>
-            <span class="space-row__value"></span>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="token-list__row" data-token="space-64">
+          <span class="token-list__name">var(--space-64)</span>
+          <span class="token-list__bar" data-space-bar></span>
+          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--space-64)">
+            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </button>
-        </li>
-      </ul>
+        </div>
+      </article>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

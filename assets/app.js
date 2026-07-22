@@ -257,20 +257,6 @@ function hydratePalette() {
   });
 }
 
-// Fill compact token chips (e.g. the size scale) from their :root token.
-function hydrateTokenChips() {
-  const rootStyle = getComputedStyle(document.documentElement);
-  document.querySelectorAll(".token-chip").forEach((chip) => {
-    const { token } = chip.dataset;
-    if (!token) return;
-    const value = rootStyle.getPropertyValue(`--${token}`).trim();
-    if (!value) return;
-    const valueEl = chip.querySelector(".token-chip__value");
-    if (valueEl) valueEl.textContent = value;
-    chip.dataset.copy = value;
-  });
-}
-
 // Generic: fill a copyable preview element from its :root token, then optionally style a preview.
 function hydratePreview(selector, valueSelector, apply) {
   const rootStyle = getComputedStyle(document.documentElement);
@@ -353,7 +339,8 @@ function buildGridOverlay() {
 
 function refreshResponsive() {
   hydrateType();
-  hydrateTokenChips();
+  // Grid page tokens (--grid-columns etc.) change with viewport, so re-hydrate.
+  hydratePreviews();
   buildGridOverlay();
   updateBreakpoint();
 }
@@ -363,15 +350,16 @@ function refreshResponsive() {
 // Space bars + radius / shadow tiles — kept in a helper so theme changes can
 // re-run them (shadow values are theme-dependent).
 function hydratePreviews() {
-  hydratePreview(".space-row", ".space-row__value", (el, value) => {
+  // Spacing rows share the preview-card copy-button pattern (var(--token) copy,
+  // no click-to-copy on the row itself); the bar's width visualises the token.
+  hydratePreview(".token-list__row", ".token-list__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");
     if (bar) bar.style.width = value;
-  });
-  hydratePreview(".tile", ".tile__value", (el, value) => {
-    const radius = el.querySelector("[data-radius-demo]");
-    if (radius) radius.style.borderRadius = value;
-    const shadow = el.querySelector("[data-shadow-demo]");
-    if (shadow) shadow.style.boxShadow = value;
+    delete el.dataset.copy;
+    const btn = el.querySelector("[data-copy-declaration]");
+    if (btn && el.dataset.token) {
+      btn.dataset.declaration = `var(--${el.dataset.token})`;
+    }
   });
   // Preview cards — copy handled by an in-card button, so wipe the card-level
   // data-copy hydratePreview sets. The button gets the full declaration.
@@ -426,7 +414,6 @@ function init() {
   injectSidebar();
   injectPagination();
   hydratePalette();
-  hydrateTokenChips();
   hydratePreviews();
   refreshResponsive();
 

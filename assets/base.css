@@ -15,6 +15,7 @@
   /* Dark theme (default) — pure greyscale, no colour tints */
   --ui-bg: #0a0a0a;
   --ui-surface: #262626;
+  --ui-surface-hover: #2e2e2e;
   --ui-surface-active: #404040;
   --ui-surface-2: #181818;
   --ui-border: #262626;
@@ -33,6 +34,7 @@
   color-scheme: light;
   --ui-bg: #fff;
   --ui-surface: #f5f5f5;
+  --ui-surface-hover: #ebebeb;
   --ui-surface-active: #f5f5f5;
   --ui-surface-2: #fff;
   --ui-border: #e5e5e5;
@@ -395,11 +397,18 @@ body {
 }
 
 .site-head {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
   justify-content: space-between;
+}
+
+/* Divider only when the page has a subhead below — no leading heading (e.g.
+   Spacing) → no floating divider above the content. */
+body:has(.subhead) .site-head {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--ui-border);
 }
 
 .site-head__body {
@@ -469,21 +478,23 @@ h1 {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 0.625rem;
   font: inherit;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--ui-text);
   background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
+  border: 0;
   border-radius: 8px;
-  padding: 0.25rem 0.625rem;
-  line-height: 22px;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .btn:hover {
-  border-color: var(--ui-border-hover);
+  background: var(--ui-surface-hover);
 }
 
 .btn:focus-visible {
@@ -601,10 +612,7 @@ pre code {
 /* Names are CSS custom properties — prefix "--" makes that clear at a glance.
    Sub-chips (hover / active) show just the suffix, so no prefix there. */
 .palette__name::before,
-.token-chip__name::before,
-.type-row__name::before,
-.space-row__name::before,
-.tile__name::before {
+.type-row__name::before {
   content: "--";
 }
 
@@ -789,165 +797,32 @@ h2:has(+ .section-note),
   font-weight: var(--font-caption-small-emphasized-weight);
 }
 
-/* Compact copyable token chips (size scale, etc.) */
-.token-scale {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.5rem;
-}
-
-.token-chip {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  width: 100%;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  cursor: default;
-}
-
-.token-chip__name {
-  font-size: 0.875rem;
-}
-
-.token-chip__value {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-}
-
-/* Spacing scale */
-.space-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.space-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
-  padding: 0.6rem 0.875rem;
-  cursor: default;
-}
-
-.space-row__name {
-  flex: 0 0 5rem;
-  font-size: 0.875rem;
-}
-
-.space-row__bar {
-  height: 14px;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--ui-ring) 45%, transparent);
-}
-
-.space-row__value {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-}
-
-/* Preview tiles (radii, shadows) */
-.tile-grid {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 0.75rem;
-}
-
-.tile {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  width: 100%;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--radius);
-  padding: 1rem;
-  cursor: default;
-}
-
-.tile__demo {
-  height: 64px;
-  margin-bottom: 0.4rem;
-  background: var(--ui-surface-2);
-  border: 1px solid var(--ui-border);
-  border-radius: var(--radius-sm, 8px);
-}
-
-.tile__name,
-.tile__label {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.tile__value {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tile__desc {
-  font-size: 0.8125rem;
-  color: var(--ui-muted);
-  margin-top: 0.15rem;
-}
-
 /* Prev/next docs pagination — shadcn-style 64px row with 24px gap above. */
 .pagination {
   display: flex;
   align-items: center;
   gap: 1rem;
   height: 64px;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 }
 
 .pagination__link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.25rem 0.625rem;
-  line-height: 22px;
+  height: 32px;
+  padding: 0 0.625rem;
   color: var(--ui-text);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
   background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
   border-radius: 8px;
-  transition: border-color 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 
 .pagination__link:hover {
-  border-color: var(--ui-border-hover);
+  background: var(--ui-surface-hover);
 }
 
 .pagination__link:focus-visible {
@@ -957,6 +832,46 @@ h2:has(+ .section-note),
 
 .pagination__link--next {
   margin-left: auto;
+}
+
+/* Single-card token list — one bordered box, rows separated by dividers.
+   Used on the Spacing page. Each row: mono name / value bar / copy button. */
+.token-list {
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+}
+
+.token-list__row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem 0.5rem 1rem;
+  min-height: 48px;
+}
+
+.token-list__row + .token-list__row {
+  border-top: 1px solid var(--ui-border);
+}
+
+.token-list__name {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  min-width: 8rem;
+}
+
+.token-list__bar {
+  flex: none;
+  height: 8px;
+  background: var(--ui-text);
+  border-radius: 4px;
+}
+
+.token-list__value {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ui-muted);
 }
 
 /* Preview blocks — heading + description above, boxed demo + token below. */
@@ -1040,6 +955,12 @@ h2:has(+ .section-note),
 
 .preview-card__copy.is-copied .icon-check {
   display: block;
+}
+
+/* Copy button reuse inside .token-list rows — swap absolute for inline layout. */
+.token-list__row .preview-card__copy {
+  position: static;
+  margin-left: auto;
 }
 
 .preview-card__chip {

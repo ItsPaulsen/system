@@ -33,78 +33,54 @@
           </div>
           <p class="lede">Toggle the overlay; resize to watch it adapt.</p>
           <div class="toolbar">
-            <button class="btn" type="button" data-grid-toggle aria-pressed="false">
-              Show grid overlay
-            </button>
+            <label class="switch">
+              <button
+                class="switch__toggle"
+                type="button"
+                role="switch"
+                aria-checked="false"
+                data-grid-toggle
+                aria-label="Toggle grid overlay"
+              ></button>
+              <span class="switch__label">Grid overlay</span>
+            </label>
           </div>
         </div>
       </header>
 
-      <h3 class="subhead">Values (current breakpoint)</h3>
-      <p class="section-note">These update with the viewport width.</p>
-      <article class="token-list">
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="grid-columns">
-          <span class="token-list__name">var(--grid-columns)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--grid-columns)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
-        </div>
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="grid-gutter">
-          <span class="token-list__name">var(--grid-gutter)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--grid-gutter)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
-        </div>
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="grid-margin">
-          <span class="token-list__name">var(--grid-margin)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--grid-margin)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
-        </div>
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="container-max">
-          <span class="token-list__name">var(--container-max)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--container-max)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
-        </div>
-      </article>
-
-      <h3 class="subhead">Breakpoints</h3>
-      <p class="section-note">Three tiers. The grid columns and gutters adapt at each.</p>
-      <article class="token-list">
+      <h3 class="subhead">Values</h3>
+      <p class="section-note">Switch tabs to preview values at each breakpoint.</p>
+      <div class="tabs" role="tablist" data-grid-tabs>
+        <button class="tabs__tab" type="button" role="tab" data-tab="mobile" aria-selected="false">
+          Mobile
+        </button>
+        <button class="tabs__tab" type="button" role="tab" data-tab="tablet" aria-selected="false">
+          Tablet
+        </button>
+        <button class="tabs__tab" type="button" role="tab" data-tab="desktop" aria-selected="false">
+          Desktop
+        </button>
+      </div>
+      <article class="token-list" data-grid-panel>
         <div class="token-list__row">
-          <span class="token-list__name">Mobile</span>
-          <span class="token-list__value">&lt; 640px</span>
+          <span class="token-list__name" data-grid-key="name"></span>
+          <span class="token-list__value" data-grid-key="threshold"></span>
         </div>
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="bp-tablet">
-          <span class="token-list__name">var(--bp-tablet)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--bp-tablet)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
+        <div class="token-list__row">
+          <span class="token-list__name">var(--grid-columns)</span>
+          <span class="token-list__value" data-grid-key="grid-columns"></span>
         </div>
-        <!-- prettier-ignore -->
-        <div class="token-list__row" data-token="bp-desktop">
-          <span class="token-list__name">var(--bp-desktop)</span>
-          <span class="token-list__value"></span>
-          <button class="preview-card__copy" type="button" data-copy-declaration aria-label="Copy var(--bp-desktop)">
-            <svg class="icon-copy" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-            <svg class="icon-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          </button>
+        <div class="token-list__row">
+          <span class="token-list__name">var(--grid-gutter)</span>
+          <span class="token-list__value" data-grid-key="grid-gutter"></span>
+        </div>
+        <div class="token-list__row">
+          <span class="token-list__name">var(--grid-margin)</span>
+          <span class="token-list__value" data-grid-key="grid-margin"></span>
+        </div>
+        <div class="token-list__row">
+          <span class="token-list__name">var(--container-max)</span>
+          <span class="token-list__value" data-grid-key="container-max"></span>
         </div>
       </article>
     </div>

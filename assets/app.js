@@ -65,7 +65,15 @@ function currentTheme() {
 }
 
 function setTheme(theme) {
-  document.documentElement.dataset.theme = theme;
+  // Suppress transitions across the swap — otherwise every element with a
+  // colour transition (buttons, pagination, cards) animates its background
+  // change and reads as a flash.
+  const root = document.documentElement;
+  root.classList.add("no-transitions");
+  root.dataset.theme = theme;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => root.classList.remove("no-transitions"));
+  });
   try {
     localStorage.setItem("theme", theme);
   } catch {
@@ -347,33 +355,69 @@ function refreshResponsive() {
 
 /* ── Init ──────────────────────────────────────────────────────────────── */
 
-// Space bars + radius / shadow tiles — kept in a helper so theme changes can
-// re-run them (shadow values are theme-dependent).
+// Token-driven demos — space bars, radius/shadow chips. Grouped so a theme
+// switch or viewport change can re-run them (shadow values are theme-dependent).
 function hydratePreviews() {
-  // Spacing rows share the preview-card copy-button pattern (var(--token) copy,
-  // no click-to-copy on the row itself); the bar's width visualises the token.
   hydratePreview(".token-list__row", ".token-list__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");
     if (bar) bar.style.width = value;
     delete el.dataset.copy;
-    const btn = el.querySelector("[data-copy-declaration]");
-    if (btn && el.dataset.token) {
-      btn.dataset.declaration = `var(--${el.dataset.token})`;
-    }
   });
-  // Preview cards — copy handled by an in-card button, so wipe the card-level
-  // data-copy hydratePreview sets. The button gets the full declaration.
   hydratePreview(".preview-card", ".preview-card__value", (el, value) => {
     const shadow = el.querySelector("[data-shadow-demo]");
     if (shadow) shadow.style.boxShadow = value;
     const radius = el.querySelector("[data-radius-demo]");
     if (radius) radius.style.borderRadius = value;
     delete el.dataset.copy;
-    const btn = el.querySelector("[data-copy-declaration]");
-    if (btn && el.dataset.token) {
-      btn.dataset.declaration = `var(--${el.dataset.token})`;
-    }
   });
+}
+
+// Grid breakpoint tabs — swap the values shown without needing a viewport
+// resize. Values mirror the media queries in demo/tokens.css.
+const GRID_BREAKPOINTS = {
+  mobile: {
+    name: "Mobile",
+    threshold: "< 640px",
+    "grid-columns": "4",
+    "grid-gutter": "16px",
+    "grid-margin": "16px",
+    "container-max": "1200px"
+  },
+  tablet: {
+    name: "var(--bp-tablet)",
+    threshold: "640px",
+    "grid-columns": "12",
+    "grid-gutter": "20px",
+    "grid-margin": "24px",
+    "container-max": "1200px"
+  },
+  desktop: {
+    name: "var(--bp-desktop)",
+    threshold: "1024px",
+    "grid-columns": "12",
+    "grid-gutter": "20px",
+    "grid-margin": "32px",
+    "container-max": "1200px"
+  }
+};
+
+function initGridTabs() {
+  const tabList = document.querySelector("[data-grid-tabs]");
+  const panel = document.querySelector("[data-grid-panel]");
+  if (!tabList || !panel) return;
+  const tabs = tabList.querySelectorAll(".tabs__tab");
+  const setActive = (name) => {
+    const values = GRID_BREAKPOINTS[name];
+    if (!values) return;
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+    panel.querySelectorAll("[data-grid-key]").forEach((el) => {
+      el.textContent = values[el.dataset.gridKey] || "";
+    });
+  };
+  tabs.forEach((t) => t.addEventListener("click", () => setActive(t.dataset.tab)));
+  // Default to the first tab so entering the page always starts here.
+  const first = tabs[0]?.dataset.tab;
+  if (first) setActive(first);
 }
 
 // Lucide arrow-right at 16px (arrow-left is mirrored via CSS transform).
@@ -415,6 +459,7 @@ function init() {
   injectPagination();
   hydratePalette();
   hydratePreviews();
+  initGridTabs();
   refreshResponsive();
 
   let frame;
@@ -440,8 +485,7 @@ function init() {
       if (!overlay) return;
       const show = overlay.hidden;
       overlay.hidden = !show;
-      gridBtn.setAttribute("aria-pressed", String(show));
-      gridBtn.textContent = show ? "Hide grid overlay" : "Show grid overlay";
+      gridBtn.setAttribute("aria-checked", String(show));
       return;
     }
     const cssBtn = event.target.closest("[data-copy-css]");
@@ -452,18 +496,6 @@ function init() {
       fetch(src)
         .then((r) => r.text())
         .then((text) => copyText(filter ? filterTokens(text, filter) : text.trim(), label))
-        .catch(() => toast("Copy failed"));
-      return;
-    }
-    const copyDecl = event.target.closest("[data-copy-declaration]");
-    if (copyDecl && copyDecl.dataset.declaration) {
-      navigator.clipboard
-        .writeText(copyDecl.dataset.declaration)
-        .then(() => {
-          copyDecl.classList.add("is-copied");
-          clearTimeout(copyDecl._copyTimer);
-          copyDecl._copyTimer = setTimeout(() => copyDecl.classList.remove("is-copied"), 2000);
-        })
         .catch(() => toast("Copy failed"));
       return;
     }

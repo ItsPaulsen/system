@@ -44,7 +44,7 @@
           <div class="type-row" data-token="font-headline-large">
             <span class="type-row__sample t-headline-large">Headline large</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-headline-large</span>
+              <span class="type-row__name">var(--font-headline-large)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -55,7 +55,7 @@
           <div class="type-row" data-token="font-headline-medium">
             <span class="type-row__sample t-headline-medium">Headline medium</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-headline-medium</span>
+              <span class="type-row__name">var(--font-headline-medium)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -66,7 +66,7 @@
           <div class="type-row" data-token="font-headline-small">
             <span class="type-row__sample t-headline-small">Headline small</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-headline-small</span>
+              <span class="type-row__name">var(--font-headline-small)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -82,7 +82,7 @@
           <div class="type-row" data-token="font-title-large">
             <span class="type-row__sample t-title-large">Title large</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-title-large</span>
+              <span class="type-row__name">var(--font-title-large)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -93,7 +93,7 @@
           <div class="type-row" data-token="font-title-medium">
             <span class="type-row__sample t-title-medium">Title medium</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-title-medium</span>
+              <span class="type-row__name">var(--font-title-medium)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -104,7 +104,7 @@
           <div class="type-row" data-token="font-title-small">
             <span class="type-row__sample t-title-small">Title small</span>
             <span class="type-row__meta">
-              <span class="type-row__name">font-title-small</span>
+              <span class="type-row__name">var(--font-title-small)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -115,7 +115,7 @@
 
       <h3 class="subhead">Body</h3>
       <p class="section-note">
-        Paragraphs and running text. Each tier has an <code>-emphasized</code> variant at weight 500
+        Paragraphs and running text. Each tier has an <code>-emphasized</code> variant at weight 600
         (shown bold inline below).
       </p>
       <ul class="type-list">
@@ -126,7 +126,7 @@
               over the lazy dog.</span
             >
             <span class="type-row__meta">
-              <span class="type-row__name">font-body-large</span>
+              <span class="type-row__name">var(--font-body-large)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -140,7 +140,7 @@
               over the lazy dog.</span
             >
             <span class="type-row__meta">
-              <span class="type-row__name">font-body-medium</span>
+              <span class="type-row__name">var(--font-body-medium)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -154,7 +154,7 @@
               over the lazy dog.</span
             >
             <span class="type-row__meta">
-              <span class="type-row__name">font-body-small</span>
+              <span class="type-row__name">var(--font-body-small)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -175,7 +175,7 @@
               metadata.</span
             >
             <span class="type-row__meta">
-              <span class="type-row__name">font-caption-medium</span>
+              <span class="type-row__name">var(--font-caption-medium)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -189,7 +189,7 @@
               hints.</span
             >
             <span class="type-row__meta">
-              <span class="type-row__name">font-caption-small</span>
+              <span class="type-row__name">var(--font-caption-small)</span>
               <span data-spec="size"></span>
               <span data-spec="lh"></span>
               <span data-spec="weight"></span>
@@ -204,15 +204,15 @@
         component. Example: a hero uses <code>headline-medium</code> (48px) on desktop and drops to
         <code>title-large</code> (32px) on mobile.
       </p>
-      <pre><code>.hero-title {
-  font-size: var(--font-headline-medium-size);
-  line-height: var(--font-headline-medium-lh);
+      <pre><code><span class="tok-selector">.hero-title</span> {
+  <span class="tok-prop">font-size</span>: <span class="tok-fn">var</span>(<span class="tok-var">--font-headline-medium-size</span>);
+  <span class="tok-prop">line-height</span>: <span class="tok-fn">var</span>(<span class="tok-var">--font-headline-medium-lh</span>);
 }
 
-@media (max-width: 640px) {
-  .hero-title {
-    font-size: var(--font-title-large-size);
-    line-height: var(--font-title-large-lh);
+<span class="tok-key">@media</span> (<span class="tok-prop">max-width</span>: <span class="tok-str">640px</span>) {
+  <span class="tok-selector">.hero-title</span> {
+    <span class="tok-prop">font-size</span>: <span class="tok-fn">var</span>(<span class="tok-var">--font-title-large-size</span>);
+    <span class="tok-prop">line-height</span>: <span class="tok-fn">var</span>(<span class="tok-var">--font-title-large-lh</span>);
   }
 }</code></pre>
     </div>

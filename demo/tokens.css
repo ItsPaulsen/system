@@ -91,32 +91,32 @@
   --font-body-large-weight: 400;
   --font-body-large-emphasized-size: 1.25rem;
   --font-body-large-emphasized-lh: 1.5;
-  --font-body-large-emphasized-weight: 500;
+  --font-body-large-emphasized-weight: 600;
   --font-body-medium-size: 1.125rem; /* 18px */
   --font-body-medium-lh: 1.5;
   --font-body-medium-weight: 400;
   --font-body-medium-emphasized-size: 1.125rem;
   --font-body-medium-emphasized-lh: 1.5;
-  --font-body-medium-emphasized-weight: 500;
+  --font-body-medium-emphasized-weight: 600;
   --font-body-small-size: 1rem; /* 16px */
   --font-body-small-lh: 1.5;
   --font-body-small-weight: 400;
   --font-body-small-emphasized-size: 1rem;
   --font-body-small-emphasized-lh: 1.5;
-  --font-body-small-emphasized-weight: 500;
+  --font-body-small-emphasized-weight: 600;
 
   --font-caption-medium-size: 0.875rem; /* 14px */
   --font-caption-medium-lh: 1.5;
   --font-caption-medium-weight: 400;
   --font-caption-medium-emphasized-size: 0.875rem;
   --font-caption-medium-emphasized-lh: 1.5;
-  --font-caption-medium-emphasized-weight: 500;
+  --font-caption-medium-emphasized-weight: 600;
   --font-caption-small-size: 0.75rem; /* 12px */
   --font-caption-small-lh: 1.5;
   --font-caption-small-weight: 400;
   --font-caption-small-emphasized-size: 0.75rem;
   --font-caption-small-emphasized-lh: 1.5;
-  --font-caption-small-emphasized-weight: 500;
+  --font-caption-small-emphasized-weight: 600;
 
   /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
   --container-max: 1200px;

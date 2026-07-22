@@ -20,18 +20,71 @@
     <div class="wrap">
       <header class="site-head">
         <div class="site-head__body">
-          <h1>Demo project</h1>
-          <p class="lede">
-            A style guide for a project. One page per foundation — pick a topic from the sidebar.
-            Click any value on the Colors page to copy it.
-          </p>
-          <div class="toolbar">
+          <div class="site-head__title">
+            <h1>Demo project</h1>
             <button class="btn" type="button" data-copy-css="/demo/tokens.css">
               Copy All Tokens
             </button>
           </div>
+          <p class="lede">
+            A design system for a single project. One CSS file to drop into your project, one page
+            per foundation, and every value is a copyable token.
+          </p>
         </div>
       </header>
+
+      <h3 class="subhead">What's inside</h3>
+      <article class="token-list">
+        <a class="token-list__row" href="/demo/colors/">
+          <span class="token-list__name">Colors</span>
+          <span class="token-list__value">Base, hover, active per family</span>
+        </a>
+        <a class="token-list__row" href="/demo/typography/">
+          <span class="token-list__name">Typography</span>
+          <span class="token-list__value">Headline, Title, Body, Caption</span>
+        </a>
+        <a class="token-list__row" href="/demo/grid/">
+          <span class="token-list__name">Grid</span>
+          <span class="token-list__value">Columns, gutters, margins</span>
+        </a>
+        <a class="token-list__row" href="/demo/spacing/">
+          <span class="token-list__name">Spacing</span>
+          <span class="token-list__value">4px base scale</span>
+        </a>
+        <a class="token-list__row" href="/demo/radii/">
+          <span class="token-list__name">Radii</span>
+          <span class="token-list__value">Corner rounding scale</span>
+        </a>
+        <a class="token-list__row" href="/demo/shadows/">
+          <span class="token-list__name">Shadows</span>
+          <span class="token-list__value">Elevation depth scale</span>
+        </a>
+      </article>
+
+      <h3 class="subhead">How to use</h3>
+      <p class="section-note">
+        The whole project ships as one <code>tokens.css</code>. Import it once and reference
+        anything with <code>var(--…)</code>.
+      </p>
+      <pre><code><span class="tok-key">@import</span> <span class="tok-fn">url</span>(<span class="tok-str">"tokens.css"</span>);
+
+<span class="tok-selector">.card</span> {
+  <span class="tok-prop">background</span>: <span class="tok-fn">var</span>(<span class="tok-var">--background-primary</span>);
+  <span class="tok-prop">border-radius</span>: <span class="tok-fn">var</span>(<span class="tok-var">--radius-md</span>);
+  <span class="tok-prop">box-shadow</span>: <span class="tok-fn">var</span>(<span class="tok-var">--shadow-sm</span>);
+  <span class="tok-prop">padding</span>: <span class="tok-fn">var</span>(<span class="tok-var">--space-24</span>);
+}</code></pre>
+
+      <h3 class="subhead">Layers</h3>
+      <p class="section-note">
+        Two tiers: primitives set the raw values, semantic names give them meaning.
+      </p>
+      <dl class="layer-list">
+        <dt>Primitives</dt>
+        <dd>--neutral-*, --primary, --space-*, --shadow-*</dd>
+        <dt>Semantic</dt>
+        <dd>--background-*, --ink-*, --focus, --overlay</dd>
+      </dl>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

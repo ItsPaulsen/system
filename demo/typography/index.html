@@ -22,7 +22,7 @@
         <div class="site-head__body">
           <h1>Typography</h1>
           <p class="lede">
-            Three tiers — Headline, Body, Caption. Sizes stay fixed at every breakpoint.
+            Four tiers — Headline, Title, Body, Caption. Sizes stay fixed at every breakpoint.
           </p>
         </div>
         <button class="btn" type="button" data-copy-css="/demo/tokens.css">Copy Tokens</button>
@@ -66,13 +66,55 @@
         </li>
       </ul>
 
+      <h3 class="subhead">Title</h3>
+      <p class="section-note">Section titles, article headers, cards.</p>
+      <ul class="type-list">
+        <li>
+          <div class="type-row" data-token="font-title-large">
+            <span class="type-row__sample t-title-large">Title large</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-title-large</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-title-medium">
+            <span class="type-row__sample t-title-medium">Title medium</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-title-medium</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-title-small">
+            <span class="type-row__sample t-title-small">Title small</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-title-small</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+      </ul>
+
       <h3 class="subhead">Body</h3>
-      <p class="section-note">Paragraphs and running text.</p>
+      <p class="section-note">
+        Paragraphs and running text. Each tier has an <code>-emphasized</code> variant at weight 500
+        (shown bold inline below).
+      </p>
       <ul class="type-list">
         <li>
           <div class="type-row" data-token="font-body-large">
             <span class="type-row__sample t-body-large"
-              >Body large — the quick brown fox jumps over the lazy dog.</span
+              >Body large — <span class="t-body-large-emphasized">the quick brown fox</span> jumps
+              over the lazy dog.</span
             >
             <span class="type-row__meta">
               <span class="type-row__name">font-body-large</span>
@@ -85,7 +127,8 @@
         <li>
           <div class="type-row" data-token="font-body-medium">
             <span class="type-row__sample t-body-medium"
-              >Body medium — the quick brown fox jumps over the lazy dog.</span
+              >Body medium — <span class="t-body-medium-emphasized">the quick brown fox</span> jumps
+              over the lazy dog.</span
             >
             <span class="type-row__meta">
               <span class="type-row__name">font-body-medium</span>
@@ -98,7 +141,8 @@
         <li>
           <div class="type-row" data-token="font-body-small">
             <span class="type-row__sample t-body-small"
-              >Body small — the quick brown fox jumps over the lazy dog.</span
+              >Body small — <span class="t-body-small-emphasized">the quick brown fox</span> jumps
+              over the lazy dog.</span
             >
             <span class="type-row__meta">
               <span class="type-row__name">font-body-small</span>
@@ -111,12 +155,15 @@
       </ul>
 
       <h3 class="subhead">Caption</h3>
-      <p class="section-note">Labels, metadata, hints.</p>
+      <p class="section-note">
+        Labels, metadata, hints. Also has an <code>-emphasized</code> variant.
+      </p>
       <ul class="type-list">
         <li>
           <div class="type-row" data-token="font-caption-medium">
             <span class="type-row__sample t-caption-medium"
-              >Caption medium — labels, metadata.</span
+              >Caption medium — <span class="t-caption-medium-emphasized">labels</span>,
+              metadata.</span
             >
             <span class="type-row__meta">
               <span class="type-row__name">font-caption-medium</span>
@@ -128,7 +175,10 @@
         </li>
         <li>
           <div class="type-row" data-token="font-caption-small">
-            <span class="type-row__sample t-caption-small">Caption small — timestamps, hints.</span>
+            <span class="type-row__sample t-caption-small"
+              >Caption small — <span class="t-caption-small-emphasized">timestamps</span>,
+              hints.</span
+            >
             <span class="type-row__meta">
               <span class="type-row__name">font-caption-small</span>
               <span data-spec="size"></span>
@@ -138,6 +188,24 @@
           </div>
         </li>
       </ul>
+
+      <h3 class="subhead">Using across breakpoints</h3>
+      <p class="section-note">
+        Sizes stay fixed per tier — for responsive text, swap the token per breakpoint in the
+        component. Example: a hero uses <code>headline-medium</code> (48px) on desktop and drops to
+        <code>title-large</code> (32px) on mobile.
+      </p>
+      <pre><code>.hero-title {
+  font-size: var(--font-headline-medium-size);
+  line-height: var(--font-headline-medium-lh);
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+  }
+}</code></pre>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

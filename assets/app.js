@@ -62,7 +62,7 @@ function injectNav() {
   nav.className = "site-nav";
   // Icons are Lucide (lucide.dev, ISC) — inlined so the shell stays dependency-free.
   const lucide = {
-    menu: '<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>',
+    menu: '<line class="ham-line ham-line--top" x1="4" x2="20" y1="9" y2="9"/><line class="ham-line ham-line--bot" x1="4" x2="20" y1="15" y2="15"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
     "arrow-left": '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>'
@@ -81,7 +81,7 @@ function injectNav() {
     <div class="site-nav__inner">
       <div class="site-nav__left">
         <button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">
-          ${icon("menu")}
+          ${icon("menu", 24)}
         </button>
         <a class="site-nav__brand" href="${projectHref}">${projectName}</a>
       </div>
@@ -263,13 +263,14 @@ function hydrateType() {
     const sample = row.querySelector(".type-row__sample");
     if (!sample) return;
     const cs = getComputedStyle(sample);
-    const sizePx = parseFloat(cs.fontSize);
-    setSpec(row, "size", `${Math.round(sizePx)}px`);
-
+    const sizePx = Math.round(parseFloat(cs.fontSize));
     const { token } = row.dataset;
     const lhRaw = token ? rootStyle.getPropertyValue(`--${token}-lh`).trim() : "";
-    setSpec(row, "lh", lhRaw ? `lh ${lhRaw}` : `lh ${Math.round(parseFloat(cs.lineHeight))}px`);
-    setSpec(row, "weight", `w ${cs.fontWeight}`);
+    const lh = lhRaw || Math.round(parseFloat(cs.lineHeight));
+    // CSS-shorthand-style: size / line-height / weight.
+    setSpec(row, "size", `${sizePx}/${lh}/${cs.fontWeight}`);
+    setSpec(row, "lh", "");
+    setSpec(row, "weight", "");
 
     if (token) {
       row.dataset.copy = rootStyle.getPropertyValue(`--${token}-size`).trim();

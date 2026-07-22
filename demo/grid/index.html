@@ -63,19 +63,28 @@
 
       <section>
         <h3 class="subhead">Breakpoints</h3>
-        <p class="section-note">Mobile, then tablet (≥640) and desktop (≥1024).</p>
-        <ul class="token-scale">
+        <p class="section-note">Three tiers. The grid columns and gutters adapt at each.</p>
+        <ul class="tile-grid">
           <li>
-            <button class="token-chip" type="button" data-token="bp-tablet">
-              <span class="token-chip__name">bp-tablet</span>
-              <span class="token-chip__value"></span>
-            </button>
+            <div class="tile">
+              <span class="tile__label">Mobile</span>
+              <span class="tile__desc">Phones. 4 columns, 16px gutters.</span>
+              <span class="tile__value">&lt; 640px</span>
+            </div>
           </li>
           <li>
-            <button class="token-chip" type="button" data-token="bp-desktop">
-              <span class="token-chip__name">bp-desktop</span>
-              <span class="token-chip__value"></span>
-            </button>
+            <div class="tile" data-token="bp-tablet">
+              <span class="tile__label">Tablet</span>
+              <span class="tile__desc">Tablets, small laptops. 12 columns, 20px gutters.</span>
+              <span class="tile__value"></span>
+            </div>
+          </li>
+          <li>
+            <div class="tile" data-token="bp-desktop">
+              <span class="tile__label">Desktop</span>
+              <span class="tile__desc">Laptops and monitors. 12 columns, wider margins.</span>
+              <span class="tile__value"></span>
+            </div>
           </li>
         </ul>
       </section>

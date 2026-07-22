@@ -63,9 +63,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--ui-bg) 88%, transparent);
-  backdrop-filter: saturate(1.4) blur(8px);
-  border-bottom: 1px solid var(--ui-border);
+  background: var(--ui-bg);
 }
 
 .site-nav__inner {
@@ -84,20 +82,42 @@ body {
 
 .site-nav__menu {
   display: none; /* mobile only */
+  position: relative;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
+
+  /* Mirror the theme toggle: 32px hit target, pulled 8px toward the corner
+     so the icon's visible content sits at the page-gutter. */
+  margin-left: -0.5rem;
+  padding: 0;
   color: var(--ui-text);
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
+  background: none;
+  border: 0;
   cursor: pointer;
 }
 
 .site-nav__menu:focus-visible {
   outline: 2px solid var(--ui-ring);
   outline-offset: 2px;
+}
+
+/* Hamburger ↔ X morph. Both lines pivot around the SVG's centre. To keep the
+   crossover perfectly symmetrical, we normalise each line to y=12 first
+   (translate) then rotate ±45° around the same origin. */
+.site-nav__menu .ham-line {
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: transform 0.2s ease;
+}
+
+.site-nav__menu[aria-expanded="true"] .ham-line--top {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.site-nav__menu[aria-expanded="true"] .ham-line--bot {
+  transform: translateY(-3px) rotate(-45deg);
 }
 
 /* Sidebar (injected). Desktop: sticky left column inside the shell.
@@ -120,12 +140,18 @@ body {
   z-index: 18;
 }
 
+.sidebar__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .sidebar__group + .sidebar__group {
   margin-top: 1.5rem;
 }
 
 .sidebar__group-title {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.625rem;
   padding-inline: 0.5rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -143,10 +169,6 @@ body {
   line-height: 20px;
   color: var(--ui-text);
   font-weight: 500;
-}
-
-.sidebar__link + .sidebar__link {
-  margin-top: 2px;
 }
 
 .sidebar__back {
@@ -185,47 +207,72 @@ body {
 
   .sidebar {
     position: fixed;
-    top: var(--nav-h);
+    top: 0;
     left: 0;
+    right: 0;
     bottom: 0;
-    width: 16rem;
+    width: auto;
+    height: 100vh;
     max-height: none;
-    padding: 1.5rem 1rem 3rem;
-    border-right: 1px solid var(--ui-border);
-    z-index: 30;
-    transform: translateX(-100%);
-    box-shadow: 0 10px 40px rgb(0 0 0 / 0.3);
+    padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
+    background: color-mix(in srgb, var(--ui-bg) 85%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Big links, no hover pill — shadcn-style fullscreen drawer. */
+  .sidebar__link {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .sidebar__link > span,
+  .sidebar__back > span {
+    padding: 0;
+    background: none !important;
+    border-radius: 0;
+  }
+
+  .sidebar__back {
+    font-size: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .sidebar__group {
+    gap: 0.75rem;
+  }
+
+  .sidebar__group + .sidebar__group {
+    margin-top: 2rem;
+  }
+
+  .sidebar__group-title {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding-inline: 0;
   }
 
   /* Animate the drawer only when the user actually toggles it — not on the
      media-query flip when the viewport crosses the mobile breakpoint. JS adds
      .is-anim on first interaction so pure resize snaps instead of slides. */
   .sidebar.is-anim {
-    transition: transform 0.2s ease;
+    transition: opacity 0.2s ease-out;
   }
 
   .sidebar.is-open {
-    transform: none;
-  }
-
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 25;
-    background: rgb(0 0 0 / 0.4);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .sidebar-backdrop.is-open {
     opacity: 1;
     pointer-events: auto;
   }
+
+  /* Backdrop not needed — the drawer already covers the whole viewport. */
 }
 
 .site-nav__brand {
+  font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--ui-text);
@@ -237,18 +284,21 @@ body {
   align-items: center;
   justify-content: center;
   font: inherit;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
+
+  /* Sit 16px from the viewport edge (rather than 24) — tighter to the corner. */
+  margin-right: -0.5rem;
+  padding: 0;
   color: var(--ui-text);
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
+  background: none;
+  border: 0;
   border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.15s ease;
 }
 
 .theme-toggle:hover {
-  border-color: var(--ui-border-hover);
+  background: var(--ui-surface);
 }
 
 .theme-toggle:focus-visible {
@@ -371,6 +421,33 @@ h2 {
   font-size: 0.875rem;
   max-width: var(--measure);
   margin: 0 0 0.75rem;
+}
+
+/* Inline + block code samples */
+code {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  padding: 0.1rem 0.3rem;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+}
+
+pre {
+  margin: 0 0 1rem;
+  padding: 0.875rem 1rem;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
 }
 
 /* Palette: one family per row (base, hover, active). Each chip is full-height
@@ -556,10 +633,32 @@ h2:has(+ .section-note),
   letter-spacing: -0.01em;
 }
 
+.t-title-large {
+  font-size: var(--font-title-large-size);
+  line-height: var(--font-title-large-lh);
+  font-weight: var(--font-title-large-weight);
+}
+
+.t-title-medium {
+  font-size: var(--font-title-medium-size);
+  line-height: var(--font-title-medium-lh);
+  font-weight: var(--font-title-medium-weight);
+}
+
+.t-title-small {
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+}
+
 .t-body-large {
   font-size: var(--font-body-large-size);
   line-height: var(--font-body-large-lh);
   font-weight: var(--font-body-large-weight);
+}
+
+.t-body-large-emphasized {
+  font-weight: var(--font-body-large-emphasized-weight);
 }
 
 .t-body-medium {
@@ -568,10 +667,18 @@ h2:has(+ .section-note),
   font-weight: var(--font-body-medium-weight);
 }
 
+.t-body-medium-emphasized {
+  font-weight: var(--font-body-medium-emphasized-weight);
+}
+
 .t-body-small {
   font-size: var(--font-body-small-size);
   line-height: var(--font-body-small-lh);
   font-weight: var(--font-body-small-weight);
+}
+
+.t-body-small-emphasized {
+  font-weight: var(--font-body-small-emphasized-weight);
 }
 
 .t-caption-medium {
@@ -580,10 +687,18 @@ h2:has(+ .section-note),
   font-weight: var(--font-caption-medium-weight);
 }
 
+.t-caption-medium-emphasized {
+  font-weight: var(--font-caption-medium-emphasized-weight);
+}
+
 .t-caption-small {
   font-size: var(--font-caption-small-size);
   line-height: var(--font-caption-small-lh);
   font-weight: var(--font-caption-small-weight);
+}
+
+.t-caption-small-emphasized {
+  font-weight: var(--font-caption-small-emphasized-weight);
 }
 
 /* Compact copyable token chips (size scale, etc.) */
@@ -697,7 +812,8 @@ h2:has(+ .section-note),
   border-radius: var(--radius-sm, 8px);
 }
 
-.tile__name {
+.tile__name,
+.tile__label {
   font-size: 0.875rem;
   font-weight: 500;
 }
@@ -709,6 +825,12 @@ h2:has(+ .section-note),
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tile__desc {
+  font-size: 0.8125rem;
+  color: var(--ui-muted);
+  margin-top: 0.15rem;
 }
 
 /* Grid overlay — pinned over the content column so its columns line up with the page.

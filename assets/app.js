@@ -39,6 +39,32 @@ function dedent(text) {
   return lines.map((l) => l.slice(indent)).join("\n");
 }
 
+// Extract only the CSS custom-property declarations whose names start with any
+// of the given prefixes, from every :root (or :root[data-theme="…"]) rule.
+// Comma-separated prefixes: "shadow,radius" keeps --shadow-* and --radius-*.
+function filterTokens(cssText, prefixList) {
+  const prefixes = prefixList
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const isMatch = (name) => prefixes.some((p) => name === `--${p}` || name.startsWith(`--${p}-`));
+  const rulePattern = /(:root(?:\[data-theme="(?:dark|light)"\])?)\s*\{([\s\S]*?)\}/g;
+  const declPattern = /(--[a-z0-9-]+)\s*:\s*([^;]+);/g;
+  const blocks = [];
+  let m;
+  while ((m = rulePattern.exec(cssText))) {
+    const selector = m[1];
+    const body = m[2];
+    const kept = [];
+    let d;
+    while ((d = declPattern.exec(body))) {
+      if (isMatch(d[1])) kept.push(`  ${d[1]}: ${d[2].trim()};`);
+    }
+    if (kept.length) blocks.push(`${selector} {\n${kept.join("\n")}\n}`);
+  }
+  return blocks.join("\n\n");
+}
+
 /* ── Theme ─────────────────────────────────────────────────────────────── */
 
 function currentTheme() {
@@ -168,27 +194,31 @@ function injectSidebar() {
 
 function wireSidebar(aside, backdrop) {
   const menuBtn = document.querySelector(".site-nav__menu");
-  // Enable animation only when the user actually interacts — that way a
-  // viewport resize across the mobile breakpoint doesn't slide the drawer.
-  const enableAnim = () => aside.classList.add("is-anim");
+  // Enable animation transiently for the duration of an actual open/close.
+  // If .is-anim persisted, a later resize across the mobile breakpoint would
+  // animate the drawer's default → hidden state and cause a fade on resize.
+  let animTimer;
+  const animate = () => {
+    aside.classList.add("is-anim");
+    clearTimeout(animTimer);
+    animTimer = setTimeout(() => aside.classList.remove("is-anim"), 250);
+  };
   const close = () => {
+    animate();
     aside.classList.remove("is-open");
     backdrop.classList.remove("is-open");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
   };
   if (menuBtn) {
     menuBtn.addEventListener("click", () => {
-      enableAnim();
+      animate();
       const open = !aside.classList.contains("is-open");
       aside.classList.toggle("is-open", open);
       backdrop.classList.toggle("is-open", open);
       menuBtn.setAttribute("aria-expanded", String(open));
     });
   }
-  backdrop.addEventListener("click", () => {
-    enableAnim();
-    close();
-  });
+  backdrop.addEventListener("click", close);
   aside.addEventListener("click", (e) => {
     if (e.target.closest(".sidebar__link")) close();
   });
@@ -337,11 +367,57 @@ function hydratePreviews() {
     const shadow = el.querySelector("[data-shadow-demo]");
     if (shadow) shadow.style.boxShadow = value;
   });
+  // Preview cards — copy handled by an in-card button, so wipe the card-level
+  // data-copy hydratePreview sets. The button gets the full declaration.
+  hydratePreview(".preview-card", ".preview-card__value", (el, value) => {
+    const shadow = el.querySelector("[data-shadow-demo]");
+    if (shadow) shadow.style.boxShadow = value;
+    const radius = el.querySelector("[data-radius-demo]");
+    if (radius) radius.style.borderRadius = value;
+    delete el.dataset.copy;
+    const btn = el.querySelector("[data-copy-declaration]");
+    if (btn && el.dataset.token) {
+      btn.dataset.declaration = `var(--${el.dataset.token})`;
+    }
+  });
+}
+
+// Lucide arrow-right at 16px (arrow-left is mirrored via CSS transform).
+const ARROW_RIGHT_16 =
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+
+// Inject a shadcn-style prev/next pair at the bottom of each doc page.
+function injectPagination() {
+  const wrap = document.querySelector(".wrap");
+  if (!wrap || document.querySelector(".pagination")) return;
+  const flat = DEMO_PAGES.flatMap((g) => g.links);
+  const idx = flat.findIndex((l) => isCurrentPage(l.href));
+  if (idx < 0) return;
+  const prev = idx > 0 ? flat[idx - 1] : null;
+  const next = idx < flat.length - 1 ? flat[idx + 1] : null;
+  if (!prev && !next) return;
+  const nav = document.createElement("nav");
+  nav.className = "pagination";
+  nav.setAttribute("aria-label", "Docs pagination");
+  const parts = [];
+  if (prev) {
+    parts.push(
+      `<a class="pagination__link pagination__link--prev" href="${prev.href}">${ARROW_LEFT_16}<span>${prev.label}</span></a>`
+    );
+  }
+  if (next) {
+    parts.push(
+      `<a class="pagination__link pagination__link--next" href="${next.href}"><span>${next.label}</span>${ARROW_RIGHT_16}</a>`
+    );
+  }
+  nav.innerHTML = parts.join("");
+  wrap.appendChild(nav);
 }
 
 function init() {
   injectNav();
   injectSidebar();
+  injectPagination();
   hydratePalette();
   hydrateTokenChips();
   hydratePreviews();
@@ -377,16 +453,31 @@ function init() {
     const cssBtn = event.target.closest("[data-copy-css]");
     if (cssBtn) {
       const src = cssBtn.dataset.copyCss;
+      const filter = cssBtn.dataset.copyTokens; // optional: comma-list of prefixes
+      const label = filter ? "Copied tokens" : "Copied all tokens";
+      const transform = (text) => (filter ? filterTokens(text, filter) : text.trim());
       // Support both an element id (legacy) and a URL to fetch.
       if (src.startsWith("/") || src.startsWith("http")) {
         fetch(src)
           .then((r) => r.text())
-          .then((text) => copyText(text.trim(), "Copied all tokens"))
+          .then((text) => copyText(transform(text), label))
           .catch(() => toast("Copy failed"));
       } else {
         const block = document.getElementById(src);
-        if (block) copyText(dedent(block.textContent), "Copied all tokens");
+        if (block) copyText(transform(dedent(block.textContent)), label);
       }
+      return;
+    }
+    const copyDecl = event.target.closest("[data-copy-declaration]");
+    if (copyDecl && copyDecl.dataset.declaration) {
+      navigator.clipboard
+        .writeText(copyDecl.dataset.declaration)
+        .then(() => {
+          copyDecl.classList.add("is-copied");
+          clearTimeout(copyDecl._copyTimer);
+          copyDecl._copyTimer = setTimeout(() => copyDecl.classList.remove("is-copied"), 2000);
+        })
+        .catch(() => toast("Copy failed"));
       return;
     }
     const target = event.target.closest("[data-copy]");

@@ -227,6 +227,11 @@ body {
     backdrop-filter: saturate(1.4) blur(12px);
     z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
     opacity: 0;
+
+    /* visibility: hidden stops the browser from painting the drawer at all —
+       prevents a brief flash of the full-screen open state when the viewport
+       crosses the breakpoint. */
+    visibility: hidden;
     pointer-events: none;
   }
 
@@ -268,11 +273,18 @@ body {
      media-query flip when the viewport crosses the mobile breakpoint. JS adds
      .is-anim on first interaction so pure resize snaps instead of slides. */
   .sidebar.is-anim {
+    transition:
+      opacity 0.2s ease-out,
+      visibility 0s linear 0.2s;
+  }
+
+  .sidebar.is-anim.is-open {
     transition: opacity 0.2s ease-out;
   }
 
   .sidebar.is-open {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
@@ -344,7 +356,7 @@ body {
 }
 
 .site-head {
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
@@ -356,10 +368,26 @@ body {
   min-width: 0;
 }
 
+/* Title + Copy Tokens on the same row, above the lede. h1's own margin-bottom
+   provides the gap to the lede. */
+.site-head__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
 @media (max-width: 640px) {
   .site-head {
     flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
+  }
+
+  /* Hide the topic-page Copy Tokens on mobile; the intro's toolbar button
+     is outside .site-head__title and stays. */
+  .site-head__title .btn {
+    display: none;
   }
 }
 
@@ -396,7 +424,7 @@ h1 {
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.625rem;
   line-height: 22px;
   cursor: pointer;
   transition: border-color 0.15s ease;
@@ -425,7 +453,7 @@ h2 {
 }
 
 .section-note {
-  color: var(--ui-muted);
+  color: var(--ui-text);
   font-size: 0.875rem;
   max-width: var(--measure);
   margin: 0 0 0.75rem;
@@ -546,7 +574,7 @@ pre code {
 
 /* Subheads inside a section */
 .subhead {
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
   margin: 1.75rem 0 0.75rem;
 }
@@ -839,6 +867,181 @@ h2:has(+ .section-note),
   font-size: 0.8125rem;
   color: var(--ui-muted);
   margin-top: 0.15rem;
+}
+
+/* Prev/next docs pagination — shadcn-style 64px row with 24px gap above. */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 64px;
+  margin-top: 1.5rem;
+}
+
+.pagination__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  line-height: 22px;
+  color: var(--ui-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.pagination__link:hover {
+  border-color: var(--ui-border-hover);
+}
+
+.pagination__link--next {
+  margin-left: auto;
+}
+
+/* Preview blocks — heading + description above, boxed demo + token below. */
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+.preview-block {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.preview-block > .subhead {
+  margin-top: 0;
+}
+
+/* Adjacent generic <section>s draw a divider; preview-blocks flow together instead. */
+.preview-block + .preview-block {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.preview-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+}
+
+.preview-card__demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 2rem;
+}
+
+.preview-card__copy {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--ui-muted);
+  background: var(--ui-bg);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.preview-card__copy:hover {
+  color: var(--ui-text);
+  background: var(--ui-surface);
+}
+
+.preview-card__copy:focus-visible {
+  outline: 2px solid var(--ui-ring);
+  outline-offset: 2px;
+}
+
+.preview-card__copy .icon-check {
+  display: none;
+}
+
+.preview-card__copy.is-copied {
+  color: var(--ui-text);
+}
+
+.preview-card__copy.is-copied .icon-copy {
+  display: none;
+}
+
+.preview-card__copy.is-copied .icon-check {
+  display: block;
+}
+
+.preview-card__chip {
+  display: block;
+  width: 100%;
+  max-width: 196px;
+  height: 128px;
+  background: var(--ui-surface);
+  border-radius: 12px;
+}
+
+/* Shadow demo keeps a subtler surface so the shadow reads against the card. */
+.preview-card__chip[data-shadow-demo] {
+  background: var(--ui-surface-2);
+}
+
+:root[data-theme="dark"] .preview-card__chip[data-shadow-demo] {
+  background: #181818;
+}
+
+.preview-card__chip[data-radius-demo] {
+  background: var(--ui-bg);
+  border: 0;
+  box-shadow: 0 0 0 1px var(--ui-border);
+}
+
+:root[data-theme="dark"] .preview-card__chip[data-radius-demo] {
+  background: #181818;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+
+.preview-card__meta {
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--ui-border);
+  overflow: hidden;
+}
+
+.preview-card__meta-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.preview-card__name {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.preview-card__value {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ui-muted);
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 /* Grid overlay — pinned over the content column so its columns line up with the page.

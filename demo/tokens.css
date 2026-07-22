@@ -59,17 +59,6 @@
   --overlay-hover: rgb(16 17 22 / 0.56);
   --overlay-active: rgb(16 17 22 / 0.6);
 
-  /* Chrome mapping — the site UI eats its own dogfood.
-     Update the project tokens above and the whole interface follows. */
-  --ui-bg: var(--background-primary);
-  --ui-surface: var(--background-secondary);
-  --ui-surface-2: var(--background-primary);
-  --ui-border: var(--neutral-gray-3);
-  --ui-border-hover: var(--neutral-gray-2);
-  --ui-text: var(--ink-primary);
-  --ui-muted: var(--ink-tertiary);
-  --ui-ring: var(--focus);
-
   /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
      unitless multipliers so they scale with the font-size. Fixed at every
      breakpoint — sizes don't step up on desktop. */

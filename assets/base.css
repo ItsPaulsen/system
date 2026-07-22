@@ -12,14 +12,15 @@
   --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
 
-  /* Dark theme (default) */
-  --ui-bg: #0e0e10;
-  --ui-surface: #16161a;
-  --ui-surface-2: #202027;
-  --ui-border: #26262c;
-  --ui-border-hover: #3a3a42;
+  /* Dark theme (default) — pure greyscale, no colour tints */
+  --ui-bg: #0a0a0a;
+  --ui-surface: #262626;
+  --ui-surface-active: #404040;
+  --ui-surface-2: #171717;
+  --ui-border: #262626;
+  --ui-border-hover: #404040;
   --ui-text: #ededed;
-  --ui-muted: #8a8a8f;
+  --ui-muted: #8a8a8a;
   --ui-ring: #6b8afd;
   --ui-swatch-border: rgb(255 255 255 / 0.1);
 }
@@ -31,12 +32,13 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --ui-bg: #fff;
-  --ui-surface: #f6f6f7;
+  --ui-surface: #f5f5f5;
+  --ui-surface-active: #f5f5f5;
   --ui-surface-2: #fff;
-  --ui-border: #e4e4e8;
-  --ui-border-hover: #cfcfd6;
-  --ui-text: #17171b;
-  --ui-muted: #6c6c75;
+  --ui-border: #e5e5e5;
+  --ui-border-hover: #d4d4d4;
+  --ui-text: #171717;
+  --ui-muted: #6c6c6c;
   --ui-ring: #3b5bdb;
   --ui-swatch-border: rgb(0 0 0 / 0.1);
 }
@@ -135,7 +137,7 @@ body {
 
   /* Left = page-gutter minus link's inline padding, so link text lands at 24px
      and its hover/active surface extends 8px to the left of the text. */
-  padding: 1.5rem 1.5rem 3rem calc(var(--page-gutter) - 0.5rem);
+  padding: 0.75rem 1.5rem 3rem calc(var(--page-gutter) - 0.5rem);
   background: var(--ui-bg);
   z-index: 18;
 }
@@ -151,10 +153,13 @@ body {
 }
 
 .sidebar__group-title {
-  margin: 0 0 0.625rem;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin: 0;
   padding-inline: 0.5rem;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ui-muted);
 }
 
@@ -186,9 +191,12 @@ body {
   border-radius: 8px;
 }
 
-.sidebar__link:hover > span,
-.sidebar__link.is-active > span {
+.sidebar__link:hover > span {
   background: var(--ui-surface);
+}
+
+.sidebar__link.is-active > span {
+  background: var(--ui-surface-active);
 }
 
 .sidebar__back:hover {

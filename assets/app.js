@@ -60,21 +60,24 @@ function injectNav() {
   if (document.querySelector(".site-nav")) return;
   const nav = document.createElement("header");
   nav.className = "site-nav";
+  // Icons are Lucide (lucide.dev, ISC) — inlined so the shell stays dependency-free.
+  const lucide = {
+    menu: '<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'
+  };
+  const icon = (name, cls) =>
+    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
   nav.innerHTML = `
     <div class="site-nav__inner">
       <div class="site-nav__left">
         <button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-            <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-          </svg>
+          ${icon("menu")}
         </button>
         <a class="site-nav__brand" href="/">system</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
-          <path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor" />
-        </svg>
+        ${icon("sun", "icon-sun")}${icon("moon", "icon-moon")}
       </button>
     </div>`;
   document.body.prepend(nav);
@@ -87,13 +90,19 @@ function injectSidebar() {
   const sections = document.querySelectorAll("section[data-nav-group][aria-labelledby]");
   if (!sections.length || document.querySelector(".sidebar")) return;
 
-  // Wrap the content so it can center in the space beside the sidebar.
+  // Build a centered shell that holds the sidebar and the content side by side,
+  // so the pair centers as one unit (shadcn-style) instead of the content
+  // drifting within the leftover space beside a viewport-pinned sidebar.
   const wrap = document.querySelector(".wrap");
+  let region;
   if (wrap && !wrap.closest(".content-region")) {
-    const region = document.createElement("div");
+    const shell = document.createElement("div");
+    shell.className = "shell";
+    region = document.createElement("div");
     region.className = "content-region";
-    wrap.parentNode.insertBefore(region, wrap);
+    wrap.parentNode.insertBefore(shell, wrap);
     region.appendChild(wrap);
+    shell.appendChild(region);
   }
 
   const groups = [];
@@ -129,7 +138,11 @@ function injectSidebar() {
   const backdrop = document.createElement("div");
   backdrop.className = "sidebar-backdrop";
 
-  document.body.append(aside, backdrop);
+  // Sidebar leads the shell (left column); backdrop stays body-level for the mobile drawer.
+  const shell = region ? region.closest(".shell") : null;
+  if (shell) shell.insertBefore(aside, region);
+  else document.body.append(aside);
+  document.body.append(backdrop);
   wireSidebar(aside, backdrop);
   spyScroll(aside);
 }
@@ -190,7 +203,10 @@ function hydrateSwatches() {
     if (!value) return;
 
     const chip = sw.querySelector(".swatch__chip");
-    if (chip) chip.style.background = value;
+    if (chip) chip.style.setProperty("--c", value);
+
+    const valueEl = sw.querySelector(".swatch__value");
+    if (valueEl) valueEl.textContent = value;
 
     // Paired tokens: render the sample text in the foreground colour on the fill.
     const { on } = sw.dataset;
@@ -306,10 +322,6 @@ function init() {
   injectSidebar();
   hydrateSwatches();
   hydrateTokenChips();
-  hydratePreview(".palette__chip", ".palette__value", (el, value) => {
-    const color = el.querySelector(".palette__color");
-    if (color) color.style.background = value;
-  });
   hydratePreview(".space-row", ".space-row__value", (el, value) => {
     const bar = el.querySelector("[data-space-bar]");
     if (bar) bar.style.width = value;

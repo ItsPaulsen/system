@@ -7,17 +7,18 @@
   --radius: 10px;
   --nav-h: 56px;
   --sidebar-w: 15rem;
+  --page-gutter: 1.5rem; /* fixed 24px chrome gutter for header + sidebar */
   --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
   --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
 
   /* Dark theme (default) */
-  --bg: #0e0e10;
-  --surface: #16161a;
-  --surface-2: #202027;
+  --ui-bg: #0e0e10;
+  --ui-surface: #16161a;
+  --ui-surface-2: #202027;
   --ui-border: #26262c;
   --ui-border-hover: #3a3a42;
-  --text: #ededed;
+  --ui-text: #ededed;
   --ui-muted: #8a8a8f;
   --ui-ring: #6b8afd;
 }
@@ -28,12 +29,12 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg: #fff;
-  --surface: #f6f6f7;
-  --surface-2: #fff;
+  --ui-bg: #fff;
+  --ui-surface: #f6f6f7;
+  --ui-surface-2: #fff;
   --ui-border: #e4e4e8;
   --ui-border-hover: #cfcfd6;
-  --text: #17171b;
+  --ui-text: #17171b;
   --ui-muted: #6c6c75;
   --ui-ring: #3b5bdb;
 }
@@ -48,8 +49,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--ui-bg);
+  color: var(--ui-text);
   font-family: var(--font);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -60,16 +61,14 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  background: color-mix(in srgb, var(--ui-bg) 88%, transparent);
   backdrop-filter: saturate(1.4) blur(8px);
   border-bottom: 1px solid var(--ui-border);
 }
 
 .site-nav__inner {
-  max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
-  margin-inline: auto;
   height: var(--nav-h);
-  padding-inline: var(--grid-margin, 1.5rem);
+  padding-inline: var(--page-gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,8 +86,8 @@ body {
   justify-content: center;
   width: 34px;
   height: 34px;
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
   cursor: pointer;
@@ -99,17 +98,23 @@ body {
   outline-offset: 2px;
 }
 
-/* Sidebar (injected, auto-generated from the page's sections) */
+/* Sidebar (injected). Desktop: sticky left column inside the shell.
+   Mobile: an off-canvas drawer (see media query below). */
 .sidebar {
-  position: fixed;
+  position: sticky;
   top: var(--nav-h);
-  left: 0;
-  bottom: 0;
+  align-self: flex-start;
+  flex: none;
   width: var(--sidebar-w);
+  max-height: calc(100vh - var(--nav-h));
   overflow-y: auto;
-  padding: 1.5rem 1rem 3rem;
-  border-right: 1px solid var(--ui-border);
-  background: var(--bg);
+
+  /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
+
+  /* Left = page-gutter minus link's inline padding, so link text lands at 24px
+     and its hover/active surface extends 8px to the left of the text. */
+  padding: 1.5rem 1.5rem 3rem calc(var(--page-gutter) - 0.5rem);
+  background: var(--ui-bg);
   z-index: 18;
 }
 
@@ -119,7 +124,7 @@ body {
 
 .sidebar__group-title {
   margin: 0 0 0.5rem;
-  padding-inline: 0.6rem;
+  padding-inline: 0.5rem;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -129,8 +134,8 @@ body {
 
 .sidebar__link {
   display: block;
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
   font-size: 0.875rem;
   line-height: 20px;
   color: var(--ui-muted);
@@ -138,13 +143,13 @@ body {
 }
 
 .sidebar__link:hover {
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
 }
 
 .sidebar__link.is-active {
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
   font-weight: 500;
 }
 
@@ -159,7 +164,14 @@ body {
   }
 
   .sidebar {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    bottom: 0;
     width: 16rem;
+    max-height: none;
+    padding: 1.5rem 1rem 3rem;
+    border-right: 1px solid var(--ui-border);
     z-index: 30;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
@@ -190,7 +202,7 @@ body {
 .site-nav__brand {
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--text);
+  color: var(--ui-text);
   text-decoration: none;
 }
 
@@ -205,8 +217,8 @@ body {
   font: inherit;
   width: 34px;
   height: 34px;
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
   cursor: pointer;
@@ -222,10 +234,28 @@ body {
   outline-offset: 2px;
 }
 
+/* Show the icon for the theme you'd switch TO: sun in dark, moon in light. */
+:root[data-theme="light"] .icon-sun,
+:root[data-theme="dark"] .icon-moon {
+  display: none;
+}
+
 .wrap {
   max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
   margin-inline: auto;
   padding: 3rem var(--grid-margin, 1.5rem) 6rem;
+}
+
+/* Shell: full width; the sidebar carries its own left gutter, and .wrap carries
+   its own side gutter (grid-margin). No shell padding, so nothing double-stacks. */
+.shell {
+  display: flex;
+  align-items: flex-start;
+}
+
+.content-region {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .site-head {
@@ -261,8 +291,8 @@ h1 {
   font: inherit;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 0.5rem 0.875rem;
@@ -314,7 +344,7 @@ h2 {
   flex-direction: column;
   gap: 0.75rem;
   padding: 0;
-  background: var(--surface);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -340,6 +370,18 @@ h2 {
   align-items: center;
   justify-content: center;
   height: 64px;
+  background: var(--c);
+}
+
+/* Border-type tokens read clearer as an actual line than a filled block. */
+.swatch--line .swatch__chip {
+  background: var(--ui-bg);
+}
+
+.swatch--line .swatch__chip::after {
+  content: "";
+  width: 64%;
+  height: 2px;
   background: var(--c);
 }
 
@@ -375,74 +417,6 @@ h2 {
   text-overflow: ellipsis;
 }
 
-.swatch__alias {
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-}
-
-/* Primitive palette (the raw source under semantic colors) — full-width rows so values fit */
-.palette {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.palette__chip {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  background: var(--surface);
-  border: 1px solid var(--ui-border);
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  transition: border-color 0.15s ease;
-}
-
-.palette__chip:hover {
-  border-color: var(--ui-border-hover);
-}
-
-.palette__chip:focus-visible {
-  outline: 2px solid var(--ui-ring);
-  outline-offset: 2px;
-}
-
-.palette__color {
-  flex: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid var(--ui-border);
-}
-
-.palette__meta {
-  display: flex;
-  flex: 1;
-  align-items: baseline;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.palette__name {
-  font-size: 0.875rem;
-}
-
-.palette__value {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-  white-space: nowrap;
-}
-
 /* Subheads inside a section */
 .subhead {
   font-size: 1rem;
@@ -462,8 +436,8 @@ h2:has(+ .section-note),
   display: inline-block;
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--text);
-  background: var(--surface);
+  color: var(--ui-text);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 999px;
   padding: 0.25rem 0.7rem;
@@ -486,7 +460,7 @@ h2:has(+ .section-note),
   text-align: left;
   font: inherit;
   color: inherit;
-  background: var(--surface);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
@@ -520,7 +494,7 @@ h2:has(+ .section-note),
 }
 
 .type-row__name {
-  color: var(--text);
+  color: var(--ui-text);
 }
 
 /* Only the live numbers are mono; the token name stays Inter */
@@ -580,7 +554,7 @@ h2:has(+ .section-note),
   font: inherit;
   text-align: left;
   color: inherit;
-  background: var(--surface);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
@@ -625,7 +599,7 @@ h2:has(+ .section-note),
   font: inherit;
   text-align: left;
   color: inherit;
-  background: var(--surface);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: 8px;
   padding: 0.6rem 0.875rem;
@@ -678,7 +652,7 @@ h2:has(+ .section-note),
   font: inherit;
   text-align: left;
   color: inherit;
-  background: var(--surface);
+  background: var(--ui-surface);
   border: 1px solid var(--ui-border);
   border-radius: var(--radius);
   padding: 1rem;
@@ -698,7 +672,7 @@ h2:has(+ .section-note),
 .tile__demo {
   height: 64px;
   margin-bottom: 0.4rem;
-  background: var(--surface-2);
+  background: var(--ui-surface-2);
   border: 1px solid var(--ui-border);
   border-radius: var(--radius-sm, 8px);
 }
@@ -717,12 +691,24 @@ h2:has(+ .section-note),
   white-space: nowrap;
 }
 
-/* Grid overlay — pinned over the page, aligned to the same container as the content */
+/* Grid overlay — pinned over the content column so its columns line up with the page.
+   The overlay box spans the content region; the inner mirrors .wrap (capped + centered). */
 .grid-overlay {
   position: fixed;
-  inset: var(--nav-h) 0 0;
+  top: var(--nav-h);
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 15;
   pointer-events: none;
+}
+
+.grid-overlay__inner {
+  position: relative;
+  height: 100%;
+
+  /* content + the outer margins (32px each), so columns fill the 1200 content
+     and the margin bands sit OUTSIDE it — matching "1200 content, 1264 w/ margins". */
   max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
   margin-inline: auto;
 }
@@ -781,8 +767,8 @@ h2:has(+ .section-note),
   left: 50%;
   bottom: 1.5rem;
   transform: translateX(-50%) translateY(1rem);
-  background: var(--text);
-  color: var(--bg);
+  background: var(--ui-text);
+  color: var(--ui-bg);
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.625rem 1rem;
@@ -800,14 +786,8 @@ h2:has(+ .section-note),
   transform: translateX(-50%) translateY(0);
 }
 
-/* Desktop: reserve the sidebar width, then the content (and the grid overlay)
-   center within the remaining space — not jammed against the sidebar.
-   (After the base .wrap / .grid-overlay rules so it wins the cascade.) */
+/* Desktop: overlay starts past the sidebar so it centers over the same box as .wrap. */
 @media (min-width: 1024px) {
-  .content-region {
-    margin-left: var(--sidebar-w);
-  }
-
   .grid-overlay {
     left: var(--sidebar-w);
   }

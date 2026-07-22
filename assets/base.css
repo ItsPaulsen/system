@@ -16,12 +16,12 @@
   --ui-bg: #0a0a0a;
   --ui-surface: #262626;
   --ui-surface-active: #404040;
-  --ui-surface-2: #171717;
+  --ui-surface-2: #181818;
   --ui-border: #262626;
   --ui-border-hover: #404040;
   --ui-text: #ededed;
-  --ui-muted: #8a8a8a;
-  --ui-ring: #6b8afd;
+  --ui-muted: #a3a3a3;
+  --ui-ring: var(--ui-text);
   --ui-swatch-border: rgb(255 255 255 / 0.1);
 }
 
@@ -39,7 +39,7 @@
   --ui-border-hover: #d4d4d4;
   --ui-text: #171717;
   --ui-muted: #6c6c6c;
-  --ui-ring: #3b5bdb;
+  --ui-ring: var(--ui-text);
   --ui-swatch-border: rgb(0 0 0 / 0.1);
 }
 
@@ -58,6 +58,29 @@ body {
   font-family: var(--font);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Accessibility: skip-to-content — hidden until keyboard-focused. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  color: var(--ui-bg);
+  background: var(--ui-text);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transform: translate(-50%, calc(-100% - 1rem));
+  transition: transform 0.15s ease-out;
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  outline: 2px solid var(--ui-ring);
+  outline-offset: 2px;
 }
 
 /* Site nav (injected on every page) */
@@ -193,6 +216,17 @@ body {
 
 .sidebar__link:hover > span {
   background: var(--ui-surface);
+}
+
+.sidebar__link:focus-visible,
+.sidebar__back:focus-visible {
+  outline: none;
+}
+
+.sidebar__link:focus-visible > span,
+.sidebar__back:focus-visible > span {
+  outline: 2px solid var(--ui-ring);
+  outline-offset: 0;
 }
 
 .sidebar__link.is-active > span {
@@ -338,6 +372,11 @@ body {
   padding: 3rem var(--grid-margin, 1.5rem) 6rem;
 }
 
+/* Wrap gets focused (tabindex=-1) via the skip link — kill the default focus ring. */
+.wrap:focus-visible {
+  outline: none;
+}
+
 /* Opt-in wider column for pages that need the full grid (e.g. the grid demo). */
 .wrap--wide {
   max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
@@ -400,7 +439,8 @@ body {
 }
 
 h1 {
-  font-size: 2.25rem; /* fixed (36px) — no fluid clamp, so no sub-pixel title */
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem; /* 36px */
   font-weight: 600;
   letter-spacing: -0.02em;
   margin: 0 0 0.5rem;
@@ -408,8 +448,20 @@ h1 {
 
 .lede {
   color: var(--ui-muted);
+  font-size: 1rem;
   margin: 0;
-  max-width: var(--measure);
+}
+
+@media (min-width: 40rem) {
+  .lede {
+    text-wrap: balance;
+  }
+}
+
+@media (min-width: 48rem) {
+  .lede {
+    max-width: 80%;
+  }
 }
 
 .toolbar {
@@ -875,7 +927,7 @@ h2:has(+ .section-note),
   align-items: center;
   gap: 1rem;
   height: 64px;
-  margin-top: 1.5rem;
+  margin-top: 3rem;
 }
 
 .pagination__link {
@@ -896,6 +948,11 @@ h2:has(+ .section-note),
 
 .pagination__link:hover {
   border-color: var(--ui-border-hover);
+}
+
+.pagination__link:focus-visible {
+  outline: 2px solid var(--ui-ring);
+  outline-offset: 2px;
 }
 
 .pagination__link--next {
@@ -999,18 +1056,14 @@ h2:has(+ .section-note),
   background: var(--ui-surface-2);
 }
 
-:root[data-theme="dark"] .preview-card__chip[data-shadow-demo] {
-  background: #181818;
-}
-
+/* Radius demo — subtle surface + alpha-white ring (matches shadcn's card look). */
 .preview-card__chip[data-radius-demo] {
-  background: var(--ui-bg);
+  background: var(--ui-surface-2);
   border: 0;
   box-shadow: 0 0 0 1px var(--ui-border);
 }
 
 :root[data-theme="dark"] .preview-card__chip[data-radius-demo] {
-  background: #181818;
   box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
 }
 

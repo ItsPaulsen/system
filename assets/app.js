@@ -32,13 +32,6 @@ async function copyText(text, label) {
   }
 }
 
-// Strip the common leading indentation from a block of text.
-function dedent(text) {
-  const lines = text.replace(/^\n+|\s+$/g, "").split("\n");
-  const indent = Math.min(...lines.filter((l) => l.trim()).map((l) => l.match(/^\s*/)[0].length));
-  return lines.map((l) => l.slice(indent)).join("\n");
-}
-
 // Extract only the CSS custom-property declarations whose names start with any
 // of the given prefixes, from every :root (or :root[data-theme="…"]) rule.
 // Comma-separated prefixes: "shadow,radius" keeps --shadow-* and --radius-*.
@@ -80,6 +73,19 @@ function setTheme(theme) {
   }
   const btn = document.querySelector(".theme-toggle");
   if (btn) btn.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} theme`);
+}
+
+function injectSkipLink() {
+  if (document.querySelector(".skip-link")) return;
+  const wrap = document.querySelector(".wrap");
+  if (!wrap) return;
+  if (!wrap.id) wrap.id = "main";
+  wrap.setAttribute("tabindex", "-1");
+  const a = document.createElement("a");
+  a.className = "skip-link";
+  a.href = `#${wrap.id}`;
+  a.textContent = "Skip to content";
+  document.body.prepend(a);
 }
 
 function injectNav() {
@@ -415,6 +421,7 @@ function injectPagination() {
 }
 
 function init() {
+  injectSkipLink();
   injectNav();
   injectSidebar();
   injectPagination();
@@ -455,17 +462,10 @@ function init() {
       const src = cssBtn.dataset.copyCss;
       const filter = cssBtn.dataset.copyTokens; // optional: comma-list of prefixes
       const label = filter ? "Copied tokens" : "Copied all tokens";
-      const transform = (text) => (filter ? filterTokens(text, filter) : text.trim());
-      // Support both an element id (legacy) and a URL to fetch.
-      if (src.startsWith("/") || src.startsWith("http")) {
-        fetch(src)
-          .then((r) => r.text())
-          .then((text) => copyText(transform(text), label))
-          .catch(() => toast("Copy failed"));
-      } else {
-        const block = document.getElementById(src);
-        if (block) copyText(transform(dedent(block.textContent)), label);
-      }
+      fetch(src)
+        .then((r) => r.text())
+        .then((text) => copyText(filter ? filterTokens(text, filter) : text.trim(), label))
+        .catch(() => toast("Copy failed"));
       return;
     }
     const copyDecl = event.target.closest("[data-copy-declaration]");

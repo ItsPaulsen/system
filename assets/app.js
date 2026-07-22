@@ -100,12 +100,12 @@ const DEMO_PAGES = [
     group: "Content",
     links: [
       { label: "Introduction", href: "/demo/" },
-      { label: "Colors", href: "/demo/colors.html" },
-      { label: "Type scale", href: "/demo/type.html" },
-      { label: "Grid", href: "/demo/grid.html" },
-      { label: "Spacing", href: "/demo/spacing.html" },
-      { label: "Radii", href: "/demo/radii.html" },
-      { label: "Shadows", href: "/demo/shadows.html" }
+      { label: "Colors", href: "/demo/colors/" },
+      { label: "Typography", href: "/demo/typography/" },
+      { label: "Grid", href: "/demo/grid/" },
+      { label: "Spacing", href: "/demo/spacing/" },
+      { label: "Radii", href: "/demo/radii/" },
+      { label: "Shadows", href: "/demo/shadows/" }
     ]
   }
 ];
@@ -255,8 +255,8 @@ function setSpec(row, name, text) {
   if (el) el.textContent = text;
 }
 
-// Read each type role's live computed metrics (they change across breakpoints).
-// The copy target is the role's token value (rem), not the resolved px.
+// Read each type role's metrics. Size comes from computed style (px); line-height
+// from the raw token so unitless multipliers show as "1.5" not "24px".
 function hydrateType() {
   const rootStyle = getComputedStyle(document.documentElement);
   document.querySelectorAll(".type-row").forEach((row) => {
@@ -265,10 +265,15 @@ function hydrateType() {
     const cs = getComputedStyle(sample);
     const sizePx = parseFloat(cs.fontSize);
     setSpec(row, "size", `${Math.round(sizePx)}px`);
-    setSpec(row, "lh", `lh ${Math.round(parseFloat(cs.lineHeight))}px`);
-    setSpec(row, "weight", `w ${cs.fontWeight}`);
+
     const { token } = row.dataset;
-    if (token) row.dataset.copy = rootStyle.getPropertyValue(`--${token}`).trim();
+    const lhRaw = token ? rootStyle.getPropertyValue(`--${token}-lh`).trim() : "";
+    setSpec(row, "lh", lhRaw ? `lh ${lhRaw}` : `lh ${Math.round(parseFloat(cs.lineHeight))}px`);
+    setSpec(row, "weight", `w ${cs.fontWeight}`);
+
+    if (token) {
+      row.dataset.copy = rootStyle.getPropertyValue(`--${token}-size`).trim();
+    }
   });
 }
 

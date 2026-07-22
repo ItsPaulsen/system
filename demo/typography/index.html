@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Typography — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <h1>Typography</h1>
+          <p class="lede">
+            Three tiers — Headline, Body, Caption. Sizes stay fixed at every breakpoint.
+          </p>
+        </div>
+        <button class="btn" type="button" data-copy-css="/demo/tokens.css">Copy Tokens</button>
+      </header>
+
+      <h3 class="subhead">Headline</h3>
+      <p class="section-note">Marketing hero, section titles, product pages.</p>
+      <ul class="type-list">
+        <li>
+          <div class="type-row" data-token="font-headline-large">
+            <span class="type-row__sample t-headline-large">Headline large</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-headline-large</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-headline-medium">
+            <span class="type-row__sample t-headline-medium">Headline medium</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-headline-medium</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-headline-small">
+            <span class="type-row__sample t-headline-small">Headline small</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-headline-small</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+      </ul>
+
+      <h3 class="subhead">Body</h3>
+      <p class="section-note">Paragraphs and running text.</p>
+      <ul class="type-list">
+        <li>
+          <div class="type-row" data-token="font-body-large">
+            <span class="type-row__sample t-body-large"
+              >Body large — the quick brown fox jumps over the lazy dog.</span
+            >
+            <span class="type-row__meta">
+              <span class="type-row__name">font-body-large</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-body-medium">
+            <span class="type-row__sample t-body-medium"
+              >Body medium — the quick brown fox jumps over the lazy dog.</span
+            >
+            <span class="type-row__meta">
+              <span class="type-row__name">font-body-medium</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-body-small">
+            <span class="type-row__sample t-body-small"
+              >Body small — the quick brown fox jumps over the lazy dog.</span
+            >
+            <span class="type-row__meta">
+              <span class="type-row__name">font-body-small</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+      </ul>
+
+      <h3 class="subhead">Caption</h3>
+      <p class="section-note">Labels, metadata, hints.</p>
+      <ul class="type-list">
+        <li>
+          <div class="type-row" data-token="font-caption-medium">
+            <span class="type-row__sample t-caption-medium"
+              >Caption medium — labels, metadata.</span
+            >
+            <span class="type-row__meta">
+              <span class="type-row__name">font-caption-medium</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="type-row" data-token="font-caption-small">
+            <span class="type-row__sample t-caption-small">Caption small — timestamps, hints.</span>
+            <span class="type-row__meta">
+              <span class="type-row__name">font-caption-small</span>
+              <span data-spec="size"></span>
+              <span data-spec="lh"></span>
+              <span data-spec="weight"></span>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

@@ -70,33 +70,39 @@
   --ui-muted: var(--ink-tertiary);
   --ui-ring: var(--focus);
 
-  /* Type primitives — size scale */
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
-  --text-5xl: 3rem;
+  /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
+     unitless multipliers so they scale with the font-size. Fixed at every
+     breakpoint — sizes don't step up on desktop. */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
 
-  /* Type primitives — weight & tracking */
-  --weight-regular: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --tracking-tight: -0.02em;
+  --font-headline-large-size: 3.75rem; /* 60px */
+  --font-headline-large-lh: 1.2;
+  --font-headline-large-weight: 500;
+  --font-headline-medium-size: 3rem; /* 48px */
+  --font-headline-medium-lh: 1.2;
+  --font-headline-medium-weight: 500;
+  --font-headline-small-size: 2.375rem; /* 38px */
+  --font-headline-small-lh: 1.2;
+  --font-headline-small-weight: 500;
 
-  /* Type semantics — size + line-height per role.
-     Line-height is px on the 4px grid, so it never lands on a sub-pixel. */
-  --font-display-size: var(--text-4xl);
-  --font-display-leading: 40px;
-  --font-h1-size: var(--text-3xl);
-  --font-h1-leading: 36px;
-  --font-h2-size: var(--text-2xl);
-  --font-h2-leading: 28px;
-  --font-body-size: var(--text-base);
-  --font-body-leading: 24px;
-  --font-small-size: var(--text-sm);
-  --font-small-leading: 20px;
+  --font-body-large-size: 1.25rem; /* 20px */
+  --font-body-large-lh: 1.5;
+  --font-body-large-weight: 400;
+  --font-body-medium-size: 1.125rem; /* 18px */
+  --font-body-medium-lh: 1.5;
+  --font-body-medium-weight: 400;
+  --font-body-small-size: 1rem; /* 16px */
+  --font-body-small-lh: 1.5;
+  --font-body-small-weight: 400;
+
+  --font-caption-medium-size: 0.875rem; /* 14px */
+  --font-caption-medium-lh: 1.5;
+  --font-caption-medium-weight: 400;
+  --font-caption-small-size: 0.75rem; /* 12px */
+  --font-caption-small-lh: 1.5;
+  --font-caption-small-weight: 400;
 
   /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
   --container-max: 1200px;
@@ -135,16 +141,10 @@
   }
 }
 
-/* Desktop ≥1024 — wider margins, type scales up */
+/* Desktop ≥1024 — wider grid margins (type stays fixed across breakpoints). */
 @media (min-width: 1024px) {
   :root {
     --grid-margin: 32px;
-    --font-display-size: var(--text-5xl);
-    --font-display-leading: 56px;
-    --font-h1-size: var(--text-4xl);
-    --font-h1-leading: 44px;
-    --font-h2-size: var(--text-3xl);
-    --font-h2-leading: 36px;
   }
 }
 

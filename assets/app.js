@@ -64,20 +64,29 @@ function injectNav() {
   const lucide = {
     menu: '<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>',
-    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    "arrow-left": '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>'
   };
-  const icon = (name, cls) =>
-    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
+  const icon = (name, size = 18, cls = "") =>
+    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
+
+  // Detect the project from the URL: /demo/... → "Demo". At the site root the
+  // title falls back to "system" so the nav still has a label.
+  const projectMatch = location.pathname.match(/^\/([^/]+)\//);
+  const projectSlug = projectMatch ? projectMatch[1] : null;
+  const projectName = projectSlug ? projectSlug[0].toUpperCase() + projectSlug.slice(1) : "system";
+  const projectHref = projectSlug ? `/${projectSlug}/` : "/";
+
   nav.innerHTML = `
     <div class="site-nav__inner">
       <div class="site-nav__left">
         <button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">
           ${icon("menu")}
         </button>
-        <a class="site-nav__brand" href="/">system</a>
+        <a class="site-nav__brand" href="${projectHref}">${projectName}</a>
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">
-        ${icon("sun", "icon-sun")}${icon("moon", "icon-moon")}
+        ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
       </button>
     </div>`;
   document.body.prepend(nav);
@@ -88,7 +97,7 @@ function injectNav() {
 // (One topic per page reads cleaner than one giant scrolling doc.)
 const DEMO_PAGES = [
   {
-    group: "Foundations",
+    group: "Content",
     links: [
       { label: "Introduction", href: "/demo/" },
       { label: "Colors", href: "/demo/colors.html" },
@@ -100,6 +109,10 @@ const DEMO_PAGES = [
     ]
   }
 ];
+
+// Lucide arrow-left inlined at 16px for the sidebar's back link.
+const ARROW_LEFT_16 =
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>';
 
 function isCurrentPage(href) {
   const here = location.pathname.replace(/\/index\.html$/, "/");
@@ -125,18 +138,23 @@ function injectSidebar() {
 
   const aside = document.createElement("aside");
   aside.className = "sidebar";
-  aside.innerHTML = DEMO_PAGES.map(
-    (g) => `
+  // Inner spans give us shadcn-style pill hover: the anchor stays full width
+  // for a wide click target, but the visual bg wraps only the label.
+  const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_16}All projects</span></a>`;
+  aside.innerHTML =
+    backLink +
+    DEMO_PAGES.map(
+      (g) => `
       <div class="sidebar__group">
         <p class="sidebar__group-title">${g.group}</p>
         ${g.links
           .map(
             (l) =>
-              `<a class="sidebar__link${isCurrentPage(l.href) ? " is-active" : ""}" href="${l.href}">${l.label}</a>`
+              `<a class="sidebar__link${isCurrentPage(l.href) ? " is-active" : ""}" href="${l.href}"><span>${l.label}</span></a>`
           )
           .join("")}
       </div>`
-  ).join("");
+    ).join("");
 
   const backdrop = document.createElement("div");
   backdrop.className = "sidebar-backdrop";
@@ -150,6 +168,9 @@ function injectSidebar() {
 
 function wireSidebar(aside, backdrop) {
   const menuBtn = document.querySelector(".site-nav__menu");
+  // Enable animation only when the user actually interacts — that way a
+  // viewport resize across the mobile breakpoint doesn't slide the drawer.
+  const enableAnim = () => aside.classList.add("is-anim");
   const close = () => {
     aside.classList.remove("is-open");
     backdrop.classList.remove("is-open");
@@ -157,13 +178,17 @@ function wireSidebar(aside, backdrop) {
   };
   if (menuBtn) {
     menuBtn.addEventListener("click", () => {
+      enableAnim();
       const open = !aside.classList.contains("is-open");
       aside.classList.toggle("is-open", open);
       backdrop.classList.toggle("is-open", open);
       menuBtn.setAttribute("aria-expanded", String(open));
     });
   }
-  backdrop.addEventListener("click", close);
+  backdrop.addEventListener("click", () => {
+    enableAnim();
+    close();
+  });
   aside.addEventListener("click", (e) => {
     if (e.target.closest(".sidebar__link")) close();
   });

@@ -137,7 +137,7 @@ function injectNav() {
 // (One topic per page reads cleaner than one giant scrolling doc.)
 const DEMO_PAGES = [
   {
-    group: "Content",
+    group: "Foundation",
     links: [
       { label: "Introduction", href: "/demo/" },
       { label: "Colors", href: "/demo/colors/" },
@@ -148,6 +148,17 @@ const DEMO_PAGES = [
       { label: "Shadows", href: "/demo/shadows/" },
       { label: "Motion", href: "/demo/motion/" },
       { label: "Z-index", href: "/demo/z-index/" }
+    ]
+  },
+  {
+    group: "Components",
+    links: [
+      { label: "Button", href: "/demo/components/button/" },
+      { label: "Badge", href: "/demo/components/badge/" },
+      { label: "Card", href: "/demo/components/card/" },
+      { label: "Input", href: "/demo/components/input/" },
+      { label: "Switch", href: "/demo/components/switch/" },
+      { label: "Tabs", href: "/demo/components/tabs/" }
     ]
   }
 ];
@@ -486,7 +497,7 @@ function initGridTabs() {
   const tabList = document.querySelector("[data-grid-tabs]");
   const panel = document.querySelector("[data-grid-panel]");
   if (!tabList || !panel) return;
-  const tabs = tabList.querySelectorAll(".tabs__tab");
+  const tabs = tabList.querySelectorAll(".docs-tabs__tab");
   const setActive = (name) => {
     const values = GRID_BREAKPOINTS[name];
     if (!values) return;
@@ -536,8 +547,8 @@ function injectPagination() {
 }
 
 function init() {
-  injectSkipLink();
   injectNav();
+  injectSkipLink();
   injectSidebar();
   injectPagination();
   renderPalette();

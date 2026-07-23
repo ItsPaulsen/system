@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Tabs — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Tabs</h1>
+          </div>
+          <p class="lede">
+            Segmented control for switching between related views. Uses native radio inputs so it
+            works without JavaScript.
+          </p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">Three tabs, first selected. Try arrow keys.</p>
+          <div class="component-preview">
+            <div class="tabs" role="tablist">
+              <label class="tabs__tab">
+                <input type="radio" name="tabs-default" class="tabs__radio" checked />
+                <span class="tabs__label">Overview</span>
+              </label>
+              <label class="tabs__tab">
+                <input type="radio" name="tabs-default" class="tabs__radio" />
+                <span class="tabs__label">Details</span>
+              </label>
+              <label class="tabs__tab">
+                <input type="radio" name="tabs-default" class="tabs__radio" />
+                <span class="tabs__label">Settings</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Two options</h3>
+          <p class="section-note">Works down to two — the minimum useful size.</p>
+          <div class="component-preview">
+            <div class="tabs" role="tablist" style="width: 200px">
+              <label class="tabs__tab">
+                <input type="radio" name="tabs-two" class="tabs__radio" checked />
+                <span class="tabs__label">Light</span>
+              </label>
+              <label class="tabs__tab">
+                <input type="radio" name="tabs-two" class="tabs__radio" />
+                <span class="tabs__label">Dark</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <p class="section-note">Copy this into your project.</p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/label&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Details<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/label&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

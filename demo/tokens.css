@@ -25,12 +25,16 @@
   --neutral-white: rgb(255 255 255);
   --neutral-white-hover: rgb(232 232 232);
   --neutral-white-active: rgb(224 224 224);
-  --background-primary: rgb(255 255 255);
-  --background-primary-hover: rgb(232 232 232);
-  --background-primary-active: rgb(224 224 224);
-  --background-secondary: rgb(246 246 246);
-  --background-secondary-hover: rgb(223 223 223);
-  --background-secondary-active: rgb(215 215 215);
+
+  /* Consistent semantics both themes: primary = page bg (recessed / tinted),
+     secondary = elevated surface (cards, sheets, active pills — brighter than
+     primary in light AND dark). Swap of the old order — matches Ruter/iOS. */
+  --background-primary: rgb(246 246 246);
+  --background-primary-hover: rgb(223 223 223);
+  --background-primary-active: rgb(215 215 215);
+  --background-secondary: rgb(255 255 255);
+  --background-secondary-hover: rgb(232 232 232);
+  --background-secondary-active: rgb(224 224 224);
   --ink-primary: rgb(34 34 34);
   --ink-primary-hover: rgb(57 57 57);
   --ink-primary-active: rgb(65 65 65);

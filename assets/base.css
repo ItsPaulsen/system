@@ -1,4 +1,7 @@
-/* system.kristianpaulsen.com — shared site chrome (mechanics, not per-project brand) */
+/* system.kristianpaulsen.com — shared chrome mechanics only. Every visual
+   token comes from the loaded project's tokens.css (e.g. /demo/tokens.css or
+   /tokens.css at the root). The chrome references those tokens directly, so
+   every page IS a live demo of whichever project it belongs to. */
 
 @import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap");
 
@@ -11,19 +14,6 @@
   --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
   --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
   --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
-
-  /* Dark theme (default) — pure greyscale, no colour tints */
-  --ui-bg: #0a0a0a;
-  --ui-surface: #262626;
-  --ui-surface-hover: #2e2e2e;
-  --ui-surface-active: #404040;
-  --ui-surface-2: #181818;
-  --ui-border: #262626;
-  --ui-border-hover: #404040;
-  --ui-text: #ededed;
-  --ui-muted: #a3a3a3;
-  --ui-ring: var(--ui-text);
-  --ui-swatch-border: rgb(255 255 255 / 0.1);
 }
 
 :root[data-theme="dark"] {
@@ -32,17 +22,6 @@
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --ui-bg: #fff;
-  --ui-surface: #f5f5f5;
-  --ui-surface-hover: #ebebeb;
-  --ui-surface-active: #f5f5f5;
-  --ui-surface-2: #fff;
-  --ui-border: #e5e5e5;
-  --ui-border-hover: #d4d4d4;
-  --ui-text: #171717;
-  --ui-muted: #6c6c6c;
-  --ui-ring: var(--ui-text);
-  --ui-swatch-border: rgb(0 0 0 / 0.1);
 }
 
 * {
@@ -56,8 +35,8 @@ html {
 body {
   min-width: 360px;
   margin: 0;
-  background: var(--ui-bg);
-  color: var(--ui-text);
+  background: var(--background-primary);
+  color: var(--ink-primary);
   font-family: var(--font);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -78,8 +57,8 @@ body {
   left: 50%;
   z-index: 100;
   padding: 0.5rem 1rem;
-  color: var(--ui-bg);
-  background: var(--ui-text);
+  color: var(--background-primary);
+  background: var(--ink-primary);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
@@ -90,7 +69,7 @@ body {
 
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -99,7 +78,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--ui-bg);
+  background: var(--background-primary);
 }
 
 .site-nav__inner {
@@ -128,14 +107,14 @@ body {
      so the icon's visible content sits at the page-gutter. */
   margin-left: -0.5rem;
   padding: 0;
-  color: var(--ui-text);
+  color: var(--ink-primary);
   background: none;
   border: 0;
   cursor: pointer;
 }
 
 .site-nav__menu:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -172,7 +151,7 @@ body {
   /* Left = page-gutter minus link's inline padding, so link text lands at 24px
      and its hover/active surface extends 8px to the left of the text. */
   padding: 0.75rem 1.5rem 3rem calc(var(--page-gutter) - 0.5rem);
-  background: var(--ui-bg);
+  background: var(--background-primary);
   z-index: 18;
 }
 
@@ -194,7 +173,7 @@ body {
   padding-inline: 0.5rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
 }
 
 .sidebar__link,
@@ -206,13 +185,13 @@ body {
 
 .sidebar__link {
   line-height: 20px;
-  color: var(--ui-text);
+  color: var(--ink-primary);
   font-weight: 500;
 }
 
 .sidebar__back {
   margin-bottom: 1.25rem;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
 }
 
 /* Visual pill wraps just the label; the anchor stays full width for clicks. */
@@ -226,7 +205,7 @@ body {
 }
 
 .sidebar__link:hover > span {
-  background: var(--ui-surface);
+  background: var(--background-secondary);
 }
 
 .sidebar__link:focus-visible,
@@ -236,16 +215,16 @@ body {
 
 .sidebar__link:focus-visible > span,
 .sidebar__back:focus-visible > span {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 0;
 }
 
 .sidebar__link.is-active > span {
-  background: var(--ui-surface-active);
+  background: var(--background-secondary-active);
 }
 
 .sidebar__back:hover {
-  color: var(--ui-text);
+  color: var(--ink-primary);
 }
 
 .sidebar-backdrop {
@@ -268,16 +247,27 @@ body {
     height: 100vh;
     max-height: none;
     padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
-    background: color-mix(in srgb, var(--ui-bg) 85%, transparent);
+    background: color-mix(in srgb, var(--background-primary) 85%, transparent);
     backdrop-filter: saturate(1.4) blur(12px);
     z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
     opacity: 0;
+
+    /* Drawer scrolls internally but hides its own scrollbar — the outer page
+       scrollbar stays visible for visual continuity (matches shadcn). Overscroll
+       is contained so reaching the end of the drawer doesn't bleed to the page. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
 
     /* visibility: hidden stops the browser from painting the drawer at all —
        prevents a brief flash of the full-screen open state when the viewport
        crosses the breakpoint. */
     visibility: hidden;
     pointer-events: none;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
   }
 
   /* Big links, no hover pill — shadcn-style fullscreen drawer. */
@@ -340,8 +330,14 @@ body {
   font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: var(--ui-text);
+  color: var(--ink-primary);
   text-decoration: none;
+}
+
+.site-nav__brand:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .theme-toggle {
@@ -355,7 +351,7 @@ body {
   /* Sit 16px from the viewport edge (rather than 24) — tighter to the corner. */
   margin-right: -0.5rem;
   padding: 0;
-  color: var(--ui-text);
+  color: var(--ink-primary);
   background: none;
   border: 0;
   border-radius: 8px;
@@ -363,11 +359,11 @@ body {
 }
 
 .theme-toggle:hover {
-  background: var(--ui-surface);
+  background: var(--background-secondary);
 }
 
 .theme-toggle:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -417,7 +413,7 @@ body {
    Spacing) → no floating divider above the content. */
 body:has(.subhead) .site-head {
   padding-bottom: 2rem;
-  border-bottom: 1px solid var(--ui-border);
+  border-bottom: 1px solid var(--fill-tertiary);
 }
 
 .site-head__body {
@@ -452,7 +448,7 @@ body:has(.subhead) .site-head {
   font-size: 0.875rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
   margin: 0 0 0.5rem;
 }
 
@@ -465,7 +461,7 @@ h1 {
 }
 
 .lede {
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
   font-size: 1rem;
   margin: 0;
 }
@@ -494,8 +490,8 @@ h1 {
   font: inherit;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--ui-text);
-  background: var(--ui-surface);
+  color: var(--ink-primary);
+  background: var(--background-secondary);
   border: 0;
   border-radius: 8px;
   cursor: pointer;
@@ -505,7 +501,7 @@ h1 {
 }
 
 .btn:hover {
-  background: var(--ui-surface-hover);
+  background: var(--background-secondary-hover);
 }
 
 .btn:active {
@@ -513,14 +509,14 @@ h1 {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
 section + section {
   margin-top: 3.5rem;
   padding-top: 3.5rem;
-  border-top: 1px solid var(--ui-border);
+  border-top: 1px solid var(--fill-tertiary);
 }
 
 h2 {
@@ -531,18 +527,20 @@ h2 {
 }
 
 .section-note {
-  color: var(--ui-text);
+  color: var(--ink-primary);
   font-size: 0.9375rem;
   max-width: var(--measure);
   margin: 0.25rem 0 0;
 }
 
-/* Inline + block code samples */
+/* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
+   contrasts against any surface it's placed on (whether that's the tinted page
+   or an elevated card). The Ruter pattern for subtle inline chips. */
 code {
   font-family: var(--mono);
   font-size: 0.8125rem;
   padding: 0.1rem 0.3rem;
-  background: var(--ui-surface);
+  background: var(--fill-quaternary);
   border: 0;
   border-radius: 4px;
 }
@@ -550,14 +548,10 @@ code {
 pre {
   margin: 0 0 1rem;
   padding: 0.875rem 1rem;
-  background: #f8f8f8;
+  background: var(--background-secondary);
   border: 0;
   border-radius: 16px;
   overflow-x: auto;
-}
-
-:root[data-theme="dark"] pre {
-  background: var(--ui-surface-2);
 }
 
 pre code {
@@ -584,7 +578,7 @@ pre code {
 
 .layer-list dd {
   margin: 0.125rem 0 0;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
   font-family: var(--mono);
   font-size: 0.8125rem;
 }
@@ -643,7 +637,8 @@ pre .tok-var {
    for states (default / hover / active). Content-driven min-width triggers
    horizontal scroll on narrow viewports instead of squeezing swatches. */
 .palette-table {
-  border: 1px solid var(--ui-border);
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -659,11 +654,13 @@ pre .tok-var {
 }
 
 .palette-table thead th {
-  padding: 0.75rem 1rem;
+  height: 48px;
+  padding: 0 1rem;
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 20px;
   text-align: left;
-  border-bottom: 1px solid var(--ui-border);
+  border-bottom: 1px solid var(--fill-tertiary);
 }
 
 .palette-table__state {
@@ -684,13 +681,15 @@ pre .tok-var {
 
 .palette-table tbody th,
 .palette-table tbody td {
-  padding: 0.75rem 1rem;
+  height: 72px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
   vertical-align: middle;
 }
 
 .palette-table tbody tr + tr th,
 .palette-table tbody tr + tr td {
-  border-top: 1px solid var(--ui-border);
+  border-top: 1px solid var(--fill-tertiary);
 }
 
 .palette-table tbody th[scope="row"] {
@@ -708,7 +707,7 @@ pre .tok-var {
   width: 64px;
   height: 48px;
   padding: 0;
-  border: 1px solid var(--ui-swatch-border);
+  border: 1px solid var(--fill-quaternary);
   border-radius: 6px;
   background: var(--c);
   cursor: pointer;
@@ -723,7 +722,7 @@ pre .tok-var {
 }
 
 .palette-swatch:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -748,9 +747,9 @@ pre .tok-var {
   display: inline-block;
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--ui-text);
-  background: var(--ui-surface);
-  border: 1px solid var(--ui-border);
+  color: var(--ink-primary);
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
   border-radius: 999px;
   padding: 0.25rem 0.7rem;
   margin: 0;
@@ -761,7 +760,8 @@ pre .tok-var {
   list-style: none;
   padding: 0;
   margin: 0;
-  border: 1px solid var(--ui-border);
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -772,7 +772,7 @@ pre .tok-var {
 }
 
 .type-list > li + li {
-  border-top: 1px solid var(--ui-border);
+  border-top: 1px solid var(--fill-tertiary);
 }
 
 .type-row {
@@ -793,11 +793,11 @@ pre .tok-var {
   justify-content: space-between;
   gap: 1rem;
   font-size: 0.8125rem;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
 }
 
 .type-row__name {
-  color: var(--ui-text);
+  color: var(--ink-primary);
 }
 
 /* Hydration leaves lh/weight empty (spec is compacted into the size slot), so
@@ -911,11 +911,11 @@ pre .tok-var {
   gap: 0.25rem;
   height: 32px;
   padding: 0 0.625rem;
-  color: var(--ui-text);
+  color: var(--ink-primary);
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  background: var(--ui-surface);
+  background: var(--background-secondary);
   border-radius: 8px;
   transition:
     background-color 0.15s ease,
@@ -923,7 +923,7 @@ pre .tok-var {
 }
 
 .pagination__link:hover {
-  background: var(--ui-surface-hover);
+  background: var(--background-secondary-hover);
 }
 
 .pagination__link:active {
@@ -931,7 +931,7 @@ pre .tok-var {
 }
 
 .pagination__link:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -940,67 +940,67 @@ pre .tok-var {
 }
 
 /* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */
-.switch {
+.docs-switch {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
   cursor: pointer;
 }
 
-.switch__toggle {
+.docs-switch__toggle {
   position: relative;
   width: 36px;
   height: 20px;
   padding: 0;
-  background: var(--ui-border-hover);
+  background: var(--fill-secondary);
   border: 0;
   border-radius: 999px;
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
-.switch__toggle::before {
+.docs-switch__toggle::before {
   content: "";
   position: absolute;
   top: 2px;
   left: 2px;
   width: 16px;
   height: 16px;
-  background: #fff;
+  background: var(--background-secondary);
   border-radius: 50%;
   transition: transform 0.15s ease;
 }
 
-.switch__toggle[aria-checked="true"] {
-  background: #10b981;
+.docs-switch__toggle[aria-checked="true"] {
+  background: var(--primary);
 }
 
-.switch__toggle[aria-checked="true"]::before {
+.docs-switch__toggle[aria-checked="true"]::before {
   transform: translateX(16px);
 }
 
-.switch__toggle:focus-visible {
-  outline: 2px solid var(--ui-ring);
+.docs-switch__toggle:focus-visible {
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
-.switch__label {
+.docs-switch__label {
   font-size: 0.875rem;
-  color: var(--ui-text);
+  color: var(--ink-primary);
 }
 
 /* Shadcn-style underlined tabs. Active tab has a text-coloured bottom line
    that sits over the tablist's bottom border. */
-.tabs {
+.docs-tabs {
   display: flex;
   gap: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.tabs__tab {
+.docs-tabs__tab {
   position: relative;
   padding: 0.375rem 0;
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
   background: none;
   border: 0;
   font: inherit;
@@ -1009,34 +1009,35 @@ pre .tok-var {
   cursor: pointer;
 }
 
-.tabs__tab:hover {
-  color: var(--ui-text);
+.docs-tabs__tab:hover {
+  color: var(--ink-primary);
 }
 
-.tabs__tab:focus-visible {
-  outline: 2px solid var(--ui-ring);
+.docs-tabs__tab:focus-visible {
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-.tabs__tab[aria-selected="true"] {
-  color: var(--ui-text);
+.docs-tabs__tab[aria-selected="true"] {
+  color: var(--ink-primary);
 }
 
-.tabs__tab[aria-selected="true"]::after {
+.docs-tabs__tab[aria-selected="true"]::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   bottom: 1px;
   height: 2px;
-  background: var(--ui-text);
+  background: var(--ink-primary);
 }
 
 /* Single-card token list — one bordered box, rows separated by dividers.
    Used on Spacing (name / bar / value) and Grid (name / value). */
 .token-list {
-  border: 1px solid var(--ui-border);
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -1050,7 +1051,7 @@ pre .tok-var {
 }
 
 .token-list__row + .token-list__row {
-  border-top: 1px solid var(--ui-border);
+  border-top: 1px solid var(--fill-tertiary);
 }
 
 .token-list__name {
@@ -1061,7 +1062,7 @@ pre .tok-var {
 .token-list__bar {
   flex: none;
   height: 8px;
-  background: var(--ui-text);
+  background: var(--ink-primary);
   border-radius: 4px;
 }
 
@@ -1082,7 +1083,7 @@ a.token-list__row .token-list__name {
 }
 
 a.token-list__row .token-list__value {
-  color: var(--ui-muted);
+  color: var(--ink-secondary);
 }
 
 a.token-list__row::after {
@@ -1091,22 +1092,19 @@ a.token-list__row::after {
   width: 16px;
   height: 16px;
   background: currentcolor;
-  color: var(--ui-muted);
+  color: var(--ink-tertiary);
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>")
     no-repeat center / 16px;
+  transition: color var(--motion-default);
 }
 
-a.token-list__row:hover {
-  background: #f8f8f8;
+a.token-list__row:hover::after {
+  color: var(--ink-primary);
 }
 
 a.token-list__row:focus-visible {
-  outline: 2px solid var(--ui-ring);
+  outline: 2px solid var(--focus);
   outline-offset: -2px;
-}
-
-:root[data-theme="dark"] a.token-list__row:hover {
-  background: var(--ui-surface-2);
 }
 
 /* On narrow screens the description drops under the label (left-aligned)
@@ -1166,7 +1164,8 @@ a.token-list__row:focus-visible {
   flex-direction: column;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--ui-border);
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
   border-radius: 16px;
 }
 
@@ -1176,6 +1175,21 @@ a.token-list__row:focus-visible {
   justify-content: center;
   min-height: 220px;
   padding: 2rem;
+  background: var(--background-primary);
+}
+
+/* Component demo container — a "stage" that isolates the live example on the
+   project's elevated surface (--background-secondary). Components that need
+   to match this surface (Tabs' active pill, Switch's knob) reference it too. */
+.component-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 2rem;
+  background: var(--background-secondary);
+  border: 1px solid var(--fill-tertiary);
+  border-radius: 16px;
 }
 
 .preview-card__chip {
@@ -1183,36 +1197,29 @@ a.token-list__row:focus-visible {
   width: 100%;
   max-width: 196px;
   height: 128px;
-  background: var(--ui-surface);
+  background: var(--background-secondary);
   border-radius: 12px;
 }
 
 /* Shadow demo keeps a subtler surface so the shadow reads against the card. */
 .preview-card__chip[data-shadow-demo] {
-  background: var(--ui-surface-2);
+  background: var(--background-secondary);
 }
 
-/* Radius demo — subtle surface + alpha-white ring (matches shadcn's card look). */
+/* Radius demo — subtle surface + alpha ring (matches shadcn's card look).
+   Uses --fill-tertiary for the ring so the alpha overlay reads correctly on
+   the demo's own surface across both themes — no per-theme override needed. */
 .preview-card__chip[data-radius-demo] {
-  background: var(--ui-surface-2);
+  background: var(--background-secondary);
   border: 0;
-  box-shadow: 0 0 0 1px var(--ui-border);
-}
-
-:root[data-theme="dark"] .preview-card__chip[data-radius-demo] {
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
+  box-shadow: 0 0 0 1px var(--fill-tertiary);
 }
 
 .preview-card__meta {
   position: relative;
   padding: 0.875rem 1rem;
-  background: #f8f8f8;
-  border-top: 1px solid var(--ui-border);
+  border-top: 1px solid var(--fill-tertiary);
   overflow: hidden;
-}
-
-:root[data-theme="dark"] .preview-card__meta {
-  background: var(--ui-surface-2);
 }
 
 .preview-card__meta-text {
@@ -1247,7 +1254,7 @@ a.token-list__row:focus-visible {
   width: 100%;
   max-width: 160px;
   height: 24px;
-  background: var(--ui-surface);
+  background: var(--background-secondary);
   border-radius: 999px;
 }
 
@@ -1258,7 +1265,7 @@ a.token-list__row:focus-visible {
   bottom: 4px;
   left: 4px;
   width: 16px;
-  background: var(--ui-text);
+  background: var(--ink-primary);
   border-radius: 999px;
   transition: left var(--motion-demo-transition);
 }
@@ -1354,8 +1361,8 @@ a.token-list__row:focus-visible {
   left: 50%;
   bottom: 1.5rem;
   transform: translateX(-50%) translateY(1rem);
-  background: var(--ui-text);
-  color: var(--ui-bg);
+  background: var(--ink-primary);
+  color: var(--background-primary);
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.625rem 1rem;

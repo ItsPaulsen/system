@@ -1,0 +1,151 @@
+/* Demo project components — copy these into your project.
+   Everything below references demo tokens (`--primary`, `--ink-*`, `--motion-*`
+   …). Restyle by swapping tokens in `tokens.css`. */
+
+/* ── Switch ────────────────────────────────────────────────────────────── */
+
+/* Structure:
+   <label class="switch">
+     <span class="switch__input-wrapper">
+       <input type="checkbox" class="switch__input" />
+       <span class="switch__knob"></span>
+     </span>
+     <span class="switch__label">Label</span>
+   </label> */
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.switch__input-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+
+.switch__input {
+  appearance: none;
+  display: block;
+  width: 48px;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+  background: var(--ink-tertiary);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background var(--motion-default);
+}
+
+.switch__input:checked {
+  background: var(--primary);
+}
+
+.switch__input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.switch__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--background-secondary);
+  border-radius: 999px;
+  pointer-events: none;
+  transition: transform var(--motion-default);
+}
+
+.switch__input:checked + .switch__knob {
+  transform: translateX(20px);
+}
+
+.switch__label {
+  font-size: 1rem;
+  color: var(--ink-primary);
+  cursor: pointer;
+}
+
+.switch:has(.switch__input:disabled) .switch__label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+/* Segmented control — track is a fill tint over whatever surface the tabs
+   sit on. Active pill uses --background-secondary so it matches the elevated
+   surface (white in light, lighter-dark in dark), giving the "punched through"
+   effect. Uses native radio inputs so no JavaScript is needed for mutual
+   exclusion or keyboard nav.
+
+   Place tabs on a --background-secondary surface (card, sheet) for the effect
+   to read correctly.
+
+   Structure:
+   <div class="tabs" role="tablist">
+     <label class="tabs__tab">
+       <input type="radio" name="group" class="tabs__radio" checked />
+       <span class="tabs__label">Overview</span>
+     </label>
+     …
+   </div> */
+
+.tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--fill-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.tabs__tab {
+  position: relative;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--motion-default);
+}
+
+.tabs__radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+}
+
+.tabs__tab:hover {
+  background: var(--fill-quaternary);
+  color: var(--ink-primary);
+}
+
+.tabs__tab:has(.tabs__radio:checked) {
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+}
+
+.tabs__tab:has(.tabs__radio:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}

@@ -228,6 +228,23 @@
   }
 }</code></pre>
         </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Whole-pixel rows</h3>
+          <p class="section-note">
+            When text lives in a fixed-height row (table cell, list item, header), pin
+            <code>line-height</code> in <code>px</code>. A unitless line-height compounds with a
+            <code>rem</code>-based font-size and can land on a fractional value, which the browser
+            snaps to <code>.5</code> pixels — you get jagged borders and off-by-half rows. Keep
+            <code>font-size</code> in <code>rem</code> for scalability; only pin the line box.
+          </p>
+          <pre><code><span class="tok-selector">th</span> {
+  <span class="tok-prop">font-size</span>: <span class="tok-str">0.875rem</span>;  <span class="tok-key">/* still scales with root */</span>
+  <span class="tok-prop">line-height</span>: <span class="tok-str">20px</span>;    <span class="tok-key">/* pinned to whole px */</span>
+  <span class="tok-prop">padding</span>: <span class="tok-str">12px 16px</span>;
+}
+<span class="tok-key">/* Total row: 12 + 20 + 12 = 44px, whole. */</span></code></pre>
+        </section>
       </div>
     </div>
     <script src="/assets/app.js" defer></script>

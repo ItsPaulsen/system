@@ -144,6 +144,18 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Motion — one composed default for hovers/state changes; raw easings for
+     entrances (ease-out) and exits (ease-in) that need a different curve. */
+  --motion-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Fill — alpha tints that work on any surface (hover overlays, selected rows) */
+  --fill-primary: rgb(18 18 18 / 0.26);
+  --fill-secondary: rgb(18 18 18 / 0.2);
+  --fill-tertiary: rgb(18 18 18 / 0.12);
+  --fill-quaternary: rgb(18 18 18 / 0.06);
 }
 
 /* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
@@ -213,4 +225,10 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+
+  /* Dark theme fills invert: light overlay ink to darken/lift any surface */
+  --fill-primary: rgb(245 245 245 / 0.26);
+  --fill-secondary: rgb(245 245 245 / 0.2);
+  --fill-tertiary: rgb(245 245 245 / 0.12);
+  --fill-quaternary: rgb(245 245 245 / 0.06);
 }

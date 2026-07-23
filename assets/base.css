@@ -499,11 +499,17 @@ h1 {
   border: 0;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
 }
 
 .btn:hover {
   background: var(--ui-surface-hover);
+}
+
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn:focus-visible {
@@ -906,11 +912,17 @@ pre .tok-var {
   text-decoration: none;
   background: var(--ui-surface);
   border-radius: 8px;
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
 }
 
 .pagination__link:hover {
   background: var(--ui-surface-hover);
+}
+
+.pagination__link:active {
+  transform: scale(0.97);
 }
 
 .pagination__link:focus-visible {
@@ -1148,6 +1160,7 @@ a.token-list__row:focus-visible {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  overflow: hidden;
   border: 1px solid var(--ui-border);
   border-radius: 16px;
 }
@@ -1188,8 +1201,13 @@ a.token-list__row:focus-visible {
 .preview-card__meta {
   position: relative;
   padding: 0.875rem 1rem;
+  background: #f8f8f8;
   border-top: 1px solid var(--ui-border);
   overflow: hidden;
+}
+
+:root[data-theme="dark"] .preview-card__meta {
+  background: var(--ui-surface-2);
 }
 
 .preview-card__meta-text {
@@ -1213,6 +1231,44 @@ a.token-list__row:focus-visible {
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
+}
+
+/* Motion demo — small horizontal track with a dot that slides across on card
+   hover, using the token duration + easing so you can see each token in action. */
+.motion-demo {
+  --motion-demo-transition: var(--motion-default);
+
+  position: relative;
+  width: 100%;
+  max-width: 160px;
+  height: 24px;
+  background: var(--ui-surface);
+  border-radius: 999px;
+}
+
+.motion-demo::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: 16px;
+  background: var(--ui-text);
+  border-radius: 999px;
+  transition: left var(--motion-demo-transition);
+}
+
+.preview-card:hover .motion-demo::after {
+  left: calc(100% - 20px);
+}
+
+/* Ease-in / ease-out demos use a longer duration so the curve shape is legible. */
+.motion-demo[data-motion="ease-in"] {
+  --motion-demo-transition: 400ms var(--motion-ease-in);
+}
+
+.motion-demo[data-motion="ease-out"] {
+  --motion-demo-transition: 400ms var(--motion-ease-out);
 }
 
 /* Grid overlay — pinned over the content column so its columns line up with the page.

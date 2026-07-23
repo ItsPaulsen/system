@@ -122,7 +122,7 @@
           <h3 class="subhead">Body</h3>
           <p class="section-note">
             Paragraphs and running text. Each tier has an <code>-emphasized</code> variant at weight
-            600 (shown bold inline below).
+            600.
           </p>
           <ul class="type-list">
             <li>
@@ -213,9 +213,8 @@
         <section class="preview-block">
           <h3 class="subhead">Using across breakpoints</h3>
           <p class="section-note">
-            Sizes stay fixed per tier — for responsive text, swap the token per breakpoint in the
-            component. Example: a hero uses <code>headline-medium</code> (48px) on desktop and drops
-            to <code>title-large</code> (32px) on mobile.
+            Sizes are fixed per tier. For responsive text, swap tokens per breakpoint — e.g.
+            <code>headline-medium</code> on desktop, <code>title-large</code> on mobile.
           </p>
           <pre><code><span class="tok-selector">.hero-title</span> {
   <span class="tok-prop">font-size</span>: <span class="tok-fn">var</span>(<span class="tok-var">--font-headline-medium-size</span>);

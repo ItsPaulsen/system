@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Motion — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Motion</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/tokens.css"
+              data-copy-tokens="motion"
+            >
+              Copy Tokens
+            </button>
+          </div>
+          <p class="lede">Transition tokens for state changes. Hover a card to play.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Hovers, focus rings, colour and small state changes. Reach for this ~95% of the time.
+          </p>
+          <article class="preview-card" data-token="motion-default">
+            <span class="preview-card__name"><code>motion-default</code></span>
+            <div class="preview-card__demo">
+              <span class="motion-demo"></span>
+            </div>
+            <div class="preview-card__meta">
+              <div class="preview-card__meta-text">
+                <span class="preview-card__value"></span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Ease-out</h3>
+          <p class="section-note">Things arriving — dropdowns, toasts, sheets sliding in.</p>
+          <article class="preview-card" data-token="motion-ease-out">
+            <span class="preview-card__name"><code>motion-ease-out</code></span>
+            <div class="preview-card__demo">
+              <span class="motion-demo" data-motion="ease-out"></span>
+            </div>
+            <div class="preview-card__meta">
+              <div class="preview-card__meta-text">
+                <span class="preview-card__value"></span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Ease-in</h3>
+          <p class="section-note">Things leaving — dismissals, closes, exits.</p>
+          <article class="preview-card" data-token="motion-ease-in">
+            <span class="preview-card__name"><code>motion-ease-in</code></span>
+            <div class="preview-card__demo">
+              <span class="motion-demo" data-motion="ease-in"></span>
+            </div>
+            <div class="preview-card__meta">
+              <div class="preview-card__meta-text">
+                <span class="preview-card__value"></span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

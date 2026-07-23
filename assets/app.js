@@ -145,7 +145,8 @@ const DEMO_PAGES = [
       { label: "Grid", href: "/demo/grid/" },
       { label: "Spacing", href: "/demo/spacing/" },
       { label: "Radii", href: "/demo/radii/" },
-      { label: "Shadows", href: "/demo/shadows/" }
+      { label: "Shadows", href: "/demo/shadows/" },
+      { label: "Motion", href: "/demo/motion/" }
     ]
   }
 ];

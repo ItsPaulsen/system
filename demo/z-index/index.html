@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Z-index — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Z-index</h1>
+            <button class="btn" type="button" data-copy-css="/demo/tokens.css" data-copy-tokens="z">
+              Copy Tokens
+            </button>
+          </div>
+          <p class="lede">
+            Stacking layers, gaps of 10 so you can slot values between when needed.
+          </p>
+        </div>
+      </header>
+
+      <article class="palette-table">
+        <div class="palette-table__scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" class="palette-table__token">Token</th>
+                <th scope="col" class="palette-table__state">Value</th>
+                <th scope="col">Use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row"><code>z-base</code></th>
+                <td class="palette-table__state">0</td>
+                <td>Default document stacking</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>z-sticky</code></th>
+                <td class="palette-table__state">10</td>
+                <td>Sticky headers, footers, elevated cards</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>z-dropdown</code></th>
+                <td class="palette-table__state">20</td>
+                <td>Menus, popovers, tooltips</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>z-overlay</code></th>
+                <td class="palette-table__state">30</td>
+                <td>Modal backdrops, drawer surfaces</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>z-modal</code></th>
+                <td class="palette-table__state">40</td>
+                <td>Modal content, dialogs</td>
+              </tr>
+              <tr>
+                <th scope="row"><code>z-toast</code></th>
+                <td class="palette-table__state">50</td>
+                <td>Toasts, notifications — always on top</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

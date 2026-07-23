@@ -156,6 +156,14 @@
   --fill-secondary: rgb(18 18 18 / 0.2);
   --fill-tertiary: rgb(18 18 18 / 0.12);
   --fill-quaternary: rgb(18 18 18 / 0.06);
+
+  /* Z-index — semantic layers, gaps of 10 so you can slot values between. */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-dropdown: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-toast: 50;
 }
 
 /* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */

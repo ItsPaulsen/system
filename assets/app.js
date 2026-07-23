@@ -384,7 +384,7 @@ const GRID_BREAKPOINTS = {
     "container-max": "1200px"
   },
   tablet: {
-    name: "var(--bp-tablet)",
+    name: "<code>bp-tablet</code>",
     threshold: "640px",
     "grid-columns": "12",
     "grid-gutter": "20px",
@@ -392,7 +392,7 @@ const GRID_BREAKPOINTS = {
     "container-max": "1200px"
   },
   desktop: {
-    name: "var(--bp-desktop)",
+    name: "<code>bp-desktop</code>",
     threshold: "1024px",
     "grid-columns": "12",
     "grid-gutter": "20px",
@@ -411,7 +411,9 @@ function initGridTabs() {
     if (!values) return;
     tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
     panel.querySelectorAll("[data-grid-key]").forEach((el) => {
-      el.textContent = values[el.dataset.gridKey] || "";
+      const v = values[el.dataset.gridKey] || "";
+      if (el.dataset.gridKey === "name") el.innerHTML = v;
+      else el.textContent = v;
     });
   };
   tabs.forEach((t) => t.addEventListener("click", () => setActive(t.dataset.tab)));

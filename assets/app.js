@@ -241,28 +241,107 @@ function wireSidebar(aside, backdrop) {
 
 /* ── Token hydration ───────────────────────────────────────────────────── */
 
-// Fill each palette chip's colour + value from its :root token.
-// Sub-chips (hover / active) show just the suffix — the indent already ties
-// them to the base above.
+// Colors page: family definitions rendered into palette tables at init.
+// Keeping this as data (not HTML) means adding/removing a token is one line.
+// States: 3-column families expand to base + `-hover` + `-active` per row;
+// single-column families (Fill) render one swatch per base token.
+const PALETTE_FAMILIES = [
+  {
+    title: "Neutral",
+    note: "Borders, dividers, and quiet surfaces.",
+    tokens: [
+      "neutral-gray-1",
+      "neutral-gray-2",
+      "neutral-gray-3",
+      "neutral-gray-4",
+      "neutral-white",
+      "neutral-black"
+    ]
+  },
+  {
+    title: "Background",
+    note: "Page and card surfaces.",
+    tokens: ["background-primary", "background-secondary"]
+  },
+  {
+    title: "Ink",
+    note: "Text and icon tones.",
+    tokens: ["ink-primary", "ink-secondary", "ink-tertiary"]
+  },
+  { title: "Primary", tokens: ["primary"] },
+  {
+    title: "Feedback",
+    note: "Status, validation, and system messages.",
+    tokens: ["success", "warning", "danger"]
+  },
+  { title: "Focus", note: "Keyboard focus ring.", tokens: ["focus"] },
+  { title: "Overlay", note: "Modal and drawer backdrops.", tokens: ["overlay"] },
+  {
+    title: "Fill",
+    note: "Alpha tints — layer over any surface for hover overlays or selected rows.",
+    tokens: ["fill-primary", "fill-secondary", "fill-tertiary", "fill-quaternary"],
+    single: true
+  }
+];
+
+const PALETTE_STATES = ["default", "hover", "active"];
+
+function renderPaletteFamily(family) {
+  const states = family.single ? ["default"] : PALETTE_STATES;
+  const headerCells = family.single
+    ? `<th class="palette-table__state"></th>`
+    : states
+        .map((s) => `<th class="palette-table__state">${s[0].toUpperCase() + s.slice(1)}</th>`)
+        .join("");
+  const rows = family.tokens
+    .map((base) => {
+      const cells = states
+        .map((s) => {
+          const token = s === "default" ? base : `${base}-${s}`;
+          const swatchClass = family.single
+            ? "palette-swatch palette-swatch--wide"
+            : "palette-swatch";
+          return `<td class="palette-table__state"><button type="button" class="${swatchClass}" data-token="${token}" aria-label="Copy ${token}"></button></td>`;
+        })
+        .join("");
+      return `<tr><th scope="row"><code>${base}</code></th>${cells}</tr>`;
+    })
+    .join("");
+  const note = family.note ? `<p class="section-note">${family.note}</p>` : "";
+  return `
+    <section class="preview-block">
+      <h3 class="subhead">${family.title}</h3>
+      ${note}
+      <article class="palette-table">
+        <div class="palette-table__scroll">
+          <table>
+            <thead>
+              <tr><th class="palette-table__token">Token</th>${headerCells}</tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  `;
+}
+
+function renderPalette() {
+  const host = document.querySelector("[data-palette-host]");
+  if (!host) return;
+  host.innerHTML = PALETTE_FAMILIES.map(renderPaletteFamily).join("");
+}
+
+// Fill each swatch's colour + copy target from its :root token.
 function hydratePalette() {
   const rootStyle = getComputedStyle(document.documentElement);
-  document.querySelectorAll(".palette__row").forEach((row) => {
-    const chips = [...row.querySelectorAll(".palette__chip")];
-    const baseToken = chips[0]?.dataset.token || "";
-    chips.forEach((chip, i) => {
-      const { token } = chip.dataset;
-      if (!token) return;
-      const value = rootStyle.getPropertyValue(`--${token}`).trim();
-      if (!value) return;
-      chip.style.setProperty("--c", value);
-      const valueEl = chip.querySelector(".palette__value");
-      if (valueEl) valueEl.textContent = value;
-      const nameEl = chip.querySelector(".palette__name");
-      if (nameEl && i > 0 && token.startsWith(baseToken + "-")) {
-        nameEl.textContent = token.slice(baseToken.length);
-      }
-      chip.dataset.copy = value;
-    });
+  document.querySelectorAll(".palette-swatch").forEach((el) => {
+    const { token } = el.dataset;
+    if (!token) return;
+    const value = rootStyle.getPropertyValue(`--${token}`).trim();
+    if (!value) return;
+    el.style.setProperty("--c", value);
+    el.dataset.copy = value;
   });
 }
 
@@ -460,6 +539,7 @@ function init() {
   injectNav();
   injectSidebar();
   injectPagination();
+  renderPalette();
   hydratePalette();
   hydratePreviews();
   initGridTabs();

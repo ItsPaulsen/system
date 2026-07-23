@@ -639,87 +639,92 @@ pre .tok-var {
   color: #79c0ff;
 }
 
-/* Palette: one family per row (base, hover, active). Each chip is full-height
-   colour block + name + value. Rows stack vertically. */
-.palette {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Palette table — one card per colour family, rows for base tokens, columns
+   for states (default / hover / active). Content-driven min-width triggers
+   horizontal scroll on narrow viewports instead of squeezing swatches. */
+.palette-table {
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-.palette__row {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+.palette-table__scroll {
+  overflow-x: auto;
 }
 
-.palette__chip {
-  display: grid;
-  grid-template-columns: 44px 1fr auto;
-  align-items: center;
-  gap: 0.75rem;
+.palette-table table {
   width: 100%;
-  font: inherit;
-  text-align: left;
-  color: inherit;
-  background: var(--ui-surface);
-  border: 0;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem 0.5rem 0.5rem;
-  cursor: pointer;
+  min-width: 480px;
+  border-collapse: collapse;
 }
 
-.palette__chip:focus-visible {
+.palette-table thead th {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.palette-table__state {
+  width: 72px;
+  padding-inline: 0.5rem !important;
+  text-align: center !important;
+}
+
+/* First state cell keeps 12px left so Token→Default stays at 24px. */
+.palette-table__token + .palette-table__state {
+  padding-left: 0.75rem !important;
+}
+
+/* Last state cell restores the outer 16px inset from the card edge. */
+.palette-table__state:last-child {
+  padding-right: 1rem !important;
+}
+
+.palette-table tbody th,
+.palette-table tbody td {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.palette-table tbody tr + tr th,
+.palette-table tbody tr + tr td {
+  border-top: 1px solid var(--ui-border);
+}
+
+.palette-table tbody th[scope="row"] {
+  padding-right: 0.75rem;
+  font-weight: 400;
+  text-align: left;
+}
+
+.palette-table tbody td.palette-table__state {
+  text-align: center;
+}
+
+.palette-swatch {
+  display: inline-block;
+  width: 64px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid var(--ui-swatch-border);
+  border-radius: 6px;
+  background: var(--c);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* Fill (single-state) family: one swatch stretched to the total width of the
+   three-state group above (3 × 64 swatch + 2 × 16 inner gap + 4 × cell-pad
+   offsets ≈ 224px) so the swatches align between families. */
+.palette-swatch--wide {
+  width: 224px;
+}
+
+.palette-swatch:focus-visible {
   outline: 2px solid var(--ui-ring);
   outline-offset: 2px;
-}
-
-.palette__color {
-  width: 44px;
-  height: 28px;
-  border-radius: 6px;
-  border: 1px solid var(--ui-swatch-border);
-  background: var(--c);
-}
-
-.palette__name {
-  font-size: 0.875rem;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Names are CSS custom properties — prefix "--" makes that clear at a glance.
-   Sub-chips (hover / active) show just the suffix, so no prefix there. */
-.palette__name::before {
-  content: "--";
-}
-
-.palette__chip:not(:first-child) .palette__name::before {
-  content: none;
-}
-
-/* Slightly shorter swatch on sub-chips so the base reads as the "main" tone. */
-.palette__chip:not(:first-child) .palette__color {
-  height: 20px;
-}
-
-.palette__value {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ui-muted);
-  white-space: nowrap;
-}
-
-@media (max-width: 640px) {
-  .palette__value {
-    display: none;
-  }
 }
 
 /* Subheads inside a section */
@@ -1376,7 +1381,6 @@ a.token-list__row:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .palette__chip,
   .btn,
   .theme-toggle,
   .sidebar,

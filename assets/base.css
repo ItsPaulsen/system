@@ -660,7 +660,6 @@ pre .tok-var {
   font-weight: 500;
   line-height: 20px;
   text-align: left;
-  border-bottom: 1px solid var(--fill-tertiary);
 }
 
 .palette-table__state {
@@ -685,10 +684,6 @@ pre .tok-var {
   padding: 0 1rem;
   font-size: 0.875rem;
   vertical-align: middle;
-}
-
-.palette-table tbody tr + tr th,
-.palette-table tbody tr + tr td {
   border-top: 1px solid var(--fill-tertiary);
 }
 

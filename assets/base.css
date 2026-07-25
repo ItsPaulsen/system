@@ -549,6 +549,11 @@ pre {
   border: 0;
   border-radius: 16px;
   overflow-x: auto;
+  scrollbar-width: none;
+}
+
+pre::-webkit-scrollbar {
+  display: none;
 }
 
 pre code {

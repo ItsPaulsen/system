@@ -108,7 +108,7 @@ function injectNav() {
     "arrow-left": '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>'
   };
   const icon = (name, size = 18, cls = "") =>
-    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
+    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
 
   // Detect the project from the URL: /demo/... → "Demo". At the site root the
   // title falls back to "system" so the nav still has a label.
@@ -163,7 +163,7 @@ const DEMO_PAGES = [
 
 // Lucide arrow-left inlined at 16px for the sidebar's back link.
 const ARROW_LEFT_16 =
-  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>';
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>';
 
 function isCurrentPage(href) {
   const here = location.pathname.replace(/\/index\.html$/, "/");
@@ -351,8 +351,8 @@ function hydratePalette() {
 // text. Injected here so the intro HTML stays lean.
 const LINK_ARROW_SVG =
   '<svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
-  '<path class="link-arrow__line" d="M1.5 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-  '<g class="link-arrow__chevron"><path d="M3.5 2l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>' +
+  '<path class="link-arrow__line" d="M1.5 6h8" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '<g class="link-arrow__chevron"><path d="M3.5 2l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></g>' +
   "</svg>";
 
 function hydrateLinkListArrows() {
@@ -521,7 +521,7 @@ function initGridTabs() {
 
 // Lucide arrow-right at 16px (arrow-left is mirrored via CSS transform).
 const ARROW_RIGHT_16 =
-  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
 
 // Inject a shadcn-style prev/next pair at the bottom of each doc page.
 function injectPagination() {

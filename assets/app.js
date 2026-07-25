@@ -346,6 +346,22 @@ function hydratePalette() {
   });
 }
 
+// Append a two-part arrow to each .link-list anchor. On hover the horizontal
+// line fades in and the chevron slides right, so the arrow "grows" out of the
+// text. Injected here so the intro HTML stays lean.
+const LINK_ARROW_SVG =
+  '<svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">' +
+  '<path class="link-arrow__line" d="M1.5 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+  '<g class="link-arrow__chevron"><path d="M3.5 2l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>' +
+  "</svg>";
+
+function hydrateLinkListArrows() {
+  document.querySelectorAll(".link-list a").forEach((a) => {
+    if (a.querySelector(".link-arrow")) return;
+    a.insertAdjacentHTML("beforeend", LINK_ARROW_SVG);
+  });
+}
+
 // Generic: fill a copyable preview element from its :root token, then optionally style a preview.
 function hydratePreview(selector, valueSelector, apply) {
   const rootStyle = getComputedStyle(document.documentElement);
@@ -540,6 +556,7 @@ function init() {
   injectSkipLink();
   injectSidebar();
   injectPagination();
+  hydrateLinkListArrows();
   renderPalette();
   hydratePalette();
   hydratePreviews();

@@ -1033,21 +1033,46 @@ pre .tok-var {
 }
 
 .link-list a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  justify-content: flex-start;
   color: var(--ink-primary);
   font-size: 1rem;
   font-weight: 500;
   text-decoration: none;
 }
 
-.link-list a:hover {
-  text-decoration: underline;
-}
-
 .link-list a:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
+   easing as the UngSex button arrow it's borrowed from. */
+.link-arrow {
+  width: 14px;
+  height: 14px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.link-arrow__line {
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.link-arrow__chevron {
+  transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.link-list a:hover .link-arrow__line {
+  opacity: 1;
+}
+
+.link-list a:hover .link-arrow__chevron {
+  translate: 3px 0;
 }
 
 /* Single-card token list — one bordered box, rows separated by dividers.

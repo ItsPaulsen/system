@@ -135,9 +135,13 @@
   clip: rect(0 0 0 0);
 }
 
-.tabs__tab:hover {
-  background: var(--fill-quaternary);
+.tabs__tab:hover:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
+  background: var(--fill-quaternary-hover);
   color: var(--ink-primary);
+}
+
+.tabs__tab:active:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
+  background: var(--fill-quaternary-active);
 }
 
 .tabs__tab:has(.tabs__radio:checked) {
@@ -145,7 +149,17 @@
   color: var(--ink-primary);
 }
 
+.tabs__tab:has(.tabs__radio:disabled) {
+  cursor: not-allowed;
+  color: var(--ink-tertiary);
+  opacity: 0.5;
+}
+
 .tabs__tab:has(.tabs__radio:focus-visible) {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
+}
+
+.tabs__tab:has(.tabs__radio:checked):active {
+  background: var(--background-secondary-active);
 }

@@ -34,7 +34,6 @@
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
-          <p class="section-note">Three tabs, first selected. Try arrow keys.</p>
           <div class="component-preview">
             <div class="tabs" role="tablist">
               <label class="tabs__tab">
@@ -54,17 +53,16 @@
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Two options</h3>
-          <p class="section-note">Works down to two — the minimum useful size.</p>
+          <h3 class="subhead">Disabled</h3>
           <div class="component-preview">
             <div class="tabs" role="tablist" style="width: 200px">
               <label class="tabs__tab">
                 <input type="radio" name="tabs-two" class="tabs__radio" checked />
-                <span class="tabs__label">Light</span>
+                <span class="tabs__label">Home</span>
               </label>
               <label class="tabs__tab">
-                <input type="radio" name="tabs-two" class="tabs__radio" />
-                <span class="tabs__label">Dark</span>
+                <input type="radio" name="tabs-two" class="tabs__radio" disabled />
+                <span class="tabs__label">Disabled</span>
               </label>
             </div>
           </div>
@@ -72,7 +70,6 @@
 
         <section class="preview-block">
           <h3 class="subhead">Markup</h3>
-          <p class="section-note">Copy this into your project.</p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>

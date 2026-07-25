@@ -142,12 +142,10 @@ const DEMO_PAGES = [
       { label: "Introduction", href: "/demo/" },
       { label: "Colors", href: "/demo/colors/" },
       { label: "Typography", href: "/demo/typography/" },
-      { label: "Grid", href: "/demo/grid/" },
-      { label: "Spacing", href: "/demo/spacing/" },
+      { label: "Layout", href: "/demo/layout/" },
       { label: "Radii", href: "/demo/radii/" },
       { label: "Shadows", href: "/demo/shadows/" },
-      { label: "Motion", href: "/demo/motion/" },
-      { label: "Z-index", href: "/demo/z-index/" }
+      { label: "Motion", href: "/demo/motion/" }
     ]
   },
   {
@@ -290,32 +288,23 @@ const PALETTE_FAMILIES = [
   { title: "Overlay", note: "Modal and drawer backdrops.", tokens: ["overlay"] },
   {
     title: "Fill",
-    note: "Alpha tints — layer over any surface for hover overlays or selected rows.",
-    tokens: ["fill-primary", "fill-secondary", "fill-tertiary", "fill-quaternary"],
-    single: true
+    note: "Alpha tints for hovers, presses, selected rows, and dividers.",
+    tokens: ["fill-primary", "fill-secondary", "fill-tertiary", "fill-quaternary"]
   }
 ];
 
 const PALETTE_STATES = ["default", "hover", "active"];
 
 function renderPaletteFamily(family) {
-  const states = family.single ? ["default"] : PALETTE_STATES;
-  const headerCells = family.single
-    ? `<th class="palette-table__state"></th>`
-    : states
-        .map((s) => `<th class="palette-table__state">${s[0].toUpperCase() + s.slice(1)}</th>`)
-        .join("");
+  const headerCells = PALETTE_STATES.map(
+    (s) => `<th class="palette-table__state">${s[0].toUpperCase() + s.slice(1)}</th>`
+  ).join("");
   const rows = family.tokens
     .map((base) => {
-      const cells = states
-        .map((s) => {
-          const token = s === "default" ? base : `${base}-${s}`;
-          const swatchClass = family.single
-            ? "palette-swatch palette-swatch--wide"
-            : "palette-swatch";
-          return `<td class="palette-table__state"><button type="button" class="${swatchClass}" data-token="${token}" aria-label="Copy ${token}"></button></td>`;
-        })
-        .join("");
+      const cells = PALETTE_STATES.map((s) => {
+        const token = s === "default" ? base : `${base}-${s}`;
+        return `<td class="palette-table__state"><button type="button" class="palette-swatch" data-token="${token}" aria-label="Copy ${token}"></button></td>`;
+      }).join("");
       return `<tr><th scope="row"><code>${base}</code></th>${cells}</tr>`;
     })
     .join("");

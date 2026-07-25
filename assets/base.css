@@ -505,6 +505,7 @@ h1 {
 }
 
 .btn:active {
+  background: var(--background-secondary-active);
   transform: scale(0.97);
 }
 
@@ -641,6 +642,7 @@ pre .tok-var {
   border: 1px solid var(--fill-tertiary);
   border-radius: 16px;
   overflow: hidden;
+  padding-right: 4px;
 }
 
 .palette-table__scroll {
@@ -666,16 +668,6 @@ pre .tok-var {
   width: 72px;
   padding-inline: 0.5rem !important;
   text-align: center !important;
-}
-
-/* First state cell keeps 12px left so Token→Default stays at 24px. */
-.palette-table__token + .palette-table__state {
-  padding-left: 0.75rem !important;
-}
-
-/* Last state cell restores the outer 16px inset from the card edge. */
-.palette-table__state:last-child {
-  padding-right: 1rem !important;
 }
 
 .palette-table tbody th,
@@ -707,13 +699,6 @@ pre .tok-var {
   background: var(--c);
   cursor: pointer;
   vertical-align: middle;
-}
-
-/* Fill (single-state) family: one swatch stretched to the total width of the
-   three-state group above (3 × 64 swatch + 2 × 16 inner gap + 4 × cell-pad
-   offsets ≈ 224px) so the swatches align between families. */
-.palette-swatch--wide {
-  width: 224px;
 }
 
 .palette-swatch:focus-visible {
@@ -922,6 +907,7 @@ pre .tok-var {
 }
 
 .pagination__link:active {
+  background: var(--background-secondary-active);
   transform: scale(0.97);
 }
 
@@ -1026,6 +1012,40 @@ pre .tok-var {
   bottom: 1px;
   height: 2px;
   background: var(--ink-primary);
+}
+
+/* Shadcn-style link list — 3-column grid on desktop, single column on mobile.
+   Used on the intro to enumerate Foundation and Components. */
+.link-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .link-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.link-list a {
+  color: var(--ink-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-list a:hover {
+  text-decoration: underline;
+}
+
+.link-list a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* Single-card token list — one bordered box, rows separated by dividers.
@@ -1134,6 +1154,11 @@ a.token-list__row:focus-visible {
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
+}
+
+/* Tighter rhythm — used on the intro where sections are short link lists. */
+.preview-grid--tight {
+  gap: 2rem;
 }
 
 .preview-block {

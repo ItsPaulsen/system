@@ -144,10 +144,18 @@
   --radius-lg: 24px;
   --radius-full: 999px;
 
-  /* Shadows (Tailwind/shadcn scale — layered for realistic depth) */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
+     mixed from --neutral-black so shadows follow any future tint of the neutrals
+     (and stay dark in both themes — --ink-primary inverts, --neutral-black doesn't). */
+  --shadow-sm:
+    0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent);
+  --shadow-md:
+    0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 10%, transparent);
+  --shadow-lg:
+    0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 10%, transparent);
 
   /* Motion — one composed default for hovers/state changes; raw easings for
      entrances (ease-out) and exits (ease-in) that need a different curve. */
@@ -155,13 +163,24 @@
   --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
   --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
 
-  /* Fill — alpha tints that work on any surface (hover overlays, selected rows) */
+  /* Fill — alpha tints that work on any surface (hover overlays, selected rows).
+     Each tier carries its own hover/active alphas so fill-backed controls can
+     move through interactive states without swapping tokens. */
   --fill-primary: rgb(18 18 18 / 0.26);
+  --fill-primary-hover: rgb(18 18 18 / 0.37);
+  --fill-primary-active: rgb(18 18 18 / 0.41);
   --fill-secondary: rgb(18 18 18 / 0.2);
+  --fill-secondary-hover: rgb(18 18 18 / 0.31);
+  --fill-secondary-active: rgb(18 18 18 / 0.35);
   --fill-tertiary: rgb(18 18 18 / 0.12);
+  --fill-tertiary-hover: rgb(18 18 18 / 0.23);
+  --fill-tertiary-active: rgb(18 18 18 / 0.27);
   --fill-quaternary: rgb(18 18 18 / 0.06);
+  --fill-quaternary-hover: rgb(18 18 18 / 0.17);
+  --fill-quaternary-active: rgb(18 18 18 / 0.21);
 
-  /* Z-index — semantic layers, gaps of 10 so you can slot values between. */
+  /* Z-index — stacking ladder. Reach for the semantic name, not the number;
+     gaps of 10 leave room to slot custom values between. */
   --z-base: 0;
   --z-sticky: 10;
   --z-dropdown: 20;
@@ -233,14 +252,29 @@
   --overlay-hover: rgb(0 0 0 / 0.75);
   --overlay-active: rgb(0 0 0 / 0.79);
 
-  /* Light shadows vanish on dark, so go darker/stronger as elevation rises */
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.4);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+  /* Light shadows vanish on dark, so go darker/stronger as elevation rises.
+     Same --neutral-black source as light theme — inherits any future tint. */
+  --shadow-sm:
+    0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 40%, transparent),
+    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 40%, transparent);
+  --shadow-md:
+    0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 50%, transparent),
+    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 50%, transparent);
+  --shadow-lg:
+    0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 60%, transparent),
+    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 50%, transparent);
 
   /* Dark theme fills invert: light overlay ink to darken/lift any surface */
   --fill-primary: rgb(245 245 245 / 0.26);
+  --fill-primary-hover: rgb(245 245 245 / 0.37);
+  --fill-primary-active: rgb(245 245 245 / 0.41);
   --fill-secondary: rgb(245 245 245 / 0.2);
+  --fill-secondary-hover: rgb(245 245 245 / 0.31);
+  --fill-secondary-active: rgb(245 245 245 / 0.35);
   --fill-tertiary: rgb(245 245 245 / 0.12);
+  --fill-tertiary-hover: rgb(245 245 245 / 0.23);
+  --fill-tertiary-active: rgb(245 245 245 / 0.27);
   --fill-quaternary: rgb(245 245 245 / 0.06);
+  --fill-quaternary-hover: rgb(245 245 245 / 0.17);
+  --fill-quaternary-active: rgb(245 245 245 / 0.21);
 }

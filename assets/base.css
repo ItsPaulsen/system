@@ -30,6 +30,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Sticky nav overlaps the top — reserve its height when jumping to any
+     in-page anchor (Skip-to-content, hash links). */
+  scroll-padding-top: var(--nav-h);
 }
 
 body {
@@ -75,6 +78,9 @@ body {
 
 /* Site nav (injected on every page) */
 .site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   background: var(--background-primary);
 }
 
@@ -135,8 +141,14 @@ body {
 /* Sidebar (injected). Desktop: sticky left column inside the shell.
    Mobile: an off-canvas drawer (see media query below). */
 .sidebar {
+  position: sticky;
+  top: var(--nav-h);
+  align-self: flex-start;
   flex: none;
   width: var(--sidebar-w);
+  max-height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+  scrollbar-width: none;
 
   /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
 
@@ -147,17 +159,7 @@ body {
   z-index: 18;
 }
 
-/* "All projects" stays in flow; only the grouped nav sticks — so on scroll
-   the top chrome and back link fall away, groups follow the viewport. */
-.sidebar__nav {
-  position: sticky;
-  top: 1rem;
-  max-height: calc(100vh - 1rem);
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.sidebar__nav::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar {
   display: none;
 }
 
@@ -241,18 +243,6 @@ body {
 @media (max-width: 1023px) {
   .site-nav__menu {
     display: inline-flex;
-  }
-
-  /* Nav must sit above the drawer so the hamburger stays clickable. Desktop
-     keeps the nav in normal flow so it scrolls away with the page. */
-  html {
-    scroll-padding-top: var(--nav-h);
-  }
-
-  .site-nav {
-    position: sticky;
-    top: 0;
-    z-index: 20;
   }
 
   .sidebar {
@@ -411,6 +401,7 @@ body {
    its own side gutter (grid-margin). No shell padding, so nothing double-stacks. */
 .shell {
   display: flex;
+  align-items: flex-start;
 }
 
 .content-region {

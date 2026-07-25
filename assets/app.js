@@ -192,8 +192,10 @@ function injectSidebar() {
   // Inner spans give us shadcn-style pill hover: the anchor stays full width
   // for a wide click target, but the visual bg wraps only the label.
   const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_16}All projects</span></a>`;
-  const nav = DEMO_PAGES.map(
-    (g) => `
+  aside.innerHTML =
+    backLink +
+    DEMO_PAGES.map(
+      (g) => `
       <div class="sidebar__group">
         <p class="sidebar__group-title">${g.group}</p>
         ${g.links
@@ -203,8 +205,7 @@ function injectSidebar() {
           )
           .join("")}
       </div>`
-  ).join("");
-  aside.innerHTML = backLink + `<nav class="sidebar__nav">${nav}</nav>`;
+    ).join("");
 
   const backdrop = document.createElement("div");
   backdrop.className = "sidebar-backdrop";

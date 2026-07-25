@@ -148,6 +148,7 @@ body {
   width: var(--sidebar-w);
   max-height: calc(100vh - var(--nav-h));
   overflow-y: auto;
+  scrollbar-width: none;
 
   /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
 
@@ -156,6 +157,10 @@ body {
   padding: 0.75rem 1.5rem 3rem calc(var(--page-gutter) - 0.5rem);
   background: var(--background-primary);
   z-index: 18;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .sidebar__group {

@@ -1036,7 +1036,7 @@ pre .tok-var {
   display: block;
   color: var(--ink-primary);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
 }
 

@@ -30,6 +30,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+
   /* Sticky nav overlaps the top — reserve its height when jumping to any
      in-page anchor (Skip-to-content, hash links). */
   scroll-padding-top: var(--nav-h);

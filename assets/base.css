@@ -1014,12 +1014,13 @@ pre .tok-var {
   background: var(--ink-primary);
 }
 
-/* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Full-cell
-   click targets: each <a> is block-level and pads its own row-height. */
+/* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Each <a>
+   fills its column width so the click target spans the cell horizontally;
+   vertical rhythm comes from the grid row-gap, not per-link padding. */
 .link-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 2rem;
+  gap: 1.25rem 2rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1033,7 +1034,6 @@ pre .tok-var {
 
 .link-list a {
   display: block;
-  padding: 0.5rem 0;
   color: var(--ink-primary);
   font-size: 1rem;
   font-weight: 600;

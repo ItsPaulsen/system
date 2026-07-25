@@ -1014,12 +1014,12 @@ pre .tok-var {
   background: var(--ink-primary);
 }
 
-/* Shadcn-style link list — 3-column grid on desktop, single column on mobile.
-   Used on the intro to enumerate Foundation and Components. */
+/* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Full-cell
+   click targets: each <a> is block-level and pads its own row-height. */
 .link-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem 2rem;
+  column-gap: 2rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1032,6 +1032,8 @@ pre .tok-var {
 }
 
 .link-list a {
+  display: block;
+  padding: 0.5rem 0;
   color: var(--ink-primary);
   font-size: 1rem;
   font-weight: 600;

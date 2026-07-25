@@ -712,7 +712,7 @@ pre .tok-var {
    introduce. Spacing is on the following element, so removing the description
    still leaves a clean 16px above the content. */
 .subhead {
-  font-size: 1.1875rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 1.75rem 0 0;
 }

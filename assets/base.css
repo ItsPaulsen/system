@@ -1052,8 +1052,8 @@ pre .tok-var {
 /* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
    easing as the UngSex button arrow it's borrowed from. */
 .link-arrow {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   overflow: visible;
   flex-shrink: 0;
 }

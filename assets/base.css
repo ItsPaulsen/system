@@ -393,11 +393,6 @@ body {
   outline: none;
 }
 
-/* Opt-in wider column for pages that need the full grid (e.g. the grid demo). */
-.wrap--wide {
-  max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
-}
-
 /* Shell: full width; the sidebar carries its own left gutter, and .wrap carries
    its own side gutter (grid-margin). No shell padding, so nothing double-stacks. */
 .shell {
@@ -418,8 +413,8 @@ body {
   justify-content: space-between;
 }
 
-/* Divider only when the page has a subhead below — no leading heading (e.g.
-   Spacing) → no floating divider above the content. */
+/* Divider only when the page has a subhead below. Pages without subheads
+   (e.g. Typography) go straight from lede into content — no floating rule. */
 body:has(.subhead) .site-head {
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--fill-tertiary);
@@ -451,14 +446,6 @@ body:has(.subhead) .site-head {
   .site-head__title .btn {
     display: none;
   }
-}
-
-.eyebrow {
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-secondary);
-  margin: 0 0 0.5rem;
 }
 
 h1 {
@@ -570,27 +557,6 @@ pre code {
   border: 0;
   font-size: 0.8125rem;
   line-height: 1.6;
-}
-
-/* Intro Layers list — term + descriptor, lighter than a token card. */
-.layer-list {
-  margin: 0;
-}
-
-.layer-list dt {
-  font-weight: 500;
-}
-
-.layer-list dt + dt,
-.layer-list dd + dt {
-  margin-top: 0.75rem;
-}
-
-.layer-list dd {
-  margin: 0.125rem 0 0;
-  color: var(--ink-secondary);
-  font-family: var(--mono);
-  font-size: 0.8125rem;
 }
 
 /* GitHub-flavoured syntax tokens for the intro code sample. Manual spans in
@@ -715,11 +681,9 @@ pre .tok-var {
   outline-offset: 2px;
 }
 
-/* Subheads inside a section */
-
-/* Vertical rhythm builds upward: headings only push down against what they
-   introduce. Spacing is on the following element, so removing the description
-   still leaves a clean 16px above the content. */
+/* Section subhead — vertical rhythm builds upward: only push down against
+   what the heading introduces, and rely on the next element's margin-top for
+   the gap below (so removing a description doesn't collapse the layout). */
 .subhead {
   font-size: 1.25rem;
   font-weight: 600;
@@ -1085,7 +1049,7 @@ pre .tok-var {
 }
 
 /* Single-card token list — one bordered box, rows separated by dividers.
-   Used on Spacing (name / bar / value) and Grid (name / value). */
+   Used on the Layout page for both Grid values and the Spacing scale. */
 .token-list {
   background: var(--background-secondary);
   border: 1px solid var(--fill-tertiary);

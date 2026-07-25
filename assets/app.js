@@ -444,7 +444,7 @@ function buildGridOverlay() {
 
 function refreshResponsive() {
   hydrateType();
-  // Grid page tokens (--grid-columns etc.) change with viewport, so re-hydrate.
+  // Layout-page grid tokens (--grid-columns etc.) change with viewport, so re-hydrate.
   hydratePreviews();
   buildGridOverlay();
   updateBreakpoint();

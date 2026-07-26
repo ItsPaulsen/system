@@ -51,24 +51,24 @@
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Filled</h3>
+          <h3 class="subhead">Rounded</h3>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label">Search</span>
-              <span class="input__container input__container--fill">
-                <input class="input__element" type="search" placeholder="Search stops" />
+              <span class="input__label">Email</span>
+              <span class="input__container input__container--rounded">
+                <input class="input__element" type="email" placeholder="you@example.com" />
               </span>
             </label>
           </div>
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Rounded</h3>
+          <h3 class="subhead">Filled</h3>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label">Destination</span>
-              <span class="input__container input__container--rounded">
-                <input class="input__element" type="text" placeholder="Where to?" />
+              <span class="input__label">Search</span>
+              <span class="input__container input__container--fill">
+                <input class="input__element" type="search" placeholder="Search..." />
               </span>
             </label>
           </div>
@@ -89,14 +89,12 @@
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Required</h3>
+          <h3 class="subhead">Disabled</h3>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label"
-                >Full name<span class="input__label-required" aria-hidden="true">*</span></span
-              >
+              <span class="input__label">Email</span>
               <span class="input__container">
-                <input class="input__element" type="text" placeholder="Jane Doe" required />
+                <input class="input__element" type="email" value="you@example.com" disabled />
               </span>
             </label>
           </div>
@@ -106,21 +104,28 @@
           <h3 class="subhead">Invalid</h3>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label">Email</span>
+              <span class="input__label">Invalid input</span>
               <span class="input__container input__container--invalid">
-                <input class="input__element" type="email" value="not-an-email" />
+                <input class="input__element" type="text" placeholder="Error" />
               </span>
             </label>
           </div>
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Disabled</h3>
+          <h3 class="subhead">Required</h3>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label">Username</span>
+              <span class="input__label"
+                >Required<span class="input__label-required" aria-hidden="true">*</span></span
+              >
               <span class="input__container">
-                <input class="input__element" type="text" value="paulsen" disabled />
+                <input
+                  class="input__element"
+                  type="text"
+                  placeholder="This field is required"
+                  required
+                />
               </span>
             </label>
           </div>

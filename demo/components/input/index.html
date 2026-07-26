@@ -6,6 +6,12 @@
     <title>Input — Demo</title>
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <style>
+      .component-preview .input {
+        width: 320px;
+      }
+    </style>
     <script>
       (function () {
         var t = localStorage.getItem("theme");
@@ -23,9 +29,117 @@
           <div class="site-head__title">
             <h1>Input</h1>
           </div>
-          <p class="lede">Coming soon.</p>
+          <p class="lede">
+            Single-line text field. The container carries the border and focus ring; the
+            <code>&lt;input&gt;</code> is chromeless so leading and trailing slots sit flush inside
+            the same box.
+          </p>
         </div>
       </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Email</span>
+              <span class="input__container">
+                <input class="input__element" type="email" placeholder="you@example.com" />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Filled</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Search</span>
+              <span class="input__container input__container--fill">
+                <input class="input__element" type="search" placeholder="Search stops" />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Rounded</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Destination</span>
+              <span class="input__container input__container--rounded">
+                <input class="input__element" type="text" placeholder="Where to?" />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Leading &amp; trailing</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Amount</span>
+              <span class="input__container">
+                <span class="input__leading" aria-hidden="true">$</span>
+                <input class="input__element" type="text" placeholder="0.00" />
+                <span class="input__trailing" aria-hidden="true">USD</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Required</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label"
+                >Full name<span class="input__label-required" aria-hidden="true">*</span></span
+              >
+              <span class="input__container">
+                <input class="input__element" type="text" placeholder="Jane Doe" required />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Invalid</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Email</span>
+              <span class="input__container input__container--invalid">
+                <input class="input__element" type="email" value="not-an-email" />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Username</span>
+              <span class="input__container">
+                <input class="input__element" type="text" value="paulsen" disabled />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Email<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__leading"</span><span class="tok-key">&gt;</span>@<span class="tok-key">&lt;/span&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">type</span>=<span class="tok-str">"email"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/label&gt;</span>
+
+<span class="tok-com">&lt;!-- Modifiers on .input__container:
+     --fill  --rounded  --invalid --&gt;</span></code></pre>
+        </section>
+      </div>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

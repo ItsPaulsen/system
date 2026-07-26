@@ -543,6 +543,7 @@ code {
 }
 
 pre {
+  position: relative;
   margin: 0 0 1rem;
   padding: 0.875rem 1rem;
   background: var(--background-secondary);
@@ -554,6 +555,56 @@ pre {
 
 pre::-webkit-scrollbar {
   display: none;
+}
+
+/* Copy button auto-injected by app.js on every <pre>. Sits on the same
+   surface as the code block so the icon reads as a floating affordance
+   rather than a distinct pill. */
+.code-copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--ink-tertiary);
+  background: var(--background-secondary);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    color var(--motion-default),
+    background var(--motion-default);
+}
+
+.code-copy:hover {
+  color: var(--ink-primary);
+  background: var(--background-secondary-hover);
+}
+
+.code-copy:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.code-copy svg {
+  width: 16px;
+  height: 16px;
+}
+
+.code-copy .code-copy__check {
+  display: none;
+}
+
+.code-copy.is-copied .code-copy__copy {
+  display: none;
+}
+
+.code-copy.is-copied .code-copy__check {
+  display: block;
 }
 
 pre code {
@@ -1210,7 +1261,7 @@ a.token-list__row:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 160px;
+  min-height: calc(200px + 4rem);
   padding: 2rem;
   background: var(--background-secondary);
   border: 1px solid var(--fill-tertiary);

@@ -163,3 +163,125 @@
 .tabs__tab:has(.tabs__radio:checked):active {
   background: var(--background-secondary-active);
 }
+
+/* ── Input ─────────────────────────────────────────────────────────────── */
+
+/* Text input with optional label, leading/trailing slots, and fill/outline
+   variants. Container carries the border and focus ring; the <input> is
+   chromeless so leading/trailing icons sit flush inside the same box.
+
+   Structure:
+   <label class="input">
+     <span class="input__label">Label</span>
+     <span class="input__container">
+       <span class="input__leading">…</span>       (optional)
+       <input class="input__element" type="text" />
+       <span class="input__trailing">…</span>      (optional)
+     </span>
+   </label>
+
+   Modifiers on .input__container:
+     --fill      — filled surface instead of outline
+     --rounded   — pill-shaped
+     --invalid   — danger border, tightens focus ring */
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.input__label {
+  font-size: var(--font-caption-medium-size);
+  font-weight: var(--font-caption-medium-weight);
+  color: var(--ink-primary);
+}
+
+.input__label-required {
+  margin-left: 0.25rem;
+  color: var(--danger);
+}
+
+.input__container {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  border: 1px solid var(--ink-tertiary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-primary);
+  transition:
+    border-color var(--motion-default),
+    background var(--motion-default);
+}
+
+.input__container:hover {
+  border-color: var(--ink-secondary);
+}
+
+.input__container:focus-within {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-color: var(--ink-primary);
+}
+
+.input__container--fill {
+  background: var(--fill-quaternary);
+  border-color: transparent;
+}
+
+.input__container--fill:hover {
+  background: var(--fill-quaternary-hover);
+  border-color: transparent;
+}
+
+.input__container--rounded {
+  border-radius: var(--radius-full);
+}
+
+.input__container--invalid,
+.input__container--invalid:hover {
+  border-color: var(--danger);
+}
+
+.input__element {
+  flex: 1;
+  min-width: 0;
+  padding: 0 1rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  outline: none;
+  text-overflow: ellipsis;
+}
+
+.input__element::placeholder {
+  color: var(--ink-tertiary);
+}
+
+.input__container:has(.input__element:disabled) {
+  color: var(--ink-tertiary);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input__leading,
+.input__trailing {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.75rem;
+  color: var(--ink-secondary);
+}
+
+.input__leading + .input__element {
+  padding-left: 0;
+}
+
+.input__element:has(+ .input__trailing) {
+  padding-right: 0;
+}

@@ -551,11 +551,31 @@ function injectPagination() {
   wrap.appendChild(nav);
 }
 
+const COPY_ICON =
+  '<svg class="code-copy__copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+const CHECK_ICON =
+  '<svg class="code-copy__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
+function injectCodeCopy() {
+  document.querySelectorAll("pre").forEach((pre) => {
+    if (pre.querySelector(".code-copy")) return;
+    const code = pre.querySelector("code");
+    if (!code) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "code-copy";
+    btn.setAttribute("aria-label", "Copy code");
+    btn.innerHTML = COPY_ICON + CHECK_ICON;
+    pre.appendChild(btn);
+  });
+}
+
 function init() {
   injectNav();
   injectSkipLink();
   injectSidebar();
   injectPagination();
+  injectCodeCopy();
   hydrateLinkListArrows();
   renderPalette();
   hydratePalette();
@@ -597,6 +617,20 @@ function init() {
       fetch(src)
         .then((r) => r.text())
         .then((text) => copyText(filter ? filterTokens(text, filter) : text.trim(), label))
+        .catch(() => toast("Copy failed"));
+      return;
+    }
+    const codeCopy = event.target.closest(".code-copy");
+    if (codeCopy) {
+      const code = codeCopy.parentElement.querySelector("code");
+      if (!code) return;
+      navigator.clipboard
+        .writeText(code.textContent)
+        .then(() => {
+          codeCopy.classList.add("is-copied");
+          clearTimeout(codeCopy._copyTimer);
+          codeCopy._copyTimer = setTimeout(() => codeCopy.classList.remove("is-copied"), 2000);
+        })
         .catch(() => toast("Copy failed"));
       return;
     }

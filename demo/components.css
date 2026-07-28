@@ -486,6 +486,184 @@
   border: 1px solid var(--fill-secondary);
 }
 
+/* ── Card ──────────────────────────────────────────────────────────────── */
+
+/* Surface container. Render as `<div>`, `<a>`, or `<button>` — the anchor
+   and button variants get hover/active/focus states automatically.
+
+   Structure:
+     <div class="card">
+       <img class="card__image" …>                  (optional)
+       <div class="card__illustration">…</div>      (optional; alt. to image)
+       <div class="card__content">
+         <h2 class="card__title">…</h2>
+         <p>…</p>
+       </div>
+     </div>
+
+   Modifiers:
+     --horizontal      grid layout with a 6rem image column on the left
+     --alternate       recessed surface (background-primary) instead of white
+     --stretch-image   image fills remaining space (vertical card, fixed height) */
+
+.card {
+  display: block;
+  border-radius: var(--radius-md);
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  overflow: hidden;
+  transition: background var(--motion-default);
+}
+
+.card--horizontal {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+}
+
+.card--stretch-image {
+  display: flex;
+  flex-direction: column;
+}
+
+.card--alternate {
+  background: var(--background-primary);
+}
+
+/* Interactive — `<a>` and `<button>` get pointer + hover/active/focus */
+
+a.card,
+button.card {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button.card {
+  border: 0;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+}
+
+a.card:hover,
+button.card:not(:disabled):hover {
+  background: var(--background-secondary-hover);
+}
+
+a.card:active,
+button.card:not(:disabled):active {
+  background: var(--background-secondary-active);
+}
+
+.card--alternate:is(a):hover,
+.card--alternate:is(button):not(:disabled):hover {
+  background: var(--background-primary-hover);
+}
+
+.card--alternate:is(a):active,
+.card--alternate:is(button):not(:disabled):active {
+  background: var(--background-primary-active);
+}
+
+a.card:focus-visible,
+button.card:focus-visible {
+  outline: 3px solid var(--focus);
+}
+
+button.card:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Slots ── */
+
+.card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.card--horizontal .card__image {
+  grid-row: 1 / -1;
+  width: 6rem;
+  height: 100%;
+}
+
+.card--stretch-image .card__image {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Illustration wrapper. Pads on three sides so the artwork sits flush with
+   card__content on the fourth (bottom in vertical, right in horizontal). */
+.card__illustration {
+  padding: 20px 20px 0;
+}
+
+.card--horizontal .card__illustration {
+  grid-row: 1 / -1;
+  padding: 20px 0 20px 20px;
+}
+
+.card__illustration > * {
+  display: block;
+  width: 11rem;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+.card--horizontal .card__illustration > * {
+  width: 4.5rem;
+  margin-inline: 0;
+}
+
+.card__content {
+  padding: 20px;
+}
+
+.card__title {
+  margin: 0;
+  font-size: var(--font-body-large-emphasized-size);
+  font-weight: var(--font-body-large-emphasized-weight);
+  line-height: var(--font-body-large-emphasized-lh);
+  letter-spacing: 0;
+}
+
+.card__content > p {
+  margin: 8px 0 0;
+  font-size: var(--font-body-small-size);
+  font-weight: var(--font-body-small-weight);
+  line-height: var(--font-body-small-lh);
+  color: var(--ink-secondary);
+}
+
+/* Space below copy only when something follows it (button, meta row, …). */
+.card__content > p:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+/* Tablet ≥640 — pad up and use title-small for the heading. */
+@media (min-width: 640px) {
+  .card__illustration {
+    padding: 24px 24px 0;
+  }
+
+  .card--horizontal .card__illustration {
+    padding: 24px 0 24px 24px;
+  }
+
+  .card__content {
+    padding: 24px;
+  }
+
+  .card__title {
+    font-size: var(--font-title-small-size);
+    font-weight: var(--font-title-small-weight);
+    line-height: var(--font-title-small-lh);
+  }
+}
+
 /* ── Chip ──────────────────────────────────────────────────────────────── */
 
 /* Interactive filter/tag. Two interaction types:

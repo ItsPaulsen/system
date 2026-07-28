@@ -6,6 +6,7 @@
     <title>Card — Demo</title>
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
     <script>
       (function () {
         var t = localStorage.getItem("theme");
@@ -15,6 +16,24 @@
         document.documentElement.dataset.theme = t;
       })();
     </script>
+    <style>
+      .component-preview {
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      /* Cards need a recessed stage so the elevated white surface reads.
+         The alternate-skin block opts back into the white stage. */
+      .component-preview {
+        background: var(--background-primary);
+      }
+      .component-preview--elevated {
+        background: var(--background-secondary);
+      }
+      .component-preview .card {
+        width: 380px;
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -23,9 +42,128 @@
           <div class="site-head__title">
             <h1>Card</h1>
           </div>
-          <p class="lede">Coming soon.</p>
+          <p class="lede">A rounded surface for grouping content.</p>
         </div>
       </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <div class="component-preview">
+            <div class="card">
+              <div class="card__content">
+                <h2 class="card__title">Elevated surface</h2>
+                <p>Sits on <code>--background-secondary</code>.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Alternate skin</h3>
+          <p class="section-note">
+            Recessed surface — for cards sitting on an elevated one.
+          </p>
+          <div class="component-preview component-preview--elevated">
+            <div class="card card--alternate">
+              <div class="card__content">
+                <h2 class="card__title">Recessed surface</h2>
+                <p>Blends into the page background.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">With image</h3>
+          <div class="component-preview">
+            <div class="card">
+              <img class="card__image" src="https://picsum.photos/seed/card-a/560/315" alt="" />
+              <div class="card__content">
+                <h2 class="card__title">Vertical media</h2>
+                <p>Rounded to the card's top corners.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Horizontal</h3>
+          <p class="section-note">
+            Grid layout — 6rem image column on the left.
+          </p>
+          <div class="component-preview">
+            <div class="card card--horizontal">
+              <img class="card__image" src="https://picsum.photos/seed/card-b/200/200" alt="" />
+              <div class="card__content">
+                <h2 class="card__title">Compact row</h2>
+                <p>For list rows and inline surfaces.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Illustration</h3>
+          <p class="section-note">
+            <code>card__illustration</code> pads artwork. Centered, up to 11rem wide.
+          </p>
+          <div class="component-preview">
+            <div class="card">
+              <div class="card__illustration">
+                <img src="/assets/illustrations/wfh.svg" alt="" />
+              </div>
+              <div class="card__content">
+                <h2 class="card__title">Working from home</h2>
+                <p>Pair the card with a scene illustration.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Interactive</h3>
+          <p class="section-note">
+            Render as <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> for hover, active, and focus states.
+          </p>
+          <div class="component-preview">
+            <a class="card" href="#" onclick="event.preventDefault()">
+              <div class="card__content">
+                <h2 class="card__title">Interactive card</h2>
+                <p>Anchor for navigation, button for actions.</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="component-preview">
+            <button class="card" type="button" disabled>
+              <div class="card__content">
+                <h2 class="card__title">Not available</h2>
+                <p>Not-allowed cursor, 50% opacity.</p>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"card"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"card__content"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span>
+
+<span class="tok-com">&lt;!-- Modifiers: --horizontal --alternate --stretch-image --&gt;</span>
+<span class="tok-com">&lt;!-- Slots:     card__image  card__illustration  card__content --&gt;</span>
+<span class="tok-com">&lt;!-- Interactive: swap the outer div for &lt;a&gt; or &lt;button&gt; --&gt;</span>
+
+<span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"card card--horizontal"</span> <span class="tok-prop">href</span>=<span class="tok-str">"…"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;img</span> <span class="tok-prop">class</span>=<span class="tok-str">"card__image"</span> <span class="tok-prop">src</span>=<span class="tok-str">"…"</span> <span class="tok-prop">alt</span>=<span class="tok-str">""</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"card__content"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/a&gt;</span></code></pre>
+        </section>
+      </div>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

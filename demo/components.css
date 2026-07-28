@@ -414,7 +414,7 @@
 /* ── Badge ─────────────────────────────────────────────────────────────── */
 
 /* Structure:
-   <span class="badge badge--{primary|secondary|outline|red|green|blue}
+   <span class="badge badge--{primary|secondary|outline|red|amber|green|blue|fuchsia}
                             [badge--with-start-icon | badge--with-end-icon]">
      [<svg>…</svg>] Label [<svg>…</svg>]
    </span>

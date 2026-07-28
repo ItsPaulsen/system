@@ -1,67 +1,123 @@
-/* ── Per-project tokens (Demo brand). Two-tier: primitives → semantic. ── */
+/* ── Per-project tokens (Demo brand). Two-tier: anchors → semantic. ────────
+   Anchors are channel triples (`R G B`, not `rgb(R G B)`) so we can compose
+   them with alpha (`rgb(var(--anchor) / 0.5)`) or opaque (`rgb(var(--anchor))`).
+   Every downstream token is derived from an anchor — change the anchor, the
+   whole family retints. Pattern follows Nord / Ruter Design System. */
+
 :root {
   /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
   --bp-tablet: 640px;
   --bp-desktop: 1024px;
 
-  /* Colours — one family per row. Rule: hover = base ±23 per channel,
-     active = base ±31. Direction: light bases subtract, dark bases add.
-     Overlay uses alpha bumps. */
-  --neutral-black: rgb(18 18 18);
-  --neutral-black-hover: rgb(41 41 41);
-  --neutral-black-active: rgb(49 49 49);
-  --neutral-gray-1: rgb(212 212 212);
-  --neutral-gray-1-hover: rgb(189 189 189);
-  --neutral-gray-1-active: rgb(181 181 181);
-  --neutral-gray-2: rgb(222 222 222);
-  --neutral-gray-2-hover: rgb(199 199 199);
-  --neutral-gray-2-active: rgb(191 191 191);
-  --neutral-gray-3: rgb(235 235 235);
-  --neutral-gray-3-hover: rgb(212 212 212);
-  --neutral-gray-3-active: rgb(204 204 204);
-  --neutral-gray-4: rgb(246 246 246);
-  --neutral-gray-4-hover: rgb(223 223 223);
-  --neutral-gray-4-active: rgb(215 215 215);
-  --neutral-white: rgb(255 255 255);
-  --neutral-white-hover: rgb(232 232 232);
-  --neutral-white-active: rgb(224 224 224);
+  /* ── Anchors ─────────────────────────────────────────────────────────
+     One channel triple per family. Change --anchor-neutral to retint the
+     entire neutral system in one line — grays, ink, fills, overlay, and
+     shadows all derive from it. Semantic anchors (brand + status) stay
+     independent so retinting neutrals doesn't touch the brand palette. */
+  --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
+  --anchor-primary: 122 78 234; /* brand */
+  --anchor-success: 46 174 105;
+  --anchor-warning: 224 178 63;
+  --anchor-danger: 224 60 44;
+  --anchor-focus: 48 140 218;
 
-  /* Consistent semantics both themes: primary = page bg (recessed / tinted),
-     secondary = elevated surface (cards, sheets, active pills — brighter than
-     primary in light AND dark). Swap of the old order — matches Ruter/iOS. */
+  /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
+     version in dark theme (see :root[data-theme="dark"] below) while these
+     three all follow the anchor's hue. */
+  --ink-base: rgb(var(--anchor-neutral));
+  --fill-base: rgb(var(--anchor-neutral));
+  --overlay-base: rgb(var(--anchor-neutral));
+
+  /* ── Backgrounds ─────────────────────────────────────────────────────
+     Opaque, per theme. Primary = recessed page bg; secondary = elevated
+     card/sheet surface. Kept opaque (not derived) because they set the
+     visual foundation everything else blends against. */
   --background-primary: rgb(246 246 246);
   --background-primary-hover: rgb(223 223 223);
   --background-primary-active: rgb(215 215 215);
   --background-secondary: rgb(255 255 255);
   --background-secondary-hover: rgb(232 232 232);
   --background-secondary-active: rgb(224 224 224);
-  --ink-primary: rgb(34 34 34);
-  --ink-primary-hover: rgb(57 57 57);
-  --ink-primary-active: rgb(65 65 65);
-  --ink-secondary: rgb(93 93 93);
-  --ink-secondary-hover: rgb(116 116 116);
-  --ink-secondary-active: rgb(124 124 124);
-  --ink-tertiary: rgb(133 133 133);
-  --ink-tertiary-hover: rgb(156 156 156);
-  --ink-tertiary-active: rgb(164 164 164);
-  --primary: rgb(122 78 234);
-  --primary-hover: rgb(145 101 255);
-  --primary-active: rgb(153 109 255);
-  --success: rgb(46 174 105);
-  --success-hover: rgb(69 197 128);
-  --success-active: rgb(77 205 136);
-  --warning: rgb(224 178 63);
-  --warning-hover: rgb(201 155 40);
-  --warning-active: rgb(193 147 32);
-  --danger: rgb(224 60 44);
-  --danger-hover: rgb(247 83 67);
-  --danger-active: rgb(255 91 75);
-  --focus: rgb(48 140 218);
-  --focus-hover: rgb(71 163 241);
-  --focus-active: rgb(79 171 249);
-  --overlay: rgb(16 17 22 / 0.45);
-  --overlay-hover: rgb(16 17 22 / 0.56);
-  --overlay-active: rgb(16 17 22 / 0.6);
+
+  /* ── Ink ─────────────────────────────────────────────────────────────
+     Primary opaque. Secondary + tertiary are alpha of --ink-base so they
+     blend into whatever surface sits underneath. Hover/active on primary
+     fade toward the surface; on secondary/tertiary they nudge alpha up. */
+  --ink-primary: var(--ink-base);
+  --ink-primary-hover: color-mix(in oklab, var(--ink-primary) 88%, var(--background-secondary));
+  --ink-primary-active: color-mix(in oklab, var(--ink-primary) 82%, var(--background-secondary));
+  --ink-secondary: rgb(from var(--ink-base) r g b / 0.702);
+  --ink-secondary-hover: rgb(from var(--ink-base) r g b / 0.81);
+  --ink-secondary-active: rgb(from var(--ink-base) r g b / 0.85);
+  --ink-tertiary: rgb(from var(--ink-base) r g b / 0.549);
+  --ink-tertiary-hover: rgb(from var(--ink-base) r g b / 0.66);
+  --ink-tertiary-active: rgb(from var(--ink-base) r g b / 0.7);
+
+  /* ── Semantic ────────────────────────────────────────────────────────
+     Each family opaque from its anchor; hover/active derived via color-mix
+     toward white (lighter) — except warning, which darkens (lightening
+     yellow washes it out). Direction is consistent across themes. */
+  --primary: rgb(var(--anchor-primary));
+  --primary-hover: color-mix(in oklab, var(--primary) 88%, white);
+  --primary-active: color-mix(in oklab, var(--primary) 82%, white);
+  --success: rgb(var(--anchor-success));
+  --success-hover: color-mix(in oklab, var(--success) 88%, white);
+  --success-active: color-mix(in oklab, var(--success) 82%, white);
+  --warning: rgb(var(--anchor-warning));
+  --warning-hover: color-mix(in oklab, var(--warning) 88%, black);
+  --warning-active: color-mix(in oklab, var(--warning) 82%, black);
+  --danger: rgb(var(--anchor-danger));
+  --danger-hover: color-mix(in oklab, var(--danger) 88%, white);
+  --danger-active: color-mix(in oklab, var(--danger) 82%, white);
+  --focus: rgb(var(--anchor-focus));
+  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
+  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
+
+  /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
+  --overlay: rgb(from var(--overlay-base) r g b / 0.45);
+  --overlay-hover: rgb(from var(--overlay-base) r g b / 0.56);
+  --overlay-active: rgb(from var(--overlay-base) r g b / 0.6);
+
+  /* ── Neutrals ────────────────────────────────────────────────────────
+     Black is the neutral anchor; grays are anchor mixed with white at
+     increasing ratios. Change --anchor-neutral to retint the whole ramp
+     (stone, blue-gray, red-gray, etc.). White stays true white. */
+  --neutral-black: rgb(var(--anchor-neutral));
+  --neutral-black-hover: color-mix(in oklab, var(--neutral-black) 90%, white);
+  --neutral-black-active: color-mix(in oklab, var(--neutral-black) 85%, white);
+  --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 22%, white);
+  --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 30%, white);
+  --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 34%, white);
+  --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 15%, white);
+  --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 22%, white);
+  --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 26%, white);
+  --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 9%, white);
+  --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 16%, white);
+  --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 19%, white);
+  --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 4%, white);
+  --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 11%, white);
+  --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 14%, white);
+  --neutral-white: white;
+  --neutral-white-hover: color-mix(in oklab, white 90%, var(--neutral-black));
+  --neutral-white-active: color-mix(in oklab, white 87%, var(--neutral-black));
+
+  /* ── Fills ───────────────────────────────────────────────────────────
+     Alpha tints of --fill-base — sit over any surface (hover overlays,
+     selected rows). Each tier has its own hover/active alphas so
+     fill-backed controls move through interactive states without
+     swapping tokens. */
+  --fill-primary: rgb(from var(--fill-base) r g b / 0.259);
+  --fill-primary-hover: rgb(from var(--fill-base) r g b / 0.37);
+  --fill-primary-active: rgb(from var(--fill-base) r g b / 0.41);
+  --fill-secondary: rgb(from var(--fill-base) r g b / 0.2);
+  --fill-secondary-hover: rgb(from var(--fill-base) r g b / 0.31);
+  --fill-secondary-active: rgb(from var(--fill-base) r g b / 0.35);
+  --fill-tertiary: rgb(from var(--fill-base) r g b / 0.122);
+  --fill-tertiary-hover: rgb(from var(--fill-base) r g b / 0.23);
+  --fill-tertiary-active: rgb(from var(--fill-base) r g b / 0.27);
+  --fill-quaternary: rgb(from var(--fill-base) r g b / 0.059);
+  --fill-quaternary-hover: rgb(from var(--fill-base) r g b / 0.17);
+  --fill-quaternary-active: rgb(from var(--fill-base) r g b / 0.21);
 
   /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
      unitless multipliers so they scale with the font-size. Fixed at every
@@ -145,8 +201,9 @@
   --radius-full: 999px;
 
   /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
-     mixed from --neutral-black so shadows follow any future tint of the neutrals
-     (and stay dark in both themes — --ink-primary inverts, --neutral-black doesn't). */
+     mixed from --neutral-black so shadows follow any future tint of the
+     neutrals (and stay dark in both themes — --ink flips, --neutral-black
+     doesn't unless --anchor-neutral itself is changed). */
   --shadow-sm:
     0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 10%, transparent),
     0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent);
@@ -162,22 +219,6 @@
   --motion-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
   --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
-
-  /* Fill — alpha tints that work on any surface (hover overlays, selected rows).
-     Each tier carries its own hover/active alphas so fill-backed controls can
-     move through interactive states without swapping tokens. */
-  --fill-primary: rgb(18 18 18 / 0.26);
-  --fill-primary-hover: rgb(18 18 18 / 0.37);
-  --fill-primary-active: rgb(18 18 18 / 0.41);
-  --fill-secondary: rgb(18 18 18 / 0.2);
-  --fill-secondary-hover: rgb(18 18 18 / 0.31);
-  --fill-secondary-active: rgb(18 18 18 / 0.35);
-  --fill-tertiary: rgb(18 18 18 / 0.12);
-  --fill-tertiary-hover: rgb(18 18 18 / 0.23);
-  --fill-tertiary-active: rgb(18 18 18 / 0.27);
-  --fill-quaternary: rgb(18 18 18 / 0.06);
-  --fill-quaternary-hover: rgb(18 18 18 / 0.17);
-  --fill-quaternary-active: rgb(18 18 18 / 0.21);
 
   /* Z-index — stacking ladder. Reach for the semantic name, not the number;
      gaps of 10 leave room to slot custom values between. */
@@ -205,55 +246,55 @@
   }
 }
 
-/* Dark mode */
+/* ── Dark theme ────────────────────────────────────────────────────────────
+   Ink + fill anchors flip to light-on-dark. Semantic anchors soften. Gray
+   ratios re-tuned so grays read against dark surfaces. Backgrounds swap to
+   dark. Everything else derives automatically. */
+
 :root[data-theme="dark"] {
-  /* Dark theme: neutrals invert (now dark bases → states lighten toward white),
-     inks flip to light bases → states darken toward black. */
+  /* Ink/fill flip to a light-tinted version of the neutral anchor —
+     if you retint the anchor to blue, dark-theme text becomes hint-of-blue
+     near-white, not pure white. --overlay-base stays anchor-tinted (dark)
+     for the scrim effect. */
+  --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
+  --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
+
+  --anchor-primary: 150 108 245;
+  --anchor-success: 84 195 132;
+  --anchor-warning: 235 210 130;
+  --anchor-danger: 240 90 68;
+  --anchor-focus: 22 146 227;
+
   --background-primary: rgb(32 32 32);
   --background-primary-hover: rgb(55 55 55);
   --background-primary-active: rgb(63 63 63);
   --background-secondary: rgb(46 46 46);
   --background-secondary-hover: rgb(69 69 69);
   --background-secondary-active: rgb(77 77 77);
-  --neutral-gray-1: rgb(100 100 100);
-  --neutral-gray-1-hover: rgb(123 123 123);
-  --neutral-gray-1-active: rgb(131 131 131);
-  --neutral-gray-2: rgb(84 84 84);
-  --neutral-gray-2-hover: rgb(107 107 107);
-  --neutral-gray-2-active: rgb(115 115 115);
-  --neutral-gray-3: rgb(76 76 76);
-  --neutral-gray-3-hover: rgb(99 99 99);
-  --neutral-gray-3-active: rgb(107 107 107);
-  --neutral-gray-4: rgb(67 67 67);
-  --neutral-gray-4-hover: rgb(90 90 90);
-  --neutral-gray-4-active: rgb(98 98 98);
-  --ink-primary: rgb(245 245 245);
-  --ink-primary-hover: rgb(222 222 222);
-  --ink-primary-active: rgb(214 214 214);
-  --ink-secondary: rgb(195 195 195);
-  --ink-secondary-hover: rgb(172 172 172);
-  --ink-secondary-active: rgb(164 164 164);
-  --ink-tertiary: rgb(149 149 149);
-  --ink-tertiary-hover: rgb(126 126 126);
-  --ink-tertiary-active: rgb(118 118 118);
-  --primary: rgb(150 108 245);
-  --primary-hover: rgb(173 131 255);
-  --primary-active: rgb(181 139 255);
-  --success: rgb(84 195 132);
-  --success-hover: rgb(107 218 155);
-  --success-active: rgb(115 226 163);
-  --danger: rgb(240 90 68);
-  --danger-hover: rgb(255 113 91);
-  --danger-active: rgb(255 121 99);
-  --warning: rgb(235 210 130);
-  --warning-hover: rgb(212 187 107);
-  --warning-active: rgb(204 179 99);
-  --overlay: rgb(0 0 0 / 0.64);
-  --overlay-hover: rgb(0 0 0 / 0.75);
-  --overlay-active: rgb(0 0 0 / 0.79);
 
-  /* Light shadows vanish on dark, so go darker/stronger as elevation rises.
-     Same --neutral-black source as light theme — inherits any future tint. */
+  /* Overlay ramps deeper for dark-theme scrim */
+  --overlay: rgb(from var(--overlay-base) r g b / 0.64);
+  --overlay-hover: rgb(from var(--overlay-base) r g b / 0.75);
+  --overlay-active: rgb(from var(--overlay-base) r g b / 0.79);
+
+  /* Grays lifted higher against a dark surface — anchor mixed further toward
+     white than in light theme. --neutral-black stays anchor-defined (dark)
+     so shadows keep their weight. */
+  --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 62%, white);
+  --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 55%, white);
+  --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 52%, white);
+  --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 70%, white);
+  --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 62%, white);
+  --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 58%, white);
+  --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 76%, white);
+  --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 68%, white);
+  --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 64%, white);
+  --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 82%, white);
+  --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 74%, white);
+  --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
+
+  /* Light shadows vanish on dark, so bump the intensity per elevation.
+     Same --neutral-black source as light — inherits any future tint. */
   --shadow-sm:
     0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 40%, transparent),
     0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 40%, transparent);
@@ -263,18 +304,4 @@
   --shadow-lg:
     0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 60%, transparent),
     0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 50%, transparent);
-
-  /* Dark theme fills invert: light overlay ink to darken/lift any surface */
-  --fill-primary: rgb(245 245 245 / 0.26);
-  --fill-primary-hover: rgb(245 245 245 / 0.37);
-  --fill-primary-active: rgb(245 245 245 / 0.41);
-  --fill-secondary: rgb(245 245 245 / 0.2);
-  --fill-secondary-hover: rgb(245 245 245 / 0.31);
-  --fill-secondary-active: rgb(245 245 245 / 0.35);
-  --fill-tertiary: rgb(245 245 245 / 0.12);
-  --fill-tertiary-hover: rgb(245 245 245 / 0.23);
-  --fill-tertiary-active: rgb(245 245 245 / 0.27);
-  --fill-quaternary: rgb(245 245 245 / 0.06);
-  --fill-quaternary-hover: rgb(245 245 245 / 0.17);
-  --fill-quaternary-active: rgb(245 245 245 / 0.21);
 }

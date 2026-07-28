@@ -211,28 +211,15 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-primary);
-  transition:
-    border-color var(--motion-default),
-    background var(--motion-default);
-}
-
-.input__container:hover {
-  border-color: var(--ink-secondary);
+  transition: outline-offset var(--motion-default);
 }
 
 .input__container:focus-within {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-  border-color: var(--ink-primary);
+  outline: 3px solid var(--focus);
 }
 
 .input__container--fill {
-  background: var(--fill-quaternary);
-  border-color: transparent;
-}
-
-.input__container--fill:hover {
-  background: var(--fill-quaternary-hover);
+  background: var(--background-primary);
   border-color: transparent;
 }
 
@@ -240,9 +227,9 @@
   border-radius: var(--radius-full);
 }
 
-.input__container--invalid,
-.input__container--invalid:hover {
+.input__container--invalid {
   border-color: var(--danger);
+  outline-offset: 2px;
 }
 
 .input__element {

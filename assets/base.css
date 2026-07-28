@@ -574,7 +574,7 @@ pre::-webkit-scrollbar {
   width: 28px;
   height: 28px;
   padding: 0;
-  color: var(--ink-tertiary);
+  color: var(--ink-secondary);
   background: var(--background-secondary);
   border: 0;
   border-radius: 8px;

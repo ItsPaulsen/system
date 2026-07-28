@@ -16,9 +16,9 @@
      independent so retinting neutrals doesn't touch the brand palette. */
   --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
   --anchor-primary: 108 43 245; /* brand — electric punch */
-  --anchor-green: 46 174 105;
-  --anchor-red: 224 60 44;
-  --anchor-blue: 33 150 243; /* clean tint blue, matches red/green saturation */
+  --anchor-green: 33 135 74;
+  --anchor-red: 191 0 0;
+  --anchor-blue: 25 80 200; /* deep blue that harmonizes with red/green weight */
   --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
@@ -295,7 +295,7 @@
   --anchor-primary: 118 55 255;
   --anchor-green: 102 204 163;
   --anchor-red: 245 124 124;
-  --anchor-blue: 77 171 247;
+  --anchor-blue: 100 165 245;
   --anchor-focus: 22 146 227;
 
   /* Foreground — only primary has one. Lightened for dark-theme
@@ -304,23 +304,22 @@
   --primary-foreground-hover: color-mix(in oklab, var(--primary-hover), white 50%);
   --primary-foreground-active: color-mix(in oklab, var(--primary-active), white 50%);
 
-  /* Soft variants — Ruter's approach for dark theme is to lighten the base
-     color before applying alpha (their dark tint-secondary uses a lighter
-     blue than tint-primary). We mirror that: mix primary with 40% white,
-     then take alpha. Result reads as visible tint against dark surfaces
-     instead of a barely-there dark speck. */
-  --primary-soft: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.2);
-  --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.31);
-  --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.35);
-  --green-soft: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.2);
-  --green-soft-hover: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.31);
-  --green-soft-active: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.35);
-  --red-soft: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.2);
-  --red-soft-hover: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.31);
-  --red-soft-active: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.35);
-  --blue-soft: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.2);
-  --blue-soft-hover: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.31);
-  --blue-soft-active: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.35);
+  /* Soft variants — higher alpha for visibility against dark surfaces.
+     No color-mix lightening needed because the dark tint solids are
+     already lifted (red/green/blue chosen to work as text on soft bg,
+     so alpha of them reads fine as bg too). */
+  --primary-soft: rgb(from var(--primary) r g b / 0.2);
+  --primary-soft-hover: rgb(from var(--primary) r g b / 0.31);
+  --primary-soft-active: rgb(from var(--primary) r g b / 0.35);
+  --green-soft: rgb(from var(--green) r g b / 0.2);
+  --green-soft-hover: rgb(from var(--green) r g b / 0.31);
+  --green-soft-active: rgb(from var(--green) r g b / 0.35);
+  --red-soft: rgb(from var(--red) r g b / 0.2);
+  --red-soft-hover: rgb(from var(--red) r g b / 0.31);
+  --red-soft-active: rgb(from var(--red) r g b / 0.35);
+  --blue-soft: rgb(from var(--blue) r g b / 0.2);
+  --blue-soft-hover: rgb(from var(--blue) r g b / 0.31);
+  --blue-soft-active: rgb(from var(--blue) r g b / 0.35);
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */

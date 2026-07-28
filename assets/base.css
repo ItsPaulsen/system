@@ -595,8 +595,8 @@ pre::-webkit-scrollbar {
 }
 
 .code-copy svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .code-copy .code-copy__check {
@@ -951,6 +951,11 @@ pre .tok-var {
 
 .pagination__link--next {
   margin-left: auto;
+}
+
+.pagination__link svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */

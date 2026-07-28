@@ -6,6 +6,7 @@
     <title>Button — Demo</title>
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
     <script>
       (function () {
         var t = localStorage.getItem("theme");
@@ -15,6 +16,18 @@
         document.documentElement.dataset.theme = t;
       })();
     </script>
+    <style>
+      .component-preview {
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      @media (max-width: 640px) {
+        .component-preview {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -23,9 +36,192 @@
           <div class="site-head__title">
             <h1>Button</h1>
           </div>
-          <p class="lede">Coming soon.</p>
+          <p class="lede">
+            Four skins driven by a global density knob. Set
+            <code>data-size="sm|md|lg"</code> on any ancestor and the button (and any other
+            density-driven component inside) rescales — no per-button size modifier.
+          </p>
         </div>
       </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Size</h3>
+          <p class="section-note">
+            Same button, three densities via <code>data-size</code> on a wrapping element.
+          </p>
+          <div class="component-preview">
+            <div data-size="sm">
+              <button type="button" class="button button--primary">Small</button>
+            </div>
+            <div data-size="md">
+              <button type="button" class="button button--primary">Medium</button>
+            </div>
+            <div data-size="lg">
+              <button type="button" class="button button--primary">Large</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Primary</h3>
+          <p class="section-note">Filled with the brand primary.</p>
+          <div class="component-preview">
+            <button type="button" class="button button--primary">Continue</button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Secondary</h3>
+          <p class="section-note">Soft primary tint background, primary text.</p>
+          <div class="component-preview">
+            <button type="button" class="button button--secondary">Continue</button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Flat</h3>
+          <p class="section-note">Transparent surface; primary text; fills on hover.</p>
+          <div class="component-preview">
+            <button type="button" class="button button--flat">Continue</button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Destructive</h3>
+          <p class="section-note">Soft danger tint background, danger text.</p>
+          <div class="component-preview">
+            <button type="button" class="button button--destructive">Delete account</button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Icon-only</h3>
+          <p class="section-note">
+            Square, no inline padding — always pair with <code>aria-label</code>.
+          </p>
+          <div class="component-preview">
+            <button type="button" class="button button--primary button--icon" aria-label="Open">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </button>
+            <button type="button" class="button button--secondary button--icon" aria-label="Open">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </button>
+            <button type="button" class="button button--flat button--icon" aria-label="Open">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">With icon</h3>
+          <p class="section-note">
+            Icon lands before or after the label; add
+            <code>button--with-start-icon</code> or <code>button--with-end-icon</code>
+            to tighten padding on the icon side.
+          </p>
+          <div class="component-preview">
+            <button type="button" class="button button--secondary button--with-start-icon">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Add item
+            </button>
+            <button type="button" class="button button--secondary button--with-end-icon">
+              Open link
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <p class="section-note">
+            Filled skins drop to <code>fill-quaternary</code>; flat stays transparent. Text and icon
+            go to <code>fill-secondary</code>. Cursor is <code>not-allowed</code>, hover does
+            nothing.
+          </p>
+          <div class="component-preview">
+            <button type="button" class="button button--primary" disabled>Continue</button>
+            <button type="button" class="button button--secondary" disabled>Continue</button>
+            <button type="button" class="button button--flat" disabled>Continue</button>
+            <button type="button" class="button button--destructive" disabled>Delete</button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary"</span><span class="tok-key">&gt;</span>Continue<span class="tok-key">&lt;/button&gt;</span>
+
+<span class="tok-com">&lt;!-- Skins:   --primary --secondary --flat --destructive --&gt;</span>
+<span class="tok-com">&lt;!-- Layout:  --icon  --with-start-icon  --with-end-icon --&gt;</span>
+<span class="tok-com">&lt;!-- Density: data-size="sm|md|lg" on any ancestor --&gt;</span>
+
+<span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span>
+        <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary button--with-start-icon"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>Add item
+<span class="tok-key">&lt;/button&gt;</span>
+
+<span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span>
+        <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary button--icon"</span>
+        <span class="tok-prop">aria-label</span>=<span class="tok-str">"Open"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
+<span class="tok-key">&lt;/button&gt;</span></code></pre>
+        </section>
+      </div>
     </div>
     <script src="/assets/app.js" defer></script>
   </body>

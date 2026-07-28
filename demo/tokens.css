@@ -202,6 +202,14 @@
   --radius-lg: 24px;
   --radius-full: 999px;
 
+  /* Density scaling — a global knob per Ruter/Nord. Components multiply
+     these instead of hardcoding pixels; toggling [data-size] on any
+     ancestor rescales everything within. Defaults match `data-size="md"`;
+     overrides live at the end of the file. */
+  --ds-size-root: 0.25rem;
+  --ds-radius-root: 0.25rem;
+  --ds-font-size-addition: 0rem;
+
   /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
      mixed from --neutral-black so shadows follow any future tint of the
      neutrals (and stay dark in both themes — --ink flips, --neutral-black
@@ -308,4 +316,26 @@
   --shadow-lg:
     0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 60%, transparent),
     0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 50%, transparent);
+}
+
+/* ── Density knob ──────────────────────────────────────────────────────────
+   Set `data-size="sm|md|lg"` on any ancestor to rescale everything driven by
+   --ds-* below that node. Root default matches md. */
+
+[data-size="sm"] {
+  --ds-size-root: 0.1875rem;
+  --ds-radius-root: 0.1875rem;
+  --ds-font-size-addition: -0.125rem;
+}
+
+[data-size="md"] {
+  --ds-size-root: 0.25rem;
+  --ds-radius-root: 0.25rem;
+  --ds-font-size-addition: 0rem;
+}
+
+[data-size="lg"] {
+  --ds-size-root: 0.3125rem;
+  --ds-radius-root: 0.3125rem;
+  --ds-font-size-addition: 0.125rem;
 }

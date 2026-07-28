@@ -276,3 +276,124 @@
 .input__element:has(+ .input__trailing) {
   padding-right: 0;
 }
+
+/* ── Button ────────────────────────────────────────────────────────────── */
+
+/* Structure:
+   <button class="button button--{primary|secondary|flat|destructive}
+                         [button--icon | button--with-start-icon | button--with-end-icon]">
+     [<svg>…</svg>] Label [<svg>…</svg>]
+   </button>
+
+   Density is a global knob — set `data-size="sm|md|lg"` on any ancestor
+   (root for site-wide, a wrapper for per-section) and the button
+   (along with any density-driven component inside) rescales. */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--ds-size-root) * 1.5);
+  height: calc(var(--ds-size-root) * 12);
+  padding-inline: calc(var(--ds-size-root) * 5);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ink-primary);
+  font: inherit;
+  font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
+  font-weight: var(--font-body-small-emphasized-weight);
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--motion-default);
+}
+
+.button svg {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+/* Modifiers — tighten padding on whichever side the icon sits */
+
+.button--with-start-icon {
+  padding-inline-start: calc(var(--ds-size-root) * 4);
+}
+
+.button--with-end-icon {
+  padding-inline-end: calc(var(--ds-size-root) * 4);
+}
+
+/* Icon-only — square, no inline padding */
+
+.button--icon {
+  width: calc(var(--ds-size-root) * 12);
+  padding-inline: 0;
+}
+
+/* Skins — hover/active guarded with :not(:disabled) so disabled state wins. */
+
+.button--primary {
+  background: var(--primary);
+  color: var(--neutral-white);
+}
+
+.button--primary:not(:disabled):hover {
+  background: var(--primary-hover);
+}
+
+.button--primary:not(:disabled):active {
+  background: var(--primary-active);
+}
+
+.button--secondary {
+  background: color-mix(in oklab, var(--primary), transparent 87.8%);
+  color: var(--primary);
+}
+
+.button--secondary:not(:disabled):hover {
+  background: color-mix(in oklab, var(--primary), transparent 77%);
+}
+
+.button--secondary:not(:disabled):active {
+  background: color-mix(in oklab, var(--primary), transparent 73%);
+}
+
+.button--flat {
+  background: transparent;
+  color: var(--primary);
+}
+
+.button--flat:not(:disabled):hover {
+  background: color-mix(in oklab, var(--primary), transparent 77%);
+}
+
+.button--flat:not(:disabled):active {
+  background: color-mix(in oklab, var(--primary), transparent 73%);
+}
+
+.button--destructive {
+  background: color-mix(in oklab, var(--danger), transparent 87.8%);
+  color: var(--danger);
+}
+
+.button--destructive:not(:disabled):hover {
+  background: color-mix(in oklab, var(--danger), transparent 77%);
+}
+
+.button--destructive:not(:disabled):active {
+  background: color-mix(in oklab, var(--danger), transparent 73%);
+}
+
+/* Disabled — fill-quaternary bg for filled skins, transparent for flat.
+   Text/icon drop to fill-secondary. Higher specificity via double class. */
+
+.button:disabled {
+  color: var(--fill-secondary);
+  cursor: not-allowed;
+  background: var(--fill-quaternary);
+}
+
+.button.button--flat:disabled {
+  background: transparent;
+}

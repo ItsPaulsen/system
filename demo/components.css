@@ -45,7 +45,7 @@
 }
 
 .switch__input:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .tabs__tab:has(.tabs__radio:focus-visible) {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -215,7 +215,7 @@
 }
 
 .input__container:focus-within {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--focus);
 }
 
 .input__container--fill {
@@ -361,7 +361,7 @@
 
 .button--secondary {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-foreground);
 }
 
 .button--secondary:not(:disabled):hover {
@@ -374,7 +374,7 @@
 
 .button--flat {
   background: transparent;
-  color: var(--primary);
+  color: var(--primary-foreground);
 }
 
 .button--flat:not(:disabled):hover {
@@ -414,7 +414,7 @@
 /* ── Badge ─────────────────────────────────────────────────────────────── */
 
 /* Structure:
-   <span class="badge badge--{primary|secondary|outline|red|green|yellow|blue}
+   <span class="badge badge--{primary|secondary|outline|red|green|blue}
                             [badge--with-start-icon | badge--with-end-icon]">
      [<svg>…</svg>] Label [<svg>…</svg>]
    </span>
@@ -473,11 +473,6 @@
 .badge--green {
   background: var(--green-soft);
   color: var(--green);
-}
-
-.badge--yellow {
-  background: var(--yellow-soft);
-  color: var(--yellow);
 }
 
 .badge--blue {
@@ -599,7 +594,7 @@
 
 .chip:focus-visible,
 .chip:has(:focus-visible) {
-  outline: 3px solid var(--blue);
+  outline: 3px solid var(--focus);
 }
 
 /* Disabled */
@@ -614,7 +609,7 @@
 .chip:has(input:checked) {
   background: var(--primary-soft);
   border-color: transparent;
-  color: var(--primary);
+  color: var(--primary-foreground);
 }
 
 /* Hover / active — checked, non-disabled */

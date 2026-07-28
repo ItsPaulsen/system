@@ -15,11 +15,11 @@
      shadows all derive from it. Semantic anchors (brand + status) stay
      independent so retinting neutrals doesn't touch the brand palette. */
   --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
-  --anchor-primary: 122 78 234; /* brand */
+  --anchor-primary: 108 43 245; /* brand — electric punch */
   --anchor-green: 46 174 105;
-  --anchor-yellow: 224 178 63;
   --anchor-red: 224 60 44;
-  --anchor-blue: 48 140 218;
+  --anchor-blue: 33 150 243; /* clean tint blue, matches red/green saturation */
+  --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
      version in dark theme (see :root[data-theme="dark"] below) while these
@@ -57,36 +57,40 @@
 
   /* ── Semantic ────────────────────────────────────────────────────────
      Each family opaque from its anchor; hover/active derived via color-mix
-     toward white (lighter) — except warning, which darkens (lightening
-     yellow washes it out). Direction is consistent across themes. */
+     toward white. Direction is consistent across themes. */
   --primary: rgb(var(--anchor-primary));
   --primary-hover: color-mix(in oklab, var(--primary) 88%, white);
   --primary-active: color-mix(in oklab, var(--primary) 82%, white);
   --green: rgb(var(--anchor-green));
   --green-hover: color-mix(in oklab, var(--green) 88%, white);
   --green-active: color-mix(in oklab, var(--green) 82%, white);
-  --yellow: rgb(var(--anchor-yellow));
-  --yellow-hover: color-mix(in oklab, var(--yellow) 88%, black);
-  --yellow-active: color-mix(in oklab, var(--yellow) 82%, black);
   --red: rgb(var(--anchor-red));
   --red-hover: color-mix(in oklab, var(--red) 88%, white);
   --red-active: color-mix(in oklab, var(--red) 82%, white);
   --blue: rgb(var(--anchor-blue));
   --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
   --blue-active: color-mix(in oklab, var(--blue) 82%, white);
+  --focus: rgb(var(--anchor-focus));
+  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
+  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
+
+  /* Foreground — the color used for text/icons sitting on the -soft
+     background. Only exists for primary (brand); tints use their
+     solid color as text directly (Ruter's pattern — only accent has
+     a foreground). In light theme foreground ≈ primary; in dark
+     theme it's lightened for legibility on dark tinted surfaces. */
+  --primary-foreground: var(--primary);
+  --primary-foreground-hover: var(--primary-hover);
+  --primary-foreground-active: var(--primary-active);
 
   /* Soft alpha variants — for chip/badge backgrounds where the tint sits
-     behind solid-color text. Yellow uses higher alpha (low-alpha yellow
-     disappears against light surfaces). Hover/active ramp deeper. */
+     behind foreground-color text. Hover/active ramp deeper. */
   --primary-soft: rgb(from var(--primary) r g b / 0.122);
   --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
   --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
   --green-soft: rgb(from var(--green) r g b / 0.122);
   --green-soft-hover: rgb(from var(--green) r g b / 0.23);
   --green-soft-active: rgb(from var(--green) r g b / 0.27);
-  --yellow-soft: rgb(from var(--yellow) r g b / 0.2);
-  --yellow-soft-hover: rgb(from var(--yellow) r g b / 0.31);
-  --yellow-soft-active: rgb(from var(--yellow) r g b / 0.35);
   --red-soft: rgb(from var(--red) r g b / 0.122);
   --red-soft-hover: rgb(from var(--red) r g b / 0.23);
   --red-soft-active: rgb(from var(--red) r g b / 0.27);
@@ -288,11 +292,35 @@
   --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
   --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
 
-  --anchor-primary: 150 108 245;
-  --anchor-green: 84 195 132;
-  --anchor-yellow: 235 210 130;
-  --anchor-red: 240 90 68;
-  --anchor-blue: 22 146 227;
+  --anchor-primary: 118 55 255;
+  --anchor-green: 102 204 163;
+  --anchor-red: 245 124 124;
+  --anchor-blue: 77 171 247;
+  --anchor-focus: 22 146 227;
+
+  /* Foreground — only primary has one. Lightened for dark-theme
+     legibility on soft bg. Mirrors Ruter's tint-accent-foreground. */
+  --primary-foreground: color-mix(in oklab, var(--primary), white 50%);
+  --primary-foreground-hover: color-mix(in oklab, var(--primary-hover), white 50%);
+  --primary-foreground-active: color-mix(in oklab, var(--primary-active), white 50%);
+
+  /* Soft variants — Ruter's approach for dark theme is to lighten the base
+     color before applying alpha (their dark tint-secondary uses a lighter
+     blue than tint-primary). We mirror that: mix primary with 40% white,
+     then take alpha. Result reads as visible tint against dark surfaces
+     instead of a barely-there dark speck. */
+  --primary-soft: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.2);
+  --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.31);
+  --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 50%) r g b / 0.35);
+  --green-soft: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.2);
+  --green-soft-hover: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.31);
+  --green-soft-active: rgb(from color-mix(in oklab, var(--green), white 50%) r g b / 0.35);
+  --red-soft: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.2);
+  --red-soft-hover: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.31);
+  --red-soft-active: rgb(from color-mix(in oklab, var(--red), white 50%) r g b / 0.35);
+  --blue-soft: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.2);
+  --blue-soft-hover: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.31);
+  --blue-soft-active: rgb(from color-mix(in oklab, var(--blue), white 50%) r g b / 0.35);
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */

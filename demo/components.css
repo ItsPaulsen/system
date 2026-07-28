@@ -529,7 +529,9 @@
   background: var(--background-primary);
 }
 
-/* Interactive — `<a>` and `<button>` get pointer + hover/active/focus */
+/* Interactive — `<a>` and `<button>` get pointer + hover/active/focus.
+   Disabled and focus-visible declared first so lower-specificity hover/active
+   rules can follow without tripping stylelint's descending-specificity check. */
 
 a.card,
 button.card {
@@ -544,6 +546,16 @@ button.card {
   text-align: left;
 }
 
+button.card:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+a.card:focus-visible,
+button.card:focus-visible {
+  outline: 3px solid var(--focus);
+}
+
 a.card:hover,
 button.card:not(:disabled):hover {
   background: var(--background-secondary-hover);
@@ -554,24 +566,14 @@ button.card:not(:disabled):active {
   background: var(--background-secondary-active);
 }
 
-.card--alternate:is(a):hover,
-.card--alternate:is(button):not(:disabled):hover {
+a.card--alternate:hover,
+button.card--alternate:not(:disabled):hover {
   background: var(--background-primary-hover);
 }
 
-.card--alternate:is(a):active,
-.card--alternate:is(button):not(:disabled):active {
+a.card--alternate:active,
+button.card--alternate:not(:disabled):active {
   background: var(--background-primary-active);
-}
-
-a.card:focus-visible,
-button.card:focus-visible {
-  outline: 3px solid var(--focus);
-}
-
-button.card:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 /* ── Slots ── */

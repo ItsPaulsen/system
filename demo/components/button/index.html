@@ -21,12 +21,6 @@
         gap: 2rem;
         flex-wrap: wrap;
       }
-      @media (max-width: 640px) {
-        .component-preview {
-          flex-direction: column;
-          align-items: center;
-        }
-      }
     </style>
   </head>
   <body>
@@ -47,9 +41,7 @@
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Size</h3>
-          <p class="section-note">
-            Same button, three densities via <code>data-size</code> on a wrapping element.
-          </p>
+          <p class="section-note">Set <code>data-size</code> on any ancestor.</p>
           <div class="component-preview">
             <div data-size="sm">
               <button type="button" class="button button--primary">Small</button>
@@ -65,7 +57,6 @@
 
         <section class="preview-block">
           <h3 class="subhead">Primary</h3>
-          <p class="section-note">Filled with the brand primary.</p>
           <div class="component-preview">
             <button type="button" class="button button--primary">Continue</button>
           </div>
@@ -73,7 +64,6 @@
 
         <section class="preview-block">
           <h3 class="subhead">Secondary</h3>
-          <p class="section-note">Soft primary tint background, primary text.</p>
           <div class="component-preview">
             <button type="button" class="button button--secondary">Continue</button>
           </div>
@@ -81,7 +71,6 @@
 
         <section class="preview-block">
           <h3 class="subhead">Flat</h3>
-          <p class="section-note">Transparent surface; primary text; fills on hover.</p>
           <div class="component-preview">
             <button type="button" class="button button--flat">Continue</button>
           </div>
@@ -89,7 +78,6 @@
 
         <section class="preview-block">
           <h3 class="subhead">Destructive</h3>
-          <p class="section-note">Soft danger tint background, danger text.</p>
           <div class="component-preview">
             <button type="button" class="button button--destructive">Delete account</button>
           </div>
@@ -97,9 +85,7 @@
 
         <section class="preview-block">
           <h3 class="subhead">Icon-only</h3>
-          <p class="section-note">
-            Square, no inline padding — always pair with <code>aria-label</code>.
-          </p>
+          <p class="section-note">Always pair with <code>aria-label</code>.</p>
           <div class="component-preview">
             <button type="button" class="button button--primary button--icon" aria-label="Open">
               <svg
@@ -149,9 +135,8 @@
         <section class="preview-block">
           <h3 class="subhead">With icon</h3>
           <p class="section-note">
-            Icon lands before or after the label; add
-            <code>button--with-start-icon</code> or <code>button--with-end-icon</code>
-            to tighten padding on the icon side.
+            Add <code>button--with-start-icon</code> or <code>button--with-end-icon</code> to
+            tighten padding on the icon side.
           </p>
           <div class="component-preview">
             <button type="button" class="button button--secondary button--with-start-icon">
@@ -189,16 +174,9 @@
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <p class="section-note">
-            Filled skins drop to <code>fill-quaternary</code>; flat stays transparent. Text and icon
-            go to <code>fill-secondary</code>. Cursor is <code>not-allowed</code>, hover does
-            nothing.
-          </p>
           <div class="component-preview">
             <button type="button" class="button button--primary" disabled>Continue</button>
-            <button type="button" class="button button--secondary" disabled>Continue</button>
             <button type="button" class="button button--flat" disabled>Continue</button>
-            <button type="button" class="button button--destructive" disabled>Delete</button>
           </div>
         </section>
 

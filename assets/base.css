@@ -1264,6 +1264,7 @@ a.token-list__row:focus-visible {
 .component-preview {
   display: flex;
   align-items: center;
+  align-content: center;
   justify-content: center;
   min-height: calc(200px + 5rem);
   padding: 2.5rem;

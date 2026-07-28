@@ -485,6 +485,11 @@
   color: var(--amber);
 }
 
+.badge--purple {
+  background: var(--purple-soft);
+  color: var(--purple);
+}
+
 .badge--outline {
   background: transparent;
   color: var(--ink-primary);

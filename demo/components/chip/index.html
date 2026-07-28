@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Filter chip — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Filter chip</h1>
+          </div>
+          <p class="lede">Selects an option from a group of choices.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">As radio (single-select)</h3>
+          <p class="section-note">
+            Radios share a <code>name</code> — only one in the group can be checked.
+          </p>
+          <div class="component-preview">
+            <label class="chip chip--as-radio">
+              <input type="radio" name="chip-when" class="chip__input" checked />
+              Today
+            </label>
+            <label class="chip chip--as-radio">
+              <input type="radio" name="chip-when" class="chip__input" />
+              This week
+            </label>
+            <label class="chip chip--as-radio">
+              <input type="radio" name="chip-when" class="chip__input" />
+              This month
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">As checkbox (multi-select)</h3>
+          <p class="section-note">Leading checkmark appears on checked.</p>
+          <div class="component-preview">
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" checked />
+              Bus
+            </label>
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" checked />
+              Metro
+            </label>
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" />
+              Tram
+            </label>
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" />
+              Train
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="component-preview">
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" disabled />
+              Unchecked
+            </label>
+            <label class="chip chip--as-checkbox">
+              <input type="checkbox" class="chip__input" checked disabled />
+              Checked
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-com">&lt;!-- Single-select group --&gt;</span>
+<span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip chip--as-radio"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"when"</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip__input"</span> <span class="tok-key">/&gt;</span> Today
+<span class="tok-key">&lt;/label&gt;</span>
+
+<span class="tok-com">&lt;!-- Multi-select filter --&gt;</span>
+<span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip chip--as-checkbox"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip__input"</span> <span class="tok-key">/&gt;</span> Bus
+<span class="tok-key">&lt;/label&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

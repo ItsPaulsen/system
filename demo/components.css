@@ -397,3 +397,199 @@
 .button.button--flat:disabled {
   background: transparent;
 }
+
+/* ── Badge ─────────────────────────────────────────────────────────────── */
+
+/* Structure:
+   <span class="badge badge--{primary|secondary|destructive|outline|flat}">
+     [<svg>…</svg>] Label [<svg>…</svg>]
+   </span>
+
+   Same density knob as buttons — data-size="sm|md|lg" on any ancestor. */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--ds-size-root) * 1.5);
+  min-height: calc(var(--ds-size-root) * 6);
+  padding-inline: calc(var(--ds-size-root) * 2);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--ink-primary);
+  font-family: inherit;
+  font-size: calc(var(--font-caption-medium-emphasized-size) + var(--ds-font-size-addition));
+  font-weight: var(--font-caption-medium-emphasized-weight);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge svg {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+/* Skins */
+
+.badge--primary {
+  background: var(--ink-primary);
+  color: var(--background-primary);
+}
+
+.badge--secondary {
+  background: var(--fill-tertiary);
+  color: var(--ink-primary);
+}
+
+.badge--destructive {
+  background: color-mix(in oklab, var(--danger), transparent 87.8%);
+  color: var(--danger);
+}
+
+.badge--outline {
+  background: transparent;
+  color: var(--ink-primary);
+  border: 1px solid var(--ink-tertiary);
+}
+
+.badge--flat {
+  background: transparent;
+  color: var(--ink-primary);
+}
+
+/* ── Chip ──────────────────────────────────────────────────────────────── */
+
+/* Ruter-faithful chip — interactive filter/tag. Two interaction types:
+   checkbox (multi-select) and radio (single-select group). Native input
+   is visually hidden; the chip surface shows the checked state via
+   :has(). Same density knob as button/badge.
+
+   Structure:
+     <label class="chip chip--as-checkbox">
+       <input type="checkbox" class="chip__input" /> Bus
+     </label>
+
+     <label class="chip chip--as-radio">
+       <input type="radio" name="filter" class="chip__input" /> Today
+     </label> */
+
+.chip {
+  --chip-h: 40px;
+  --chip-px: 12px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--ds-size-root) * 1.5);
+  min-height: var(--chip-h);
+  padding-block: 0;
+  padding-inline: var(--chip-px);
+  border: 1px solid var(--fill-secondary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-primary);
+  font-family: inherit;
+  font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
+  font-weight: var(--font-body-small-emphasized-weight);
+  line-height: 1;
+  text-align: left;
+  vertical-align: middle;
+  transition:
+    background 75ms,
+    border-color 75ms,
+    color 75ms;
+}
+
+[data-size="sm"] .chip {
+  --chip-h: 32px;
+  --chip-px: 8px;
+}
+
+[data-size="lg"] .chip {
+  --chip-h: 48px;
+  --chip-px: 16px;
+}
+
+.chip svg {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+/* Material 3 leading checkmark on checked multi-select chips.
+   CSS mask tints a currentColor background into the checkmark shape,
+   so it inherits the chip's text color across skins and themes. */
+.chip--as-checkbox:has(input:checked)::before {
+  content: "";
+  width: 1.125em;
+  height: 1.125em;
+  flex-shrink: 0;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+.chip__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+}
+
+/* Interactive types — cursor pointer when enabled */
+
+.chip--as-checkbox:not(:has(input:disabled)),
+.chip--as-radio:not(:has(input:disabled)) {
+  cursor: pointer;
+}
+
+/* Hover / active — unchecked, non-disabled */
+
+.chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
+.chip--as-radio:not(:has(input:disabled, input:checked)):hover {
+  border-color: var(--fill-primary-hover);
+}
+
+.chip--as-checkbox:not(:has(input:disabled, input:checked)):active,
+.chip--as-radio:not(:has(input:disabled, input:checked)):active {
+  border-color: var(--fill-primary-active);
+}
+
+/* Focus — 3px ring, either on the chip itself or via the hidden input */
+
+.chip:focus-visible,
+.chip:has(:focus-visible) {
+  outline: 3px solid var(--focus);
+}
+
+/* Disabled */
+
+.chip:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Checked state — soft primary tint bg, primary text, no border */
+
+.chip:has(input:checked) {
+  background: color-mix(in oklab, var(--primary), transparent 87.8%);
+  border-color: transparent;
+  color: var(--primary);
+}
+
+/* Hover / active — checked, non-disabled */
+
+.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
+.chip--as-radio:has(input:checked):not(:has(input:disabled)):hover {
+  background: color-mix(in oklab, var(--primary), transparent 77%);
+}
+
+.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active,
+.chip--as-radio:has(input:checked):not(:has(input:disabled)):active {
+  background: color-mix(in oklab, var(--primary), transparent 73%);
+}

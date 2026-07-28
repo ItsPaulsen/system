@@ -953,11 +953,6 @@ pre .tok-var {
   margin-left: auto;
 }
 
-.pagination__link svg {
-  width: 18px;
-  height: 18px;
-}
-
 /* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */
 .docs-switch {
   display: inline-flex;

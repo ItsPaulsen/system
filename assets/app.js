@@ -162,9 +162,9 @@ const DEMO_PAGES = [
   }
 ];
 
-// Tabler arrow-left inlined at 16px for the sidebar's back link.
-const ARROW_LEFT_16 =
-  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
+// Tabler arrow-left inlined at 18px for sidebar back + pagination prev.
+const ARROW_LEFT_ICON =
+  '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
 
 function isCurrentPage(href) {
   const here = location.pathname.replace(/\/index\.html$/, "/");
@@ -192,7 +192,7 @@ function injectSidebar() {
   aside.className = "sidebar";
   // Inner spans give us shadcn-style pill hover: the anchor stays full width
   // for a wide click target, but the visual bg wraps only the label.
-  const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_16}All projects</span></a>`;
+  const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_ICON}All projects</span></a>`;
   aside.innerHTML =
     backLink +
     DEMO_PAGES.map(
@@ -539,9 +539,9 @@ function initGridTabs() {
   if (first) setActive(first);
 }
 
-// Tabler arrow-right at 16px (arrow-left is mirrored via CSS transform).
+// Tabler arrow-right at 18px (arrow-left is mirrored via CSS transform).
 const ARROW_RIGHT_16 =
-  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
+  '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
 
 // Inject a shadcn-style prev/next pair at the bottom of each doc page.
 function injectPagination() {
@@ -559,7 +559,7 @@ function injectPagination() {
   const parts = [];
   if (prev) {
     parts.push(
-      `<a class="pagination__link pagination__link--prev" href="${prev.href}">${ARROW_LEFT_16}<span>${prev.label}</span></a>`
+      `<a class="pagination__link pagination__link--prev" href="${prev.href}">${ARROW_LEFT_ICON}<span>${prev.label}</span></a>`
     );
   }
   if (next) {

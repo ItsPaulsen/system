@@ -296,8 +296,8 @@ const PALETTE_FAMILIES = [
       "green-soft",
       "blue",
       "blue-soft",
-      "purple",
-      "purple-soft"
+      "fuchsia",
+      "fuchsia-soft"
     ]
   },
   {

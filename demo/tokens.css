@@ -26,7 +26,7 @@
   --anchor-amber: 170 81 0;
   --anchor-green: 0 122 22;
   --anchor-blue: 25 80 200;
-  --anchor-purple: 180 0 192;
+  --anchor-fuchsia: 180 0 192;
   --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
@@ -81,9 +81,9 @@
   --blue: rgb(var(--anchor-blue));
   --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
   --blue-active: color-mix(in oklab, var(--blue) 82%, white);
-  --purple: rgb(var(--anchor-purple));
-  --purple-hover: color-mix(in oklab, var(--purple) 88%, white);
-  --purple-active: color-mix(in oklab, var(--purple) 82%, white);
+  --fuchsia: rgb(var(--anchor-fuchsia));
+  --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
+  --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
   --focus: rgb(var(--anchor-focus));
   --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
   --focus-active: color-mix(in oklab, var(--focus) 82%, white);
@@ -114,9 +114,9 @@
   --blue-soft: rgb(from var(--blue) r g b / 0.122);
   --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
   --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
-  --purple-soft: rgb(from var(--purple) r g b / 0.122);
-  --purple-soft-hover: rgb(from var(--purple) r g b / 0.23);
-  --purple-soft-active: rgb(from var(--purple) r g b / 0.27);
+  --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.122);
+  --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.23);
+  --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.27);
 
   /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
   --overlay: rgb(from var(--overlay-base) r g b / 0.45);
@@ -319,7 +319,7 @@
   --anchor-amber: 245 165 30;
   --anchor-green: 84 203 153;
   --anchor-blue: 140 190 255;
-  --anchor-purple: 235 157 239;
+  --anchor-fuchsia: 235 157 239;
   --anchor-focus: 22 146 227;
 
   /* Foreground — only primary has one. Lightened for dark-theme
@@ -350,9 +350,9 @@
   --blue-soft: rgb(from var(--blue) r g b / 0.2);
   --blue-soft-hover: rgb(from var(--blue) r g b / 0.31);
   --blue-soft-active: rgb(from var(--blue) r g b / 0.35);
-  --purple-soft: rgb(from var(--purple) r g b / 0.2);
-  --purple-soft-hover: rgb(from var(--purple) r g b / 0.31);
-  --purple-soft-active: rgb(from var(--purple) r g b / 0.35);
+  --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.2);
+  --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.31);
+  --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.35);
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */

@@ -485,9 +485,9 @@
   color: var(--blue);
 }
 
-.badge--purple {
-  background: var(--purple-soft);
-  color: var(--purple);
+.badge--fuchsia {
+  background: var(--fuchsia-soft);
+  color: var(--fuchsia);
 }
 
 .badge--outline {

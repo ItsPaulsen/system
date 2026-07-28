@@ -16,7 +16,7 @@
      independent so retinting neutrals doesn't touch the brand palette. */
   --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
   --anchor-primary: 108 43 245; /* brand — electric punch */
-  --anchor-green: 33 135 74;
+  --anchor-green: 25 130 65;
   --anchor-red: 191 0 0;
   --anchor-blue: 25 80 200; /* deep blue that harmonizes with red/green weight */
   --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */

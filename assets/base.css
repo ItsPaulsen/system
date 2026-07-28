@@ -73,7 +73,7 @@ body {
 
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -118,7 +118,7 @@ body {
 }
 
 .site-nav__menu:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -224,7 +224,7 @@ body {
 
 .sidebar__link:focus-visible > span,
 .sidebar__back:focus-visible > span {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 0;
 }
 
@@ -344,7 +344,7 @@ body {
 }
 
 .site-nav__brand:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -372,7 +372,7 @@ body {
 }
 
 .theme-toggle:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -506,7 +506,7 @@ h1 {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -532,7 +532,7 @@ h2 {
 
 /* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
    contrasts against any surface it's placed on (whether that's the tinted page
-   or an elevated card). The Ruter pattern for subtle inline chips. */
+   or an elevated card). */
 code {
   font-family: var(--mono);
   font-size: 0.8125rem;
@@ -590,7 +590,7 @@ pre::-webkit-scrollbar {
 }
 
 .code-copy:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -737,7 +737,7 @@ pre .tok-var {
 }
 
 .palette-swatch:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -945,7 +945,7 @@ pre .tok-var {
 }
 
 .pagination__link:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -994,7 +994,7 @@ pre .tok-var {
 }
 
 .docs-switch__toggle:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -1028,7 +1028,7 @@ pre .tok-var {
 }
 
 .docs-tabs__tab:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -1077,7 +1077,7 @@ pre .tok-var {
 }
 
 .link-list a:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -1178,7 +1178,7 @@ a.token-list__row:hover::after {
 }
 
 a.token-list__row:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: -2px;
 }
 
@@ -1368,11 +1368,8 @@ a.token-list__row:focus-visible {
   --grid-overlay-color: #ef4444;
 
   position: fixed;
-  top: var(--nav-h);
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 15;
+  inset: 0;
+  z-index: 50;
   pointer-events: none;
 }
 
@@ -1460,11 +1457,6 @@ a.token-list__row:focus-visible {
 }
 
 /* Desktop: overlay starts past the sidebar so it centers over the same box as .wrap. */
-@media (min-width: 1024px) {
-  .grid-overlay {
-    left: var(--sidebar-w);
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .btn,

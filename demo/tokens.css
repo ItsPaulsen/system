@@ -2,7 +2,7 @@
    Anchors are channel triples (`R G B`, not `rgb(R G B)`) so we can compose
    them with alpha (`rgb(var(--anchor) / 0.5)`) or opaque (`rgb(var(--anchor))`).
    Every downstream token is derived from an anchor — change the anchor, the
-   whole family retints. Pattern follows Nord / Ruter Design System. */
+   whole family retints. */
 
 :root {
   /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
@@ -16,10 +16,10 @@
      independent so retinting neutrals doesn't touch the brand palette. */
   --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
   --anchor-primary: 122 78 234; /* brand */
-  --anchor-success: 46 174 105;
-  --anchor-warning: 224 178 63;
-  --anchor-danger: 224 60 44;
-  --anchor-focus: 48 140 218;
+  --anchor-green: 46 174 105;
+  --anchor-yellow: 224 178 63;
+  --anchor-red: 224 60 44;
+  --anchor-blue: 48 140 218;
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
      version in dark theme (see :root[data-theme="dark"] below) while these
@@ -62,18 +62,37 @@
   --primary: rgb(var(--anchor-primary));
   --primary-hover: color-mix(in oklab, var(--primary) 88%, white);
   --primary-active: color-mix(in oklab, var(--primary) 82%, white);
-  --success: rgb(var(--anchor-success));
-  --success-hover: color-mix(in oklab, var(--success) 88%, white);
-  --success-active: color-mix(in oklab, var(--success) 82%, white);
-  --warning: rgb(var(--anchor-warning));
-  --warning-hover: color-mix(in oklab, var(--warning) 88%, black);
-  --warning-active: color-mix(in oklab, var(--warning) 82%, black);
-  --danger: rgb(var(--anchor-danger));
-  --danger-hover: color-mix(in oklab, var(--danger) 88%, white);
-  --danger-active: color-mix(in oklab, var(--danger) 82%, white);
-  --focus: rgb(var(--anchor-focus));
-  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
-  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
+  --green: rgb(var(--anchor-green));
+  --green-hover: color-mix(in oklab, var(--green) 88%, white);
+  --green-active: color-mix(in oklab, var(--green) 82%, white);
+  --yellow: rgb(var(--anchor-yellow));
+  --yellow-hover: color-mix(in oklab, var(--yellow) 88%, black);
+  --yellow-active: color-mix(in oklab, var(--yellow) 82%, black);
+  --red: rgb(var(--anchor-red));
+  --red-hover: color-mix(in oklab, var(--red) 88%, white);
+  --red-active: color-mix(in oklab, var(--red) 82%, white);
+  --blue: rgb(var(--anchor-blue));
+  --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
+  --blue-active: color-mix(in oklab, var(--blue) 82%, white);
+
+  /* Soft alpha variants — for chip/badge backgrounds where the tint sits
+     behind solid-color text. Yellow uses higher alpha (low-alpha yellow
+     disappears against light surfaces). Hover/active ramp deeper. */
+  --primary-soft: rgb(from var(--primary) r g b / 0.122);
+  --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
+  --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
+  --green-soft: rgb(from var(--green) r g b / 0.122);
+  --green-soft-hover: rgb(from var(--green) r g b / 0.23);
+  --green-soft-active: rgb(from var(--green) r g b / 0.27);
+  --yellow-soft: rgb(from var(--yellow) r g b / 0.2);
+  --yellow-soft-hover: rgb(from var(--yellow) r g b / 0.31);
+  --yellow-soft-active: rgb(from var(--yellow) r g b / 0.35);
+  --red-soft: rgb(from var(--red) r g b / 0.122);
+  --red-soft-hover: rgb(from var(--red) r g b / 0.23);
+  --red-soft-active: rgb(from var(--red) r g b / 0.27);
+  --blue-soft: rgb(from var(--blue) r g b / 0.122);
+  --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
+  --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
 
   /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
   --overlay: rgb(from var(--overlay-base) r g b / 0.45);
@@ -202,8 +221,8 @@
   --radius-lg: 24px;
   --radius-full: 999px;
 
-  /* Density scaling — a global knob per Ruter/Nord. Components multiply
-     these instead of hardcoding pixels; toggling [data-size] on any
+  /* Density scaling — a global knob. Components multiply these instead
+     of hardcoding pixels; toggling [data-size] on any
      ancestor rescales everything within. Defaults match `data-size="md"`;
      overrides live at the end of the file. */
   --ds-size-root: 0.25rem;
@@ -270,10 +289,10 @@
   --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
 
   --anchor-primary: 150 108 245;
-  --anchor-success: 84 195 132;
-  --anchor-warning: 235 210 130;
-  --anchor-danger: 240 90 68;
-  --anchor-focus: 22 146 227;
+  --anchor-green: 84 195 132;
+  --anchor-yellow: 235 210 130;
+  --anchor-red: 240 90 68;
+  --anchor-blue: 22 146 227;
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */

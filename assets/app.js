@@ -279,13 +279,17 @@ const PALETTE_FAMILIES = [
     note: "Text and icon tones.",
     tokens: ["ink-primary", "ink-secondary", "ink-tertiary"]
   },
-  { title: "Primary", tokens: ["primary"] },
+  { title: "Primary", note: "The brand color.", tokens: ["primary"] },
   {
-    title: "Feedback",
-    note: "Status, validation, and system messages.",
-    tokens: ["success", "warning", "danger"]
+    title: "Tints",
+    note: "Color primitives — use for status, tags, callouts, or anywhere a hue reads better than a semantic role. Blue doubles as the keyboard focus ring.",
+    tokens: ["red", "green", "yellow", "blue"]
   },
-  { title: "Focus", note: "Keyboard focus ring.", tokens: ["focus"] },
+  {
+    title: "Soft",
+    note: "Alpha versions of each tint (plus primary). Sit as backgrounds behind solid text — used by chip's checked state, badge's colored variants, and button's secondary/destructive skins.",
+    tokens: ["primary-soft", "red-soft", "green-soft", "yellow-soft", "blue-soft"]
+  },
   { title: "Overlay", note: "Modal and drawer backdrops.", tokens: ["overlay"] },
   {
     title: "Fill",

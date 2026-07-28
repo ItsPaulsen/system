@@ -18,7 +18,7 @@
     </script>
     <style>
       .component-preview {
-        gap: 2rem;
+        gap: 0.5rem;
         flex-wrap: wrap;
       }
     </style>
@@ -36,36 +36,32 @@
 
       <div class="preview-grid">
         <section class="preview-block">
-          <h3 class="subhead">Size</h3>
-          <p class="section-note">Set <code>data-size</code> on any ancestor.</p>
-          <div class="component-preview">
-            <div data-size="sm">
-              <span class="badge badge--primary">Small</span>
-            </div>
-            <div data-size="md">
-              <span class="badge badge--primary">Medium</span>
-            </div>
-            <div data-size="lg">
-              <span class="badge badge--primary">Large</span>
-            </div>
-          </div>
-        </section>
-
-        <section class="preview-block">
           <h3 class="subhead">Variants</h3>
           <div class="component-preview">
             <span class="badge badge--primary">Primary</span>
             <span class="badge badge--secondary">Secondary</span>
-            <span class="badge badge--destructive">Destructive</span>
             <span class="badge badge--outline">Outline</span>
-            <span class="badge badge--flat">Flat</span>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Tints</h3>
+          <div class="component-preview">
+            <span class="badge badge--red">Red</span>
+            <span class="badge badge--green">Green</span>
+            <span class="badge badge--yellow">Yellow</span>
+            <span class="badge badge--blue">Blue</span>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">With icon</h3>
+          <p class="section-note">
+            Add <code>badge--with-start-icon</code> or <code>badge--with-end-icon</code> to tighten
+            padding on the icon side.
+          </p>
           <div class="component-preview">
-            <span class="badge badge--secondary">
+            <span class="badge badge--secondary badge--with-start-icon">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -82,7 +78,7 @@
               </svg>
               Verified
             </span>
-            <span class="badge badge--outline">
+            <span class="badge badge--outline badge--with-end-icon">
               Bookmark
               <svg
                 viewBox="0 0 24 24"
@@ -103,7 +99,8 @@
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"badge badge--primary"</span><span class="tok-key">&gt;</span>Primary<span class="tok-key">&lt;/span&gt;</span>
 
-<span class="tok-com">&lt;!-- Skins: --primary --secondary --destructive --outline --flat --&gt;</span>
+<span class="tok-com">&lt;!-- Skins: --primary --secondary --outline --&gt;</span>
+<span class="tok-com">&lt;!-- Tints: --red --green --yellow --blue --&gt;</span>
 
 <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"badge badge--secondary"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>Verified

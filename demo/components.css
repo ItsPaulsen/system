@@ -45,7 +45,7 @@
 }
 
 .switch__input:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -156,7 +156,7 @@
 }
 
 .tabs__tab:has(.tabs__radio:focus-visible) {
-  outline: 2px solid var(--focus);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
@@ -200,7 +200,7 @@
 
 .input__label-required {
   margin-left: 0.25rem;
-  color: var(--danger);
+  color: var(--red);
 }
 
 .input__container {
@@ -215,7 +215,7 @@
 }
 
 .input__container:focus-within {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--blue);
 }
 
 .input__container--fill {
@@ -228,7 +228,7 @@
 }
 
 .input__container--invalid {
-  border-color: var(--danger);
+  border-color: var(--red);
   outline-offset: 2px;
 }
 
@@ -290,12 +290,15 @@
    (along with any density-driven component inside) rescales. */
 
 .button {
+  --button-px: 20px;
+  --button-gap: 6px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--ds-size-root) * 1.5);
+  gap: var(--button-gap);
   height: calc(var(--ds-size-root) * 12);
-  padding-inline: calc(var(--ds-size-root) * 5);
+  padding-inline: var(--button-px);
   border: 0;
   border-radius: var(--radius-full);
   background: transparent;
@@ -308,6 +311,16 @@
   transition: background var(--motion-default);
 }
 
+[data-size="sm"] .button {
+  --button-px: 16px;
+  --button-gap: 4px;
+}
+
+[data-size="lg"] .button {
+  --button-px: 24px;
+  --button-gap: 8px;
+}
+
 .button svg {
   width: 1.25em;
   height: 1.25em;
@@ -317,11 +330,11 @@
 /* Modifiers — tighten padding on whichever side the icon sits */
 
 .button--with-start-icon {
-  padding-inline-start: calc(var(--ds-size-root) * 4);
+  padding-inline-start: calc(var(--button-px) - 4px);
 }
 
 .button--with-end-icon {
-  padding-inline-end: calc(var(--ds-size-root) * 4);
+  padding-inline-end: calc(var(--button-px) - 4px);
 }
 
 /* Icon-only — square, no inline padding */
@@ -347,16 +360,16 @@
 }
 
 .button--secondary {
-  background: color-mix(in oklab, var(--primary), transparent 87.8%);
+  background: var(--primary-soft);
   color: var(--primary);
 }
 
 .button--secondary:not(:disabled):hover {
-  background: color-mix(in oklab, var(--primary), transparent 77%);
+  background: var(--primary-soft-hover);
 }
 
 .button--secondary:not(:disabled):active {
-  background: color-mix(in oklab, var(--primary), transparent 73%);
+  background: var(--primary-soft-active);
 }
 
 .button--flat {
@@ -365,24 +378,24 @@
 }
 
 .button--flat:not(:disabled):hover {
-  background: color-mix(in oklab, var(--primary), transparent 77%);
+  background: var(--primary-soft-hover);
 }
 
 .button--flat:not(:disabled):active {
-  background: color-mix(in oklab, var(--primary), transparent 73%);
+  background: var(--primary-soft-active);
 }
 
 .button--destructive {
-  background: color-mix(in oklab, var(--danger), transparent 87.8%);
-  color: var(--danger);
+  background: var(--red-soft);
+  color: var(--red);
 }
 
 .button--destructive:not(:disabled):hover {
-  background: color-mix(in oklab, var(--danger), transparent 77%);
+  background: var(--red-soft-hover);
 }
 
 .button--destructive:not(:disabled):active {
-  background: color-mix(in oklab, var(--danger), transparent 73%);
+  background: var(--red-soft-active);
 }
 
 /* Disabled — fill-quaternary bg for filled skins, transparent for flat.
@@ -401,28 +414,37 @@
 /* ── Badge ─────────────────────────────────────────────────────────────── */
 
 /* Structure:
-   <span class="badge badge--{primary|secondary|destructive|outline|flat}">
+   <span class="badge badge--{primary|secondary|outline|red|green|yellow|blue}
+                            [badge--with-start-icon | badge--with-end-icon]">
      [<svg>…</svg>] Label [<svg>…</svg>]
    </span>
 
-   Same density knob as buttons — data-size="sm|md|lg" on any ancestor. */
+   Fixed size — badges don't scale with data-size. */
 
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--ds-size-root) * 1.5);
-  min-height: calc(var(--ds-size-root) * 6);
-  padding-inline: calc(var(--ds-size-root) * 2);
+  gap: 6px;
+  min-height: 24px;
+  padding-inline: 12px;
   border: 0;
   border-radius: var(--radius-full);
   background: transparent;
   color: var(--ink-primary);
   font-family: inherit;
-  font-size: calc(var(--font-caption-medium-emphasized-size) + var(--ds-font-size-addition));
+  font-size: var(--font-caption-medium-emphasized-size);
   font-weight: var(--font-caption-medium-emphasized-weight);
   line-height: 1;
   white-space: nowrap;
+}
+
+.badge--with-start-icon {
+  padding-inline-start: 8px;
+}
+
+.badge--with-end-icon {
+  padding-inline-end: 8px;
 }
 
 .badge svg {
@@ -443,25 +465,35 @@
   color: var(--ink-primary);
 }
 
-.badge--destructive {
-  background: color-mix(in oklab, var(--danger), transparent 87.8%);
-  color: var(--danger);
+.badge--red {
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.badge--green {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.badge--yellow {
+  background: var(--yellow-soft);
+  color: var(--yellow);
+}
+
+.badge--blue {
+  background: var(--blue-soft);
+  color: var(--blue);
 }
 
 .badge--outline {
   background: transparent;
   color: var(--ink-primary);
-  border: 1px solid var(--ink-tertiary);
-}
-
-.badge--flat {
-  background: transparent;
-  color: var(--ink-primary);
+  border: 1px solid var(--fill-secondary);
 }
 
 /* ── Chip ──────────────────────────────────────────────────────────────── */
 
-/* Ruter-faithful chip — interactive filter/tag. Two interaction types:
+/* Interactive filter/tag. Two interaction types:
    checkbox (multi-select) and radio (single-select group). Native input
    is visually hidden; the chip surface shows the checked state via
    :has(). Same density knob as button/badge.
@@ -478,10 +510,11 @@
 .chip {
   --chip-h: 40px;
   --chip-px: 12px;
+  --chip-gap: 6px;
 
   display: inline-flex;
   align-items: center;
-  gap: calc(var(--ds-size-root) * 1.5);
+  gap: var(--chip-gap);
   min-height: var(--chip-h);
   padding-block: 0;
   padding-inline: var(--chip-px);
@@ -504,11 +537,13 @@
 [data-size="sm"] .chip {
   --chip-h: 32px;
   --chip-px: 8px;
+  --chip-gap: 4px;
 }
 
 [data-size="lg"] .chip {
   --chip-h: 48px;
   --chip-px: 16px;
+  --chip-gap: 8px;
 }
 
 .chip svg {
@@ -564,7 +599,7 @@
 
 .chip:focus-visible,
 .chip:has(:focus-visible) {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--blue);
 }
 
 /* Disabled */
@@ -577,7 +612,7 @@
 /* Checked state — soft primary tint bg, primary text, no border */
 
 .chip:has(input:checked) {
-  background: color-mix(in oklab, var(--primary), transparent 87.8%);
+  background: var(--primary-soft);
   border-color: transparent;
   color: var(--primary);
 }
@@ -586,10 +621,10 @@
 
 .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
 .chip--as-radio:has(input:checked):not(:has(input:disabled)):hover {
-  background: color-mix(in oklab, var(--primary), transparent 77%);
+  background: var(--primary-soft-hover);
 }
 
 .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active,
 .chip--as-radio:has(input:checked):not(:has(input:disabled)):active {
-  background: color-mix(in oklab, var(--primary), transparent 73%);
+  background: var(--primary-soft-active);
 }

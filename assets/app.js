@@ -558,15 +558,19 @@ const CHECK_ICON =
 
 function injectCodeCopy() {
   document.querySelectorAll("pre").forEach((pre) => {
-    if (pre.querySelector(".code-copy")) return;
+    if (pre.parentElement.classList.contains("code-block")) return;
     const code = pre.querySelector("code");
     if (!code) return;
+    const wrapper = document.createElement("div");
+    wrapper.className = "code-block";
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "code-copy";
     btn.setAttribute("aria-label", "Copy code");
     btn.innerHTML = COPY_ICON + CHECK_ICON;
-    pre.appendChild(btn);
+    wrapper.appendChild(btn);
   });
 }
 

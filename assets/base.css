@@ -542,9 +542,13 @@ code {
   border-radius: 4px;
 }
 
-pre {
+.code-block {
   position: relative;
   margin: 0 0 1rem;
+}
+
+pre {
+  margin: 0;
   padding: 0.875rem 1rem;
   background: var(--background-secondary);
   border: 0;
@@ -1295,7 +1299,6 @@ a.token-list__row:focus-visible {
   position: relative;
   padding: 0.875rem 1rem;
   border-top: 1px solid var(--fill-tertiary);
-  overflow: hidden;
 }
 
 .preview-card__meta-text {
@@ -1316,9 +1319,8 @@ a.token-list__row:focus-visible {
 
 .preview-card__value {
   font-size: 0.875rem;
-  overflow: hidden;
-  white-space: nowrap;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 /* Motion demo — small horizontal track with a dot that slides across on card

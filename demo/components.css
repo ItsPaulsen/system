@@ -256,6 +256,10 @@
   cursor: not-allowed;
 }
 
+.input__element:disabled {
+  cursor: not-allowed;
+}
+
 .input__leading,
 .input__trailing {
   display: inline-flex;

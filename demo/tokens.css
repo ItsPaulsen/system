@@ -316,7 +316,7 @@
 
   /* Tints — matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
   --anchor-red: 255 150 150;
-  --anchor-amber: 245 165 30;
+  --anchor-amber: 234 170 80;
   --anchor-green: 84 203 153;
   --anchor-blue: 140 190 255;
   --anchor-fuchsia: 235 157 239;

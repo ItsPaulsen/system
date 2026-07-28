@@ -335,6 +335,7 @@
   --primary-soft: rgb(from var(--primary) r g b / 0.2);
   --primary-soft-hover: rgb(from var(--primary) r g b / 0.31);
   --primary-soft-active: rgb(from var(--primary) r g b / 0.35);
+
   /* Red drops 2 alpha points — it's the lightest solid, so its surface has
      to run paler to hold 4.5:1. */
   --red-soft: rgb(from var(--red) r g b / 0.18);

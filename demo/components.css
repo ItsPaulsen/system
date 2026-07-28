@@ -480,6 +480,11 @@
   color: var(--blue);
 }
 
+.badge--amber {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
 .badge--outline {
   background: transparent;
   color: var(--ink-primary);
@@ -633,16 +638,11 @@ button.card--alternate:not(:disabled):active {
 }
 
 .card__content > p {
-  margin: 8px 0 0;
+  margin: 8px 0 16px;
   font-size: var(--font-body-small-size);
   font-weight: var(--font-body-small-weight);
   line-height: var(--font-body-small-lh);
   color: var(--ink-secondary);
-}
-
-/* Space below copy only when something follows it (button, meta row, …). */
-.card__content > p:not(:last-child) {
-  margin-bottom: 16px;
 }
 
 /* Tablet ≥640 — pad up and use title-small for the heading. */

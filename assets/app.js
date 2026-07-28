@@ -287,7 +287,7 @@ const PALETTE_FAMILIES = [
   {
     title: "Tints",
     note: "Color primitives — solid + soft alpha. The solid doubles as text on the matching soft background (only Primary has a separate foreground token).",
-    tokens: ["red", "red-soft", "green", "green-soft", "blue", "blue-soft"]
+    tokens: ["red", "red-soft", "green", "green-soft", "blue", "blue-soft", "amber", "amber-soft"]
   },
   {
     title: "Focus",

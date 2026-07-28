@@ -16,9 +16,16 @@
      independent so retinting neutrals doesn't touch the brand palette. */
   --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
   --anchor-primary: 108 43 245; /* brand — electric punch */
-  --anchor-green: 25 130 65;
+
+  /* Tints — tuned so text-on-own-soft-surface clears 4.5:1 without any family
+     reading weaker than the others. Green and amber sit at rotated hues (144
+     and 52) where sRGB offers more chroma than the "obvious" angles. Amber
+     stays a warm rust rather than gold — 4.5:1 on white caps a text color at
+     L≈0.55, and warm at that lightness is always brown. */
+  --anchor-green: 0 122 22;
   --anchor-red: 191 0 0;
-  --anchor-blue: 25 80 200; /* deep blue that harmonizes with red/green weight */
+  --anchor-blue: 25 80 200;
+  --anchor-amber: 170 81 0;
   --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
@@ -70,6 +77,9 @@
   --blue: rgb(var(--anchor-blue));
   --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
   --blue-active: color-mix(in oklab, var(--blue) 82%, white);
+  --amber: rgb(var(--anchor-amber));
+  --amber-hover: color-mix(in oklab, var(--amber) 88%, white);
+  --amber-active: color-mix(in oklab, var(--amber) 82%, white);
   --focus: rgb(var(--anchor-focus));
   --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
   --focus-active: color-mix(in oklab, var(--focus) 82%, white);
@@ -97,6 +107,9 @@
   --blue-soft: rgb(from var(--blue) r g b / 0.122);
   --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
   --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
+  --amber-soft: rgb(from var(--amber) r g b / 0.122);
+  --amber-soft-hover: rgb(from var(--amber) r g b / 0.23);
+  --amber-soft-active: rgb(from var(--amber) r g b / 0.27);
 
   /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
   --overlay: rgb(from var(--overlay-base) r g b / 0.45);
@@ -293,9 +306,12 @@
   --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
 
   --anchor-primary: 118 55 255;
-  --anchor-green: 102 204 163;
-  --anchor-red: 245 124 124;
-  --anchor-blue: 100 165 245;
+
+  /* Tints — matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
+  --anchor-green: 84 203 153;
+  --anchor-red: 255 150 150;
+  --anchor-blue: 140 190 255;
+  --anchor-amber: 245 165 30;
   --anchor-focus: 22 146 227;
 
   /* Foreground — only primary has one. Lightened for dark-theme
@@ -314,12 +330,18 @@
   --green-soft: rgb(from var(--green) r g b / 0.2);
   --green-soft-hover: rgb(from var(--green) r g b / 0.31);
   --green-soft-active: rgb(from var(--green) r g b / 0.35);
-  --red-soft: rgb(from var(--red) r g b / 0.2);
-  --red-soft-hover: rgb(from var(--red) r g b / 0.31);
-  --red-soft-active: rgb(from var(--red) r g b / 0.35);
+
+  /* Red drops 2 alpha points — it's the lightest solid, so its surface has
+     to run paler to hold 4.5:1. */
+  --red-soft: rgb(from var(--red) r g b / 0.18);
+  --red-soft-hover: rgb(from var(--red) r g b / 0.29);
+  --red-soft-active: rgb(from var(--red) r g b / 0.33);
   --blue-soft: rgb(from var(--blue) r g b / 0.2);
   --blue-soft-hover: rgb(from var(--blue) r g b / 0.31);
   --blue-soft-active: rgb(from var(--blue) r g b / 0.35);
+  --amber-soft: rgb(from var(--amber) r g b / 0.2);
+  --amber-soft-hover: rgb(from var(--amber) r g b / 0.31);
+  --amber-soft-active: rgb(from var(--amber) r g b / 0.35);
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */

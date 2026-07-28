@@ -290,12 +290,12 @@ const PALETTE_FAMILIES = [
     tokens: [
       "red",
       "red-soft",
+      "amber",
+      "amber-soft",
       "green",
       "green-soft",
       "blue",
       "blue-soft",
-      "amber",
-      "amber-soft",
       "purple",
       "purple-soft"
     ]

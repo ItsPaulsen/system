@@ -470,6 +470,11 @@
   color: var(--red);
 }
 
+.badge--amber {
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
 .badge--green {
   background: var(--green-soft);
   color: var(--green);
@@ -478,11 +483,6 @@
 .badge--blue {
   background: var(--blue-soft);
   color: var(--blue);
-}
-
-.badge--amber {
-  background: var(--amber-soft);
-  color: var(--amber);
 }
 
 .badge--purple {

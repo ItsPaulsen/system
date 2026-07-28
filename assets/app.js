@@ -162,9 +162,9 @@ const DEMO_PAGES = [
   }
 ];
 
-// Tabler arrow-left inlined at 18px for sidebar back + pagination prev.
+// Tabler arrow-left at 16px with stroke 2 — matches shadcn pagination weight.
 const ARROW_LEFT_ICON =
-  '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
 
 function isCurrentPage(href) {
   const here = location.pathname.replace(/\/index\.html$/, "/");
@@ -539,9 +539,9 @@ function initGridTabs() {
   if (first) setActive(first);
 }
 
-// Tabler arrow-right at 18px (arrow-left is mirrored via CSS transform).
+// Tabler arrow-right at 16px, stroke 2 — matches ARROW_LEFT_ICON.
 const ARROW_RIGHT_16 =
-  '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
 
 // Inject a shadcn-style prev/next pair at the bottom of each doc page.
 function injectPagination() {

@@ -18,6 +18,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  user-select: none;
 }
 
 .switch__input-wrapper {
@@ -113,6 +114,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  user-select: none;
 }
 
 .checkbox__input,
@@ -294,6 +296,7 @@
   color: var(--ink-secondary);
   border-radius: 6px;
   cursor: pointer;
+  user-select: none;
   transition: background var(--motion-default);
 }
 
@@ -477,6 +480,7 @@
   background: transparent;
   color: var(--ink-primary);
   font: inherit;
+  user-select: none;
   font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
   font-weight: var(--font-body-small-emphasized-weight);
   line-height: 1;
@@ -881,6 +885,7 @@ button.card--alternate:not(:disabled):active {
   line-height: 1;
   text-align: left;
   vertical-align: middle;
+  user-select: none;
   transition:
     background 75ms,
     border-color 75ms,
@@ -905,17 +910,40 @@ button.card--alternate:not(:disabled):active {
   flex-shrink: 0;
 }
 
-/* Material 3 leading checkmark on checked multi-select chips.
-   CSS mask tints a currentColor background into the checkmark shape,
-   so it inherits the chip's text color across skins and themes. */
-.chip--as-checkbox:has(input:checked)::before {
+/* Material 3 leading checkmark on multi-select chips. A CSS mask tints a
+   currentColor background into the (Tabler) checkmark shape, so it inherits the
+   chip's text colour across skins and themes.
+
+   Always rendered so it can animate: collapsed to zero width and faded out
+   until checked, with a negative margin cancelling the flex gap so there's no
+   phantom space. On check it expands to full width and the label slides right
+   to make room — the MD3 filter-chip select motion, CSS-only. */
+.chip--as-checkbox::before {
   content: "";
-  width: 1.125em;
+  width: 0;
   height: 1.125em;
   flex-shrink: 0;
+  margin-right: calc(-1 * var(--chip-gap));
   background: currentcolor;
+  opacity: 0;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
     center / contain no-repeat;
+  transition:
+    width var(--motion-default),
+    margin-right var(--motion-default),
+    opacity var(--motion-default);
+}
+
+.chip--as-checkbox:has(input:checked)::before {
+  width: 1.125em;
+  margin-right: 0;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip--as-checkbox::before {
+    transition: none;
+  }
 }
 
 .chip__input {
@@ -972,12 +1000,16 @@ button.card--alternate:not(:disabled):active {
 
 /* Hover / active — checked, non-disabled */
 
-.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
-.chip--as-radio:has(input:checked):not(:has(input:disabled)):hover {
+.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
   background: var(--primary-soft-hover);
 }
 
-.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active,
-.chip--as-radio:has(input:checked):not(:has(input:disabled)):active {
+.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
   background: var(--primary-soft-active);
+}
+
+/* A checked single-select chip is the current choice — it can't be un-picked,
+   so it isn't interactive: no pointer (and no hover/active feedback above). */
+.chip--as-radio:has(input:checked):not(:has(input:disabled)) {
+  cursor: default;
 }

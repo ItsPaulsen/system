@@ -743,11 +743,18 @@ function initTooltips() {
       const arrow = Math.max(10, Math.min(centerX - left, b.width - 10));
       bubble.style.setProperty("--tt-arrow", `${Math.round(arrow)}px`);
     };
+    const hide = () => {
+      bubble.classList.remove("is-visible");
+      window.removeEventListener("scroll", onScroll, true);
+    };
+    const onScroll = () => hide();
     const show = () => {
       place();
       bubble.classList.add("is-visible");
+      // Fixed-position bubble would float away from the trigger on scroll —
+      // just dismiss it instead.
+      window.addEventListener("scroll", onScroll, { capture: true, passive: true });
     };
-    const hide = () => bubble.classList.remove("is-visible");
 
     root.addEventListener("mouseenter", show);
     root.addEventListener("mouseleave", hide);

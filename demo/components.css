@@ -537,6 +537,121 @@
   transition: background-color 100000s ease-out;
 }
 
+/* ── Select ────────────────────────────────────────────────────────────── */
+
+/* Custom listbox — a styled trigger + a floating option list, for when the
+   native picker's look isn't enough (custom option rendering, a checkmark on
+   the selected row). Prefer Native Select when you don't need that. app.js
+   (initSelects) wires open/close, selection, and keyboard nav.
+
+   Structure:
+   <div class="select" data-select>
+     <button class="select__trigger" aria-haspopup="listbox" aria-expanded="false">
+       <span class="select__value">Design</span>
+       <svg class="select__chevron" …>…</svg>
+     </button>
+     <ul class="select__list" role="listbox" tabindex="-1" hidden>
+       <li class="select__option" role="option" aria-selected="true">Design</li>
+       …
+     </ul>
+   </div> */
+.select {
+  position: relative;
+}
+
+.select__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 1rem;
+  border: 1px solid var(--ink-tertiary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-primary);
+  font: inherit;
+  font-size: var(--font-body-small-size);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-default),
+    box-shadow var(--motion-default);
+}
+
+.select__trigger:focus-visible {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+.select__chevron {
+  flex-shrink: 0;
+  width: 1.25em;
+  height: 1.25em;
+  color: var(--ink-secondary);
+  transition: rotate var(--motion-default);
+}
+
+.select__trigger[aria-expanded="true"] .select__chevron {
+  rotate: 180deg;
+}
+
+.select__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 30;
+  width: 100%;
+  max-height: 260px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--background-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.select__list[hidden] {
+  display: none;
+}
+
+.select__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-body-small-size);
+  color: var(--ink-primary);
+  cursor: pointer;
+}
+
+.select__option:hover,
+.select__option.is-active {
+  background: var(--fill-quaternary-hover);
+}
+
+.select__option[aria-selected="true"] {
+  color: var(--primary-foreground);
+  font-weight: 500;
+}
+
+/* Tabler check on the selected row, tinted to match the row's text. */
+.select__option[aria-selected="true"]::after {
+  content: "";
+  flex-shrink: 0;
+  width: 1.125em;
+  height: 1.125em;
+  background: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
 /* ── Button ────────────────────────────────────────────────────────────── */
 
 /* Structure:

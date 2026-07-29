@@ -176,6 +176,7 @@ const PROJECT_PAGES = {
         { label: "Input", href: "/demo/components/input/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
+        { label: "Select", href: "/demo/components/select/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Tabs", href: "/demo/components/tabs/" },
         { label: "Textarea", href: "/demo/components/textarea/" }
@@ -630,6 +631,65 @@ function injectCodeCopy() {
   });
 }
 
+// Custom select: a styled trigger + a floating listbox. Native <select> is the
+// default; this is for when option rendering needs to be custom. Handles
+// open/close, click + keyboard selection (arrows/Enter/Esc), and click-away.
+function initSelects() {
+  document.querySelectorAll("[data-select]").forEach((root) => {
+    const trigger = root.querySelector(".select__trigger");
+    const list = root.querySelector(".select__list");
+    const valueEl = root.querySelector(".select__value");
+    const options = [...root.querySelectorAll(".select__option")];
+    if (!trigger || !list || !options.length) return;
+
+    let activeIndex = options.findIndex((o) => o.getAttribute("aria-selected") === "true");
+
+    const setActive = (i) => {
+      activeIndex = (i + options.length) % options.length;
+      options.forEach((o, idx) => o.classList.toggle("is-active", idx === activeIndex));
+      options[activeIndex].scrollIntoView({ block: "nearest" });
+    };
+    const open = () => {
+      list.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+      setActive(activeIndex < 0 ? 0 : activeIndex);
+      list.focus();
+    };
+    const close = (focusTrigger = true) => {
+      list.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      if (focusTrigger) trigger.focus();
+    };
+    const select = (i) => {
+      options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
+      if (valueEl) valueEl.textContent = options[i].textContent.trim();
+      activeIndex = i;
+      close();
+    };
+
+    trigger.addEventListener("click", () => (list.hidden ? open() : close()));
+    trigger.addEventListener("keydown", (e) => {
+      if (["ArrowDown", "Enter", " "].includes(e.key)) {
+        e.preventDefault();
+        open();
+      }
+    });
+    list.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowDown") (e.preventDefault(), setActive(activeIndex + 1));
+      else if (e.key === "ArrowUp") (e.preventDefault(), setActive(activeIndex - 1));
+      else if (e.key === "Enter" || e.key === " ") (e.preventDefault(), select(activeIndex));
+    });
+    options.forEach((o, i) => {
+      o.addEventListener("click", () => select(i));
+      o.addEventListener("mousemove", () => setActive(i));
+    });
+    document.addEventListener("click", (e) => {
+      if (!root.contains(e.target)) close(false);
+    });
+  });
+}
+
 function init() {
   injectNav();
   injectSkipLink();
@@ -641,6 +701,7 @@ function init() {
   hydratePalette();
   hydratePreviews();
   initGridTabs();
+  initSelects();
   refreshResponsive();
 
   let frame;

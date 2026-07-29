@@ -230,8 +230,8 @@ body {
    link's inner span, so the flex gap spaces it off the label. */
 .sidebar__new {
   flex-shrink: 0;
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--primary);
 }

@@ -85,6 +85,11 @@ body {
   background: var(--background-primary);
 }
 
+/* Root landing: transparent, brandless — just the theme toggle. */
+.site-nav--bare {
+  background: transparent;
+}
+
 .site-nav__inner {
   height: var(--nav-h);
   padding-inline: var(--page-gutter);
@@ -1207,6 +1212,55 @@ a.token-list__row:focus-visible {
     right: 12px;
     transform: translateY(-50%);
   }
+}
+
+/* Flush variant — drops the box so each linked row is its own action-row-style
+   surface: resting on --background-secondary with card hover/active. Used on
+   the project landing. */
+.token-list--flush {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+
+.token-list--flush .token-list__row + .token-list__row {
+  border-top: 0;
+}
+
+.token-list--flush a.token-list__row {
+  min-height: 0;
+  padding: 12px 16px;
+  background: var(--background-secondary);
+  border-radius: 16px;
+  transition: background var(--motion-default);
+}
+
+.token-list--flush .token-list__name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.token-list--flush a.token-list__row::after {
+  width: 20px;
+  height: 20px;
+  mask-size: 20px;
+}
+
+.token-list--flush a.token-list__row:hover {
+  background: var(--background-secondary-hover);
+}
+
+.token-list--flush a.token-list__row:active {
+  background: var(--background-secondary-active);
+}
+
+/* Only the surface reacts to hover — keep the chevron steady. */
+.token-list--flush a.token-list__row:hover::after {
+  color: var(--ink-tertiary);
 }
 
 /* Preview blocks — heading + description above, boxed demo + token below. */

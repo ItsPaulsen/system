@@ -366,7 +366,7 @@
 
   /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */
-  --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 80%, black);
+  --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 90%, black);
   --background-primary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 93%, white);
   --background-primary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 89%, white);
   --background-secondary: color-mix(in oklab, rgb(var(--anchor-neutral)) 97%, white);

@@ -100,6 +100,10 @@ function injectNav() {
   if (document.querySelector(".site-nav")) return;
   const nav = document.createElement("header");
   nav.className = "site-nav";
+  const isRoot = location.pathname === "/" || location.pathname === "/index.html";
+  // Root landing: no project to label and nothing to scroll under, so the nav
+  // drops its brand and its surface — just the theme toggle floating on the page.
+  if (isRoot) nav.classList.add("site-nav--bare");
   // Icons are Lucide (lucide.dev, ISC) — inlined so the shell stays dependency-free.
   const lucide = {
     menu: '<line class="ham-line ham-line--top" x1="4" x2="20" y1="9" y2="9"/><line class="ham-line ham-line--bot" x1="4" x2="20" y1="15" y2="15"/>',
@@ -117,13 +121,17 @@ function injectNav() {
   const projectName = projectSlug ? projectSlug[0].toUpperCase() + projectSlug.slice(1) : "system";
   const projectHref = projectSlug ? `/${projectSlug}/` : "/";
 
+  // The menu button only toggles the per-project sidebar; the root landing has
+  // no sidebar, so drop it there.
+  const menuBtn = projectSlug
+    ? `<button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">${icon("menu", 24)}</button>`
+    : "";
+
   nav.innerHTML = `
     <div class="site-nav__inner">
       <div class="site-nav__left">
-        <button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">
-          ${icon("menu", 24)}
-        </button>
-        <a class="site-nav__brand" href="${projectHref}">${projectName}</a>
+        ${menuBtn}
+        ${isRoot ? "" : `<a class="site-nav__brand" href="${projectHref}">${projectName}</a>`}
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">
         ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
@@ -175,6 +183,9 @@ function isCurrentPage(href) {
 // Build the sidebar from DEMO_PAGES. Wrap the content in a shell so the sidebar
 // can sit beside it as a sticky left column (shadcn-style layout).
 function injectSidebar() {
+  // The sidebar is per-project (DEMO_PAGES). The site root is the project
+  // list, not a project — leave it chrome-free.
+  if (location.pathname === "/" || location.pathname === "/index.html") return;
   if (document.querySelector(".sidebar")) return;
   const wrap = document.querySelector(".wrap");
   let region;

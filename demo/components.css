@@ -1191,24 +1191,24 @@ button.card--alternate:not(:disabled):active {
   color: var(--red);
 }
 
-/* ── Modal ─────────────────────────────────────────────────────────────── */
+/* ── Dialog ────────────────────────────────────────────────────────────── */
 
 /* Native <dialog> — focus trap, Esc-to-close, and an inert background come for
-   free. Open with dialog.showModal(); app.js wires [data-modal-open="id"] and
-   [data-modal-close], and a click on the backdrop closes it.
+   free. Open with dialog.showModal(); app.js wires [data-dialog-open="id"] and
+   [data-dialog-close], and a click on the backdrop closes it.
 
    Structure:
-   <dialog class="modal" id="demo-modal">
-     <div class="modal__inner">
-       <h2 class="modal__title">Title</h2>
-       <p class="modal__text">Supporting copy.</p>
-       <div class="modal__actions">
-         <button class="button button--flat" data-modal-close>Cancel</button>
-         <button class="button button--primary" data-modal-close>Confirm</button>
+   <dialog class="dialog" id="demo-dialog">
+     <div class="dialog__inner">
+       <h2 class="dialog__title">Title</h2>
+       <p class="dialog__text">Supporting copy.</p>
+       <div class="dialog__actions">
+         <button class="button button--flat" data-dialog-close>Cancel</button>
+         <button class="button button--primary" data-dialog-close>Confirm</button>
        </div>
      </div>
    </dialog> */
-.modal {
+.dialog {
   width: min(92vw, 420px);
   padding: 0;
   border: 0;
@@ -1218,31 +1218,31 @@ button.card--alternate:not(:disabled):active {
   box-shadow: var(--shadow-lg);
 }
 
-.modal::backdrop {
+.dialog::backdrop {
   background: var(--overlay);
 }
 
-.modal__inner {
+.dialog__inner {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1.5rem;
 }
 
-.modal__title {
+.dialog__title {
   margin: 0;
   font-size: var(--font-body-large-emphasized-size);
   font-weight: var(--font-body-large-emphasized-weight);
   line-height: var(--font-body-large-emphasized-lh);
 }
 
-.modal__text {
+.dialog__text {
   margin: 0;
   font-size: var(--font-body-small-size);
   color: var(--ink-secondary);
 }
 
-.modal__actions {
+.dialog__actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;

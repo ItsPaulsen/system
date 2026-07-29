@@ -171,9 +171,9 @@ const PROJECT_PAGES = {
         { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
+        { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
-        { label: "Modal", href: "/demo/components/modal/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Switch", href: "/demo/components/switch/" },
@@ -694,21 +694,21 @@ function init() {
         .catch(() => toast("Copy failed"));
       return;
     }
-    const modalOpen = event.target.closest("[data-modal-open]");
-    if (modalOpen) {
-      const dlg = document.getElementById(modalOpen.dataset.modalOpen);
+    const dialogOpen = event.target.closest("[data-dialog-open]");
+    if (dialogOpen) {
+      const dlg = document.getElementById(dialogOpen.dataset.dialogOpen);
       if (dlg && typeof dlg.showModal === "function") dlg.showModal();
       return;
     }
-    const modalClose = event.target.closest("[data-modal-close]");
-    if (modalClose) {
-      modalClose.closest("dialog")?.close();
+    const dialogClose = event.target.closest("[data-dialog-close]");
+    if (dialogClose) {
+      dialogClose.closest("dialog")?.close();
       return;
     }
     // Click on the backdrop (target is the <dialog> itself, not its inner content).
-    const openModal = event.target.closest("dialog.modal");
-    if (openModal && event.target === openModal) {
-      openModal.close();
+    const openDialog = event.target.closest("dialog.dialog");
+    if (openDialog && event.target === openDialog) {
+      openDialog.close();
       return;
     }
     const target = event.target.closest("[data-copy]");

@@ -27,7 +27,6 @@
   --anchor-green: 0 122 22;
   --anchor-blue: 25 80 200;
   --anchor-fuchsia: 152 39 160;
-  --anchor-focus: 18 144 226; /* softer blue — for keyboard focus rings */
 
   /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
      version in dark theme (see :root[data-theme="dark"] below) while these
@@ -84,9 +83,13 @@
   --fuchsia: rgb(var(--anchor-fuchsia));
   --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
   --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
-  --focus: rgb(var(--anchor-focus));
-  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
-  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
+
+  /* Focus follows the brand — the ring is the primary colour, so retinting
+     --anchor-primary moves the focus ring with it (Ruter's focus reads right
+     only because their primary is already blue; ours must track the violet). */
+  --focus: var(--primary);
+  --focus-hover: var(--primary-hover);
+  --focus-active: var(--primary-active);
 
   /* Foreground — the color used for text/icons sitting on the -soft
      background. Only exists for primary (brand); tints use their
@@ -320,7 +323,6 @@
   --anchor-green: 84 203 153;
   --anchor-blue: 140 190 255;
   --anchor-fuchsia: 235 157 239;
-  --anchor-focus: 22 146 227;
 
   /* Foreground — only primary has one. Lightened for dark-theme
      legibility on soft bg. Mirrors Ruter's tint-accent-foreground.

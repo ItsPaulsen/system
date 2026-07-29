@@ -1415,8 +1415,13 @@ button.card--alternate:not(:disabled):active {
 }
 
 .accordion__summary:focus-visible {
+  outline: none;
+}
+
+/* Ring the whole item (not just the summary) when focused. */
+.accordion__item:has(.accordion__summary:focus-visible) {
   outline: 3px solid var(--focus);
-  outline-offset: -3px;
+  outline-offset: 2px;
 }
 
 .accordion__chevron {

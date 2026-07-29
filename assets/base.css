@@ -34,6 +34,24 @@
   --flip: -1;
 }
 
+/* Cross-document view transitions: a soft cross-fade between pages as you
+   navigate the docs. Both pages opt in (base.css is on every page) and same-
+   origin nav is required. Progressive enhancement — unsupported browsers just
+   navigate normally. */
+@view-transition {
+  navigation: auto;
+}
+
+/* The `*` reduced-motion guard above can't reach view-transition pseudos, so
+   silence the page-transition animation explicitly under reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1581,5 +1599,65 @@ a.token-list__row:focus-visible {
 @keyframes toast-spin {
   to {
     rotate: 360deg;
+  }
+}
+
+/* ── Preference fallbacks ────────────────────────────────────────────────────
+   Each block only activates on a matching OS/user setting, so the default look
+   is untouched. */
+
+/* Reduced transparency: drop the drawer's blur + translucency for an opaque
+   surface. */
+@media (max-width: 1023px) and (prefers-reduced-transparency: reduce) {
+  .sidebar {
+    background: var(--background-primary);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* More contrast: firm up the hairline dividers/borders (normally a faint
+   --fill-tertiary) to an ink tone so they're clearly visible. */
+@media (prefers-contrast: more) {
+  .palette-table,
+  .type-list,
+  .token-list,
+  .preview-card,
+  .component-preview,
+  .bp-indicator,
+  .site-head,
+  section + section,
+  .type-list > li + li,
+  .token-list__row + .token-list__row,
+  .preview-card__meta {
+    border-color: var(--ink-tertiary);
+  }
+}
+
+/* Forced colors (Windows High Contrast) for the site chrome. Only active in
+   that mode; uses system-color keywords and never touches the token pipeline,
+   so neutral retinting is unaffected. (Component library has its own block.) */
+@media (forced-colors: active) {
+  .docs-switch__toggle {
+    border: 1px solid ButtonBorder;
+  }
+
+  .docs-switch__toggle[aria-checked="true"] {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+
+  .docs-switch__toggle::before {
+    background: ButtonText;
+  }
+
+  .docs-switch__toggle[aria-checked="true"]::before {
+    background: HighlightText;
+  }
+
+  /* Swatches convey meaning via background alone — keep an outline so the grid
+     doesn't flatten into blank cells. */
+  .palette-swatch {
+    border: 1px solid ButtonBorder;
   }
 }

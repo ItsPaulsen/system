@@ -703,6 +703,11 @@ function initSelects() {
     document.addEventListener("click", (e) => {
       if (!root.contains(e.target)) close(false);
     });
+    // Tab (or any focus move) out of the select closes it — don't refocus the
+    // trigger, focus is already moving on.
+    root.addEventListener("focusout", (e) => {
+      if (!root.contains(e.relatedTarget)) close(false);
+    });
   });
 }
 

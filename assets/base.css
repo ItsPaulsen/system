@@ -54,6 +54,27 @@ body {
   transition: none !important;
 }
 
+/* MD3-style focus ring: every time an element gains a visible focus ring, the
+   ring converges from a wider offset down to its resting one. Each component
+   sets its own outline + resting offset (3px / 2px by convention); this only
+   animates the settle, so moving focus between elements feels like the ring
+   snaps in. */
+@keyframes focus-ring-converge {
+  from {
+    outline-offset: 6px;
+  }
+}
+
+:focus-visible {
+  animation: focus-ring-converge var(--motion-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible {
+    animation: none;
+  }
+}
+
 /* Accessibility: skip-to-content — hidden until keyboard-focused. */
 .skip-link {
   position: fixed;
@@ -73,7 +94,7 @@ body {
 
 .skip-link:focus-visible {
   transform: translate(-50%, 0);
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -123,7 +144,7 @@ body {
 }
 
 .site-nav__menu:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -231,8 +252,9 @@ body {
 
 .sidebar__link:focus-visible > span,
 .sidebar__back:focus-visible > span {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 0;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .sidebar__link.is-active > span {
@@ -351,7 +373,7 @@ body {
 }
 
 .site-nav__brand:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -379,7 +401,7 @@ body {
 }
 
 .theme-toggle:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -513,7 +535,7 @@ h1 {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -597,7 +619,7 @@ pre::-webkit-scrollbar {
 }
 
 .code-copy:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -744,7 +766,7 @@ pre .tok-var {
 }
 
 .palette-swatch:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -952,7 +974,7 @@ pre .tok-var {
 }
 
 .pagination__link:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -1001,7 +1023,7 @@ pre .tok-var {
 }
 
 .docs-switch__toggle:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -1035,7 +1057,7 @@ pre .tok-var {
 }
 
 .docs-tabs__tab:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -1084,7 +1106,7 @@ pre .tok-var {
 }
 
 .link-list a:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -1184,9 +1206,12 @@ a.token-list__row:hover::after {
   color: var(--ink-primary);
 }
 
+/* Full-width rows: ring sits just inside so it never collides with the
+   container edge. No converge — a 6px→-2px sweep would fly in from outside. */
 a.token-list__row:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: -2px;
+  animation: none;
 }
 
 /* On narrow screens the description drops under the label (left-aligned)
@@ -1263,6 +1288,13 @@ a.token-list__row:focus-visible {
 /* Only the surface reacts to hover — keep the chevron steady. */
 .token-list--flush a.token-list__row:hover::after {
   color: var(--ink-tertiary);
+}
+
+/* These rows are spaced cards, not edge-to-edge, so they take the standard
+   outset ring + converge instead of the inset treatment above. */
+.token-list--flush a.token-list__row:focus-visible {
+  outline-offset: 2px;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 /* Preview blocks — heading + description above, boxed demo + token below. */

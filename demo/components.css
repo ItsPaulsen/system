@@ -47,7 +47,7 @@
 }
 
 .switch__input:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -145,7 +145,7 @@
 
 .checkbox__input:focus-visible,
 .radio__input:focus-visible {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -335,8 +335,9 @@
 }
 
 .tabs__tab:has(.tabs__radio:focus-visible) {
-  outline: 2px solid var(--focus);
+  outline: 3px solid var(--focus);
   outline-offset: 2px;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .tabs__tab:has(.tabs__radio:checked):active {
@@ -395,6 +396,8 @@
 
 .input__container:focus-within {
   outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .input__container--fill {
@@ -506,6 +509,11 @@
   width: 1.25em;
   height: 1.25em;
   flex-shrink: 0;
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 /* Modifiers — tighten padding on whichever side the icon sits */
@@ -745,6 +753,7 @@ button.card:disabled {
 a.card:focus-visible,
 button.card:focus-visible {
   outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 a.card:hover,
@@ -981,11 +990,14 @@ button.card--alternate:not(:disabled):active {
   border-color: var(--fill-primary-active);
 }
 
-/* Focus — 3px ring, either on the chip itself or via the hidden input */
+/* Focus — 3px ring set 1px outside the chip, either on the chip itself or via
+   the hidden input */
 
 .chip:focus-visible,
 .chip:has(:focus-visible) {
   outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 /* Disabled */

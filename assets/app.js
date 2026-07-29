@@ -15,8 +15,7 @@ const toast = (() => {
     warning:
       '<path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" />',
     error:
-      '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" />',
-    loading: '<path d="M12 3a9 9 0 1 0 9 9" />'
+      '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" />'
   };
   const svg = (type) =>
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[type]}</svg>`;
@@ -48,7 +47,12 @@ const toast = (() => {
     el.setAttribute("role", assertive ? "alert" : "status");
     el.setAttribute("aria-live", assertive ? "assertive" : "polite");
     el.dataset.type = type;
-    iconEl.innerHTML = ICONS[type] ? svg(type) : "";
+    // Loading uses the ring spinner (matches the Spinner component); the other
+    // types use their semantic Tabler glyph.
+    let iconMarkup = "";
+    if (type === "loading") iconMarkup = '<span class="toast__spinner"></span>';
+    else if (ICONS[type]) iconMarkup = svg(type);
+    iconEl.innerHTML = iconMarkup;
     textEl.textContent = message;
     el.classList.add("is-visible");
   };
@@ -226,24 +230,28 @@ const PROJECT_PAGES = {
     {
       group: "Components",
       links: [
-        { label: "Accordion", href: "/demo/components/accordion/", new: true },
+        { label: "Accordion", href: "/demo/components/accordion/" },
         { label: "Alert", href: "/demo/components/alert/" },
         { label: "Badge", href: "/demo/components/badge/" },
+        { label: "Breadcrumb", href: "/demo/components/breadcrumb/", new: true },
         { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
+        { label: "Link", href: "/demo/components/link/", new: true },
         { label: "Native Select", href: "/demo/components/native-select/" },
+        { label: "Progress", href: "/demo/components/progress/", new: true },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
+        { label: "Spinner", href: "/demo/components/spinner/", new: true },
         { label: "Switch", href: "/demo/components/switch/" },
-        { label: "Table", href: "/demo/components/table/", new: true },
+        { label: "Table", href: "/demo/components/table/" },
         { label: "Tabs", href: "/demo/components/tabs/" },
         { label: "Textarea", href: "/demo/components/textarea/" },
-        { label: "Toast", href: "/demo/components/toast/", new: true },
-        { label: "Tooltip", href: "/demo/components/tooltip/", new: true }
+        { label: "Toast", href: "/demo/components/toast/" },
+        { label: "Tooltip", href: "/demo/components/tooltip/" }
       ]
     }
   ]
@@ -950,6 +958,12 @@ function init() {
   });
 
   document.addEventListener("click", (event) => {
+    // Placeholder demo links (href="#") shouldn't scroll to top or add a hash.
+    const placeholder = event.target.closest('a[href="#"]');
+    if (placeholder) {
+      event.preventDefault();
+      return;
+    }
     const themeBtn = event.target.closest(".theme-toggle");
     if (themeBtn) {
       setTheme(currentTheme() === "dark" ? "light" : "dark");

@@ -598,6 +598,23 @@ h2 {
   margin: 0.25rem 0 0;
 }
 
+/* Inline text links in prose: medium-weight ink text (same when visited), an
+   ink-tertiary underline that lifts to ink-primary on hover. */
+.section-note a,
+.lede a {
+  color: var(--ink-primary);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--ink-tertiary);
+  text-underline-offset: 2px;
+  transition: text-decoration-color var(--motion-default);
+}
+
+.section-note a:where(:hover),
+.lede a:where(:hover) {
+  text-decoration-color: var(--ink-primary);
+}
+
 /* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
    contrasts against any surface it's placed on (whether that's the tinted page
    or an elevated card). */
@@ -1559,6 +1576,8 @@ a.token-list__row:focus-visible {
 .toast__icon {
   display: inline-flex;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
   width: 1.125rem;
   height: 1.125rem;
 }
@@ -1592,7 +1611,16 @@ a.token-list__row:focus-visible {
   color: var(--ink-secondary);
 }
 
-.toast[data-type="loading"] .toast__icon svg {
+/* Ring spinner matching the Spinner component (which lives in components.css,
+   not loaded site-wide — so the toast keeps its own copy here). */
+.toast__spinner {
+  /* ~75% of the icon slot so it optically matches the other glyphs' inset
+     circles (their paths sit inside a 24 viewBox), not the full box. */
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
+  border-top-color: currentcolor;
+  border-radius: 50%;
   animation: toast-spin 0.7s linear infinite;
 }
 

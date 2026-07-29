@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Progress — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .component-preview .progress {
+        max-width: 360px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Progress</h1>
+          </div>
+          <p class="lede">A bar showing how far a task has advanced.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Determinate</h3>
+          <p class="section-note">
+            Use when completion is measurable (upload, import, multi-step form). Native
+            <code>&lt;progress&gt;</code> carries the value semantics, so set <code>value</code> and
+            <code>max</code>. When progress can't be measured, use
+            <a href="/demo/components/spinner/">Spinner</a> instead.
+          </p>
+          <div class="component-preview">
+            <progress
+              class="progress"
+              value="30"
+              max="100"
+              aria-label="Example progress"
+            ></progress>
+            <progress
+              class="progress"
+              value="70"
+              max="100"
+              aria-label="Example progress"
+            ></progress>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;progress</span> <span class="tok-prop">class</span>=<span class="tok-str">"progress"</span> <span class="tok-prop">value</span>=<span class="tok-str">"70"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span>
+          <span class="tok-prop">aria-label</span>=<span class="tok-str">"Upload"</span><span class="tok-key">&gt;&lt;/progress&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

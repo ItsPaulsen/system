@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Link — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Link</h1>
+          </div>
+          <p class="lede">A styled text link.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <div class="component-preview">
+            <a class="link" href="#">Default link</a>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Call to action</h3>
+          <p class="section-note">
+            <code>link--cta</code> is a standalone next-step link; on hover the stem fades in and
+            the chevron slides, so the arrow grows out of the text.
+          </p>
+          <div class="component-preview">
+            <a class="link link--cta" href="#">
+              See all components
+              <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path
+                  class="link-arrow__line"
+                  d="M1.5 6h8"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <g class="link-arrow__chevron">
+                  <path
+                    d="M3.5 2l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+              </svg>
+            </a>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Default link<span class="tok-key">&lt;/a&gt;</span>
+
+<span class="tok-com">&lt;!-- Variant: --cta --&gt;</span>
+<span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"link link--cta"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>See all <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"link-arrow"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;&lt;/a&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

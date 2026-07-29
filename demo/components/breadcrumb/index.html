@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Breadcrumb — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Breadcrumb</h1>
+          </div>
+          <p class="lede">A trail showing the current page's place in the hierarchy.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Skip it at the top level. The last crumb is plain text with <code>aria-current</code>,
+            not a link.
+          </p>
+          <div class="component-preview">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+              <ol class="breadcrumb__list">
+                <li class="breadcrumb__item">
+                  <a class="breadcrumb__link" href="#">Home</a>
+                </li>
+                <li class="breadcrumb__item">
+                  <a class="breadcrumb__link" href="#">Library</a>
+                </li>
+                <li class="breadcrumb__item">
+                  <span class="breadcrumb__current" aria-current="page">Annual report</span>
+                </li>
+              </ol>
+            </nav>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Breadcrumb"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;ol</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__list"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__item"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Home<span class="tok-key">&lt;/a&gt;</span>
+    <span class="tok-key">&lt;/li&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__item"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__current"</span> <span class="tok-prop">aria-current</span>=<span class="tok-str">"page"</span><span class="tok-key">&gt;</span>Report<span class="tok-key">&lt;/span&gt;</span>
+    <span class="tok-key">&lt;/li&gt;</span>
+  <span class="tok-key">&lt;/ol&gt;</span>
+<span class="tok-key">&lt;/nav&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

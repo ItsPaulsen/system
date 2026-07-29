@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Spinner — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Spinner</h1>
+          </div>
+          <p class="lede">An indeterminate loading indicator.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Sizes</h3>
+          <p class="section-note">
+            Use when work is in progress but has no measurable completion; reach for
+            <a href="/demo/components/progress/">Progress</a> when it does.
+          </p>
+          <div class="component-preview">
+            <span class="spinner spinner--sm" role="status" aria-label="Loading"></span>
+            <span class="spinner" role="status" aria-label="Loading"></span>
+            <span class="spinner spinner--lg" role="status" aria-label="Loading"></span>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">On a color</h3>
+          <p class="section-note">
+            The arc is <code>currentColor</code>, so it inherits the surrounding text color. Inside
+            a button or on a tint it needs no extra styling.
+          </p>
+          <div class="component-preview">
+            <button class="button button--primary" type="button" disabled>
+              <span class="spinner spinner--sm" role="status" aria-label="Saving"></span>
+              Saving
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner"</span> <span class="tok-prop">role</span>=<span class="tok-str">"status"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Loading"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+
+<span class="tok-com">&lt;!-- Sizes: --sm --lg --&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

@@ -1331,17 +1331,19 @@ button.card--alternate:not(:disabled):active {
   color: var(--ink-primary);
   box-shadow: var(--shadow-lg);
 
-  /* Open/close animation (Ruter's recipe): fade + rise. allow-discrete keeps
-     the dialog painted through the exit; @starting-style sets the entry state.
-     Progressive enhancement — unsupported browsers just pop in. */
+  /* Animate on open only — the transition lives on [open], so removing it
+     (close) is instant. @starting-style gives the entry state (fade + rise).
+     Progressive enhancement — browsers without @starting-style just pop in. */
   opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.2s ease-out allow-discrete;
+  transform: translateY(10px);
 }
 
 .dialog[open] {
   opacity: 1;
   transform: translateY(0);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
 }
 
 @starting-style {
@@ -1354,11 +1356,11 @@ button.card--alternate:not(:disabled):active {
 .dialog::backdrop {
   background: var(--overlay);
   opacity: 0;
-  transition: all 0.2s ease-out allow-discrete;
 }
 
 .dialog[open]::backdrop {
   opacity: 1;
+  transition: opacity 0.2s ease-out;
 }
 
 @starting-style {
@@ -1521,8 +1523,9 @@ button.card--alternate:not(:disabled):active {
    </div> */
 .table-wrap {
   overflow-x: auto;
+  background: var(--background-secondary);
   border: 1px solid var(--fill-tertiary);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
 }
 
 .table {
@@ -1539,9 +1542,10 @@ button.card--alternate:not(:disabled):active {
 }
 
 .table th {
-  color: var(--ink-secondary);
-  font-size: var(--font-caption-medium-size);
-  font-weight: var(--font-caption-medium-emphasized-weight);
+  background: var(--fill-quaternary);
+  color: var(--ink-primary);
+  font-size: var(--font-body-small-size);
+  font-weight: var(--font-body-small-emphasized-weight);
   white-space: nowrap;
 }
 

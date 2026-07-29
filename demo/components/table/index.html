@@ -16,6 +16,12 @@
         document.documentElement.dataset.theme = t;
       })();
     </script>
+    <style>
+      /* Recessed stage (page surface) so the bordered table reads, like Card. */
+      .component-preview {
+        background: var(--background-primary);
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -32,7 +38,7 @@
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">Wrap in <code>.table-wrap</code> so wide tables scroll.</p>
-          <div class="component-preview" style="align-items: stretch">
+          <div class="component-preview">
             <div class="table-wrap" style="width: 100%">
               <table class="table">
                 <thead>

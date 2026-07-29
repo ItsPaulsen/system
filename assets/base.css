@@ -1537,18 +1537,24 @@ a.token-list__row:focus-visible {
   transform: rotate(-90deg);
 }
 
-/* Toast */
+/* Toast — light surface (like Alert/cards) so semantic type icons read. */
 .toast {
   position: fixed;
   left: 50%;
   bottom: 1.5rem;
   transform: translateX(-50%) translateY(1rem);
-  background: var(--ink-primary);
-  color: var(--background-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.625rem 1rem;
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  border: 1px solid var(--fill-tertiary);
+  border-radius: 999px;
+  box-shadow: var(--shadow-lg);
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.625rem 1rem;
-  border-radius: 999px;
   opacity: 0;
   pointer-events: none;
   transition:
@@ -1560,6 +1566,52 @@ a.token-list__row:focus-visible {
 .toast.is-visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.toast__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.toast__icon:empty {
+  display: none;
+}
+
+.toast__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.toast[data-type="success"] .toast__icon {
+  color: var(--green);
+}
+
+.toast[data-type="info"] .toast__icon {
+  color: var(--blue);
+}
+
+.toast[data-type="warning"] .toast__icon {
+  color: var(--amber);
+}
+
+.toast[data-type="error"] .toast__icon {
+  color: var(--red);
+}
+
+.toast[data-type="loading"] .toast__icon {
+  color: var(--ink-secondary);
+}
+
+.toast[data-type="loading"] .toast__icon svg {
+  animation: toast-spin 0.7s linear infinite;
+}
+
+@keyframes toast-spin {
+  to {
+    rotate: 360deg;
+  }
 }
 
 /* Desktop: overlay starts past the sidebar so it centers over the same box as .wrap. */

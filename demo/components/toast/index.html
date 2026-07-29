@@ -30,11 +30,48 @@
 
       <div class="preview-grid">
         <section class="preview-block">
-          <h3 class="subhead">Default</h3>
-          <p class="section-note">A single pill, bottom-centre, auto-dismissed.</p>
-          <div class="component-preview">
+          <h3 class="subhead">Types</h3>
+          <p class="section-note">
+            A default message, the semantic types, and a promise that resolves loading → done.
+          </p>
+          <div class="component-preview" style="flex-wrap: wrap; gap: 0.5rem">
             <button class="button button--secondary" type="button" data-toast="Changes saved">
-              Show toast
+              Default
+            </button>
+            <button
+              class="button button--secondary"
+              type="button"
+              data-toast="Changes saved"
+              data-toast-type="success"
+            >
+              Success
+            </button>
+            <button
+              class="button button--secondary"
+              type="button"
+              data-toast="Heads up"
+              data-toast-type="info"
+            >
+              Info
+            </button>
+            <button
+              class="button button--secondary"
+              type="button"
+              data-toast="Double-check your input"
+              data-toast-type="warning"
+            >
+              Warning
+            </button>
+            <button
+              class="button button--secondary"
+              type="button"
+              data-toast="Couldn't save"
+              data-toast-type="error"
+            >
+              Error
+            </button>
+            <button class="button button--secondary" type="button" data-toast-promise>
+              Promise
             </button>
           </div>
         </section>

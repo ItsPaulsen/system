@@ -5,22 +5,67 @@
 //   • tracks the active breakpoint on resize
 // Tokens are declared with data-token (the CSS custom-property name, sans "--").
 
+// toast(msg) / toast.success|info|warning|error(msg) / toast.promise(p, msgs).
+// One reused pill; typed toasts get a Tabler icon in the matching semantic
+// colour (same icons as the Alert component).
 const toast = (() => {
-  let el;
-  let timer;
-  return (message) => {
-    if (!el) {
-      el = document.createElement("div");
-      el.className = "toast";
-      el.setAttribute("role", "status");
-      el.setAttribute("aria-live", "polite");
-      document.body.appendChild(el);
-    }
-    el.textContent = message;
-    el.classList.add("is-visible");
-    clearTimeout(timer);
-    timer = setTimeout(() => el.classList.remove("is-visible"), 1400);
+  const ICONS = {
+    success: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12l2 2l4 -4" />',
+    info: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8h.01" /><path d="M11 12h1v4h1" />',
+    warning:
+      '<path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" />',
+    error:
+      '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" />',
+    loading: '<path d="M12 3a9 9 0 1 0 9 9" />'
   };
+  const svg = (type) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[type]}</svg>`;
+
+  let el;
+  let iconEl;
+  let textEl;
+  let timer;
+  const ensure = () => {
+    if (el) return;
+    el = document.createElement("div");
+    el.className = "toast";
+    el.setAttribute("role", "status");
+    el.setAttribute("aria-live", "polite");
+    iconEl = document.createElement("span");
+    iconEl.className = "toast__icon";
+    textEl = document.createElement("span");
+    textEl.className = "toast__text";
+    el.append(iconEl, textEl);
+    document.body.appendChild(el);
+  };
+  const render = (message, type = "default") => {
+    ensure();
+    el.dataset.type = type;
+    iconEl.innerHTML = ICONS[type] ? svg(type) : "";
+    textEl.textContent = message;
+    el.classList.add("is-visible");
+  };
+
+  const show = (message, opts = {}) => {
+    render(message, opts.type);
+    clearTimeout(timer);
+    timer = setTimeout(() => el.classList.remove("is-visible"), opts.duration || 1400);
+  };
+  show.success = (m) => show(m, { type: "success" });
+  show.info = (m) => show(m, { type: "info" });
+  show.warning = (m) => show(m, { type: "warning" });
+  show.error = (m) => show(m, { type: "error" });
+  // Loading toast that resolves into success/error; stays until the promise settles.
+  show.promise = (p, msgs = {}) => {
+    render(msgs.loading || "Loading…", "loading");
+    clearTimeout(timer);
+    Promise.resolve(p).then(
+      () => show(msgs.success || "Done", { type: "success" }),
+      () => show(msgs.error || "Something went wrong", { type: "error" })
+    );
+    return p;
+  };
+  return show;
 })();
 
 async function copyText(text, label) {
@@ -864,7 +909,17 @@ function init() {
     }
     const toastBtn = event.target.closest("[data-toast]");
     if (toastBtn) {
-      toast(toastBtn.dataset.toast || "Saved");
+      const type = toastBtn.dataset.toastType;
+      toast(toastBtn.dataset.toast || "Saved", type ? { type } : undefined);
+      return;
+    }
+    const toastPromiseBtn = event.target.closest("[data-toast-promise]");
+    if (toastPromiseBtn) {
+      toast.promise(new Promise((resolve) => setTimeout(resolve, 1600)), {
+        loading: "Saving…",
+        success: "Saved",
+        error: "Couldn't save"
+      });
       return;
     }
     const target = event.target.closest("[data-copy]");

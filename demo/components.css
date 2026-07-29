@@ -347,8 +347,8 @@
 /* ── Input ─────────────────────────────────────────────────────────────── */
 
 /* Text input with optional label, leading/trailing slots, and fill/outline
-   variants. Container carries the border and focus ring; the <input> is
-   chromeless so leading/trailing icons sit flush inside the same box.
+   variants. The container carries the border and the active state; the <input>
+   is chromeless so leading/trailing icons sit flush inside the same box.
 
    Structure:
    <label class="input">
@@ -363,7 +363,7 @@
    Modifiers on .input__container:
      --fill      — filled surface instead of outline
      --rounded   — pill-shaped
-     --invalid   — danger border, tightens focus ring */
+     --invalid   — danger border (red on focus too) */
 
 .input {
   display: flex;
@@ -391,13 +391,17 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-primary);
-  transition: outline-offset var(--motion-default);
+  transition:
+    border-color var(--motion-default),
+    box-shadow var(--motion-default);
 }
 
+/* Active state is the border itself (MD3 outlined field): it turns primary and
+   a 1px outset shadow doubles it to ~2px on the outside — no separate ring, no
+   layout shift. */
 .input__container:focus-within {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  animation: focus-ring-converge var(--motion-default);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .input__container--fill {
@@ -411,7 +415,11 @@
 
 .input__container--invalid {
   border-color: var(--red);
-  outline-offset: 2px;
+}
+
+.input__container--invalid:focus-within {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px var(--red);
 }
 
 .input__element {
@@ -457,6 +465,16 @@
 
 .input__element:has(+ .input__trailing) {
   padding-right: 0;
+}
+
+/* Kill the browser autofill surface tint — keep our own (often transparent)
+   background. The absurd transition duration defers the UA's autofill
+   background-color paint indefinitely; text-fill-color keeps our ink. */
+.input__element:-webkit-autofill,
+.input__element:-webkit-autofill:hover,
+.input__element:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink-primary);
+  transition: background-color 100000s ease-out;
 }
 
 /* ── Button ────────────────────────────────────────────────────────────── */

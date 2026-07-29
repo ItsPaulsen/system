@@ -329,9 +329,15 @@
      Then re-saturated: oklch holds L (so contrast is unchanged) and
      hue, but pushes chroma 1.5× so the light text reads violet, not
      washed-out lilac. */
-  --primary-foreground: oklch(from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h);
-  --primary-foreground-hover: oklch(from color-mix(in oklab, var(--primary-hover), white 60%) l calc(c * 1.5) h);
-  --primary-foreground-active: oklch(from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h);
+  --primary-foreground: oklch(
+    from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h
+  );
+  --primary-foreground-hover: oklch(
+    from color-mix(in oklab, var(--primary-hover), white 60%) l calc(c * 1.5) h
+  );
+  --primary-foreground-active: oklch(
+    from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h
+  );
 
   /* Soft variants — higher alpha for visibility against dark surfaces.
      No color-mix lightening needed because the dark tint solids are

@@ -1239,7 +1239,7 @@ a.token-list__row:focus-visible {
   transition: background var(--motion-default);
 }
 
-.token-list--flush .token-list__name {
+.token-list--flush a.token-list__row .token-list__name {
   font-size: 1rem;
   font-weight: 600;
 }

@@ -588,7 +588,6 @@
   width: 1.25em;
   height: 1.25em;
   color: var(--ink-secondary);
-  transition: rotate var(--motion-default);
 }
 
 .select__trigger[aria-expanded="true"] .select__chevron {

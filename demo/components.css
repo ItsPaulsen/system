@@ -669,7 +669,7 @@
 }
 
 .badge--secondary {
-  background: var(--fill-tertiary);
+  background: var(--fill-quaternary);
   color: var(--ink-primary);
 }
 

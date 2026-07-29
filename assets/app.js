@@ -715,6 +715,47 @@ function initSelects() {
   });
 }
 
+// Tooltip positioning: flip above/below by available space and clamp to the
+// viewport, keeping the arrow pointed at the trigger. CSS handles the fade.
+function initTooltips() {
+  const PAD = 8;
+  const GAP = 8;
+  document.querySelectorAll(".tooltip").forEach((root) => {
+    const bubble = root.querySelector(".tooltip__bubble");
+    const trigger = root.firstElementChild;
+    if (!bubble || !trigger || trigger === bubble) return;
+
+    const place = () => {
+      const t = trigger.getBoundingClientRect();
+      const b = bubble.getBoundingClientRect();
+      const centerX = t.left + t.width / 2;
+      // Above unless there isn't room, then below.
+      const above = t.top - b.height - GAP >= 0;
+      bubble.dataset.placement = above ? "top" : "bottom";
+      const top = above ? t.top - b.height - GAP : t.bottom + GAP;
+      const left = Math.max(
+        PAD,
+        Math.min(centerX - b.width / 2, window.innerWidth - b.width - PAD)
+      );
+      bubble.style.top = `${Math.round(top)}px`;
+      bubble.style.left = `${Math.round(left)}px`;
+      // Arrow tracks the trigger centre, clamped inside the bubble.
+      const arrow = Math.max(10, Math.min(centerX - left, b.width - 10));
+      bubble.style.setProperty("--tt-arrow", `${Math.round(arrow)}px`);
+    };
+    const show = () => {
+      place();
+      bubble.classList.add("is-visible");
+    };
+    const hide = () => bubble.classList.remove("is-visible");
+
+    root.addEventListener("mouseenter", show);
+    root.addEventListener("mouseleave", hide);
+    root.addEventListener("focusin", show);
+    root.addEventListener("focusout", hide);
+  });
+}
+
 function init() {
   injectNav();
   injectSkipLink();
@@ -727,6 +768,7 @@ function init() {
   hydratePreviews();
   initGridTabs();
   initSelects();
+  initTooltips();
   refreshResponsive();
 
   let frame;

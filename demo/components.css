@@ -1500,16 +1500,17 @@ button.card--alternate:not(:disabled):active {
      <span class="tooltip__bubble" role="tooltip">Label text</span>
    </span> */
 .tooltip {
-  position: relative;
   display: inline-flex;
 }
 
+/* Position is set by initTooltips (fixed coords) so the bubble can flip
+   above/below and clamp to the viewport. --tt-arrow is the arrow's x within
+   the bubble, so it keeps pointing at the trigger even when the bubble shifts. */
 .tooltip__bubble {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 40;
-  translate: -50% 0;
   padding: 0.375rem 0.625rem;
   background: var(--ink-primary);
   color: var(--background-primary);
@@ -1521,18 +1522,24 @@ button.card--alternate:not(:disabled):active {
   transition: opacity var(--motion-default);
 }
 
-/* Downward arrow */
+.tooltip__bubble.is-visible {
+  opacity: 1;
+}
+
 .tooltip__bubble::after {
   content: "";
   position: absolute;
-  top: 100%;
-  left: 50%;
+  left: var(--tt-arrow, 50%);
   translate: -50% 0;
   border: 5px solid transparent;
+}
+
+.tooltip__bubble[data-placement="top"]::after {
+  top: 100%;
   border-top-color: var(--ink-primary);
 }
 
-.tooltip:hover .tooltip__bubble,
-.tooltip:focus-within .tooltip__bubble {
-  opacity: 1;
+.tooltip__bubble[data-placement="bottom"]::after {
+  bottom: 100%;
+  border-bottom-color: var(--ink-primary);
 }

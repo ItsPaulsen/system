@@ -166,15 +166,19 @@ const PROJECT_PAGES = {
     {
       group: "Components",
       links: [
-        { label: "Button", href: "/demo/components/button/" },
+        { label: "Alert", href: "/demo/components/alert/" },
         { label: "Badge", href: "/demo/components/badge/" },
+        { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
+        { label: "Modal", href: "/demo/components/modal/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
+        { label: "Select", href: "/demo/components/select/" },
         { label: "Switch", href: "/demo/components/switch/" },
-        { label: "Tabs", href: "/demo/components/tabs/" }
+        { label: "Tabs", href: "/demo/components/tabs/" },
+        { label: "Textarea", href: "/demo/components/textarea/" }
       ]
     }
   ]
@@ -688,6 +692,23 @@ function init() {
           codeCopy._copyTimer = setTimeout(() => codeCopy.classList.remove("is-copied"), 2000);
         })
         .catch(() => toast("Copy failed"));
+      return;
+    }
+    const modalOpen = event.target.closest("[data-modal-open]");
+    if (modalOpen) {
+      const dlg = document.getElementById(modalOpen.dataset.modalOpen);
+      if (dlg && typeof dlg.showModal === "function") dlg.showModal();
+      return;
+    }
+    const modalClose = event.target.closest("[data-modal-close]");
+    if (modalClose) {
+      modalClose.closest("dialog")?.close();
+      return;
+    }
+    // Click on the backdrop (target is the <dialog> itself, not its inner content).
+    const openModal = event.target.closest("dialog.modal");
+    if (openModal && event.target === openModal) {
+      openModal.close();
       return;
     }
     const target = event.target.closest("[data-copy]");

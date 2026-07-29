@@ -468,6 +468,65 @@
   padding-right: 0;
 }
 
+/* ── Textarea ──────────────────────────────────────────────────────────── */
+
+/* Reuses the input shell (label + container + focus/invalid/disabled); the
+   container just stretches and the field gets vertical resize.
+
+   Structure:
+   <label class="input">
+     <span class="input__label">Message</span>
+     <span class="input__container input__container--textarea">
+       <textarea class="input__element" rows="4"></textarea>
+     </span>
+   </label> */
+.input__container--textarea {
+  align-items: stretch;
+  min-height: auto;
+}
+
+.input__container--textarea .input__element {
+  min-height: 96px;
+  padding: 0.625rem 1rem;
+  resize: vertical;
+}
+
+/* ── Select ────────────────────────────────────────────────────────────── */
+
+/* Native <select> in the input shell; the UA arrow is removed and our chevron
+   is drawn with ::after, so no extra markup.
+
+   Structure:
+   <label class="input">
+     <span class="input__label">Country</span>
+     <span class="input__container input__container--select">
+       <select class="input__element"><option>…</option></select>
+     </span>
+   </label> */
+.input__container--select {
+  position: relative;
+}
+
+.input__container--select .input__element {
+  appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.input__container--select::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  translate: 0 -50%;
+  width: 1.25em;
+  height: 1.25em;
+  background: var(--ink-secondary);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  pointer-events: none;
+}
+
 /* Kill the browser autofill surface tint — keep our own (often transparent)
    background. The absurd transition duration defers the UA's autofill
    background-color paint indefinitely; text-fill-color keeps our ink. */
@@ -1048,4 +1107,144 @@ button.card--alternate:not(:disabled):active {
    so it isn't interactive: no pointer (and no hover/active feedback above). */
 .chip--as-radio:has(input:checked):not(:has(input:disabled)) {
   cursor: default;
+}
+
+/* ── Alert ─────────────────────────────────────────────────────────────── */
+
+/* Inline status message. The variant sets a soft surface + matching icon
+   colour; text stays ink for legibility. Title is optional — icon + text alone
+   reads fine for a one-liner.
+
+   Structure:
+   <div class="alert alert--info" role="status">
+     <svg class="alert__icon" …>…</svg>
+     <div class="alert__body">
+       <p class="alert__title">Heads up</p>
+       <p class="alert__text">Message goes here.</p>
+     </div>
+   </div> */
+.alert {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-sm);
+  color: var(--ink-primary);
+}
+
+.alert p {
+  margin: 0;
+}
+
+.alert__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 1px;
+}
+
+.alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.alert__title {
+  font-size: var(--font-body-small-emphasized-size);
+  font-weight: var(--font-body-small-emphasized-weight);
+}
+
+.alert__text {
+  font-size: var(--font-body-small-size);
+  color: var(--ink-secondary);
+}
+
+.alert--info {
+  background: var(--blue-soft);
+}
+
+.alert--info .alert__icon {
+  color: var(--blue);
+}
+
+.alert--success {
+  background: var(--green-soft);
+}
+
+.alert--success .alert__icon {
+  color: var(--green);
+}
+
+.alert--warning {
+  background: var(--amber-soft);
+}
+
+.alert--warning .alert__icon {
+  color: var(--amber);
+}
+
+.alert--error {
+  background: var(--red-soft);
+}
+
+.alert--error .alert__icon {
+  color: var(--red);
+}
+
+/* ── Modal ─────────────────────────────────────────────────────────────── */
+
+/* Native <dialog> — focus trap, Esc-to-close, and an inert background come for
+   free. Open with dialog.showModal(); app.js wires [data-modal-open="id"] and
+   [data-modal-close], and a click on the backdrop closes it.
+
+   Structure:
+   <dialog class="modal" id="demo-modal">
+     <div class="modal__inner">
+       <h2 class="modal__title">Title</h2>
+       <p class="modal__text">Supporting copy.</p>
+       <div class="modal__actions">
+         <button class="button button--flat" data-modal-close>Cancel</button>
+         <button class="button button--primary" data-modal-close>Confirm</button>
+       </div>
+     </div>
+   </dialog> */
+.modal {
+  width: min(92vw, 420px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal::backdrop {
+  background: var(--overlay);
+}
+
+.modal__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: var(--font-body-large-emphasized-size);
+  font-weight: var(--font-body-large-emphasized-weight);
+  line-height: var(--font-body-large-emphasized-lh);
+}
+
+.modal__text {
+  margin: 0;
+  font-size: var(--font-body-small-size);
+  color: var(--ink-secondary);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }

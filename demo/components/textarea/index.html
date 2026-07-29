@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Textarea — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Textarea</h1>
+          </div>
+          <p class="lede">A multi-line text field — the input shell, stretched and resizable.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <div class="component-preview">
+            <label class="input" style="max-width: 360px">
+              <span class="input__label">Message</span>
+              <span class="input__container input__container--textarea">
+                <textarea class="input__element" rows="4" placeholder="Write a message…"></textarea>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="component-preview">
+            <label class="input" style="max-width: 360px">
+              <span class="input__label">Message</span>
+              <span class="input__container input__container--textarea">
+                <textarea class="input__element" rows="4" disabled>Can't edit this.</textarea>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Message<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container input__container--textarea"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;textarea</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">rows</span>=<span class="tok-str">"4"</span><span class="tok-key">&gt;&lt;/textarea&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/label&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

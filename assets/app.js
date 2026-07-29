@@ -121,9 +121,9 @@ function injectNav() {
   const projectName = projectSlug ? projectSlug[0].toUpperCase() + projectSlug.slice(1) : "system";
   const projectHref = projectSlug ? `/${projectSlug}/` : "/";
 
-  // The menu button only toggles the per-project sidebar; the root landing has
-  // no sidebar, so drop it there.
-  const menuBtn = projectSlug
+  // The menu button only toggles the per-project sidebar, so show it only where
+  // a sidebar exists — not the root landing, not an unknown project.
+  const menuBtn = currentProjectPages()
     ? `<button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">${icon("menu", 24)}</button>`
     : "";
 
@@ -141,34 +141,45 @@ function injectNav() {
   setTheme(currentTheme());
 }
 
-// The demo project's page nav. Each entry is a page; the current one is highlighted.
-// (One topic per page reads cleaner than one giant scrolling doc.)
-const DEMO_PAGES = [
-  {
-    group: "Foundation",
-    links: [
-      { label: "Introduction", href: "/demo/" },
-      { label: "Colors", href: "/demo/colors/" },
-      { label: "Typography", href: "/demo/typography/" },
-      { label: "Layout", href: "/demo/layout/" },
-      { label: "Radii", href: "/demo/radii/" },
-      { label: "Shadows", href: "/demo/shadows/" },
-      { label: "Motion", href: "/demo/motion/" }
-    ]
-  },
-  {
-    group: "Components",
-    links: [
-      { label: "Button", href: "/demo/components/button/" },
-      { label: "Badge", href: "/demo/components/badge/" },
-      { label: "Card", href: "/demo/components/card/" },
-      { label: "Filter chip", href: "/demo/components/chip/" },
-      { label: "Input", href: "/demo/components/input/" },
-      { label: "Switch", href: "/demo/components/switch/" },
-      { label: "Tabs", href: "/demo/components/tabs/" }
-    ]
-  }
-];
+// Per-project sidebar nav, keyed by the URL's first path segment (/demo/… →
+// "demo"). Each entry is one page; the current one is highlighted, and one
+// topic per page reads cleaner than one giant scrolling doc. Add a project by
+// dropping a new key here — the sidebar, back link, and pagination all follow.
+const PROJECT_PAGES = {
+  demo: [
+    {
+      group: "Foundation",
+      links: [
+        { label: "Introduction", href: "/demo/" },
+        { label: "Colors", href: "/demo/colors/" },
+        { label: "Typography", href: "/demo/typography/" },
+        { label: "Layout", href: "/demo/layout/" },
+        { label: "Radii", href: "/demo/radii/" },
+        { label: "Shadows", href: "/demo/shadows/" },
+        { label: "Motion", href: "/demo/motion/" }
+      ]
+    },
+    {
+      group: "Components",
+      links: [
+        { label: "Button", href: "/demo/components/button/" },
+        { label: "Badge", href: "/demo/components/badge/" },
+        { label: "Card", href: "/demo/components/card/" },
+        { label: "Filter chip", href: "/demo/components/chip/" },
+        { label: "Input", href: "/demo/components/input/" },
+        { label: "Switch", href: "/demo/components/switch/" },
+        { label: "Tabs", href: "/demo/components/tabs/" }
+      ]
+    }
+  ]
+};
+
+// The page groups for the project in the current URL, or null at the site root
+// / on any path without a matching project entry.
+function currentProjectPages() {
+  const slug = (location.pathname.match(/^\/([^/]+)\//) || [])[1];
+  return (slug && PROJECT_PAGES[slug]) || null;
+}
 
 // Tabler arrow-left at 16px with stroke 2 — matches shadcn pagination weight.
 const ARROW_LEFT_ICON =
@@ -180,12 +191,12 @@ function isCurrentPage(href) {
   return here === there;
 }
 
-// Build the sidebar from DEMO_PAGES. Wrap the content in a shell so the sidebar
-// can sit beside it as a sticky left column (shadcn-style layout).
+// Build the sidebar for the current project. Wrap the content in a shell so the
+// sidebar can sit beside it as a sticky left column (shadcn-style layout).
 function injectSidebar() {
-  // The sidebar is per-project (DEMO_PAGES). The site root is the project
-  // list, not a project — leave it chrome-free.
-  if (location.pathname === "/" || location.pathname === "/index.html") return;
+  // No project pages (site root, or an unknown project) → leave it chrome-free.
+  const pages = currentProjectPages();
+  if (!pages) return;
   if (document.querySelector(".sidebar")) return;
   const wrap = document.querySelector(".wrap");
   let region;
@@ -206,8 +217,9 @@ function injectSidebar() {
   const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_ICON}All projects</span></a>`;
   aside.innerHTML =
     backLink +
-    DEMO_PAGES.map(
-      (g) => `
+    pages
+      .map(
+        (g) => `
       <div class="sidebar__group">
         <p class="sidebar__group-title">${g.group}</p>
         ${g.links
@@ -217,7 +229,8 @@ function injectSidebar() {
           )
           .join("")}
       </div>`
-    ).join("");
+      )
+      .join("");
 
   const backdrop = document.createElement("div");
   backdrop.className = "sidebar-backdrop";
@@ -558,7 +571,9 @@ const ARROW_RIGHT_16 =
 function injectPagination() {
   const wrap = document.querySelector(".wrap");
   if (!wrap || document.querySelector(".pagination")) return;
-  const flat = DEMO_PAGES.flatMap((g) => g.links);
+  const pages = currentProjectPages();
+  if (!pages) return;
+  const flat = pages.flatMap((g) => g.links);
   const idx = flat.findIndex((l) => isCurrentPage(l.href));
   if (idx < 0) return;
   const prev = idx > 0 ? flat[idx - 1] : null;

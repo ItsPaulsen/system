@@ -391,9 +391,6 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-primary);
-  transition:
-    border-color var(--motion-default),
-    box-shadow var(--motion-default);
 }
 
 /* Active state is the border itself (MD3 outlined field): it turns the focus
@@ -575,9 +572,6 @@
   font-size: var(--font-body-small-size);
   text-align: left;
   cursor: pointer;
-  transition:
-    border-color var(--motion-default),
-    box-shadow var(--motion-default);
 }
 
 /* Active border on keyboard focus and while open (focus moves to the list on
@@ -1424,10 +1418,12 @@ button.card--alternate:not(:disabled):active {
   outline: none;
 }
 
-/* Ring the whole item (not just the summary) when focused. */
+/* Ring the whole item (not just the summary) when focused; converges in like
+   the other focus rings. */
 .accordion__item:has(.accordion__summary:focus-visible) {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .accordion__chevron {

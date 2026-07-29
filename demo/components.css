@@ -391,6 +391,9 @@
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--ink-primary);
+  transition:
+    border-color var(--motion-default),
+    box-shadow var(--motion-default);
 }
 
 /* Active state is the border itself (MD3 outlined field): it turns the focus
@@ -572,6 +575,9 @@
   font-size: var(--font-body-small-size);
   text-align: left;
   cursor: pointer;
+  transition:
+    border-color var(--motion-default),
+    box-shadow var(--motion-default);
 }
 
 /* Active border on keyboard focus and while open (focus moves to the list on

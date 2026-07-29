@@ -1568,6 +1568,11 @@ a.token-list__row:focus-visible {
   transform: translateX(-50%) translateY(0);
 }
 
+/* Leading icon carries its own optical space — tighten the left, like badge. */
+.toast:has(.toast__icon svg) {
+  padding-left: 12px;
+}
+
 .toast__icon {
   display: inline-flex;
   flex-shrink: 0;

@@ -1410,7 +1410,8 @@ button.card--alternate:not(:disabled):active {
   display: none;
 }
 
-.accordion__summary:hover {
+/* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
+.accordion__item:not([open]) .accordion__summary:hover {
   background: var(--background-secondary-hover);
 }
 

@@ -18,6 +18,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -114,6 +115,7 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -296,6 +298,7 @@
   color: var(--ink-secondary);
   border-radius: 6px;
   cursor: pointer;
+  -webkit-user-select: none;
   user-select: none;
   transition: background var(--motion-default);
 }
@@ -480,6 +483,7 @@
   background: transparent;
   color: var(--ink-primary);
   font: inherit;
+  -webkit-user-select: none;
   user-select: none;
   font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
   font-weight: var(--font-body-small-emphasized-weight);
@@ -885,6 +889,7 @@ button.card--alternate:not(:disabled):active {
   line-height: 1;
   text-align: left;
   vertical-align: middle;
+  -webkit-user-select: none;
   user-select: none;
   transition:
     background 75ms,

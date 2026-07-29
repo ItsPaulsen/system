@@ -229,6 +229,7 @@ body {
 .sidebar__back {
   margin-bottom: 1.25rem;
   color: var(--ink-secondary);
+  font-weight: 500;
 }
 
 /* Visual pill wraps just the label; the anchor stays full width for clicks. */

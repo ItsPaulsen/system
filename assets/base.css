@@ -232,6 +232,70 @@ body {
   display: none;
 }
 
+/* Scroll fade: when the sticky sidebar overflows, its top/bottom edges fade to
+   hint more content. Scroll-driven, so the top fades only once scrolled down and
+   the bottom only while there's more below — and neither fades when the list
+   fits (an inactive scroll timeline leaves the fade sizes at 0). Chrome/Edge;
+   other browsers just show no fade. @property makes the fade sizes animatable. */
+@property --sidebar-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --sidebar-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@media (min-width: 1024px) {
+  @supports (animation-timeline: scroll()) {
+    .sidebar {
+      --sidebar-fade: 2rem;
+
+      /* Clear strip of page surface below the bottom fade — the fade finishes
+         this far above the edge instead of running to it. */
+      --sidebar-fade-gap: 2rem;
+
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0,
+        #000 var(--sidebar-fade-top),
+        #000 calc(100% - var(--sidebar-fade-gap) - var(--sidebar-fade-bottom)),
+        transparent calc(100% - var(--sidebar-fade-gap))
+      );
+      animation:
+        sidebar-fade-top linear both,
+        sidebar-fade-bottom linear both;
+      animation-timeline: scroll(self), scroll(self);
+      animation-range:
+        0 var(--sidebar-fade),
+        calc(100% - var(--sidebar-fade)) 100%;
+    }
+  }
+
+  @keyframes sidebar-fade-top {
+    from {
+      --sidebar-fade-top: 0;
+    }
+
+    to {
+      --sidebar-fade-top: var(--sidebar-fade);
+    }
+  }
+
+  @keyframes sidebar-fade-bottom {
+    from {
+      --sidebar-fade-bottom: var(--sidebar-fade);
+    }
+
+    to {
+      --sidebar-fade-bottom: 0;
+    }
+  }
+}
+
 .sidebar__group {
   display: flex;
   flex-direction: column;

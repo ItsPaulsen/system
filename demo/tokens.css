@@ -165,7 +165,7 @@
   --fill-tertiary: rgb(from var(--fill-base) r g b / 0.122);
   --fill-tertiary-hover: rgb(from var(--fill-base) r g b / 0.23);
   --fill-tertiary-active: rgb(from var(--fill-base) r g b / 0.27);
-  --fill-quaternary: rgb(from var(--fill-base) r g b / 0.059);
+  --fill-quaternary: rgb(from var(--fill-base) r g b / 0.08);
   --fill-quaternary-hover: rgb(from var(--fill-base) r g b / 0.17);
   --fill-quaternary-active: rgb(from var(--fill-base) r g b / 0.21);
 

@@ -104,15 +104,19 @@ function injectNav() {
   // Root landing: no project to label and nothing to scroll under, so the nav
   // drops its brand and its surface — just the theme toggle floating on the page.
   if (isRoot) nav.classList.add("site-nav--bare");
-  // Icons are Lucide (lucide.dev, ISC) — inlined so the shell stays dependency-free.
-  const lucide = {
+  // Icons are Tabler (tabler.io, MIT) — inlined so the shell stays
+  // dependency-free. `menu` is a custom two-line mark that morphs into a close
+  // (X) via CSS; the rest are Tabler paths. The hamburger keeps its own
+  // stroke-width in CSS (.ham-line) so the shared stroke-width below is free to
+  // match Tabler's default of 2.
+  const tabler = {
     menu: '<line class="ham-line ham-line--top" x1="4" x2="20" y1="9" y2="9"/><line class="ham-line ham-line--bot" x1="4" x2="20" y1="15" y2="15"/>',
     sun: '<path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z"/><path d="M6.343 17.657l-1.414 1.414"/><path d="M6.343 6.343l-1.414 -1.414"/><path d="M17.657 6.343l1.414 -1.414"/><path d="M17.657 17.657l1.414 1.414"/><path d="M4 12l-2 0"/><path d="M12 4l0 -2"/><path d="M20 12l2 0"/><path d="M12 20l0 2"/>',
     moon: '<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>',
     "arrow-left": '<path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>'
   };
   const icon = (name, size = 18, cls = "") =>
-    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${lucide[name]}</svg>`;
+    `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${tabler[name]}</svg>`;
 
   // Detect the project from the URL: /demo/... → "Demo". At the site root the
   // title falls back to "system" so the nav still has a label.

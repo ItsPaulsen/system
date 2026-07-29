@@ -131,6 +131,8 @@ body {
    crossover perfectly symmetrical, we normalise each line to y=12 first
    (translate) then rotate ±45° around the same origin. */
 .site-nav__menu .ham-line {
+  /* Custom mark — pin its own weight so the shared icon stroke can be Tabler's 2. */
+  stroke-width: 1.75;
   transform-origin: center;
   transform-box: fill-box;
   transition: transform 0.2s ease;

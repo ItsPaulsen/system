@@ -323,18 +323,25 @@
   --anchor-focus: 22 146 227;
 
   /* Foreground — only primary has one. Lightened for dark-theme
-     legibility on soft bg. Mirrors Ruter's tint-accent-foreground. */
-  --primary-foreground: color-mix(in oklab, var(--primary), white 50%);
-  --primary-foreground-hover: color-mix(in oklab, var(--primary-hover), white 50%);
-  --primary-foreground-active: color-mix(in oklab, var(--primary-active), white 50%);
+     legibility on soft bg. Mirrors Ruter's tint-accent-foreground.
+     Mixed 60% (vs Ruter's ~50%) because our violet primary sits darker
+     than their blue, so it needs more white to read as bright text. */
+  --primary-foreground: color-mix(in oklab, var(--primary), white 60%);
+  --primary-foreground-hover: color-mix(in oklab, var(--primary-hover), white 60%);
+  --primary-foreground-active: color-mix(in oklab, var(--primary-active), white 60%);
 
   /* Soft variants — higher alpha for visibility against dark surfaces.
      No color-mix lightening needed because the dark tint solids are
      already lifted (red/green/blue chosen to work as text on soft bg,
-     so alpha of them reads fine as bg too). */
-  --primary-soft: rgb(from var(--primary) r g b / 0.2);
-  --primary-soft-hover: rgb(from var(--primary) r g b / 0.31);
-  --primary-soft-active: rgb(from var(--primary) r g b / 0.35);
+     so alpha of them reads fine as bg too).
+
+     Primary runs 5 alpha points above the rest of the families: it's the
+     only deep solid left in dark (a violet, not a light tint), so the same
+     alpha lifts far less luminance off the surface and the resting
+     secondary button reads too flat. */
+  --primary-soft: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.28);
+  --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.39);
+  --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.43);
 
   /* Red drops 2 alpha points — it's the lightest solid, so its surface has
      to run paler to hold 4.5:1. */

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Select — Demo</title>
+    <title>Native Select — Demo</title>
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/tokens.css" />
     <link rel="stylesheet" href="/demo/components.css" />
@@ -22,7 +22,7 @@
       <header class="site-head">
         <div class="site-head__body">
           <div class="site-head__title">
-            <h1>Select</h1>
+            <h1>Native Select</h1>
           </div>
           <p class="lede">
             A single choice from a list — a native <code>&lt;select&gt;</code> in the input shell.
@@ -67,9 +67,34 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Groups</h3>
+          <p class="section-note">
+            Wrap options in a native <code>&lt;optgroup&gt;</code> to sort them into labelled
+            categories.
+          </p>
+          <div class="component-preview">
+            <label class="input" style="max-width: 280px">
+              <span class="input__label">Assignee</span>
+              <span class="input__container input__container--select">
+                <select class="input__element">
+                  <optgroup label="Design">
+                    <option>Ada</option>
+                    <option>Mert</option>
+                  </optgroup>
+                  <optgroup label="Engineering">
+                    <option>Jonas</option>
+                    <option>Priya</option>
+                  </optgroup>
+                </select>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Line<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Team<span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container input__container--select"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;select</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span><span class="tok-key">&gt;</span>
       <span class="tok-key">&lt;option&gt;</span>Design<span class="tok-key">&lt;/option&gt;</span>

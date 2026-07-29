@@ -174,8 +174,8 @@ const PROJECT_PAGES = {
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
         { label: "Modal", href: "/demo/components/modal/" },
+        { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
-        { label: "Select", href: "/demo/components/select/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Tabs", href: "/demo/components/tabs/" },
         { label: "Textarea", href: "/demo/components/textarea/" }

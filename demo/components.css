@@ -580,7 +580,10 @@
     box-shadow var(--motion-default);
 }
 
-.select__trigger:focus-visible {
+/* Active border on keyboard focus and while open (focus moves to the list on
+   open, so key off aria-expanded to keep the border lit) — mirrors the input. */
+.select__trigger:focus-visible,
+.select__trigger[aria-expanded="true"] {
   outline: none;
   border-color: var(--focus);
   box-shadow: 0 0 0 1px var(--focus);
@@ -612,6 +615,10 @@
   background: var(--background-secondary);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
+
+  /* The list takes programmatic focus for key handling, but the active option
+     (.is-active) is the visible indicator — so no ring on the surface itself. */
+  outline: none;
 }
 
 .select__list[hidden] {

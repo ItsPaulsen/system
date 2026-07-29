@@ -587,6 +587,13 @@ pre {
   scrollbar-width: none;
 }
 
+/* Chrome makes horizontally-scrollable <pre> keyboard-focusable (to scroll it).
+   Give that our focus ring instead of the UA default blue. */
+pre:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
 pre::-webkit-scrollbar {
   display: none;
 }

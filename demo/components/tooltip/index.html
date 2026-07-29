@@ -41,6 +41,31 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Side</h3>
+          <p class="section-note">
+            Set <code>data-tooltip-side</code> to prefer a side; it flips if there's no room.
+          </p>
+          <div class="component-preview" style="gap: 0.5rem">
+            <span class="tooltip" data-tooltip-side="left">
+              <button class="button button--secondary" type="button">Left</button>
+              <span class="tooltip__bubble" role="tooltip">On the left</span>
+            </span>
+            <span class="tooltip" data-tooltip-side="top">
+              <button class="button button--secondary" type="button">Top</button>
+              <span class="tooltip__bubble" role="tooltip">On top</span>
+            </span>
+            <span class="tooltip" data-tooltip-side="bottom">
+              <button class="button button--secondary" type="button">Bottom</button>
+              <span class="tooltip__bubble" role="tooltip">Below</span>
+            </span>
+            <span class="tooltip" data-tooltip-side="right">
+              <button class="button button--secondary" type="button">Right</button>
+              <span class="tooltip__bubble" role="tooltip">On the right</span>
+            </span>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tooltip"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span><span class="tok-key">&gt;</span>Hover me<span class="tok-key">&lt;/button&gt;</span>

@@ -725,22 +725,38 @@ function initTooltips() {
     const trigger = root.firstElementChild;
     if (!bubble || !trigger || trigger === bubble) return;
 
+    const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
+
     const place = () => {
       const t = trigger.getBoundingClientRect();
       const b = bubble.getBoundingClientRect();
-      const centerX = t.left + t.width / 2;
-      // Above unless there isn't room, then below.
-      const above = t.top - b.height - GAP >= 0;
-      bubble.dataset.placement = above ? "top" : "bottom";
-      const top = above ? t.top - b.height - GAP : t.bottom + GAP;
-      const left = Math.max(
-        PAD,
-        Math.min(centerX - b.width / 2, window.innerWidth - b.width - PAD)
-      );
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Preferred side (data-tooltip-side), flipped to the opposite if it
+      // wouldn't fit.
+      let side = root.dataset.tooltipSide || "top";
+      if (side === "top" && t.top - b.height - GAP < 0) side = "bottom";
+      else if (side === "bottom" && t.bottom + b.height + GAP > vh) side = "top";
+      else if (side === "left" && t.left - b.width - GAP < 0) side = "right";
+      else if (side === "right" && t.right + b.width + GAP > vw) side = "left";
+      bubble.dataset.placement = side;
+
+      let top;
+      let left;
+      let arrow;
+      if (side === "top" || side === "bottom") {
+        top = side === "top" ? t.top - b.height - GAP : t.bottom + GAP;
+        const cx = t.left + t.width / 2;
+        left = clamp(cx - b.width / 2, PAD, vw - b.width - PAD);
+        arrow = clamp(cx - left, 10, b.width - 10);
+      } else {
+        left = side === "left" ? t.left - b.width - GAP : t.right + GAP;
+        const cy = t.top + t.height / 2;
+        top = clamp(cy - b.height / 2, PAD, vh - b.height - PAD);
+        arrow = clamp(cy - top, 10, b.height - 10);
+      }
       bubble.style.top = `${Math.round(top)}px`;
       bubble.style.left = `${Math.round(left)}px`;
-      // Arrow tracks the trigger centre, clamped inside the bubble.
-      const arrow = Math.max(10, Math.min(centerX - left, b.width - 10));
       bubble.style.setProperty("--tt-arrow", `${Math.round(arrow)}px`);
     };
     const hide = () => {

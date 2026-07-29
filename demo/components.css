@@ -1529,17 +1529,35 @@ button.card--alternate:not(:disabled):active {
 .tooltip__bubble::after {
   content: "";
   position: absolute;
-  left: var(--tt-arrow, 50%);
-  translate: -50% 0;
   border: 5px solid transparent;
 }
 
+/* --tt-arrow is the offset along the shared edge (x for top/bottom, y for
+   left/right), so the arrow keeps pointing at the trigger after clamping. */
 .tooltip__bubble[data-placement="top"]::after {
   top: 100%;
+  left: var(--tt-arrow, 50%);
+  translate: -50% 0;
   border-top-color: var(--ink-primary);
 }
 
 .tooltip__bubble[data-placement="bottom"]::after {
   bottom: 100%;
+  left: var(--tt-arrow, 50%);
+  translate: -50% 0;
   border-bottom-color: var(--ink-primary);
+}
+
+.tooltip__bubble[data-placement="left"]::after {
+  left: 100%;
+  top: var(--tt-arrow, 50%);
+  translate: 0 -50%;
+  border-left-color: var(--ink-primary);
+}
+
+.tooltip__bubble[data-placement="right"]::after {
+  right: 100%;
+  top: var(--tt-arrow, 50%);
+  translate: 0 -50%;
+  border-right-color: var(--ink-primary);
 }

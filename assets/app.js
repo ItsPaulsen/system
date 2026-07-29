@@ -49,7 +49,7 @@ const toast = (() => {
   const show = (message, opts = {}) => {
     render(message, opts.type);
     clearTimeout(timer);
-    timer = setTimeout(() => el.classList.remove("is-visible"), opts.duration || 1400);
+    timer = setTimeout(() => el.classList.remove("is-visible"), opts.duration || 4000);
   };
   show.success = (m) => show(m, { type: "success" });
   show.info = (m) => show(m, { type: "info" });

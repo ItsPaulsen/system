@@ -633,7 +633,7 @@
 
 .select__option:hover,
 .select__option.is-active {
-  background: var(--fill-quaternary-hover);
+  background: var(--background-secondary-hover);
 }
 
 .select__option[aria-selected="true"] {

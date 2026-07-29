@@ -1127,7 +1127,7 @@ button.card--alternate:not(:disabled):active {
   display: flex;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   color: var(--ink-primary);
 }
 
@@ -1156,7 +1156,7 @@ button.card--alternate:not(:disabled):active {
 
 .alert__text {
   font-size: var(--font-body-small-size);
-  color: var(--ink-secondary);
+  color: var(--ink-primary);
 }
 
 .alert--info {

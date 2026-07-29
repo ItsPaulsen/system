@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Table — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Table</h1>
+          </div>
+          <p class="lede">Rows and columns of data.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">Wrap in <code>.table-wrap</code> so wide tables scroll.</p>
+          <div class="component-preview" style="align-items: stretch">
+            <div class="table-wrap" style="width: 100%">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Team</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ada Berg</td>
+                    <td>Design</td>
+                    <td>Lead</td>
+                  </tr>
+                  <tr>
+                    <td>Jonas Voll</td>
+                    <td>Engineering</td>
+                    <td>Senior</td>
+                  </tr>
+                  <tr>
+                    <td>Priya Rao</td>
+                    <td>Product</td>
+                    <td>Manager</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"table-wrap"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;table</span> <span class="tok-prop">class</span>=<span class="tok-str">"table"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;thead&gt;&lt;tr&gt;&lt;th&gt;</span>Name<span class="tok-key">&lt;/th&gt;</span>…<span class="tok-key">&lt;/tr&gt;&lt;/thead&gt;</span>
+    <span class="tok-key">&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;</span>Ada Berg<span class="tok-key">&lt;/td&gt;</span>…<span class="tok-key">&lt;/tr&gt;&lt;/tbody&gt;</span>
+  <span class="tok-key">&lt;/table&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

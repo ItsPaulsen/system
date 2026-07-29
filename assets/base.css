@@ -226,6 +226,16 @@ body {
   font-weight: 500;
 }
 
+/* "New" dot — primary marker next to recently-added pages. Sits inside the
+   link's inner span, so the flex gap spaces it off the label. */
+.sidebar__new {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
 .sidebar__back {
   margin-bottom: 1.25rem;
   color: var(--ink-secondary);

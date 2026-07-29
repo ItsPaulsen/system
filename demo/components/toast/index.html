@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Toast — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Toast</h1>
+          </div>
+          <p class="lede">A brief message that appears, then fades on its own.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">A single pill, bottom-centre, auto-dismissed.</p>
+          <div class="component-preview">
+            <button class="button button--secondary" type="button" data-toast="Changes saved">
+              Show toast
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Usage</h3>
+          <p class="section-note">
+            The shell exposes it via a <code>data-toast</code> trigger; in your own code call the
+            toast helper with a message.
+          </p>
+          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-toast</span>=<span class="tok-str">"Changes saved"</span><span class="tok-key">&gt;</span>Show toast<span class="tok-key">&lt;/button&gt;</span>
+
+<span class="tok-fn">toast</span>(<span class="tok-str">"Changes saved"</span>)<span class="tok-key">;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

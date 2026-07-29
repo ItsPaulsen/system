@@ -166,6 +166,7 @@ const PROJECT_PAGES = {
     {
       group: "Components",
       links: [
+        { label: "Accordion", href: "/demo/components/accordion/", new: true },
         { label: "Alert", href: "/demo/components/alert/" },
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Button", href: "/demo/components/button/" },
@@ -178,8 +179,11 @@ const PROJECT_PAGES = {
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
         { label: "Switch", href: "/demo/components/switch/" },
+        { label: "Table", href: "/demo/components/table/", new: true },
         { label: "Tabs", href: "/demo/components/tabs/" },
-        { label: "Textarea", href: "/demo/components/textarea/" }
+        { label: "Textarea", href: "/demo/components/textarea/" },
+        { label: "Toast", href: "/demo/components/toast/", new: true },
+        { label: "Tooltip", href: "/demo/components/tooltip/", new: true }
       ]
     }
   ]
@@ -236,7 +240,7 @@ function injectSidebar() {
         ${g.links
           .map(
             (l) =>
-              `<a class="sidebar__link${isCurrentPage(l.href) ? " is-active" : ""}" href="${l.href}"><span>${l.label}</span></a>`
+              `<a class="sidebar__link${isCurrentPage(l.href) ? " is-active" : ""}" href="${l.href}"><span>${l.label}${l.new ? '<i class="sidebar__new" aria-hidden="true"></i>' : ""}</span></a>`
           )
           .join("")}
       </div>`
@@ -791,6 +795,11 @@ function init() {
     const openDialog = event.target.closest("dialog.dialog");
     if (openDialog && event.target === openDialog) {
       openDialog.close();
+      return;
+    }
+    const toastBtn = event.target.closest("[data-toast]");
+    if (toastBtn) {
+      toast(toastBtn.dataset.toast || "Saved");
       return;
     }
     const target = event.target.closest("[data-copy]");

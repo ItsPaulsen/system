@@ -692,28 +692,31 @@ function initSelects() {
     if (!trigger || !list || !options.length) return;
 
     let activeIndex = options.findIndex((o) => o.getAttribute("aria-selected") === "true");
-    // Suppresses the open-on-focus that would otherwise fire when we programmatically
-    // refocus the trigger after closing.
-    let justClosed = false;
+    // Focus stays on the trigger the whole time (the list is never focused), so
+    // Tab/Shift+Tab move through the page normally — no focus trap. The active
+    // option is tracked with .is-active + aria-activedescendant.
+    options.forEach((o, i) => {
+      if (!o.id) o.id = `${root.id || "select"}-opt-${i}`;
+    });
 
     const setActive = (i) => {
       activeIndex = (i + options.length) % options.length;
+      const opt = options[activeIndex];
       options.forEach((o, idx) => o.classList.toggle("is-active", idx === activeIndex));
-      options[activeIndex].scrollIntoView({ block: "nearest" });
+      opt.scrollIntoView({ block: "nearest" });
+      trigger.setAttribute("aria-activedescendant", opt.id);
     };
     const open = () => {
+      if (!list.hidden) return;
       list.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
       setActive(activeIndex < 0 ? 0 : activeIndex);
-      list.focus();
     };
-    const close = (focusTrigger = true) => {
+    const close = () => {
+      if (list.hidden) return;
       list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
-      if (focusTrigger) {
-        justClosed = true;
-        trigger.focus();
-      }
+      trigger.removeAttribute("aria-activedescendant");
     };
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
@@ -722,40 +725,37 @@ function initSelects() {
       close();
     };
 
-    // Open on keyboard focus (matches Ruter). Gated to :focus-visible so a mouse
-    // click doesn't open here then get toggled shut by the click handler; the
-    // justClosed guard stops a reopen when focus returns after selecting.
+    // Open on keyboard focus (matches Ruter); mouse focus isn't :focus-visible,
+    // so a click toggles instead of double-firing here.
     trigger.addEventListener("focus", () => {
-      if (justClosed) {
-        justClosed = false;
-        return;
-      }
       if (trigger.matches(":focus-visible")) open();
     });
     trigger.addEventListener("click", () => (list.hidden ? open() : close()));
     trigger.addEventListener("keydown", (e) => {
-      if (["ArrowDown", "Enter", " "].includes(e.key)) {
-        e.preventDefault();
-        open();
+      if (e.key === "Escape" || e.key === "Tab") {
+        close();
+        return;
       }
-    });
-    list.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowDown") (e.preventDefault(), setActive(activeIndex + 1));
+      if (list.hidden) {
+        if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+          e.preventDefault();
+          open();
+        }
+      } else if (e.key === "ArrowDown") (e.preventDefault(), setActive(activeIndex + 1));
       else if (e.key === "ArrowUp") (e.preventDefault(), setActive(activeIndex - 1));
       else if (e.key === "Enter" || e.key === " ") (e.preventDefault(), select(activeIndex));
     });
     options.forEach((o, i) => {
+      // Keep focus on the trigger when clicking an option.
+      o.addEventListener("mousedown", (e) => e.preventDefault());
       o.addEventListener("click", () => select(i));
       o.addEventListener("mousemove", () => setActive(i));
     });
     document.addEventListener("click", (e) => {
-      if (!root.contains(e.target)) close(false);
+      if (!root.contains(e.target)) close();
     });
-    // Tab (or any focus move) out of the select closes it — don't refocus the
-    // trigger, focus is already moving on.
     root.addEventListener("focusout", (e) => {
-      if (!root.contains(e.relatedTarget)) close(false);
+      if (!root.contains(e.relatedTarget)) close();
     });
   });
 }

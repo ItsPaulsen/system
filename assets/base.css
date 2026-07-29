@@ -75,6 +75,15 @@ body {
   }
 }
 
+/* Default ring for plain content links (prose, section notes) so they use our
+   focus colour instead of the UA blue. Components with their own link focus
+   styles (sidebar, buttons, cards, list rows) override this. */
+a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 /* Accessibility: skip-to-content — hidden until keyboard-focused. */
 .skip-link {
   position: fixed;

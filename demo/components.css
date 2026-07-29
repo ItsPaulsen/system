@@ -1453,6 +1453,30 @@ button.card--alternate:not(:disabled):active {
   margin-bottom: 0;
 }
 
+/* Animate open/close (Ruter's recipe): interpolate-size lets block-size go
+   to/from auto; ::details-content fades + expands. Progressive enhancement —
+   browsers without ::details-content just toggle instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  .accordion__item {
+    interpolate-size: allow-keywords;
+  }
+}
+
+.accordion__item::details-content {
+  overflow: hidden;
+  block-size: 0;
+  opacity: 0;
+  transition:
+    content-visibility allow-discrete var(--motion-default),
+    opacity var(--motion-default),
+    block-size var(--motion-default);
+}
+
+.accordion__item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
 /* ── Table ─────────────────────────────────────────────────────────────── */
 
 /* Plain data table. Wrap in .table-wrap so wide tables scroll instead of

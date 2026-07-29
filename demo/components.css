@@ -644,7 +644,6 @@
 }
 
 .select__option[aria-selected="true"] {
-  color: var(--primary-foreground);
   font-weight: 500;
 }
 

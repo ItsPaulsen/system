@@ -643,6 +643,9 @@ function initSelects() {
     if (!trigger || !list || !options.length) return;
 
     let activeIndex = options.findIndex((o) => o.getAttribute("aria-selected") === "true");
+    // Suppresses the open-on-focus that would otherwise fire when we programmatically
+    // refocus the trigger after closing.
+    let justClosed = false;
 
     const setActive = (i) => {
       activeIndex = (i + options.length) % options.length;
@@ -658,7 +661,10 @@ function initSelects() {
     const close = (focusTrigger = true) => {
       list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
-      if (focusTrigger) trigger.focus();
+      if (focusTrigger) {
+        justClosed = true;
+        trigger.focus();
+      }
     };
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
@@ -667,6 +673,16 @@ function initSelects() {
       close();
     };
 
+    // Open on keyboard focus (matches Ruter). Gated to :focus-visible so a mouse
+    // click doesn't open here then get toggled shut by the click handler; the
+    // justClosed guard stops a reopen when focus returns after selecting.
+    trigger.addEventListener("focus", () => {
+      if (justClosed) {
+        justClosed = false;
+        return;
+      }
+      if (trigger.matches(":focus-visible")) open();
+    });
     trigger.addEventListener("click", () => (list.hidden ? open() : close()));
     trigger.addEventListener("keydown", (e) => {
       if (["ArrowDown", "Enter", " "].includes(e.key)) {

@@ -1410,13 +1410,13 @@ button.card--alternate:not(:disabled):active {
   display: none;
 }
 
+.accordion__summary:focus-visible {
+  outline: none;
+}
+
 /* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
 .accordion__item:not([open]) .accordion__summary:hover {
   background: var(--background-secondary-hover);
-}
-
-.accordion__summary:focus-visible {
-  outline: none;
 }
 
 /* Ring the whole item (not just the summary) when focused; converges in like

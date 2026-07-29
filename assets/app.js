@@ -165,8 +165,10 @@ const PROJECT_PAGES = {
         { label: "Button", href: "/demo/components/button/" },
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Card", href: "/demo/components/card/" },
-        { label: "Filter chip", href: "/demo/components/chip/" },
+        { label: "Checkbox", href: "/demo/components/checkbox/" },
+        { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
+        { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Tabs", href: "/demo/components/tabs/" }
       ]

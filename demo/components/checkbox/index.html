@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Checkbox — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Checkbox</h1>
+          </div>
+          <p class="lede">A multi-select control — any number of options can be on at once.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Native <code>&lt;input type="checkbox"&gt;</code> — works with forms and screen readers.
+            The tick strokes itself on.
+          </p>
+          <div class="component-preview">
+            <div class="checkbox-group">
+              <label class="checkbox">
+                <span class="checkbox__box">
+                  <input type="checkbox" class="checkbox__input" />
+                  <svg
+                    class="checkbox__check"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12l5 5l10 -10" pathLength="1" />
+                  </svg>
+                </span>
+                <span class="checkbox__label">Email me updates</span>
+              </label>
+              <label class="checkbox">
+                <span class="checkbox__box">
+                  <input type="checkbox" class="checkbox__input" checked />
+                  <svg
+                    class="checkbox__check"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12l5 5l10 -10" pathLength="1" />
+                  </svg>
+                </span>
+                <span class="checkbox__label">Send me a receipt</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="component-preview">
+            <label class="checkbox">
+              <span class="checkbox__box">
+                <input type="checkbox" class="checkbox__input" disabled />
+                <svg
+                  class="checkbox__check"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12l5 5l10 -10" pathLength="1" />
+                </svg>
+              </span>
+              <span class="checkbox__label">Email me updates</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__box"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__input"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__check"</span> <span class="tok-prop">viewBox</span>=<span class="tok-str">"0 0 24 24"</span> <span class="tok-prop">fill</span>=<span class="tok-str">"none"</span> <span class="tok-prop">stroke</span>=<span class="tok-str">"currentColor"</span> <span class="tok-prop">stroke-width</span>=<span class="tok-str">"2"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;path</span> <span class="tok-prop">d</span>=<span class="tok-str">"M5 12l5 5l10 -10"</span> <span class="tok-prop">pathLength</span>=<span class="tok-str">"1"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;/svg&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__label"</span><span class="tok-key">&gt;</span>Email me updates<span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/label&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

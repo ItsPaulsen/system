@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Radio Group — Demo</title>
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Radio Group</h1>
+          </div>
+          <p class="lede">
+            A single-select group — options share a <code>name</code>, so exactly one is chosen.
+          </p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Native <code>&lt;input type="radio"&gt;</code> — the shared <code>name</code> handles
+            mutual exclusion, no JavaScript needed.
+          </p>
+          <div class="component-preview">
+            <div class="radio-group" role="radiogroup" aria-label="Density">
+              <label class="radio">
+                <input type="radio" name="density" class="radio__input" />
+                <span class="radio__label">Default</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="density" class="radio__input" checked />
+                <span class="radio__label">Comfortable</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="density" class="radio__input" />
+                <span class="radio__label">Compact</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <p class="section-note">
+            A single option can be disabled while the rest stay selectable.
+          </p>
+          <div class="component-preview">
+            <div class="radio-group" role="radiogroup" aria-label="Options">
+              <label class="radio">
+                <input type="radio" name="options" class="radio__input" disabled />
+                <span class="radio__label">Disabled</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="options" class="radio__input" checked />
+                <span class="radio__label">Option 2</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="options" class="radio__input" />
+                <span class="radio__label">Option 3</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio-group"</span> <span class="tok-prop">role</span>=<span class="tok-str">"radiogroup"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"density"</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio__input"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio__label"</span><span class="tok-key">&gt;</span>Comfortable<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/label&gt;</span>
+  &lt;!-- …more options with the same name --&gt;
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

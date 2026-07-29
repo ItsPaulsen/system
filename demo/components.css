@@ -81,6 +81,179 @@
   opacity: 0.5;
 }
 
+/* ── Checkbox & Radio ──────────────────────────────────────────────────── */
+
+/* Native inputs styled directly with appearance:none, so forms and screen
+   readers work with no JavaScript. Checkbox = square with a checkmark that
+   strokes on; radio = circle whose border thickens into a ring. Both share
+   sizing, focus, hover, and disabled treatment.
+
+   Structure — the checkbox wraps input + SVG tick in a grid box so the tick
+   can overlay the square and animate:
+     <label class="checkbox">
+       <span class="checkbox__box">
+         <input type="checkbox" class="checkbox__input" />
+         <svg class="checkbox__check" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+           <path d="M5 12l5 5l10 -10" pathLength="1" />
+         </svg>
+       </span>
+       <span class="checkbox__label">Label</span>
+     </label>
+
+     <label class="radio">
+       <input type="radio" name="group" class="radio__input" />
+       <span class="radio__label">Label</span>
+     </label> */
+
+.checkbox,
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.checkbox__input,
+.radio__input {
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  background: transparent;
+  border: 2px solid var(--ink-tertiary);
+  cursor: pointer;
+  transition:
+    background var(--motion-default),
+    border-color var(--motion-default),
+    border-width var(--motion-default);
+}
+
+.checkbox__input {
+  border-radius: 4px;
+}
+
+.radio__input {
+  border-radius: var(--radius-full);
+}
+
+.checkbox__input:focus-visible,
+.radio__input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Checkmark — an inline SVG overlaid on the box via grid, so the tick can
+   stroke itself on (Ruter's draw animation) instead of just appearing. The
+   input and the icon share one grid cell. Declared before the hover/checked
+   rules so its lower-specificity input selector stays in ascending order. */
+.checkbox__box {
+  display: grid;
+  flex-shrink: 0;
+}
+
+.checkbox__box .checkbox__input,
+.checkbox__check {
+  grid-area: 1 / 1;
+}
+
+/* Ruter's icon logic with our Tabler check path: the svg fills the box (grid
+   cell, stretched) so the box size drives everything and the svg keeps its
+   native stroke-width 2 (≈1.67px at this size). No padding — the Tabler path's
+   own 5→20 bounds give the inset; Ruter needs padding because its path runs
+   edge-to-edge, ours doesn't. Presentation lives on the <svg> like the other
+   inline icons; stroke="currentColor" reads this colour. */
+.checkbox__check {
+  color: var(--neutral-white);
+  pointer-events: none;
+}
+
+/* pathLength="1" normalises the tick so the 0→1 dash draw covers it exactly. */
+.checkbox__check path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.checkbox__input:checked ~ .checkbox__check path {
+  animation: checkbox-draw 0.2s ease-out forwards;
+}
+
+@keyframes checkbox-draw {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkbox__input:checked ~ .checkbox__check path {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.checkbox__input:disabled,
+.radio__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Checked — checkbox fills with primary; radio grows its border into a solid
+   ring (Ruter draws the dot with border-width, no inner element — box-sizing
+   keeps the 20px footprint fixed). */
+.checkbox__input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.radio__input:checked {
+  border-color: var(--primary);
+  border-width: 6px;
+}
+
+/* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
+   Declared last: higher specificity than the :disabled/:checked rules. */
+.checkbox__input:not(:disabled, :checked):hover,
+.radio__input:not(:disabled, :checked):hover {
+  background: var(--fill-quaternary-hover);
+}
+
+/* Radios/checkboxes ship as a group — a vertical stack of options. Radios
+   share one input name for mutual exclusion; checkboxes toggle independently. */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.checkbox__label,
+.radio__label {
+  font-size: 1rem;
+  color: var(--ink-primary);
+  cursor: pointer;
+}
+
+.checkbox:has(:disabled) .checkbox__label,
+.radio:has(:disabled) .radio__label {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
 /* Segmented control — track is a fill tint over whatever surface the tabs

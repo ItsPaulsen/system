@@ -1545,7 +1545,7 @@ a.token-list__row:focus-visible {
   transform: translateX(-50%) translateY(1rem);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   max-width: calc(100vw - 2rem);
   padding: 0.625rem 1rem;
   background: var(--background-secondary);

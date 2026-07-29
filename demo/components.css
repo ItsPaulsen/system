@@ -1459,6 +1459,8 @@ button.card--alternate:not(:disabled):active {
    </div> */
 .table-wrap {
   overflow-x: auto;
+  border: 1px solid var(--fill-tertiary);
+  border-radius: var(--radius-md);
 }
 
 .table {

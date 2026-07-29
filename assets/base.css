@@ -103,7 +103,6 @@ a:focus-visible {
   transform: translate(-50%, 0);
   outline: 3px solid var(--focus);
   outline-offset: 2px;
-  transition: transform 0.15s ease-out; /* slide in on focus; hide is instant */
 }
 
 /* Site nav (injected on every page) */

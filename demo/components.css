@@ -633,9 +633,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   min-height: 24px;
-  padding-inline: 12px;
+  padding-inline: 8px;
   border: 0;
   border-radius: var(--radius-full);
   background: transparent;
@@ -648,11 +648,11 @@
 }
 
 .badge--with-start-icon {
-  padding-inline-start: 8px;
+  padding-inline-start: 4px;
 }
 
 .badge--with-end-icon {
-  padding-inline-end: 8px;
+  padding-inline-end: 4px;
 }
 
 .badge svg {

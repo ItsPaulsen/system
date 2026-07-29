@@ -332,7 +332,7 @@ const PALETTE_FAMILIES = [
   },
   {
     title: "Focus",
-    note: "Keyboard focus ring — follows the primary, so it retints with the brand.",
+    note: "Keyboard focus ring — a lighter, softer tone derived from the primary, so it retints with the brand.",
     tokens: ["focus"]
   },
   { title: "Overlay", note: "Modal and drawer backdrops.", tokens: ["overlay"] },

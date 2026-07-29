@@ -84,12 +84,14 @@
   --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
   --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
 
-  /* Focus follows the brand — the ring is the primary colour, so retinting
-     --anchor-primary moves the focus ring with it (Ruter's focus reads right
-     only because their primary is already blue; ours must track the violet). */
-  --focus: var(--primary);
-  --focus-hover: var(--primary-hover);
-  --focus-active: var(--primary-active);
+  /* Focus is derived from the brand, not a fixed blue, so it retints with
+     --anchor-primary. It's not primary verbatim — it mirrors the relationship
+     Ruter has between its accent and focus: lighter (+0.09 L), softer
+     (−0.1 C), hue nudged −22° toward cyan. That yields a distinct "system
+     focus" tone that still harmonises with whatever primary is. */
+  --focus: oklch(from var(--primary) calc(l + 0.09) calc(c - 0.1) calc(h - 22));
+  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
+  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
   /* Foreground — the color used for text/icons sitting on the -soft
      background. Only exists for primary (brand); tints use their

@@ -25,6 +25,8 @@ const toast = (() => {
   let iconEl;
   let textEl;
   let timer;
+  // Mount the live region up front (idempotent) so its first announcement isn't
+  // injected and populated in the same tick — some screen readers miss that.
   const ensure = () => {
     if (el) return;
     el = document.createElement("div");
@@ -40,6 +42,11 @@ const toast = (() => {
   };
   const render = (message, type = "default") => {
     ensure();
+    // error/warning are interruptive — assertive/alert so they aren't queued
+    // behind whatever a polite region is already reading.
+    const assertive = type === "error" || type === "warning";
+    el.setAttribute("role", assertive ? "alert" : "status");
+    el.setAttribute("aria-live", assertive ? "assertive" : "polite");
     el.dataset.type = type;
     iconEl.innerHTML = ICONS[type] ? svg(type) : "";
     textEl.textContent = message;
@@ -59,12 +66,16 @@ const toast = (() => {
   show.promise = (p, msgs = {}) => {
     render(msgs.loading || "Loading…", "loading");
     clearTimeout(timer);
+    // Attaching a rejection handler here also marks `p` as handled, so
+    // returning the original promise (callers await its real resolved value)
+    // can't raise an unhandled rejection when the caller ignores it.
     Promise.resolve(p).then(
       () => show(msgs.success || "Done", { type: "success" }),
       () => show(msgs.error || "Something went wrong", { type: "error" })
     );
     return p;
   };
+  show.mount = ensure;
   return show;
 })();
 
@@ -180,13 +191,17 @@ function injectNav() {
     <div class="site-nav__inner">
       <div class="site-nav__left">
         ${menuBtn}
-        ${isRoot ? "" : `<a class="site-nav__brand" href="${projectHref}">${projectName}</a>`}
+        ${isRoot ? "" : `<a class="site-nav__brand" href="${projectHref}"></a>`}
       </div>
       <button class="theme-toggle" type="button" aria-label="Switch theme">
         ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
       </button>
     </div>`;
   document.body.prepend(nav);
+  // Set the brand label as text (not interpolated into innerHTML) since it's
+  // derived from the URL path.
+  const brand = nav.querySelector(".site-nav__brand");
+  if (brand) brand.textContent = projectName;
   setTheme(currentTheme());
 }
 
@@ -304,6 +319,7 @@ function injectSidebar() {
 
 function wireSidebar(aside, backdrop) {
   const menuBtn = document.querySelector(".site-nav__menu");
+  const region = document.querySelector(".content-region");
   // Enable animation transiently for the duration of an actual open/close.
   // If .is-anim persisted, a later resize across the mobile breakpoint would
   // animate the drawer's default → hidden state and cause a fade on resize.
@@ -313,24 +329,50 @@ function wireSidebar(aside, backdrop) {
     clearTimeout(animTimer);
     animTimer = setTimeout(() => aside.classList.remove("is-anim"), 250);
   };
-  const close = () => {
+  const isOpen = () => aside.classList.contains("is-open");
+
+  const onKeydown = (e) => {
+    if (e.key === "Escape") close(true);
+  };
+
+  const open = () => {
+    animate();
+    aside.classList.add("is-open");
+    backdrop.classList.add("is-open");
+    if (menuBtn) menuBtn.setAttribute("aria-expanded", "true");
+    // Modal-style: the rest of the page is inert (not focusable/clickable)
+    // while the drawer is open, and focus moves into it. No scroll-lock —
+    // the page keeps its single, always-hidden scrollbar.
+    if (region) region.inert = true;
+    document.addEventListener("keydown", onKeydown);
+    (aside.querySelector(".sidebar__back, .sidebar__link") || aside).focus();
+  };
+
+  // restoreFocus: return focus to the menu button on a user-driven close, but
+  // not when a resize to desktop auto-closes (the button is hidden there).
+  const close = (restoreFocus) => {
+    if (!isOpen()) return;
     animate();
     aside.classList.remove("is-open");
     backdrop.classList.remove("is-open");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
+    if (region) region.inert = false;
+    document.removeEventListener("keydown", onKeydown);
+    if (restoreFocus && menuBtn) menuBtn.focus();
   };
+
   if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-      animate();
-      const open = !aside.classList.contains("is-open");
-      aside.classList.toggle("is-open", open);
-      backdrop.classList.toggle("is-open", open);
-      menuBtn.setAttribute("aria-expanded", String(open));
-    });
+    menuBtn.addEventListener("click", () => (isOpen() ? close(true) : open()));
   }
-  backdrop.addEventListener("click", close);
+  backdrop.addEventListener("click", () => close(true));
   aside.addEventListener("click", (e) => {
-    if (e.target.closest(".sidebar__link")) close();
+    // A link click navigates away; close without stealing focus back.
+    if (e.target.closest(".sidebar__link")) close(false);
+  });
+  // Crossing to desktop turns the drawer into a static column — force it closed
+  // so `inert` can't strand the (now visible) main content.
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
+    if (e.matches) close(false);
   });
 }
 
@@ -365,12 +407,12 @@ const PALETTE_FAMILIES = [
   },
   {
     title: "Primary",
-    note: "The brand color. Solid for filled controls, soft for tinted surfaces, foreground for text sitting on the soft surface (matters most in dark theme).",
+    note: "Solid for filled controls, soft for tinted surfaces, foreground for text sitting on the soft surface (matters most in dark theme).",
     tokens: ["primary", "primary-foreground", "primary-soft"]
   },
   {
     title: "Tints",
-    note: "Color primitives — solid + soft alpha. The solid doubles as text on the matching soft background (only Primary has a separate foreground token).",
+    note: "Solid + soft alpha. The solid doubles as text on its own soft background.",
     tokens: [
       "red",
       "red-soft",
@@ -386,7 +428,7 @@ const PALETTE_FAMILIES = [
   },
   {
     title: "Focus",
-    note: "Keyboard focus ring — a lighter, softer tone derived from the primary, so it retints with the brand.",
+    note: "A lighter, softer tone derived from the primary, so it retints with the brand.",
     tokens: ["focus"]
   },
   { title: "Overlay", note: "Modal and drawer backdrops.", tokens: ["overlay"] },
@@ -497,7 +539,10 @@ function hydrateType() {
     const sizePx = Math.round(parseFloat(cs.fontSize));
     const { token } = row.dataset;
     const lhRaw = token ? rootStyle.getPropertyValue(`--${token}-lh`).trim() : "";
-    const lh = lhRaw || Math.round(parseFloat(cs.lineHeight));
+    // Computed line-height is "normal" (parseFloat → NaN) when no token drives
+    // it; print "normal" rather than "NaN".
+    const lhComputed = parseFloat(cs.lineHeight);
+    const lh = lhRaw || (Number.isNaN(lhComputed) ? "normal" : Math.round(lhComputed));
     // CSS-shorthand-style: size / line-height / weight.
     setSpec(row, "size", `${sizePx}/${lh}/${cs.fontWeight}`);
     setSpec(row, "lh", "");
@@ -664,7 +709,7 @@ const CHECK_ICON =
 
 function injectCodeCopy() {
   document.querySelectorAll("pre").forEach((pre) => {
-    if (pre.parentElement.classList.contains("code-block")) return;
+    if (pre.parentElement?.classList.contains("code-block")) return;
     const code = pre.querySelector("code");
     if (!code) return;
     const wrapper = document.createElement("div");
@@ -698,6 +743,8 @@ function initSelects() {
     options.forEach((o, i) => {
       if (!o.id) o.id = `${root.id || "select"}-opt-${i}`;
     });
+    // Labels are static — lowercase them once for type-ahead instead of per key.
+    const optionLabels = options.map((o) => o.textContent.trim().toLowerCase());
 
     const setActive = (i) => {
       activeIndex = (i + options.length) % options.length;
@@ -725,25 +772,69 @@ function initSelects() {
       close();
     };
 
+    // Type-ahead: jump to the next option whose label starts with the typed
+    // string. The buffer clears after a pause so a fresh keystroke starts over.
+    let typeahead = "";
+    let typeaheadTimer;
+    const matchTypeahead = (char) => {
+      clearTimeout(typeaheadTimer);
+      typeahead += char.toLowerCase();
+      typeaheadTimer = setTimeout(() => {
+        typeahead = "";
+      }, 500);
+      // A single-char buffer advances past the current option; a growing buffer
+      // keeps refining the current one.
+      const from = typeahead.length === 1 ? activeIndex + 1 : activeIndex;
+      for (let n = 0; n < options.length; n += 1) {
+        const idx = (from + n) % options.length;
+        if (optionLabels[idx].startsWith(typeahead)) {
+          setActive(idx);
+          return;
+        }
+      }
+    };
+
     // Open on keyboard focus (matches Ruter); mouse focus isn't :focus-visible,
     // so a click toggles instead of double-firing here.
     trigger.addEventListener("focus", () => {
       if (trigger.matches(":focus-visible")) open();
     });
     trigger.addEventListener("click", () => (list.hidden ? open() : close()));
+
+    // Actions for each nav key while the list is open. The same keys also open a
+    // closed list (Enter/Space just reveal it, matching a trigger click).
+    const keyActions = {
+      ArrowDown: () => setActive(activeIndex + 1),
+      ArrowUp: () => setActive(activeIndex - 1),
+      Home: () => setActive(0),
+      End: () => setActive(options.length - 1),
+      Enter: () => select(activeIndex),
+      " ": () => select(activeIndex)
+    };
+
     trigger.addEventListener("keydown", (e) => {
       if (e.key === "Escape" || e.key === "Tab") {
         close();
         return;
       }
       if (list.hidden) {
-        if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        if (e.key in keyActions) {
           e.preventDefault();
           open();
+          // Enter/Space/arrows just open; Home/End also jump within the list.
+          if (e.key === "Home" || e.key === "End") keyActions[e.key]();
+          return;
         }
-      } else if (e.key === "ArrowDown") (e.preventDefault(), setActive(activeIndex + 1));
-      else if (e.key === "ArrowUp") (e.preventDefault(), setActive(activeIndex - 1));
-      else if (e.key === "Enter" || e.key === " ") (e.preventDefault(), select(activeIndex));
+      } else if (e.key in keyActions) {
+        e.preventDefault();
+        keyActions[e.key]();
+        return;
+      }
+      // Printable character → type-ahead (opening the list first if needed).
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (list.hidden) open();
+        matchTypeahead(e.key);
+      }
     });
     options.forEach((o, i) => {
       // Keep focus on the trigger when clicking an option.
@@ -765,10 +856,15 @@ function initSelects() {
 function initTooltips() {
   const PAD = 8;
   const GAP = 8;
+  let uid = 0;
   document.querySelectorAll(".tooltip").forEach((root) => {
     const bubble = root.querySelector(".tooltip__bubble");
-    const trigger = root.firstElementChild;
-    if (!bubble || !trigger || trigger === bubble) return;
+    // The trigger is whichever child isn't the bubble — don't assume position.
+    const trigger = root.querySelector(":scope > :not(.tooltip__bubble)");
+    if (!bubble || !trigger) return;
+    // Associate the bubble with the trigger so assistive tech announces it.
+    if (!bubble.id) bubble.id = `tooltip-${(uid += 1)}`;
+    trigger.setAttribute("aria-describedby", bubble.id);
 
     const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
 
@@ -807,14 +903,21 @@ function initTooltips() {
     const hide = () => {
       bubble.classList.remove("is-visible");
       window.removeEventListener("scroll", onScroll, true);
+      document.removeEventListener("keydown", onKeydown, true);
     };
     const onScroll = () => hide();
+    // WCAG 1.4.13: a hover/focus tooltip must be dismissible with Escape
+    // without moving the pointer or focus.
+    const onKeydown = (e) => {
+      if (e.key === "Escape") hide();
+    };
     const show = () => {
       place();
       bubble.classList.add("is-visible");
       // Fixed-position bubble would float away from the trigger on scroll —
       // just dismiss it instead.
       window.addEventListener("scroll", onScroll, { capture: true, passive: true });
+      document.addEventListener("keydown", onKeydown, true);
     };
 
     root.addEventListener("mouseenter", show);
@@ -825,6 +928,7 @@ function initTooltips() {
 }
 
 function init() {
+  toast.mount();
   injectNav();
   injectSkipLink();
   injectSidebar();
@@ -901,10 +1005,18 @@ function init() {
       dialogClose.closest("dialog")?.close();
       return;
     }
-    // Click on the backdrop (target is the <dialog> itself, not its inner content).
+    // Click on the backdrop (target is the <dialog> itself, not its inner
+    // content). Hit-test against the dialog's box so a click on the element's
+    // own padding doesn't count as a backdrop click.
     const openDialog = event.target.closest("dialog.dialog");
     if (openDialog && event.target === openDialog) {
-      openDialog.close();
+      const r = openDialog.getBoundingClientRect();
+      const inBox =
+        event.clientX >= r.left &&
+        event.clientX <= r.right &&
+        event.clientY >= r.top &&
+        event.clientY <= r.bottom;
+      if (!inBox) openDialog.close();
       return;
     }
     const toastBtn = event.target.closest("[data-toast]");

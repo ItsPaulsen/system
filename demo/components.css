@@ -37,7 +37,7 @@
   margin: 0;
   background: var(--ink-tertiary);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   cursor: pointer;
   transition: background var(--motion-default);
 }
@@ -59,17 +59,19 @@
 .switch__knob {
   position: absolute;
   top: 2px;
-  left: 2px;
+  inset-inline-start: 2px;
   width: 24px;
   height: 24px;
   background: var(--background-secondary);
-  border-radius: 999px;
+  border-radius: var(--radius-full);
   pointer-events: none;
   transition: transform var(--motion-default);
 }
 
+/* Knob rests at the inline-start edge and slides to the inline-end; --flip
+   negates the travel in RTL so it moves toward the correct end. */
 .switch__input:checked + .switch__knob {
-  transform: translateX(20px);
+  transform: translateX(calc(20px * var(--flip)));
 }
 
 .switch__label {
@@ -311,7 +313,7 @@
   padding: 0;
   overflow: hidden;
   border: 0;
-  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
 }
 
 .tabs__tab:hover:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
@@ -379,7 +381,7 @@
 }
 
 .input__label-required {
-  margin-left: 0.25rem;
+  margin-inline-start: 0.25rem;
   color: var(--red);
 }
 
@@ -411,11 +413,16 @@
   border-radius: var(--radius-full);
 }
 
-.input__container--invalid {
+/* Invalid — either an explicit --invalid modifier, or a field the browser
+   itself reports as invalid after the user has interacted (:user-invalid), so
+   live constraint validation needs no JS class-toggling. */
+.input__container--invalid,
+.input__container:has(:user-invalid) {
   border-color: var(--red);
 }
 
-.input__container--invalid:focus-within {
+.input__container--invalid:focus-within,
+.input__container:has(:user-invalid):focus-within {
   border-color: var(--red);
   box-shadow: 0 0 0 1px var(--red);
 }
@@ -458,11 +465,11 @@
 }
 
 .input__leading + .input__element {
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .input__element:has(+ .input__trailing) {
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 
 /* ── Textarea ──────────────────────────────────────────────────────────── */
@@ -486,6 +493,10 @@
   min-height: 96px;
   padding: 0.625rem 1rem;
   resize: vertical;
+
+  /* Grow with content up to the user's manual resize (supported browsers);
+     others just keep the fixed min-height + drag handle. */
+  field-sizing: content;
 }
 
 /* ── Select ────────────────────────────────────────────────────────────── */
@@ -506,7 +517,7 @@
 
 .input__container--select .input__element {
   appearance: none;
-  padding-right: 2.5rem;
+  padding-inline-end: 2.5rem;
   cursor: pointer;
 }
 
@@ -514,7 +525,7 @@
   content: "";
   position: absolute;
   top: 50%;
-  right: 1rem;
+  inset-inline-end: 1rem;
   translate: 0 -50%;
   width: 1.25em;
   height: 1.25em;
@@ -570,7 +581,7 @@
   color: var(--ink-primary);
   font: inherit;
   font-size: var(--font-body-small-size);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
 
@@ -597,7 +608,7 @@
 .select__list {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0;
+  inset-inline-start: 0;
   z-index: 30;
   width: 100%;
   max-height: 260px;
@@ -934,7 +945,7 @@ button.card {
   border: 0;
   padding: 0;
   font: inherit;
-  text-align: left;
+  text-align: start;
 }
 
 button.card:disabled {
@@ -989,14 +1000,15 @@ button.card--alternate:not(:disabled):active {
 }
 
 /* Illustration wrapper. Pads on three sides so the artwork sits flush with
-   card__content on the fourth (bottom in vertical, right in horizontal). */
+   card__content on the fourth (bottom in vertical, inline-end in horizontal). */
 .card__illustration {
   padding: 20px 20px 0;
 }
 
 .card--horizontal .card__illustration {
   grid-row: 1 / -1;
-  padding: 20px 0 20px 20px;
+  padding-block: 20px;
+  padding-inline: 20px 0;
 }
 
 .card__illustration > * {
@@ -1039,7 +1051,8 @@ button.card--alternate:not(:disabled):active {
   }
 
   .card--horizontal .card__illustration {
-    padding: 24px 0 24px 24px;
+    padding-block: 24px;
+    padding-inline: 24px 0;
   }
 
   .card__content {
@@ -1088,7 +1101,7 @@ button.card--alternate:not(:disabled):active {
   font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
   font-weight: var(--font-body-small-emphasized-weight);
   line-height: 1;
-  text-align: left;
+  text-align: start;
   vertical-align: middle;
   -webkit-user-select: none;
   user-select: none;
@@ -1129,20 +1142,20 @@ button.card--alternate:not(:disabled):active {
   width: 0;
   height: 1.125em;
   flex-shrink: 0;
-  margin-right: calc(-1 * var(--chip-gap));
+  margin-inline-end: calc(-1 * var(--chip-gap));
   background: currentcolor;
   opacity: 0;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
     center / contain no-repeat;
   transition:
     width var(--motion-default),
-    margin-right var(--motion-default),
+    margin-inline-end var(--motion-default),
     opacity var(--motion-default);
 }
 
 .chip--as-checkbox:has(input:checked)::before {
   width: 1.125em;
-  margin-right: 0;
+  margin-inline-end: 0;
   opacity: 1;
 }
 
@@ -1160,7 +1173,7 @@ button.card--alternate:not(:disabled):active {
   margin: -1px;
   overflow: hidden;
   border: 0;
-  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
 }
 
 /* Interactive types — cursor pointer when enabled */
@@ -1537,7 +1550,7 @@ button.card--alternate:not(:disabled):active {
 .table th,
 .table td {
   padding: 0.625rem 0.75rem;
-  text-align: left;
+  text-align: start;
   border-bottom: 1px solid var(--fill-tertiary);
 }
 
@@ -1628,4 +1641,61 @@ button.card--alternate:not(:disabled):active {
   top: var(--tt-arrow, 50%);
   translate: 0 -50%;
   border-right-color: var(--ink-primary);
+}
+
+/* ── Forced colors (Windows High Contrast) ─────────────────────────────────
+   These controls paint their state with background / mask / box-shadow, all of
+   which the forced-colors palette strips — leaving toggles and focus rings
+   invisible. Restore visibility with system colors and real borders/outlines.
+   `forced-color-adjust: none` is used only where we must keep a painted fill
+   (the checked checkbox/switch), and paired with system colors so it still
+   respects the user's palette. */
+@media (forced-colors: active) {
+  /* Switch: outline the track, fill it on when checked, keep the knob solid. */
+  .switch__input {
+    border: 1px solid ButtonBorder;
+  }
+
+  .switch__input:checked {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+
+  .switch__knob {
+    background: ButtonText;
+  }
+
+  .switch__input:checked + .switch__knob {
+    background: HighlightText;
+  }
+
+  /* Checkbox / radio: the painted checked fill would vanish otherwise. */
+  .checkbox__input:checked,
+  .radio__input:checked {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .checkbox__check {
+    color: HighlightText;
+  }
+
+  /* Focus affordances built from box-shadow (input, custom select) disappear —
+     substitute a real outline, which forced-colors always renders. */
+  .input__container:focus-within,
+  .select__trigger:focus-visible,
+  .select__trigger[aria-expanded="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: 1px;
+  }
+
+  /* The active option is shown only by a background tint — make it a system
+     selection instead. */
+  .select__option:hover,
+  .select__option.is-active {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+  }
 }

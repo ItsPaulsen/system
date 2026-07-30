@@ -37,9 +37,12 @@
 /* Cross-document view transitions: a soft cross-fade between pages as you
    navigate the docs. Both pages opt in (base.css is on every page) and same-
    origin nav is required. Progressive enhancement — unsupported browsers just
-   navigate normally. */
-@view-transition {
-  navigation: auto;
+   navigate normally. Disabled at mobile widths: there the nav is a hamburger
+   drawer, and transitioning an open drawer into the next page reads as a jump. */
+@media (min-width: 640px) {
+  @view-transition {
+    navigation: auto;
+  }
 }
 
 /* The `*` reduced-motion guard above can't reach view-transition pseudos, so

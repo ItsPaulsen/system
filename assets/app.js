@@ -540,6 +540,23 @@ const LINK_ARROW_SVG =
   '<g class="link-arrow__chevron"><path d="M3.5 2l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></g>' +
   "</svg>";
 
+// Landing-page link lists rendered from PROJECT_PAGES (the same source as the
+// sidebar) so they can't drift out of sync. A <ul data-project-group="…">
+// is filled with that group's links, minus the current page (skips the intro's
+// own self-link). Run before hydrateLinkListArrows so the arrows land on these.
+function hydrateProjectLinks() {
+  const pages = currentProjectPages();
+  if (!pages) return;
+  document.querySelectorAll("[data-project-group]").forEach((ul) => {
+    const group = pages.find((g) => g.group === ul.dataset.projectGroup);
+    if (!group) return;
+    ul.innerHTML = group.links
+      .filter((l) => !isCurrentPage(l.href))
+      .map((l) => `<li><a href="${l.href}">${l.label}</a></li>`)
+      .join("");
+  });
+}
+
 function hydrateLinkListArrows() {
   document.querySelectorAll(".link-list a").forEach((a) => {
     if (a.querySelector(".link-arrow")) return;
@@ -1203,6 +1220,7 @@ function init() {
   injectSidebar();
   injectPagination();
   injectCodeCopy();
+  hydrateProjectLinks();
   hydrateLinkListArrows();
   renderPalette();
   hydratePalette();

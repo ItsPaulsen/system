@@ -627,10 +627,29 @@
   /* The list takes programmatic focus for key handling, but the active option
      (.is-active) is the visible indicator — so no ring on the surface itself. */
   outline: none;
+
+  /* Open-only fade + rise, matching the Dropdown Menu popover. */
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 .select__list[hidden] {
   display: none;
+}
+
+.select__list:not([hidden]) {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+@starting-style {
+  .select__list:not([hidden]) {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
 }
 
 .select__option {

@@ -1614,9 +1614,8 @@ a.token-list__row:focus-visible {
   padding: 0.75rem 1.25rem;
   background: var(--background-secondary);
   color: var(--ink-primary);
-  border: 1px solid var(--fill-tertiary);
   border-radius: 999px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), var(--surface-rim);
   font-size: 0.875rem;
   font-weight: 500;
   opacity: 0;

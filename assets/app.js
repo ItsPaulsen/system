@@ -250,7 +250,7 @@ const PROJECT_PAGES = {
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
         { label: "Sheet", href: "/demo/components/sheet/", new: true },
-        { label: "Slider", href: "/demo/components/slider/", new: true },
+        { label: "Slider", href: "/demo/components/slider/" },
         { label: "Spinner", href: "/demo/components/spinner/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Table", href: "/demo/components/table/" },
@@ -650,7 +650,9 @@ function hydratePreviews() {
   });
   hydratePreview(".preview-card", ".preview-card__value", (el, value) => {
     const shadow = el.querySelector("[data-shadow-demo]");
-    if (shadow) shadow.style.boxShadow = value;
+    // Append --surface-rim so the chip matches a real elevated surface — a
+    // no-op in light, the top-edge highlight in dark.
+    if (shadow) shadow.style.boxShadow = `${value}, var(--surface-rim)`;
     const radius = el.querySelector("[data-radius-demo]");
     if (radius) radius.style.borderRadius = value;
     delete el.dataset.copy;
@@ -916,13 +918,29 @@ function positionPopover(trigger, pop) {
 // both the dropdown surface and standalone popovers; initMenus handles only the
 // menu keyboard model on top.
 function initPopovers() {
-  if (CSS.supports("position-area", "bottom")) return;
+  const supportsAnchor = CSS.supports("position-area", "bottom");
   document.querySelectorAll(".popover[id]").forEach((pop) => {
     const trigger = document.querySelector(`[popovertarget="${pop.id}"]`);
     if (!trigger) return;
-    pop.addEventListener("toggle", (e) => {
-      if (e.newState === "open") positionPopover(trigger, pop);
-    });
+
+    if (!supportsAnchor) {
+      pop.addEventListener("toggle", (e) => {
+        if (e.newState === "open") positionPopover(trigger, pop);
+      });
+    }
+
+    // A native auto-popover only light-dismisses on outside click / Esc, so it
+    // lingers when you Tab away. Close once focus leaves the trigger+popover
+    // group (Tab into the popover's own content keeps it open). The menu runs
+    // its own keyboard model, so leave those to initMenus.
+    if (!pop.classList.contains("menu__list")) {
+      const onFocusOut = (e) => {
+        const to = e.relatedTarget;
+        if (to && to !== trigger && !pop.contains(to)) pop.hidePopover();
+      };
+      trigger.addEventListener("focusout", onFocusOut);
+      pop.addEventListener("focusout", onFocusOut);
+    }
   });
 }
 
@@ -1084,6 +1102,24 @@ function initPagination() {
   });
 }
 
+// Slider: keep --slider-fill in sync with the value so WebKit/Chrome can paint
+// the filled part of the track (Firefox uses ::-moz-range-progress natively),
+// and mirror the value into the field's <output> when there is one.
+function initSliders() {
+  const sync = (el, out) => {
+    const min = Number(el.min) || 0;
+    const max = el.max === "" ? 100 : Number(el.max);
+    const pct = max === min ? 0 : ((Number(el.value) - min) / (max - min)) * 100;
+    el.style.setProperty("--slider-fill", `${pct}%`);
+    if (out) out.textContent = el.value;
+  };
+  document.querySelectorAll(".slider").forEach((el) => {
+    const out = el.closest(".slider-field")?.querySelector(".slider-field__value");
+    sync(el, out);
+    el.addEventListener("input", () => sync(el, out));
+  });
+}
+
 // Tooltip positioning: flip above/below by available space and clamp to the
 // viewport, keeping the arrow pointed at the trigger. CSS handles the fade.
 function initTooltips() {
@@ -1176,6 +1212,7 @@ function init() {
   initPopovers();
   initMenus();
   initPagination();
+  initSliders();
   initTooltips();
   refreshResponsive();
 

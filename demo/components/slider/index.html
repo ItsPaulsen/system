@@ -38,11 +38,18 @@
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            A native <code>&lt;input type="range"&gt;</code> — keyboard (arrows / Home / End),
-            steps, and min/max are all built in.
+            A native <code>&lt;input type="range"&gt;</code>. Keyboard (arrows, Home, End), steps,
+            and min/max are all built in. The <code>slider-field</code> wrapper adds a label and a
+            live value.
           </p>
           <div class="component-preview">
-            <input class="slider" type="range" min="0" max="100" value="50" aria-label="Value" />
+            <div class="slider-field">
+              <div class="slider-field__header">
+                <label class="slider-field__label" for="slider-volume">Volume</label>
+                <output class="slider-field__value" for="slider-volume">50</output>
+              </div>
+              <input class="slider" type="range" id="slider-volume" min="0" max="100" value="50" />
+            </div>
           </div>
         </section>
 
@@ -50,36 +57,54 @@
           <h3 class="subhead">Stepped</h3>
           <p class="section-note"><code>step</code> snaps the thumb to fixed increments.</p>
           <div class="component-preview">
-            <input
-              class="slider"
-              type="range"
-              min="0"
-              max="100"
-              step="25"
-              value="25"
-              aria-label="Stepped value"
-            />
+            <div class="slider-field">
+              <div class="slider-field__header">
+                <label class="slider-field__label" for="slider-quality">Quality</label>
+                <output class="slider-field__value" for="slider-quality">25</output>
+              </div>
+              <input
+                class="slider"
+                type="range"
+                id="slider-quality"
+                min="0"
+                max="100"
+                step="25"
+                value="25"
+              />
+            </div>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
           <div class="component-preview">
-            <input
-              class="slider"
-              type="range"
-              min="0"
-              max="100"
-              value="40"
-              disabled
-              aria-label="Disabled value"
-            />
+            <div class="slider-field">
+              <div class="slider-field__header">
+                <label class="slider-field__label" for="slider-opacity">Opacity</label>
+                <output class="slider-field__value" for="slider-opacity">40</output>
+              </div>
+              <input
+                class="slider"
+                type="range"
+                id="slider-opacity"
+                min="0"
+                max="100"
+                value="40"
+                disabled
+              />
+            </div>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Markup</h3>
-          <pre><code><span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider"</span> <span class="tok-prop">type</span>=<span class="tok-str">"range"</span> <span class="tok-prop">min</span>=<span class="tok-str">"0"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span> <span class="tok-prop">value</span>=<span class="tok-str">"50"</span> <span class="tok-key">/&gt;</span></code></pre>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field__header"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field__label"</span> <span class="tok-prop">for</span>=<span class="tok-str">"volume"</span><span class="tok-key">&gt;</span>Volume<span class="tok-key">&lt;/label&gt;</span>
+    <span class="tok-key">&lt;output</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field__value"</span> <span class="tok-prop">for</span>=<span class="tok-str">"volume"</span><span class="tok-key">&gt;</span>50<span class="tok-key">&lt;/output&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider"</span> <span class="tok-prop">type</span>=<span class="tok-str">"range"</span> <span class="tok-prop">id</span>=<span class="tok-str">"volume"</span> <span class="tok-prop">min</span>=<span class="tok-str">"0"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span> <span class="tok-prop">value</span>=<span class="tok-str">"50"</span> <span class="tok-key">/&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>
       </div>
     </div>

@@ -261,16 +261,26 @@
   /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
      mixed from --neutral-black so shadows follow any future tint of the
      neutrals (and stay dark in both themes — --ink flips, --neutral-black
-     doesn't unless --anchor-neutral itself is changed). */
+     doesn't unless --anchor-neutral itself is changed). Each ends with a soft,
+     zero-offset ambient layer so the glow wraps all edges (incl. the top),
+     keeping an elevated surface visible even when what's behind it matches. */
   --shadow-sm:
     0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent);
+    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 0 6px 0 color-mix(in oklab, var(--neutral-black) 5%, transparent);
   --shadow-md:
     0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 10%, transparent);
+    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 0 12px 0 color-mix(in oklab, var(--neutral-black) 7%, transparent);
   --shadow-lg:
     0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 10%, transparent);
+    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+    0 0 16px 0 color-mix(in oklab, var(--neutral-black) 8%, transparent);
+
+  /* Top-edge rim for elevated surfaces. A shadow defines the edge in light, so
+     this is a no-op here; dark overrides it with a faint light highlight (the
+     one cue that reads on a dark surface). Append after the shadow token. */
+  --surface-rim: inset 0 0 0 transparent;
 
   /* Motion — one composed default for hovers/state changes; raw easings for
      entrances (ease-out) and exits (ease-in) that need a different curve. */
@@ -404,17 +414,21 @@
   --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 74%, white);
   --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
 
-  /* Light shadows vanish on dark, so bump the intensity per elevation.
-     Same --neutral-black source as light — inherits any future tint. */
+  /* Same shape as light — offsets, alphas, and the ambient edge layer all
+     match. The only difference is colour: pure black instead of the neutral
+     tint, so the shadow still reads on a dark surface (a one-off: dark shadows
+     don't follow the neutral tint). */
   --shadow-sm:
-    0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 40%, transparent),
-    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 40%, transparent);
+    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 6px 0 rgb(0 0 0 / 0.05);
   --shadow-md:
-    0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 50%, transparent),
-    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 50%, transparent);
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 12px 0 rgb(0 0 0 / 0.07);
   --shadow-lg:
-    0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 60%, transparent),
-    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 50%, transparent);
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 16px 0 rgb(0 0 0 / 0.08);
+
+  /* A dark shadow can't define a top edge on a dark page, so catch the top rim
+     with a faint light highlight instead — the dark-theme counterpart to the
+     drop shadow (see --surface-rim in :root). */
+  --surface-rim: inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
 
 /* ── Density knob ──────────────────────────────────────────────────────────

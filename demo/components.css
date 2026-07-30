@@ -620,7 +620,9 @@
 
   /* Concentric with 8px options: surface = option radius + 4px padding. */
   border-radius: calc(var(--radius-sm) + 4px);
-  box-shadow: var(--shadow-lg);
+
+  /* Matches Dropdown Menu — both are a trigger opening a floating list. */
+  box-shadow: var(--shadow-md), var(--surface-rim);
 
   /* The list takes programmatic focus for key handling, but the active option
      (.is-active) is the visible indicator — so no ring on the surface itself. */
@@ -684,7 +686,7 @@
   border-radius: calc(var(--radius-sm) + 4px);
   background: var(--background-secondary);
   color: var(--ink-primary);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md), var(--surface-rim);
   opacity: 0;
   transform: translateY(-4px);
 }
@@ -717,7 +719,6 @@
 /* Roomier padding for a popover holding prose/controls, rather than the 4px
    used by the menu (where each row supplies its own padding). */
 .popover--panel {
-  max-width: min(320px, calc(100vw - 16px));
   padding: 1rem;
   font-size: var(--font-body-small-size);
   color: var(--ink-secondary);
@@ -2350,9 +2351,15 @@ button.card--alternate:not(:disabled):active {
    min/max come for free. Track + thumb are themed for both engines
    (::-webkit-slider-* and ::-moz-range-*).
 
+   The track fills up to the thumb: Firefox has ::-moz-range-progress natively;
+   WebKit/Chrome have no equivalent, so app.js (initSliders) tracks the value in
+   --slider-fill and a hard-stop gradient paints the filled portion.
+
    Structure:
    <input class="slider" type="range" min="0" max="100" value="50" /> */
 .slider {
+  --slider-fill: 0%;
+
   appearance: none;
   width: 100%;
   max-width: 320px;
@@ -2361,16 +2368,32 @@ button.card--alternate:not(:disabled):active {
   cursor: pointer;
 }
 
+/* Ring lives on the thumb only (below); suppress the element-level ring so the
+   whole bar doesn't also outline. */
+.slider:focus-visible {
+  outline: none;
+}
+
 .slider::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: var(--radius-full);
-  background: var(--fill-tertiary);
+  background: linear-gradient(
+    to right,
+    var(--primary-foreground) var(--slider-fill),
+    var(--fill-tertiary) var(--slider-fill)
+  );
 }
 
 .slider::-moz-range-track {
   height: 6px;
   border-radius: var(--radius-full);
   background: var(--fill-tertiary);
+}
+
+.slider::-moz-range-progress {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--primary-foreground);
 }
 
 .slider::-webkit-slider-thumb {
@@ -2382,7 +2405,7 @@ button.card--alternate:not(:disabled):active {
   margin-top: -7px;
   border: 2px solid var(--background-secondary);
   border-radius: var(--radius-full);
-  background: var(--primary);
+  background: var(--primary-foreground);
   box-shadow: var(--shadow-sm);
 }
 
@@ -2391,21 +2414,65 @@ button.card--alternate:not(:disabled):active {
   height: 20px;
   border: 2px solid var(--background-secondary);
   border-radius: var(--radius-full);
-  background: var(--primary);
+  background: var(--primary-foreground);
   box-shadow: var(--shadow-sm);
 }
 
 .slider:focus-visible::-webkit-slider-thumb {
   outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 0;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .slider:focus-visible::-moz-range-thumb {
   outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline-offset: 0;
+  animation: focus-ring-converge var(--motion-default);
 }
 
 .slider:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Optional wrapper: a label on the inline-start and a live value on the
+   inline-end, above the track. app.js (initSliders) keeps the <output> in sync.
+
+   Structure:
+   <div class="slider-field">
+     <div class="slider-field__header">
+       <label class="slider-field__label" for="x">Volume</label>
+       <output class="slider-field__value" for="x">50</output>
+     </div>
+     <input class="slider" type="range" id="x" min="0" max="100" value="50" />
+   </div> */
+.slider-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.slider-field__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: var(--font-body-small-size);
+}
+
+.slider-field__label {
+  color: var(--ink-primary);
+}
+
+.slider-field__value {
+  color: var(--ink-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dim the label + value alongside a disabled track. */
+.slider-field:has(.slider:disabled) .slider-field__label,
+.slider-field:has(.slider:disabled) .slider-field__value {
   opacity: 0.5;
 }

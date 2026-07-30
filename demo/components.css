@@ -723,6 +723,15 @@
   color: var(--ink-secondary);
 }
 
+/* Centre on the trigger instead of the menu's start-aligned edge (initPopovers
+   mirrors this for engines without anchor positioning). */
+@supports (position-area: bottom) {
+  .popover--center {
+    position-area: block-end;
+    justify-self: anchor-center;
+  }
+}
+
 /* ── Dropdown Menu ─────────────────────────────────────────────────────── */
 
 /* Menu-button pattern: a trigger opens a floating list of actions (role="menu"

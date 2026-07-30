@@ -40,19 +40,22 @@
           <p class="section-note">
             The foundation under <a href="/demo/components/dropdown/">Dropdown Menu</a>: the native
             Popover API for top-layer rendering, light-dismiss, and Esc, positioned with CSS anchor
-            positioning. No JavaScript — the <code>popovertarget</code> button drives it.
-            <code>--panel</code> adds padding for prose or controls.
+            positioning. No JavaScript; the <code>popovertarget</code> button drives it. Use
+            <code>--panel</code> for content padding and <code>--center</code> to center it on the
+            trigger.
           </p>
           <div class="component-preview">
-            <button
-              class="button button--secondary"
-              type="button"
-              popovertarget="popover-demo"
-              aria-haspopup="dialog"
-            >
-              Show details
-            </button>
-            <div class="popover popover--panel" id="popover-demo" popover>
+            <div data-size="sm">
+              <button
+                class="button button--secondary"
+                type="button"
+                popovertarget="popover-demo"
+                aria-haspopup="dialog"
+              >
+                Open popover
+              </button>
+            </div>
+            <div class="popover popover--panel popover--center" id="popover-demo" popover>
               <p style="margin: 0 0 0.5rem; color: var(--ink-primary); font-weight: 500">
                 Keyboard shortcuts
               </p>
@@ -66,8 +69,8 @@
 
         <section class="preview-block">
           <h3 class="subhead">Markup</h3>
-          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"popover-x"</span><span class="tok-key">&gt;</span>Show details<span class="tok-key">&lt;/button&gt;</span>
-<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--panel"</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x"</span> <span class="tok-prop">popover</span><span class="tok-key">&gt;</span>
+          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"popover-x"</span><span class="tok-key">&gt;</span>Open popover<span class="tok-key">&lt;/button&gt;</span>
+<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--panel popover--center"</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x"</span> <span class="tok-prop">popover</span><span class="tok-key">&gt;</span>
   …
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>

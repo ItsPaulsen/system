@@ -245,7 +245,7 @@ const PROJECT_PAGES = {
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Pagination", href: "/demo/components/pagination/" },
-        { label: "Popover", href: "/demo/components/popover/", new: true },
+        { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
@@ -902,7 +902,11 @@ function positionPopover(trigger, pop) {
   if (top + p.height + PAD > window.innerHeight && t.top - p.height - GAP > 0) {
     top = t.top - p.height - GAP;
   }
-  const left = Math.max(PAD, Math.min(t.left, window.innerWidth - p.width - PAD));
+  // Start-aligned to the trigger by default; --center aligns to its midpoint.
+  const anchorLeft = pop.classList.contains("popover--center")
+    ? t.left + t.width / 2 - p.width / 2
+    : t.left;
+  const left = Math.max(PAD, Math.min(anchorLeft, window.innerWidth - p.width - PAD));
   pop.style.left = `${Math.round(left)}px`;
   pop.style.top = `${Math.round(top)}px`;
 }

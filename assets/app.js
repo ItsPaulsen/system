@@ -232,7 +232,7 @@ const PROJECT_PAGES = {
       links: [
         { label: "Accordion", href: "/demo/components/accordion/" },
         { label: "Alert", href: "/demo/components/alert/" },
-        { label: "Avatar", href: "/demo/components/avatar/", new: true },
+        { label: "Avatar", href: "/demo/components/avatar/" },
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Breadcrumb", href: "/demo/components/breadcrumb/" },
         { label: "Button", href: "/demo/components/button/" },

@@ -2258,26 +2258,33 @@ button.card--alternate:not(:disabled):active {
    surface behind. */
 .avatar__status {
   position: absolute;
-  inset-inline-end: 6%;
-  inset-block-end: 6%;
+  inset-inline-end: 1%;
+  inset-block-end: 1%;
   width: 28%;
   height: 28%;
   border-radius: var(--radius-full);
   background: var(--green);
-  box-shadow: 0 0 0 2px var(--background-primary);
+  box-shadow: 0 0 0 2px var(--background-secondary);
 }
 
-/* Overlapping stack — a ring separates neighbours; later avatars sit on top. */
+/* Overlapping stack — a ring separates neighbours; later avatars sit on top.
+   The ring matches the surface behind (elevated --background-secondary), so it
+   reads as a seamless gap rather than a visible border. */
 .avatar-group {
   display: inline-flex;
 }
 
 .avatar-group .avatar {
-  box-shadow: 0 0 0 2px var(--background-primary);
+  box-shadow: 0 0 0 2px var(--background-secondary);
 }
 
 .avatar-group .avatar + .avatar {
   margin-inline-start: -0.75rem;
+}
+
+/* Overflow count ("+3") reads a touch smaller than initials. */
+.avatar--count {
+  font-size: 0.875rem;
 }
 
 /* ── Pagination ────────────────────────────────────────────────────────── */

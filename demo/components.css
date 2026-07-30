@@ -302,6 +302,10 @@
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
+
+  /* Skip the browser's ~300ms double-tap-zoom wait so selection is instant on
+     touch (the tab still checks on tap, just without the delay). */
+  touch-action: manipulation;
   transition: background var(--motion-default);
 }
 

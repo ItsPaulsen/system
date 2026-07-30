@@ -1214,6 +1214,12 @@ function initTooltips() {
 }
 
 function init() {
+  // iOS Safari only fires :active on tap when a touch listener exists somewhere
+  // in the document. A no-op on the document enables every component's pressed
+  // state on touch (full JS apps like Ruter get this for free from their own
+  // listeners; a static site has to opt in).
+  document.addEventListener("touchstart", () => {}, { passive: true });
+
   toast.mount();
   injectNav();
   injectSkipLink();

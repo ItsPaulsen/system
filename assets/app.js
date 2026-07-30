@@ -301,6 +301,9 @@ function injectSidebar() {
 
   const aside = document.createElement("aside");
   aside.className = "sidebar";
+  // Focus holder: opening the drawer moves focus here (not the first link, which
+  // would show a stray focus ring) so keyboard/Esc work with nothing highlighted.
+  aside.tabIndex = -1;
   // Inner spans give us shadcn-style pill hover: the anchor stays full width
   // for a wide click target, but the visual bg wraps only the label.
   const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_ICON}All projects</span></a>`;
@@ -384,7 +387,7 @@ function wireSidebar(aside, backdrop) {
     // the page keeps its single, always-hidden scrollbar.
     if (region) region.inert = true;
     document.addEventListener("keydown", onKeydown);
-    (aside.querySelector(".sidebar__back, .sidebar__link") || aside).focus();
+    aside.focus({ preventScroll: true });
   };
 
   // restoreFocus: return focus to the menu button on a user-driven close, but

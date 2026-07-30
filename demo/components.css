@@ -2117,7 +2117,9 @@ button.card--alternate:not(:disabled):active {
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
-  border-radius: 2px;
+
+  /* 8px so the focus ring reads rounded, matching the nav/link-list rings. */
+  border-radius: 8px;
   transition: color var(--motion-default);
 }
 

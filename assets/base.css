@@ -235,6 +235,12 @@ body {
   z-index: 18;
 }
 
+/* Container is only a programmatic focus holder on drawer open — never show a
+   ring on it (the links have their own focus styles). */
+.sidebar:focus-visible {
+  outline: none;
+}
+
 .sidebar::-webkit-scrollbar {
   display: none;
 }
@@ -443,7 +449,15 @@ body {
   .sidebar__back > span {
     padding: 0;
     background: none !important;
-    border-radius: 0;
+
+    /* No pill in the drawer, but keep 8px so the focus ring reads rounded. */
+    border-radius: 8px;
+  }
+
+  /* Bare text has no padding, so push the ring out a touch for breathing room. */
+  .sidebar__link:focus-visible > span,
+  .sidebar__back:focus-visible > span {
+    outline-offset: 4px;
   }
 
   .sidebar__back {
@@ -686,6 +700,9 @@ h2 {
   text-decoration: underline;
   text-decoration-color: var(--ink-tertiary);
   text-underline-offset: 2px;
+
+  /* Rounds the focus ring a touch. */
+  border-radius: 4px;
   transition: text-decoration-color var(--motion-default);
 }
 
@@ -1211,7 +1228,7 @@ pre .tok-var {
 .link-list a:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 8px;
 }
 
 /* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same

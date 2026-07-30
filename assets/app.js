@@ -244,6 +244,7 @@ const PROJECT_PAGES = {
         { label: "Input", href: "/demo/components/input/" },
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
+        { label: "Navigation Menu", href: "/demo/components/navigation-menu/", new: true },
         { label: "Pagination", href: "/demo/components/pagination/" },
         { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },

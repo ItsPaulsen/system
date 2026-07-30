@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Navigation Menu — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Navigation Menu</h1>
+          </div>
+          <p class="lede">A row of links for moving between top-level destinations.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Each item is a link to another page; the current one carries
+            <code>aria-current="page"</code>.
+          </p>
+          <div class="component-preview">
+            <nav class="nav-menu" aria-label="Main">
+              <ul class="nav-menu__list">
+                <li><a class="nav-menu__link" href="#" aria-current="page">Overview</a></li>
+                <li><a class="nav-menu__link" href="#">Projects</a></li>
+                <li><a class="nav-menu__link" href="#">Reports</a></li>
+                <li><a class="nav-menu__link" href="#">Settings</a></li>
+              </ul>
+            </nav>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Main"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__list"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;li&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span> <span class="tok-prop">aria-current</span>=<span class="tok-str">"page"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tok-key">&lt;li&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Projects<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="tok-key">&lt;/ul&gt;</span>
+<span class="tok-key">&lt;/nav&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

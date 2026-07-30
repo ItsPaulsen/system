@@ -2260,6 +2260,43 @@
     color: var(--ink-primary);
   }
 
+  /* ── Navigation Menu ───────────────────────────────────────────────────────
+   Primary navigation between destinations, e.g. in a header. Unlike Tabs (which
+   swap panels within one page), each item is a link to another page — mark the
+   current destination with aria-current="page". Plain links — no hover, active,
+   or pressed states; only the keyboard focus ring remains.
+
+   Structure:
+   <nav class="nav-menu" aria-label="Main">
+     <ul class="nav-menu__list">
+       <li><a class="nav-menu__link" href="#" aria-current="page">Overview</a></li>
+       <li><a class="nav-menu__link" href="#">Projects</a></li>
+     </ul>
+   </nav> */
+  .nav-menu__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav-menu__link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink-primary);
+    text-decoration: none;
+
+    /* Rounds the keyboard focus ring only — no hover/active fill. */
+    border-radius: var(--radius-sm);
+  }
+
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    These controls paint their state with background / mask / box-shadow, all of
    which the forced-colors palette strips — leaving toggles and focus rings

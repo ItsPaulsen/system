@@ -716,7 +716,7 @@ const ARROW_RIGHT_16 =
 // Inject a shadcn-style prev/next pair at the bottom of each doc page.
 function injectPagination() {
   const wrap = document.querySelector(".wrap");
-  if (!wrap || document.querySelector(".pagination")) return;
+  if (!wrap || document.querySelector(".pager")) return;
   const pages = currentProjectPages();
   if (!pages) return;
   const flat = pages.flatMap((g) => g.links);
@@ -726,17 +726,17 @@ function injectPagination() {
   const next = idx < flat.length - 1 ? flat[idx + 1] : null;
   if (!prev && !next) return;
   const nav = document.createElement("nav");
-  nav.className = "pagination";
+  nav.className = "pager";
   nav.setAttribute("aria-label", "Docs pagination");
   const parts = [];
   if (prev) {
     parts.push(
-      `<a class="pagination__link pagination__link--prev" href="${prev.href}">${ARROW_LEFT_ICON}<span>${prev.label}</span></a>`
+      `<a class="pager__link pager__link--prev" href="${prev.href}">${ARROW_LEFT_ICON}<span>${prev.label}</span></a>`
     );
   }
   if (next) {
     parts.push(
-      `<a class="pagination__link pagination__link--next" href="${next.href}"><span>${next.label}</span>${ARROW_RIGHT_16}</a>`
+      `<a class="pager__link pager__link--next" href="${next.href}"><span>${next.label}</span>${ARROW_RIGHT_16}</a>`
     );
   }
   nav.innerHTML = parts.join("");

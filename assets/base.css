@@ -1027,8 +1027,9 @@ pre .tok-var {
   font-weight: var(--font-caption-small-emphasized-weight);
 }
 
-/* Prev/next docs pagination — shadcn-style 64px row with 24px gap above. */
-.pagination {
+/* Prev/next docs pager — shadcn-style 64px row with 24px gap above. Distinct
+   from the Pagination component (.pagination); this is the between-pages nav. */
+.pager {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -1036,7 +1037,7 @@ pre .tok-var {
   margin-top: 1.5rem;
 }
 
-.pagination__link {
+.pager__link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -1053,16 +1054,16 @@ pre .tok-var {
     transform 0.1s ease;
 }
 
-.pagination__link:hover {
+.pager__link:hover {
   background: var(--background-secondary-hover);
 }
 
-.pagination__link:active {
+.pager__link:active {
   background: var(--background-secondary-active);
   transform: scale(0.97);
 }
 
-.pagination__link--next {
+.pager__link--next {
   margin-inline-start: auto;
 }
 

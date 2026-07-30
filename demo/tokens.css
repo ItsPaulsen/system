@@ -322,10 +322,14 @@
 :root[data-theme="dark"] {
   /* Ink/fill flip to a light-tinted version of the neutral anchor —
      if you retint the anchor to blue, dark-theme text becomes hint-of-blue
-     near-white, not pure white. --overlay-base stays anchor-tinted (dark)
-     for the scrim effect. */
+     near-white, not pure white. */
   --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
   --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
+
+  /* Scrim goes pure black: the neutral anchor is a mid-gray, which barely
+     darkens an already-dark page, so the overlay could never dim on dark.
+     Black (like the shadows) actually recedes the content behind a modal. */
+  --overlay-base: #000;
 
   --anchor-primary: 118 55 255;
 

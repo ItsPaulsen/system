@@ -249,7 +249,7 @@ const PROJECT_PAGES = {
         { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
-        { label: "Sheet", href: "/demo/components/sheet/", new: true },
+        { label: "Sheet", href: "/demo/components/sheet/" },
         { label: "Slider", href: "/demo/components/slider/" },
         { label: "Spinner", href: "/demo/components/spinner/" },
         { label: "Switch", href: "/demo/components/switch/" },

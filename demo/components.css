@@ -1609,8 +1609,9 @@ button.card--alternate:not(:disabled):active {
 
 /* Edge-anchored panel on native <dialog> — same focus-trap, Esc, and inert
    backdrop as Dialog, and the same data-dialog-open / data-dialog-close wiring
-   (app.js). Slides in from the inline-end edge; --left flips it to inline-start.
-   Open-only slide, matching Dialog — close is instant.
+   (app.js). Anchored to the inline-end edge; --left flips it to inline-start.
+   Same open-only fade + nudge as Dialog (here on the X axis, toward its edge) —
+   close is instant.
 
    Structure:
    <button data-dialog-open="demo-sheet">Open</button>
@@ -1634,26 +1635,32 @@ button.card--alternate:not(:disabled):active {
   background: var(--background-secondary);
   color: var(--ink-primary);
   box-shadow: var(--shadow-lg);
-  translate: 100% 0;
+  opacity: 0;
+  transform: translateX(24px);
 }
 
 .sheet--left {
   inset: 0 auto 0 0;
-  translate: -100% 0;
+  transform: translateX(-24px);
 }
 
 .sheet[open] {
-  translate: 0 0;
-  transition: translate 0.25s ease-out;
+  opacity: 1;
+  transform: translateX(0);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
 }
 
 @starting-style {
   .sheet[open] {
-    translate: 100% 0;
+    opacity: 0;
+    transform: translateX(24px);
   }
 
   .sheet--left[open] {
-    translate: -100% 0;
+    opacity: 0;
+    transform: translateX(-24px);
   }
 }
 
@@ -1664,7 +1671,7 @@ button.card--alternate:not(:disabled):active {
 
 .sheet[open]::backdrop {
   opacity: 1;
-  transition: opacity 0.25s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 @starting-style {

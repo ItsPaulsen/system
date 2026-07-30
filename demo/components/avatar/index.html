@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Avatar — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Avatar</h1>
+          </div>
+          <p class="lede">A user's image, with a fallback when none loads.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Fallbacks</h3>
+          <p class="section-note">
+            With no image, show initials — or a glyph when you don't have a name.
+          </p>
+          <div class="component-preview" style="gap: 1rem">
+            <span class="avatar">
+              <img
+                class="avatar__img"
+                src="/assets/illustrations/avatar-sample.svg"
+                alt="Ada Lovelace"
+              />
+            </span>
+            <span class="avatar"><span class="avatar__fallback">AL</span></span>
+            <span class="avatar">
+              <span class="avatar__fallback">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Sizes &amp; shape</h3>
+          <p class="section-note">
+            <code>--sm</code> / <code>--lg</code> scale it; <code>--square</code> rounds the corners
+            instead for product tiles.
+          </p>
+          <div class="component-preview" style="gap: 1rem">
+            <span class="avatar avatar--sm"><span class="avatar__fallback">AL</span></span>
+            <span class="avatar"><span class="avatar__fallback">AL</span></span>
+            <span class="avatar avatar--lg"><span class="avatar__fallback">AL</span></span>
+            <span class="avatar avatar--square avatar--lg">
+              <img
+                class="avatar__img"
+                src="/assets/illustrations/avatar-sample.svg"
+                alt="Ada Lovelace"
+              />
+            </span>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Status &amp; group</h3>
+          <p class="section-note">A presence dot, and an overlapping stack for a set of people.</p>
+          <div class="component-preview" style="gap: 1.5rem">
+            <span class="avatar">
+              <img
+                class="avatar__img"
+                src="/assets/illustrations/avatar-sample.svg"
+                alt="Ada Lovelace"
+              />
+              <span class="avatar__status" aria-hidden="true"></span>
+            </span>
+            <span class="avatar-group">
+              <span class="avatar"><span class="avatar__fallback">AL</span></span>
+              <span class="avatar"><span class="avatar__fallback">GH</span></span>
+              <span class="avatar">
+                <img
+                  class="avatar__img"
+                  src="/assets/illustrations/avatar-sample.svg"
+                  alt="Ada Lovelace"
+                />
+              </span>
+              <span class="avatar"><span class="avatar__fallback">+3</span></span>
+            </span>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-com">&lt;!-- Image --&gt;</span>
+<span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;img</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar__img"</span> <span class="tok-prop">src</span>=<span class="tok-str">"…"</span> <span class="tok-prop">alt</span>=<span class="tok-str">"Ada Lovelace"</span> <span class="tok-key">/&gt;</span>
+<span class="tok-key">&lt;/span&gt;</span>
+
+<span class="tok-com">&lt;!-- Initials fallback --&gt;</span>
+<span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar__fallback"</span><span class="tok-key">&gt;</span>AL<span class="tok-key">&lt;/span&gt;&lt;/span&gt;</span>
+
+<span class="tok-com">&lt;!-- Variants: --sm --lg --square, plus .avatar__status and .avatar-group --&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

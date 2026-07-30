@@ -232,20 +232,25 @@ const PROJECT_PAGES = {
       links: [
         { label: "Accordion", href: "/demo/components/accordion/" },
         { label: "Alert", href: "/demo/components/alert/" },
+        { label: "Avatar", href: "/demo/components/avatar/", new: true },
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Breadcrumb", href: "/demo/components/breadcrumb/" },
         { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
-        { label: "Dropdown Menu", href: "/demo/components/dropdown/", new: true },
+        { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
+        { label: "Pagination", href: "/demo/components/pagination/" },
+        { label: "Popover", href: "/demo/components/popover/", new: true },
         { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
+        { label: "Sheet", href: "/demo/components/sheet/", new: true },
+        { label: "Slider", href: "/demo/components/slider/", new: true },
         { label: "Spinner", href: "/demo/components/spinner/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Table", href: "/demo/components/table/" },
@@ -885,9 +890,9 @@ function initSelects() {
   });
 }
 
-// Anchor-positioning fallback: place a popover under its invoker (flipping up
-// when cramped, clamped to the viewport). Only used where CSS anchor
-// positioning is unsupported — otherwise the stylesheet does this declaratively.
+// Place a popover under its invoker (flipping up when cramped, clamped to the
+// viewport). The stylesheet does this declaratively via CSS anchor positioning;
+// this is the fallback for engines that lack it (Firefox today).
 function positionPopover(trigger, pop) {
   const GAP = 4;
   const PAD = 8;
@@ -902,13 +907,27 @@ function positionPopover(trigger, pop) {
   pop.style.top = `${Math.round(top)}px`;
 }
 
+// Position every invoker-driven .popover on open, but only where CSS anchor
+// positioning is unsupported — otherwise the stylesheet owns placement. Covers
+// both the dropdown surface and standalone popovers; initMenus handles only the
+// menu keyboard model on top.
+function initPopovers() {
+  if (CSS.supports("position-area", "bottom")) return;
+  document.querySelectorAll(".popover[id]").forEach((pop) => {
+    const trigger = document.querySelector(`[popovertarget="${pop.id}"]`);
+    if (!trigger) return;
+    pop.addEventListener("toggle", (e) => {
+      if (e.newState === "open") positionPopover(trigger, pop);
+    });
+  });
+}
+
 // Dropdown menu (menu-button pattern) on the native Popover API: the trigger's
 // popovertarget gives top-layer rendering, light-dismiss, Esc, and focus-return
 // for free. app.js adds the menu keyboard model — focus moves INTO the menu and
 // roves across items (arrow keys), items carry tabindex="-1" so Tab leaves —
-// plus type-ahead, and positions the surface where anchor positioning is absent.
+// plus type-ahead. Fallback positioning lives in initPopovers.
 function initMenus() {
-  const supportsAnchor = CSS.supports("position-area", "bottom");
   document.querySelectorAll(".menu").forEach((root) => {
     const trigger = root.querySelector(".menu__trigger");
     const list = root.querySelector(".menu__list");
@@ -921,13 +940,12 @@ function initMenus() {
     };
 
     // The native popover owns show/hide; react to its toggle to sync the
-    // trigger, place the surface (fallback only), and move focus in.
+    // trigger state and move focus in. (Fallback positioning is in initPopovers.)
     let openEdge = "first";
     list.addEventListener("toggle", (e) => {
       const open = e.newState === "open";
       trigger.setAttribute("aria-expanded", String(open));
       if (!open) return;
-      if (!supportsAnchor) positionPopover(trigger, list);
       focusItem(openEdge === "last" ? -1 : 0);
       openEdge = "first";
     });
@@ -987,6 +1005,78 @@ function initMenus() {
     list.addEventListener("click", (e) => {
       if (e.target.closest(".menu__item")) list.hidePopover();
     });
+  });
+}
+
+// Pagination: renders a bounded page window and keeps it interactive. The
+// window always shows the first and last page, the current page ±1, and an
+// ellipsis wherever there's a gap — the standard pattern. Seed with data-total
+// and data-page; clicking a number or prev/next re-renders in place.
+function initPagination() {
+  const chevron = (d) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}" /></svg>`;
+  const CHEVRON_LEFT = chevron("M15 6l-6 6l6 6");
+  const CHEVRON_RIGHT = chevron("M9 6l6 6l-6 6");
+
+  // Pages to show: 1, current-1..current+1, total — with "ellipsis" markers
+  // where the sequence skips. Clamped so the ends never duplicate a neighbour.
+  const windowed = (current, total) => {
+    const out = [1];
+    const left = Math.max(2, current - 1);
+    const right = Math.min(total - 1, current + 1);
+    if (left > 2) out.push("ellipsis");
+    for (let i = left; i <= right; i += 1) out.push(i);
+    if (right < total - 1) out.push("ellipsis");
+    if (total > 1) out.push(total);
+    return out;
+  };
+
+  document.querySelectorAll("[data-pagination]").forEach((nav) => {
+    const total = Math.max(1, parseInt(nav.dataset.total, 10) || 1);
+    let current = Math.min(total, Math.max(1, parseInt(nav.dataset.page, 10) || 1));
+
+    const pageItem = (p) =>
+      `<li><button type="button" class="pagination__link" data-key="p${p}"${
+        p === current ? ' aria-current="page"' : ""
+      }>${p}</button></li>`;
+    const navItem = (dir, disabled) => {
+      const label = dir === "prev" ? "Previous page" : "Next page";
+      const glyph = dir === "prev" ? CHEVRON_LEFT : CHEVRON_RIGHT;
+      return `<li><button type="button" class="pagination__link" data-key="${dir}" data-nav="${dir}" aria-label="${label}"${
+        disabled ? " disabled" : ""
+      }>${glyph}</button></li>`;
+    };
+
+    const render = (focusKey) => {
+      const items = [navItem("prev", current === 1)];
+      windowed(current, total).forEach((p) => {
+        items.push(
+          p === "ellipsis"
+            ? '<li><span class="pagination__ellipsis" aria-hidden="true">…</span></li>'
+            : pageItem(p)
+        );
+      });
+      items.push(navItem("next", current === total));
+      nav.innerHTML = `<ul class="pagination__list">${items.join("")}</ul>`;
+      if (focusKey) nav.querySelector(`[data-key="${focusKey}"]`)?.focus();
+    };
+
+    nav.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-key]");
+      if (!btn || btn.disabled) return;
+      const dir = btn.dataset.nav;
+      if (dir === "prev") current = Math.max(1, current - 1);
+      else if (dir === "next") current = Math.min(total, current + 1);
+      else current = parseInt(btn.dataset.key.slice(1), 10);
+      // Keep focus on the pressed control; if a nav button just disabled itself
+      // at an edge, fall back to the now-current page so focus isn't lost.
+      let focusKey = btn.dataset.key;
+      if (dir === "prev" && current === 1) focusKey = `p${current}`;
+      else if (dir === "next" && current === total) focusKey = `p${current}`;
+      render(focusKey);
+    });
+
+    render();
   });
 }
 
@@ -1079,7 +1169,9 @@ function init() {
   hydratePreviews();
   initGridTabs();
   initSelects();
+  initPopovers();
   initMenus();
+  initPagination();
   initTooltips();
   refreshResponsive();
 
@@ -1153,8 +1245,9 @@ function init() {
     }
     // Click on the backdrop (target is the <dialog> itself, not its inner
     // content). Hit-test against the dialog's box so a click on the element's
-    // own padding doesn't count as a backdrop click.
-    const openDialog = event.target.closest("dialog.dialog");
+    // own padding doesn't count as a backdrop click. Covers Dialog and Sheet —
+    // both are native <dialog>s sharing the data-dialog-open/close wiring.
+    const openDialog = event.target.closest("dialog.dialog, dialog.sheet");
     if (openDialog && event.target === openDialog) {
       const r = openDialog.getBoundingClientRect();
       const inBox =

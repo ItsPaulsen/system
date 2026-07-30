@@ -2192,8 +2192,11 @@ button.card--alternate:not(:disabled):active {
 /* ── Avatar ────────────────────────────────────────────────────────────── */
 
 /* A user's image, with initials (or a glyph) as the fallback when no image is
-   set. Circle by default; --square for product/app tiles. Overlap several in an
-   .avatar-group.
+   set. Overlap several in an .avatar-group.
+
+   The media (img / glyph) clips itself rather than the .avatar, so a status dot
+   can sit on the edge without being masked. Background is an opaque gray (not an
+   alpha fill) so overlapping avatars in a group don't bleed through each other.
 
    Structure:
    <span class="avatar"><img class="avatar__img" src="…" alt="Ada Lovelace" /></span>
@@ -2206,12 +2209,11 @@ button.card--alternate:not(:disabled):active {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  overflow: hidden;
   border-radius: var(--radius-full);
-  background: var(--fill-tertiary);
+  background: var(--neutral-gray-3);
   color: var(--ink-secondary);
   font-size: var(--font-body-small-size);
-  font-weight: 500;
+  font-weight: 600;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -2228,32 +2230,36 @@ button.card--alternate:not(:disabled):active {
   font-size: var(--font-body-large-size);
 }
 
-.avatar--square {
-  border-radius: var(--radius-sm);
-}
-
 .avatar__img {
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   object-fit: cover;
 }
 
+/* Fills the avatar and clips the glyph to the circle (the .avatar itself no
+   longer clips, so the status dot can overflow the edge). */
 .avatar__fallback {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .avatar__fallback svg {
-  width: 60%;
-  height: 60%;
+  width: 50%;
+  height: 50%;
 }
 
-/* Presence dot pinned to the corner; the ring punches it out of the surface. */
+/* Presence dot sitting on the lower edge; the ring punches it out of the
+   surface behind. */
 .avatar__status {
   position: absolute;
-  inset-inline-end: 0;
-  inset-block-end: 0;
+  inset-inline-end: 6%;
+  inset-block-end: 6%;
   width: 28%;
   height: 28%;
   border-radius: var(--radius-full);

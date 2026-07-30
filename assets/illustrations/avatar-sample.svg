@@ -1,13 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Sample avatar">
-  <defs>
-    <linearGradient id="avatar-bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#8a6cf0" />
-      <stop offset="1" stop-color="#4a7cf0" />
-    </linearGradient>
-  </defs>
-  <rect width="96" height="96" fill="url(#avatar-bg)" />
-  <g fill="#ffffff" fill-opacity="0.9">
-    <circle cx="48" cy="38" r="16" />
-    <path d="M20 84a28 28 0 0 1 56 0z" />
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Sample avatar">
+  <rect width="40" height="40" fill="#6c2bf5" />
+  <path
+    fill="#ecebfb"
+    fill-rule="evenodd"
+    d="M20,38 C26,38 31,35 34,31.32 C34,27.1778644 27.7319865,25 20,25 C12.2680135,25 6,27.1778644 6,31.32 C9,35 14,38 20,38 Z M20,22 C23.8659932,22 27,18.8659932 27,15 C27,11.1340068 23.8659932,8 20,8 C16.1340068,8 13,11.1340068 13,15 C13,18.8659932 16.1340068,22 20,22 Z"
+  />
 </svg>

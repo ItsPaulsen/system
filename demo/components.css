@@ -325,12 +325,18 @@
   }
 }
 
-/* Press previews the selected surface (not a separate tint), so holding shows a
-   stable state that carries straight into the checked state on release — no
-   colour jump/blink between pressed and selected. */
 .tabs__tab:active:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
-  background: var(--background-secondary);
-  color: var(--ink-primary);
+  background: var(--fill-quaternary-active);
+}
+
+/* Touch only: press previews the selected surface so holding carries straight
+   into the checked state on release — no pressed→selected colour blink. Pointer
+   devices keep the subtle tint above. */
+@media (hover: none) {
+  .tabs__tab:active:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+  }
 }
 
 .tabs__tab:has(.tabs__radio:checked) {

@@ -316,9 +316,13 @@
   clip-path: inset(50%);
 }
 
-.tabs__tab:hover:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
-  background: var(--fill-quaternary-hover);
-  color: var(--ink-primary);
+/* Hover only where a real pointer exists, so the state doesn't stick after a
+   tap on touch (Ruter's pattern); :active below covers the pressed feedback. */
+@media (hover: hover) {
+  .tabs__tab:hover:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
+    background: var(--fill-quaternary-hover);
+    color: var(--ink-primary);
+  }
 }
 
 .tabs__tab:active:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {

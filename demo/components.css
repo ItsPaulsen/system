@@ -617,7 +617,9 @@
   overflow-y: auto;
   list-style: none;
   background: var(--background-secondary);
-  border-radius: var(--radius-md);
+
+  /* Concentric with 8px options: surface = option radius + 4px padding. */
+  border-radius: calc(var(--radius-sm) + 4px);
   box-shadow: var(--shadow-lg);
 
   /* The list takes programmatic focus for key handling, but the active option
@@ -660,6 +662,181 @@
   background: currentcolor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
     center / contain no-repeat;
+}
+
+/* ── Popover ───────────────────────────────────────────────────────────── */
+
+/* Reusable floating surface built on the native Popover API. Because it lives
+   in the top layer it escapes any overflow/stacking context, and popover="auto"
+   gives light-dismiss (outside click), Esc, and focus-return for free. Placed
+   with CSS anchor positioning against its invoker (the popovertarget button);
+   app.js (positionPopover) covers engines without anchor positioning. Open-only
+   fade + rise, matching Dialog — close is instant. */
+.popover {
+  position: fixed;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 16px));
+  margin: 0;
+  padding: 4px;
+  border: 0;
+
+  /* Concentric with 8px items: surface = item radius + 4px padding. */
+  border-radius: calc(var(--radius-sm) + 4px);
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* Declarative placement where supported: below the invoker, start-aligned,
+   flipping above when there's no room. */
+@supports (position-area: bottom) {
+  .popover {
+    margin-block-start: 4px;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block;
+  }
+}
+
+.popover:popover-open {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+@starting-style {
+  .popover:popover-open {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ── Dropdown Menu ─────────────────────────────────────────────────────── */
+
+/* Menu-button pattern: a trigger opens a floating list of actions (role="menu"
+   / menuitem) built on the Popover primitive above — as opposed to Select's
+   single-value listbox. The native popover owns show/hide/dismiss; app.js
+   (initMenus) adds the menu keyboard model (roving arrow focus + type-ahead).
+
+   Structure:
+   <div class="menu">
+     <button class="menu__trigger" popovertarget="menu-x"
+             aria-haspopup="menu" aria-expanded="false">…</button>
+     <div class="menu__list popover" id="menu-x" popover role="menu">
+       <button class="menu__item" role="menuitem" tabindex="-1">…</button>
+       <hr class="menu__separator" />
+       <button class="menu__item menu__item--danger" role="menuitem" tabindex="-1">…</button>
+     </div>
+   </div> */
+.menu {
+  display: inline-block;
+}
+
+.menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 1rem;
+  border: 1px solid var(--ink-tertiary);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-primary);
+  font: inherit;
+  font-size: var(--font-body-small-size);
+  cursor: pointer;
+}
+
+.menu__trigger:focus-visible,
+.menu__trigger[aria-expanded="true"] {
+  outline: none;
+  border-color: var(--focus);
+  box-shadow: 0 0 0 1px var(--focus);
+}
+
+.menu__chevron {
+  flex-shrink: 0;
+  width: 1.25em;
+  height: 1.25em;
+  color: var(--ink-secondary);
+}
+
+.menu__trigger[aria-expanded="true"] .menu__chevron {
+  rotate: 180deg;
+}
+
+/* Surface comes from .popover; the menu only sets its width. */
+.menu__list {
+  min-width: 220px;
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-primary);
+  font: inherit;
+  font-size: var(--font-body-small-size);
+  text-align: start;
+  cursor: pointer;
+}
+
+.menu__item:hover,
+.menu__item:focus-visible {
+  outline: none;
+  background: var(--background-secondary-hover);
+}
+
+.menu__item[disabled] {
+  color: var(--ink-tertiary);
+  cursor: not-allowed;
+}
+
+.menu__item[disabled]:hover {
+  background: transparent;
+}
+
+/* Leading glyph; inherits the row colour so a danger row tints its icon too. */
+.menu__item-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+/* Trailing shortcut hint, pushed to the far edge. */
+.menu__shortcut {
+  margin-inline-start: auto;
+  padding-inline-start: 1rem;
+  color: var(--ink-tertiary);
+  font-size: 0.8125em;
+  font-variant-numeric: tabular-nums;
+}
+
+.menu__item--danger {
+  color: var(--red);
+}
+
+.menu__item--danger:hover,
+.menu__item--danger:focus-visible {
+  background: var(--red-soft-hover);
+}
+
+/* Hairline divider between item groups. */
+.menu__separator {
+  height: 1px;
+  margin: 4px 0;
+  border: 0;
+  background: var(--ink-tertiary);
+  opacity: 0.4;
 }
 
 /* ── Button ────────────────────────────────────────────────────────────── */
@@ -1722,14 +1899,14 @@ button.card--alternate:not(:disabled):active {
 }
 
 .link:hover {
-  color: var(--primary-hover);
+  color: var(--primary-foreground-hover);
 }
 
 .link--cta {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  color: var(--primary);
+  color: var(--primary-foreground);
   font-weight: 500;
   text-decoration: none;
 }

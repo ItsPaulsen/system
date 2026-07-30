@@ -252,7 +252,7 @@ body {
 @media (min-width: 1024px) {
   @supports (animation-timeline: scroll()) {
     .sidebar {
-      --sidebar-fade: 2rem;
+      --sidebar-fade: 2.5rem;
 
       /* Clear strip of page surface below the bottom fade — the fade finishes
          this far above the edge instead of running to it. */

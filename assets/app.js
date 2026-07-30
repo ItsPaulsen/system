@@ -233,19 +233,20 @@ const PROJECT_PAGES = {
         { label: "Accordion", href: "/demo/components/accordion/" },
         { label: "Alert", href: "/demo/components/alert/" },
         { label: "Badge", href: "/demo/components/badge/" },
-        { label: "Breadcrumb", href: "/demo/components/breadcrumb/", new: true },
+        { label: "Breadcrumb", href: "/demo/components/breadcrumb/" },
         { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
+        { label: "Dropdown Menu", href: "/demo/components/dropdown/", new: true },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
-        { label: "Link", href: "/demo/components/link/", new: true },
+        { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
-        { label: "Progress", href: "/demo/components/progress/", new: true },
+        { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
-        { label: "Spinner", href: "/demo/components/spinner/", new: true },
+        { label: "Spinner", href: "/demo/components/spinner/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Table", href: "/demo/components/table/" },
         { label: "Tabs", href: "/demo/components/tabs/" },
@@ -323,6 +324,31 @@ function injectSidebar() {
   else document.body.append(aside);
   document.body.append(backdrop);
   wireSidebar(aside, backdrop);
+  persistSidebarScroll(aside);
+}
+
+// Keep the sidebar where you left it across page loads (shadcn-style persistent
+// sidebar). Each page is a fresh document, so cross-document view transitions
+// otherwise render the new sidebar at the top and scroll the active item out of
+// view. sessionStorage keeps the offset per tab, keyed by project so separate
+// sidebars don't clobber each other. Restore runs synchronously here — app.js is
+// deferred and the sidebar was just appended — so it applies before first paint,
+// no flash. Save on pagehide, which also covers the bfcache case.
+function persistSidebarScroll(aside) {
+  const key = `sidebar-scroll:${location.pathname.split("/")[1] || ""}`;
+  try {
+    const saved = sessionStorage.getItem(key);
+    if (saved !== null) aside.scrollTop = +saved;
+  } catch {
+    /* storage may be unavailable; sidebar just starts at the top */
+  }
+  window.addEventListener("pagehide", () => {
+    try {
+      sessionStorage.setItem(key, aside.scrollTop);
+    } catch {
+      /* storage may be unavailable; scroll simply won't persist */
+    }
+  });
 }
 
 function wireSidebar(aside, backdrop) {
@@ -859,6 +885,111 @@ function initSelects() {
   });
 }
 
+// Anchor-positioning fallback: place a popover under its invoker (flipping up
+// when cramped, clamped to the viewport). Only used where CSS anchor
+// positioning is unsupported — otherwise the stylesheet does this declaratively.
+function positionPopover(trigger, pop) {
+  const GAP = 4;
+  const PAD = 8;
+  const t = trigger.getBoundingClientRect();
+  const p = pop.getBoundingClientRect();
+  let top = t.bottom + GAP;
+  if (top + p.height + PAD > window.innerHeight && t.top - p.height - GAP > 0) {
+    top = t.top - p.height - GAP;
+  }
+  const left = Math.max(PAD, Math.min(t.left, window.innerWidth - p.width - PAD));
+  pop.style.left = `${Math.round(left)}px`;
+  pop.style.top = `${Math.round(top)}px`;
+}
+
+// Dropdown menu (menu-button pattern) on the native Popover API: the trigger's
+// popovertarget gives top-layer rendering, light-dismiss, Esc, and focus-return
+// for free. app.js adds the menu keyboard model — focus moves INTO the menu and
+// roves across items (arrow keys), items carry tabindex="-1" so Tab leaves —
+// plus type-ahead, and positions the surface where anchor positioning is absent.
+function initMenus() {
+  const supportsAnchor = CSS.supports("position-area", "bottom");
+  document.querySelectorAll(".menu").forEach((root) => {
+    const trigger = root.querySelector(".menu__trigger");
+    const list = root.querySelector(".menu__list");
+    if (!trigger || !list || !list.popover) return;
+    // Re-read each time so disabled items are skipped by keyboard navigation.
+    const items = () => [...list.querySelectorAll(".menu__item:not([disabled])")];
+    const focusItem = (i) => {
+      const els = items();
+      if (els.length) els[(i + els.length) % els.length].focus();
+    };
+
+    // The native popover owns show/hide; react to its toggle to sync the
+    // trigger, place the surface (fallback only), and move focus in.
+    let openEdge = "first";
+    list.addEventListener("toggle", (e) => {
+      const open = e.newState === "open";
+      trigger.setAttribute("aria-expanded", String(open));
+      if (!open) return;
+      if (!supportsAnchor) positionPopover(trigger, list);
+      focusItem(openEdge === "last" ? -1 : 0);
+      openEdge = "first";
+    });
+
+    // Arrow keys open a closed menu (Enter/Space are the button's native
+    // toggle); Down lands on the first item, Up on the last.
+    trigger.addEventListener("keydown", (e) => {
+      if (list.matches(":popover-open")) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        openEdge = e.key === "ArrowUp" ? "last" : "first";
+        list.showPopover();
+      }
+    });
+
+    // Type-ahead: jump to the next item whose label starts with the typed
+    // buffer; the buffer clears after a short pause.
+    let buf = "";
+    let bufTimer;
+    list.addEventListener("keydown", (e) => {
+      const els = items();
+      const current = els.indexOf(document.activeElement);
+      // Esc/outside-click dismissal are the popover's job; Tab just closes and
+      // moves on through the page.
+      if (e.key === "Tab") {
+        list.hidePopover();
+        return;
+      }
+      const nav = {
+        ArrowDown: () => focusItem(current + 1),
+        ArrowUp: () => focusItem(current - 1),
+        Home: () => focusItem(0),
+        End: () => focusItem(-1)
+      };
+      if (e.key in nav) {
+        e.preventDefault();
+        nav[e.key]();
+        return;
+      }
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        clearTimeout(bufTimer);
+        buf += e.key.toLowerCase();
+        bufTimer = setTimeout(() => (buf = ""), 500);
+        const from = buf.length === 1 ? current + 1 : current;
+        for (let n = 0; n < els.length; n += 1) {
+          const idx = (from + n) % els.length;
+          if (els[idx].textContent.trim().toLowerCase().startsWith(buf)) {
+            els[idx].focus();
+            return;
+          }
+        }
+      }
+    });
+
+    // Activating an item would run its action; the demo items are placeholders,
+    // so just dismiss — the popover hands focus back to the trigger.
+    list.addEventListener("click", (e) => {
+      if (e.target.closest(".menu__item")) list.hidePopover();
+    });
+  });
+}
+
 // Tooltip positioning: flip above/below by available space and clamp to the
 // viewport, keeping the arrow pointed at the trigger. CSS handles the fade.
 function initTooltips() {
@@ -948,6 +1079,7 @@ function init() {
   hydratePreviews();
   initGridTabs();
   initSelects();
+  initMenus();
   initTooltips();
   refreshResponsive();
 

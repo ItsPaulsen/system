@@ -62,6 +62,10 @@
 html {
   -webkit-text-size-adjust: 100%;
 
+  /* Kill the mobile tap-highlight (a square, radius-ignoring translucent overlay
+     the browser paints on tap). Our own :active states are the press feedback. */
+  -webkit-tap-highlight-color: transparent;
+
   /* Sticky nav overlaps the top — reserve its height when jumping to any
      in-page anchor (Skip-to-content, hash links). */
   scroll-padding-top: var(--nav-h);

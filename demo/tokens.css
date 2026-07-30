@@ -4,360 +4,363 @@
    Every downstream token is derived from an anchor — change the anchor, the
    whole family retints. */
 
-:root {
-  /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
-  --bp-tablet: 640px;
-  --bp-desktop: 1024px;
+@layer base, tokens, components;
 
-  /* ── Anchors ─────────────────────────────────────────────────────────
+@layer tokens {
+  :root {
+    /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
+    --bp-tablet: 640px;
+    --bp-desktop: 1024px;
+
+    /* ── Anchors ─────────────────────────────────────────────────────────
      One channel triple per family. Change --anchor-neutral to retint the
      entire neutral system in one line — grays, ink, fills, overlay, and
      shadows all derive from it. Semantic anchors (brand + status) stay
      independent so retinting neutrals doesn't touch the brand palette. */
-  --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
-  --anchor-primary: 108 43 245; /* brand — electric punch */
+    --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
+    --anchor-primary: 108 43 245; /* brand — electric punch */
 
-  /* Tints — tuned so text-on-own-soft-surface clears 4.5:1 without any family
+    /* Tints — tuned so text-on-own-soft-surface clears 4.5:1 without any family
      reading weaker than the others. Green and amber sit at rotated hues (144
      and 52) where sRGB offers more chroma than the "obvious" angles. Amber
      stays a warm rust rather than gold — 4.5:1 on white caps a text color at
      L≈0.55, and warm at that lightness is always brown. */
-  --anchor-red: 191 0 0;
-  --anchor-amber: 170 81 0;
-  --anchor-green: 0 122 22;
-  --anchor-blue: 25 80 200;
-  --anchor-fuchsia: 152 39 160;
+    --anchor-red: 191 0 0;
+    --anchor-amber: 170 81 0;
+    --anchor-green: 0 122 22;
+    --anchor-blue: 25 80 200;
+    --anchor-fuchsia: 152 39 160;
 
-  /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
+    /* Bases derived from the neutral anchor. Ink/fill flip to a light-tinted
      version in dark theme (see :root[data-theme="dark"] below) while these
      three all follow the anchor's hue. */
-  --ink-base: rgb(var(--anchor-neutral));
-  --fill-base: rgb(var(--anchor-neutral));
-  --overlay-base: rgb(var(--anchor-neutral));
+    --ink-base: rgb(var(--anchor-neutral));
+    --fill-base: rgb(var(--anchor-neutral));
+    --overlay-base: rgb(var(--anchor-neutral));
 
-  /* ── Backgrounds ─────────────────────────────────────────────────────
+    /* ── Backgrounds ─────────────────────────────────────────────────────
      Opaque, but tinted by the anchor via color-mix. Primary = recessed
      page bg; secondary = elevated card/sheet surface. Retint the anchor
      → backgrounds shift subtly in the same direction. If a specific
      value doesn't look right after retinting, override the individual
      token directly (e.g. `--background-primary: rgb(244 242 241);`). */
-  --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 4%, white);
-  --background-primary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 12%, white);
-  --background-primary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 15%, white);
-  --background-secondary: white;
-  --background-secondary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
-  --background-secondary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 12%, white);
+    --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 4%, white);
+    --background-primary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 12%, white);
+    --background-primary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 15%, white);
+    --background-secondary: white;
+    --background-secondary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
+    --background-secondary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 12%, white);
 
-  /* ── Ink ─────────────────────────────────────────────────────────────
+    /* ── Ink ─────────────────────────────────────────────────────────────
      Primary opaque. Secondary + tertiary are alpha of --ink-base so they
      blend into whatever surface sits underneath. Hover/active on primary
      fade toward the surface; on secondary/tertiary they nudge alpha up. */
-  --ink-primary: var(--ink-base);
-  --ink-primary-hover: color-mix(in oklab, var(--ink-primary) 88%, var(--background-secondary));
-  --ink-primary-active: color-mix(in oklab, var(--ink-primary) 82%, var(--background-secondary));
-  --ink-secondary: rgb(from var(--ink-base) r g b / 0.702);
-  --ink-secondary-hover: rgb(from var(--ink-base) r g b / 0.81);
-  --ink-secondary-active: rgb(from var(--ink-base) r g b / 0.85);
-  --ink-tertiary: rgb(from var(--ink-base) r g b / 0.549);
-  --ink-tertiary-hover: rgb(from var(--ink-base) r g b / 0.66);
-  --ink-tertiary-active: rgb(from var(--ink-base) r g b / 0.7);
+    --ink-primary: var(--ink-base);
+    --ink-primary-hover: color-mix(in oklab, var(--ink-primary) 88%, var(--background-secondary));
+    --ink-primary-active: color-mix(in oklab, var(--ink-primary) 82%, var(--background-secondary));
+    --ink-secondary: rgb(from var(--ink-base) r g b / 0.702);
+    --ink-secondary-hover: rgb(from var(--ink-base) r g b / 0.81);
+    --ink-secondary-active: rgb(from var(--ink-base) r g b / 0.85);
+    --ink-tertiary: rgb(from var(--ink-base) r g b / 0.549);
+    --ink-tertiary-hover: rgb(from var(--ink-base) r g b / 0.66);
+    --ink-tertiary-active: rgb(from var(--ink-base) r g b / 0.7);
 
-  /* ── Semantic ────────────────────────────────────────────────────────
+    /* ── Semantic ────────────────────────────────────────────────────────
      Each family opaque from its anchor; hover/active derived via color-mix
      toward white. Direction is consistent across themes. */
-  --primary: rgb(var(--anchor-primary));
-  --primary-hover: color-mix(in oklab, var(--primary) 88%, white);
-  --primary-active: color-mix(in oklab, var(--primary) 82%, white);
-  --red: rgb(var(--anchor-red));
-  --red-hover: color-mix(in oklab, var(--red) 88%, white);
-  --red-active: color-mix(in oklab, var(--red) 82%, white);
-  --amber: rgb(var(--anchor-amber));
-  --amber-hover: color-mix(in oklab, var(--amber) 88%, white);
-  --amber-active: color-mix(in oklab, var(--amber) 82%, white);
-  --green: rgb(var(--anchor-green));
-  --green-hover: color-mix(in oklab, var(--green) 88%, white);
-  --green-active: color-mix(in oklab, var(--green) 82%, white);
-  --blue: rgb(var(--anchor-blue));
-  --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
-  --blue-active: color-mix(in oklab, var(--blue) 82%, white);
-  --fuchsia: rgb(var(--anchor-fuchsia));
-  --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
-  --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
+    --primary: rgb(var(--anchor-primary));
+    --primary-hover: color-mix(in oklab, var(--primary) 88%, white);
+    --primary-active: color-mix(in oklab, var(--primary) 82%, white);
+    --red: rgb(var(--anchor-red));
+    --red-hover: color-mix(in oklab, var(--red) 88%, white);
+    --red-active: color-mix(in oklab, var(--red) 82%, white);
+    --amber: rgb(var(--anchor-amber));
+    --amber-hover: color-mix(in oklab, var(--amber) 88%, white);
+    --amber-active: color-mix(in oklab, var(--amber) 82%, white);
+    --green: rgb(var(--anchor-green));
+    --green-hover: color-mix(in oklab, var(--green) 88%, white);
+    --green-active: color-mix(in oklab, var(--green) 82%, white);
+    --blue: rgb(var(--anchor-blue));
+    --blue-hover: color-mix(in oklab, var(--blue) 88%, white);
+    --blue-active: color-mix(in oklab, var(--blue) 82%, white);
+    --fuchsia: rgb(var(--anchor-fuchsia));
+    --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
+    --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
 
-  /* Focus is derived from the brand so it retints with --anchor-primary, but
+    /* Focus is derived from the brand so it retints with --anchor-primary, but
      it's not primary verbatim: same hue (stays our purple), just lighter
      (+0.09 L) and a touch softer (−0.1 C) for a distinct focus tone. Ruter's
      focus looks blue only because their primary is blue — the transform is the
      relationship, not the hue. */
-  --focus: oklch(from var(--primary) calc(l + 0.09) calc(c - 0.1) h);
-  --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
-  --focus-active: color-mix(in oklab, var(--focus) 82%, white);
+    --focus: oklch(from var(--primary) calc(l + 0.09) calc(c - 0.1) h);
+    --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
+    --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
-  /* Foreground — the color used for text/icons sitting on the -soft
+    /* Foreground — the color used for text/icons sitting on the -soft
      background. Only exists for primary (brand); tints use their
      solid color as text directly (Ruter's pattern — only accent has
      a foreground). In light theme foreground ≈ primary; in dark
      theme it's lightened for legibility on dark tinted surfaces. */
-  --primary-foreground: var(--primary);
-  --primary-foreground-hover: var(--primary-hover);
-  --primary-foreground-active: var(--primary-active);
+    --primary-foreground: var(--primary);
+    --primary-foreground-hover: var(--primary-hover);
+    --primary-foreground-active: var(--primary-active);
 
-  /* Soft alpha variants — for chip/badge backgrounds where the tint sits
+    /* Soft alpha variants — for chip/badge backgrounds where the tint sits
      behind foreground-color text. Hover/active ramp deeper. */
-  --primary-soft: rgb(from var(--primary) r g b / 0.122);
-  --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
-  --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
-  --red-soft: rgb(from var(--red) r g b / 0.122);
-  --red-soft-hover: rgb(from var(--red) r g b / 0.23);
-  --red-soft-active: rgb(from var(--red) r g b / 0.27);
-  --amber-soft: rgb(from var(--amber) r g b / 0.122);
-  --amber-soft-hover: rgb(from var(--amber) r g b / 0.23);
-  --amber-soft-active: rgb(from var(--amber) r g b / 0.27);
-  --green-soft: rgb(from var(--green) r g b / 0.122);
-  --green-soft-hover: rgb(from var(--green) r g b / 0.23);
-  --green-soft-active: rgb(from var(--green) r g b / 0.27);
-  --blue-soft: rgb(from var(--blue) r g b / 0.122);
-  --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
-  --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
-  --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.122);
-  --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.23);
-  --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.27);
+    --primary-soft: rgb(from var(--primary) r g b / 0.122);
+    --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
+    --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
+    --red-soft: rgb(from var(--red) r g b / 0.122);
+    --red-soft-hover: rgb(from var(--red) r g b / 0.23);
+    --red-soft-active: rgb(from var(--red) r g b / 0.27);
+    --amber-soft: rgb(from var(--amber) r g b / 0.122);
+    --amber-soft-hover: rgb(from var(--amber) r g b / 0.23);
+    --amber-soft-active: rgb(from var(--amber) r g b / 0.27);
+    --green-soft: rgb(from var(--green) r g b / 0.122);
+    --green-soft-hover: rgb(from var(--green) r g b / 0.23);
+    --green-soft-active: rgb(from var(--green) r g b / 0.27);
+    --blue-soft: rgb(from var(--blue) r g b / 0.122);
+    --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
+    --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
+    --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.122);
+    --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.23);
+    --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.27);
 
-  /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
-  --overlay: rgb(from var(--overlay-base) r g b / 0.45);
-  --overlay-hover: rgb(from var(--overlay-base) r g b / 0.56);
-  --overlay-active: rgb(from var(--overlay-base) r g b / 0.6);
+    /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
+    --overlay: rgb(from var(--overlay-base) r g b / 0.45);
+    --overlay-hover: rgb(from var(--overlay-base) r g b / 0.56);
+    --overlay-active: rgb(from var(--overlay-base) r g b / 0.6);
 
-  /* ── Neutrals ────────────────────────────────────────────────────────
+    /* ── Neutrals ────────────────────────────────────────────────────────
      Black is the neutral anchor; grays are anchor mixed with white at
      increasing ratios. Change --anchor-neutral to retint the whole ramp
      (stone, blue-gray, red-gray, etc.). White stays true white. */
-  --neutral-black: rgb(var(--anchor-neutral));
-  --neutral-black-hover: color-mix(in oklab, var(--neutral-black) 90%, white);
-  --neutral-black-active: color-mix(in oklab, var(--neutral-black) 85%, white);
-  --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 22%, white);
-  --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 30%, white);
-  --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 34%, white);
-  --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 15%, white);
-  --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 22%, white);
-  --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 26%, white);
-  --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 9%, white);
-  --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 16%, white);
-  --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 19%, white);
-  --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 4%, white);
-  --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 11%, white);
-  --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 14%, white);
-  --neutral-white: white;
-  --neutral-white-hover: color-mix(in oklab, white 90%, var(--neutral-black));
-  --neutral-white-active: color-mix(in oklab, white 87%, var(--neutral-black));
+    --neutral-black: rgb(var(--anchor-neutral));
+    --neutral-black-hover: color-mix(in oklab, var(--neutral-black) 90%, white);
+    --neutral-black-active: color-mix(in oklab, var(--neutral-black) 85%, white);
+    --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 22%, white);
+    --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 30%, white);
+    --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 34%, white);
+    --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 15%, white);
+    --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 22%, white);
+    --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 26%, white);
+    --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 9%, white);
+    --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 16%, white);
+    --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 19%, white);
+    --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 4%, white);
+    --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 11%, white);
+    --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 14%, white);
+    --neutral-white: white;
+    --neutral-white-hover: color-mix(in oklab, white 90%, var(--neutral-black));
+    --neutral-white-active: color-mix(in oklab, white 87%, var(--neutral-black));
 
-  /* ── Fills ───────────────────────────────────────────────────────────
+    /* ── Fills ───────────────────────────────────────────────────────────
      Alpha tints of --fill-base — sit over any surface (hover overlays,
      selected rows). Each tier has its own hover/active alphas so
      fill-backed controls move through interactive states without
      swapping tokens. */
-  --fill-primary: rgb(from var(--fill-base) r g b / 0.259);
-  --fill-primary-hover: rgb(from var(--fill-base) r g b / 0.37);
-  --fill-primary-active: rgb(from var(--fill-base) r g b / 0.41);
-  --fill-secondary: rgb(from var(--fill-base) r g b / 0.2);
-  --fill-secondary-hover: rgb(from var(--fill-base) r g b / 0.31);
-  --fill-secondary-active: rgb(from var(--fill-base) r g b / 0.35);
-  --fill-tertiary: rgb(from var(--fill-base) r g b / 0.122);
-  --fill-tertiary-hover: rgb(from var(--fill-base) r g b / 0.23);
-  --fill-tertiary-active: rgb(from var(--fill-base) r g b / 0.27);
-  --fill-quaternary: rgb(from var(--fill-base) r g b / 0.08);
-  --fill-quaternary-hover: rgb(from var(--fill-base) r g b / 0.17);
-  --fill-quaternary-active: rgb(from var(--fill-base) r g b / 0.21);
+    --fill-primary: rgb(from var(--fill-base) r g b / 0.259);
+    --fill-primary-hover: rgb(from var(--fill-base) r g b / 0.37);
+    --fill-primary-active: rgb(from var(--fill-base) r g b / 0.41);
+    --fill-secondary: rgb(from var(--fill-base) r g b / 0.2);
+    --fill-secondary-hover: rgb(from var(--fill-base) r g b / 0.31);
+    --fill-secondary-active: rgb(from var(--fill-base) r g b / 0.35);
+    --fill-tertiary: rgb(from var(--fill-base) r g b / 0.122);
+    --fill-tertiary-hover: rgb(from var(--fill-base) r g b / 0.23);
+    --fill-tertiary-active: rgb(from var(--fill-base) r g b / 0.27);
+    --fill-quaternary: rgb(from var(--fill-base) r g b / 0.08);
+    --fill-quaternary-hover: rgb(from var(--fill-base) r g b / 0.17);
+    --fill-quaternary-active: rgb(from var(--fill-base) r g b / 0.21);
 
-  /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
+    /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
      unitless multipliers so they scale with the font-size. Fixed at every
      breakpoint — sizes don't step up on desktop. */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
 
-  --font-headline-large-size: 3.75rem; /* 60px */
-  --font-headline-large-lh: 1.2;
-  --font-headline-large-weight: 500;
-  --font-headline-medium-size: 3rem; /* 48px */
-  --font-headline-medium-lh: 1.2;
-  --font-headline-medium-weight: 500;
-  --font-headline-small-size: 2.375rem; /* 38px */
-  --font-headline-small-lh: 1.2;
-  --font-headline-small-weight: 500;
+    --font-headline-large-size: 3.75rem; /* 60px */
+    --font-headline-large-lh: 1.2;
+    --font-headline-large-weight: 500;
+    --font-headline-medium-size: 3rem; /* 48px */
+    --font-headline-medium-lh: 1.2;
+    --font-headline-medium-weight: 500;
+    --font-headline-small-size: 2.375rem; /* 38px */
+    --font-headline-small-lh: 1.2;
+    --font-headline-small-weight: 500;
 
-  --font-title-large-size: 2rem; /* 32px */
-  --font-title-large-lh: 1.3;
-  --font-title-large-weight: 500;
-  --font-title-medium-size: 1.75rem; /* 28px */
-  --font-title-medium-lh: 1.3;
-  --font-title-medium-weight: 500;
-  --font-title-small-size: 1.5rem; /* 24px */
-  --font-title-small-lh: 1.3;
-  --font-title-small-weight: 500;
+    --font-title-large-size: 2rem; /* 32px */
+    --font-title-large-lh: 1.3;
+    --font-title-large-weight: 500;
+    --font-title-medium-size: 1.75rem; /* 28px */
+    --font-title-medium-lh: 1.3;
+    --font-title-medium-weight: 500;
+    --font-title-small-size: 1.5rem; /* 24px */
+    --font-title-small-lh: 1.3;
+    --font-title-small-weight: 500;
 
-  --font-body-large-size: 1.25rem; /* 20px */
-  --font-body-large-lh: 1.5;
-  --font-body-large-weight: 400;
-  --font-body-large-emphasized-size: 1.25rem;
-  --font-body-large-emphasized-lh: 1.5;
-  --font-body-large-emphasized-weight: 500;
-  --font-body-medium-size: 1.125rem; /* 18px */
-  --font-body-medium-lh: 1.5;
-  --font-body-medium-weight: 400;
-  --font-body-medium-emphasized-size: 1.125rem;
-  --font-body-medium-emphasized-lh: 1.5;
-  --font-body-medium-emphasized-weight: 500;
-  --font-body-small-size: 1rem; /* 16px */
-  --font-body-small-lh: 1.5;
-  --font-body-small-weight: 400;
-  --font-body-small-emphasized-size: 1rem;
-  --font-body-small-emphasized-lh: 1.5;
-  --font-body-small-emphasized-weight: 500;
+    --font-body-large-size: 1.25rem; /* 20px */
+    --font-body-large-lh: 1.5;
+    --font-body-large-weight: 400;
+    --font-body-large-emphasized-size: 1.25rem;
+    --font-body-large-emphasized-lh: 1.5;
+    --font-body-large-emphasized-weight: 500;
+    --font-body-medium-size: 1.125rem; /* 18px */
+    --font-body-medium-lh: 1.5;
+    --font-body-medium-weight: 400;
+    --font-body-medium-emphasized-size: 1.125rem;
+    --font-body-medium-emphasized-lh: 1.5;
+    --font-body-medium-emphasized-weight: 500;
+    --font-body-small-size: 1rem; /* 16px */
+    --font-body-small-lh: 1.5;
+    --font-body-small-weight: 400;
+    --font-body-small-emphasized-size: 1rem;
+    --font-body-small-emphasized-lh: 1.5;
+    --font-body-small-emphasized-weight: 500;
 
-  --font-caption-medium-size: 0.875rem; /* 14px */
-  --font-caption-medium-lh: 1.5;
-  --font-caption-medium-weight: 400;
-  --font-caption-medium-emphasized-size: 0.875rem;
-  --font-caption-medium-emphasized-lh: 1.5;
-  --font-caption-medium-emphasized-weight: 500;
-  --font-caption-small-size: 0.75rem; /* 12px */
-  --font-caption-small-lh: 1.5;
-  --font-caption-small-weight: 400;
-  --font-caption-small-emphasized-size: 0.75rem;
-  --font-caption-small-emphasized-lh: 1.5;
-  --font-caption-small-emphasized-weight: 500;
+    --font-caption-medium-size: 0.875rem; /* 14px */
+    --font-caption-medium-lh: 1.5;
+    --font-caption-medium-weight: 400;
+    --font-caption-medium-emphasized-size: 0.875rem;
+    --font-caption-medium-emphasized-lh: 1.5;
+    --font-caption-medium-emphasized-weight: 500;
+    --font-caption-small-size: 0.75rem; /* 12px */
+    --font-caption-small-lh: 1.5;
+    --font-caption-small-weight: 400;
+    --font-caption-small-emphasized-size: 0.75rem;
+    --font-caption-small-emphasized-lh: 1.5;
+    --font-caption-small-emphasized-weight: 500;
 
-  /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
-  --container-max: 1200px;
-  --grid-columns: 4;
-  --grid-gutter: 16px;
-  --grid-margin: 16px;
+    /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
+    --container-max: 1200px;
+    --grid-columns: 4;
+    --grid-gutter: 16px;
+    --grid-margin: 16px;
 
-  /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
-  --space-4: 0.25rem;
-  --space-8: 0.5rem;
-  --space-12: 0.75rem;
-  --space-16: 1rem;
-  --space-24: 1.5rem;
-  --space-32: 2rem;
-  --space-48: 3rem;
-  --space-64: 4rem;
+    /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
+    --space-4: 0.25rem;
+    --space-8: 0.5rem;
+    --space-12: 0.75rem;
+    --space-16: 1rem;
+    --space-24: 1.5rem;
+    --space-32: 2rem;
+    --space-48: 3rem;
+    --space-64: 4rem;
 
-  /* Radii — on the spacing rhythm (8/16/24) */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-full: 999px;
+    /* Radii — on the spacing rhythm (8/16/24) */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 999px;
 
-  /* Density scaling — a global knob. Components multiply these instead
+    /* Density scaling — a global knob. Components multiply these instead
      of hardcoding pixels; toggling [data-size] on any
      ancestor rescales everything within. Defaults match `data-size="md"`;
      overrides live at the end of the file. */
-  --ds-size-root: 0.25rem;
-  --ds-radius-root: 0.25rem;
-  --ds-font-size-addition: 0rem;
+    --ds-size-root: 0.25rem;
+    --ds-radius-root: 0.25rem;
+    --ds-font-size-addition: 0rem;
 
-  /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
+    /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
      mixed from --neutral-black so shadows follow any future tint of the
      neutrals (and stay dark in both themes — --ink flips, --neutral-black
      doesn't unless --anchor-neutral itself is changed). Each ends with a soft,
      zero-offset ambient layer so the glow wraps all edges (incl. the top),
      keeping an elevated surface visible even when what's behind it matches. */
-  --shadow-sm:
-    0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 0 6px 0 color-mix(in oklab, var(--neutral-black) 5%, transparent);
-  --shadow-md:
-    0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 0 12px 0 color-mix(in oklab, var(--neutral-black) 7%, transparent);
-  --shadow-lg:
-    0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 10%, transparent),
-    0 0 16px 0 color-mix(in oklab, var(--neutral-black) 8%, transparent);
+    --shadow-sm:
+      0 1px 3px 0 color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 1px 2px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 0 6px 0 color-mix(in oklab, var(--neutral-black) 5%, transparent);
+    --shadow-md:
+      0 4px 6px -1px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 2px 4px -2px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 0 12px 0 color-mix(in oklab, var(--neutral-black) 7%, transparent);
+    --shadow-lg:
+      0 10px 15px -3px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 4px 6px -4px color-mix(in oklab, var(--neutral-black) 10%, transparent),
+      0 0 16px 0 color-mix(in oklab, var(--neutral-black) 8%, transparent);
 
-  /* Top-edge rim for elevated surfaces. A shadow defines the edge in light, so
+    /* Top-edge rim for elevated surfaces. A shadow defines the edge in light, so
      this is a no-op here; dark overrides it with a faint light highlight (the
      one cue that reads on a dark surface). Append after the shadow token. */
-  --surface-rim: inset 0 0 0 transparent;
+    --surface-rim: inset 0 0 0 transparent;
 
-  /* Motion — one composed default for hovers/state changes; raw easings for
+    /* Motion — one composed default for hovers/state changes; raw easings for
      entrances (ease-out) and exits (ease-in) that need a different curve. */
-  --motion-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --motion-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
 
-  /* Z-index — stacking ladder. Reach for the semantic name, not the number;
+    /* Z-index — stacking ladder. Reach for the semantic name, not the number;
      gaps of 10 leave room to slot custom values between. */
-  --z-base: 0;
-  --z-sticky: 10;
-  --z-dropdown: 20;
-  --z-overlay: 30;
-  --z-modal: 40;
-  --z-toast: 50;
-}
-
-/* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
-@media (min-width: 640px) {
-  :root {
-    --grid-columns: 12;
-    --grid-gutter: 20px;
-    --grid-margin: 24px;
+    --z-base: 0;
+    --z-sticky: 10;
+    --z-dropdown: 20;
+    --z-overlay: 30;
+    --z-modal: 40;
+    --z-toast: 50;
   }
-}
 
-/* Desktop ≥1024 — wider grid margins (type stays fixed across breakpoints). */
-@media (min-width: 1024px) {
-  :root {
-    --grid-margin: 32px;
+  /* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
+  @media (min-width: 640px) {
+    :root {
+      --grid-columns: 12;
+      --grid-gutter: 20px;
+      --grid-margin: 24px;
+    }
   }
-}
 
-/* ── Dark theme ────────────────────────────────────────────────────────────
+  /* Desktop ≥1024 — wider grid margins (type stays fixed across breakpoints). */
+  @media (min-width: 1024px) {
+    :root {
+      --grid-margin: 32px;
+    }
+  }
+
+  /* ── Dark theme ────────────────────────────────────────────────────────────
    Ink + fill anchors flip to light-on-dark. Semantic anchors soften. Gray
    ratios re-tuned so grays read against dark surfaces. Backgrounds swap to
    dark. Everything else derives automatically. */
 
-:root[data-theme="dark"] {
-  /* Ink/fill flip to a light-tinted version of the neutral anchor —
+  :root[data-theme="dark"] {
+    /* Ink/fill flip to a light-tinted version of the neutral anchor —
      if you retint the anchor to blue, dark-theme text becomes hint-of-blue
      near-white, not pure white. */
-  --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
-  --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
+    --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
+    --fill-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 8%, white);
 
-  /* Scrim goes pure black: the neutral anchor is a mid-gray, which barely
+    /* Scrim goes pure black: the neutral anchor is a mid-gray, which barely
      darkens an already-dark page, so the overlay could never dim on dark.
      Black (like the shadows) actually recedes the content behind a modal. */
-  --overlay-base: #000;
+    --overlay-base: #000;
 
-  --anchor-primary: 118 55 255;
+    --anchor-primary: 118 55 255;
 
-  /* Tints — matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
-  --anchor-red: 255 150 150;
-  --anchor-amber: 234 170 80;
-  --anchor-green: 84 203 153;
-  --anchor-blue: 140 190 255;
-  --anchor-fuchsia: 235 157 239;
+    /* Tints — matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
+    --anchor-red: 255 150 150;
+    --anchor-amber: 234 170 80;
+    --anchor-green: 84 203 153;
+    --anchor-blue: 140 190 255;
+    --anchor-fuchsia: 235 157 239;
 
-  /* Foreground — only primary has one. Lightened for dark-theme
+    /* Foreground — only primary has one. Lightened for dark-theme
      legibility on soft bg. Mirrors Ruter's tint-accent-foreground.
      Mixed 60% (vs Ruter's ~50%) because our violet primary sits darker
      than their blue, so it needs more white to read as bright text.
      Then re-saturated: oklch holds L (so contrast is unchanged) and
      hue, but pushes chroma 1.5× so the light text reads violet, not
      washed-out lilac. */
-  --primary-foreground: oklch(
-    from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h
-  );
-  --primary-foreground-hover: oklch(
-    from color-mix(in oklab, var(--primary-hover), white 60%) l calc(c * 1.5) h
-  );
-  --primary-foreground-active: oklch(
-    from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h
-  );
+    --primary-foreground: oklch(
+      from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h
+    );
+    --primary-foreground-hover: oklch(
+      from color-mix(in oklab, var(--primary-hover), white 60%) l calc(c * 1.5) h
+    );
+    --primary-foreground-active: oklch(
+      from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h
+    );
 
-  /* Soft variants — higher alpha for visibility against dark surfaces.
+    /* Soft variants — higher alpha for visibility against dark surfaces.
      No color-mix lightening needed because the dark tint solids are
      already lifted (red/green/blue chosen to work as text on soft bg,
      so alpha of them reads fine as bg too).
@@ -366,93 +369,95 @@
      only deep solid left in dark (a violet, not a light tint), so the same
      alpha lifts far less luminance off the surface and the resting
      secondary button reads too flat. */
-  --primary-soft: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.28);
-  --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.39);
-  --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.43);
+    --primary-soft: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.28);
+    --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.39);
+    --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.43);
 
-  /* Red drops 2 alpha points — it's the lightest solid, so its surface has
+    /* Red drops 2 alpha points — it's the lightest solid, so its surface has
      to run paler to hold 4.5:1. */
-  --red-soft: rgb(from var(--red) r g b / 0.18);
-  --red-soft-hover: rgb(from var(--red) r g b / 0.29);
-  --red-soft-active: rgb(from var(--red) r g b / 0.33);
-  --amber-soft: rgb(from var(--amber) r g b / 0.2);
-  --amber-soft-hover: rgb(from var(--amber) r g b / 0.31);
-  --amber-soft-active: rgb(from var(--amber) r g b / 0.35);
-  --green-soft: rgb(from var(--green) r g b / 0.2);
-  --green-soft-hover: rgb(from var(--green) r g b / 0.31);
-  --green-soft-active: rgb(from var(--green) r g b / 0.35);
-  --blue-soft: rgb(from var(--blue) r g b / 0.2);
-  --blue-soft-hover: rgb(from var(--blue) r g b / 0.31);
-  --blue-soft-active: rgb(from var(--blue) r g b / 0.35);
-  --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.2);
-  --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.31);
-  --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.35);
+    --red-soft: rgb(from var(--red) r g b / 0.18);
+    --red-soft-hover: rgb(from var(--red) r g b / 0.29);
+    --red-soft-active: rgb(from var(--red) r g b / 0.33);
+    --amber-soft: rgb(from var(--amber) r g b / 0.2);
+    --amber-soft-hover: rgb(from var(--amber) r g b / 0.31);
+    --amber-soft-active: rgb(from var(--amber) r g b / 0.35);
+    --green-soft: rgb(from var(--green) r g b / 0.2);
+    --green-soft-hover: rgb(from var(--green) r g b / 0.31);
+    --green-soft-active: rgb(from var(--green) r g b / 0.35);
+    --blue-soft: rgb(from var(--blue) r g b / 0.2);
+    --blue-soft-hover: rgb(from var(--blue) r g b / 0.31);
+    --blue-soft-active: rgb(from var(--blue) r g b / 0.35);
+    --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.2);
+    --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.31);
+    --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.35);
 
-  /* Dark backgrounds derive from the same anchor. Primary mixes anchor
+    /* Dark backgrounds derive from the same anchor. Primary mixes anchor
      with black; secondary/hover/active add hints of white to lift. */
-  --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 90%, black);
-  --background-primary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 93%, white);
-  --background-primary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 89%, white);
-  --background-secondary: color-mix(in oklab, rgb(var(--anchor-neutral)) 97%, white);
-  --background-secondary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 86%, white);
-  --background-secondary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 83%, white);
+    --background-primary: color-mix(in oklab, rgb(var(--anchor-neutral)) 90%, black);
+    --background-primary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 93%, white);
+    --background-primary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 89%, white);
+    --background-secondary: color-mix(in oklab, rgb(var(--anchor-neutral)) 97%, white);
+    --background-secondary-hover: color-mix(in oklab, rgb(var(--anchor-neutral)) 86%, white);
+    --background-secondary-active: color-mix(in oklab, rgb(var(--anchor-neutral)) 83%, white);
 
-  /* Overlay ramps deeper for dark-theme scrim */
-  --overlay: rgb(from var(--overlay-base) r g b / 0.64);
-  --overlay-hover: rgb(from var(--overlay-base) r g b / 0.75);
-  --overlay-active: rgb(from var(--overlay-base) r g b / 0.79);
+    /* Overlay ramps deeper for dark-theme scrim */
+    --overlay: rgb(from var(--overlay-base) r g b / 0.64);
+    --overlay-hover: rgb(from var(--overlay-base) r g b / 0.75);
+    --overlay-active: rgb(from var(--overlay-base) r g b / 0.79);
 
-  /* Grays lifted higher against a dark surface — anchor mixed further toward
+    /* Grays lifted higher against a dark surface — anchor mixed further toward
      white than in light theme. --neutral-black stays anchor-defined (dark)
      so shadows keep their weight. */
-  --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 62%, white);
-  --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 55%, white);
-  --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 52%, white);
-  --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 70%, white);
-  --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 62%, white);
-  --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 58%, white);
-  --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 76%, white);
-  --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 68%, white);
-  --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 64%, white);
-  --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 82%, white);
-  --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 74%, white);
-  --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
+    --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 62%, white);
+    --neutral-gray-1-hover: color-mix(in oklab, var(--neutral-black) 55%, white);
+    --neutral-gray-1-active: color-mix(in oklab, var(--neutral-black) 52%, white);
+    --neutral-gray-2: color-mix(in oklab, var(--neutral-black) 70%, white);
+    --neutral-gray-2-hover: color-mix(in oklab, var(--neutral-black) 62%, white);
+    --neutral-gray-2-active: color-mix(in oklab, var(--neutral-black) 58%, white);
+    --neutral-gray-3: color-mix(in oklab, var(--neutral-black) 76%, white);
+    --neutral-gray-3-hover: color-mix(in oklab, var(--neutral-black) 68%, white);
+    --neutral-gray-3-active: color-mix(in oklab, var(--neutral-black) 64%, white);
+    --neutral-gray-4: color-mix(in oklab, var(--neutral-black) 82%, white);
+    --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 74%, white);
+    --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
 
-  /* Same shape as light — offsets, alphas, and the ambient edge layer all
+    /* Same shape as light — offsets, alphas, and the ambient edge layer all
      match. The only difference is colour: pure black instead of the neutral
      tint, so the shadow still reads on a dark surface (a one-off: dark shadows
      don't follow the neutral tint). */
-  --shadow-sm:
-    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 6px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 12px 0 rgb(0 0 0 / 0.07);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 16px 0 rgb(0 0 0 / 0.08);
+    --shadow-sm:
+      0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1), 0 0 6px 0 rgb(0 0 0 / 0.05);
+    --shadow-md:
+      0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1), 0 0 12px 0 rgb(0 0 0 / 0.07);
+    --shadow-lg:
+      0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1),
+      0 0 16px 0 rgb(0 0 0 / 0.08);
 
-  /* A dark shadow can't define a top edge on a dark page, so catch the top rim
+    /* A dark shadow can't define a top edge on a dark page, so catch the top rim
      with a faint light highlight instead — the dark-theme counterpart to the
      drop shadow (see --surface-rim in :root). */
-  --surface-rim: inset 0 1px 0 rgb(255 255 255 / 0.04);
-}
+    --surface-rim: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
 
-/* ── Density knob ──────────────────────────────────────────────────────────
+  /* ── Density knob ──────────────────────────────────────────────────────────
    Set `data-size="sm|md|lg"` on any ancestor to rescale everything driven by
    --ds-* below that node. Root default matches md. */
 
-[data-size="sm"] {
-  --ds-size-root: 0.1875rem;
-  --ds-radius-root: 0.1875rem;
-  --ds-font-size-addition: -0.125rem;
-}
+  [data-size="sm"] {
+    --ds-size-root: 0.1875rem;
+    --ds-radius-root: 0.1875rem;
+    --ds-font-size-addition: -0.125rem;
+  }
 
-[data-size="md"] {
-  --ds-size-root: 0.25rem;
-  --ds-radius-root: 0.25rem;
-  --ds-font-size-addition: 0rem;
-}
+  [data-size="md"] {
+    --ds-size-root: 0.25rem;
+    --ds-radius-root: 0.25rem;
+    --ds-font-size-addition: 0rem;
+  }
 
-[data-size="lg"] {
-  --ds-size-root: 0.3125rem;
-  --ds-radius-root: 0.3125rem;
-  --ds-font-size-addition: 0.125rem;
+  [data-size="lg"] {
+    --ds-size-root: 0.3125rem;
+    --ds-radius-root: 0.3125rem;
+    --ds-font-size-addition: 0.125rem;
+  }
 }

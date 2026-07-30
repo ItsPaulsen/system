@@ -2,9 +2,12 @@
    Everything below references demo tokens (`--primary`, `--ink-*`, `--motion-*`
    …). Restyle by swapping tokens in `tokens.css`. */
 
-/* ── Switch ────────────────────────────────────────────────────────────── */
+@layer base, tokens, components;
 
-/* Structure:
+@layer components {
+  /* ── Switch ────────────────────────────────────────────────────────────── */
+
+  /* Structure:
    <label class="switch">
      <span class="switch__input-wrapper">
        <input type="checkbox" class="switch__input" />
@@ -13,81 +16,81 @@
      <span class="switch__label">Label</span>
    </label> */
 
-.switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-}
+  .switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
-.switch__input-wrapper {
-  position: relative;
-  display: inline-block;
-  line-height: 0;
-}
+  .switch__input-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+  }
 
-.switch__input {
-  appearance: none;
-  display: block;
-  width: 48px;
-  height: 28px;
-  padding: 0;
-  margin: 0;
-  background: var(--ink-tertiary);
-  border: 0;
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  transition: background var(--motion-default);
-}
+  .switch__input {
+    appearance: none;
+    display: block;
+    width: 48px;
+    height: 28px;
+    padding: 0;
+    margin: 0;
+    background: var(--ink-tertiary);
+    border: 0;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background var(--motion-default);
+  }
 
-.switch__input:checked {
-  background: var(--primary);
-}
+  .switch__input:checked {
+    background: var(--primary);
+  }
 
-.switch__input:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
+  .switch__input:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-.switch__input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  .switch__input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-.switch__knob {
-  position: absolute;
-  top: 2px;
-  inset-inline-start: 2px;
-  width: 24px;
-  height: 24px;
-  background: var(--background-secondary);
-  border-radius: var(--radius-full);
-  pointer-events: none;
-  transition: transform var(--motion-default);
-}
+  .switch__knob {
+    position: absolute;
+    top: 2px;
+    inset-inline-start: 2px;
+    width: 24px;
+    height: 24px;
+    background: var(--background-secondary);
+    border-radius: var(--radius-full);
+    pointer-events: none;
+    transition: transform var(--motion-default);
+  }
 
-/* Knob rests at the inline-start edge and slides to the inline-end; --flip
+  /* Knob rests at the inline-start edge and slides to the inline-end; --flip
    negates the travel in RTL so it moves toward the correct end. */
-.switch__input:checked + .switch__knob {
-  transform: translateX(calc(20px * var(--flip)));
-}
+  .switch__input:checked + .switch__knob {
+    transform: translateX(calc(20px * var(--flip)));
+  }
 
-.switch__label {
-  font-size: 1rem;
-  color: var(--ink-primary);
-  cursor: pointer;
-}
+  .switch__label {
+    font-size: 1rem;
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
 
-.switch:has(.switch__input:disabled) .switch__label {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  .switch:has(.switch__input:disabled) .switch__label {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-/* ── Checkbox & Radio ──────────────────────────────────────────────────── */
+  /* ── Checkbox & Radio ──────────────────────────────────────────────────── */
 
-/* Native inputs styled directly with appearance:none, so forms and screen
+  /* Native inputs styled directly with appearance:none, so forms and screen
    readers work with no JavaScript. Checkbox = square with a checkmark that
    strokes on; radio = circle whose border thickens into a ring. Both share
    sizing, focus, hover, and disabled treatment.
@@ -111,160 +114,160 @@
        <span class="radio__label">Label</span>
      </label> */
 
-.checkbox,
-.radio {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
-}
+  .checkbox,
+  .radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
-.checkbox__input,
-.radio__input {
-  appearance: none;
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  background: transparent;
-  border: 2px solid var(--ink-tertiary);
-  cursor: pointer;
-  transition:
-    background var(--motion-default),
-    border-color var(--motion-default),
-    border-width var(--motion-default);
-}
+  .checkbox__input,
+  .radio__input {
+    appearance: none;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    background: transparent;
+    border: 2px solid var(--ink-tertiary);
+    cursor: pointer;
+    transition:
+      background var(--motion-default),
+      border-color var(--motion-default),
+      border-width var(--motion-default);
+  }
 
-.checkbox__input {
-  border-radius: 4px;
-}
+  .checkbox__input {
+    border-radius: 4px;
+  }
 
-.radio__input {
-  border-radius: var(--radius-full);
-}
+  .radio__input {
+    border-radius: var(--radius-full);
+  }
 
-.checkbox__input:focus-visible,
-.radio__input:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
+  .checkbox__input:focus-visible,
+  .radio__input:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-/* Checkmark — an inline SVG overlaid on the box via grid, so the tick can
+  /* Checkmark — an inline SVG overlaid on the box via grid, so the tick can
    stroke itself on (Ruter's draw animation) instead of just appearing. The
    input and the icon share one grid cell. Declared before the hover/checked
    rules so its lower-specificity input selector stays in ascending order. */
-.checkbox__box {
-  display: grid;
-  flex-shrink: 0;
-}
+  .checkbox__box {
+    display: grid;
+    flex-shrink: 0;
+  }
 
-.checkbox__box .checkbox__input,
-.checkbox__check {
-  grid-area: 1 / 1;
-}
+  .checkbox__box .checkbox__input,
+  .checkbox__check {
+    grid-area: 1 / 1;
+  }
 
-/* Ruter's icon logic with our Tabler check path: the svg fills the box (grid
+  /* Ruter's icon logic with our Tabler check path: the svg fills the box (grid
    cell, stretched) so the box size drives everything and the svg keeps its
    native stroke-width 2 (≈1.67px at this size). No padding — the Tabler path's
    own 5→20 bounds give the inset; Ruter needs padding because its path runs
    edge-to-edge, ours doesn't. Presentation lives on the <svg> like the other
    inline icons; stroke="currentColor" reads this colour. */
-.checkbox__check {
-  color: var(--neutral-white);
-  pointer-events: none;
-}
+  .checkbox__check {
+    color: var(--neutral-white);
+    pointer-events: none;
+  }
 
-/* pathLength="1" normalises the tick so the 0→1 dash draw covers it exactly. */
-.checkbox__check path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  opacity: 0;
-}
-
-.checkbox__input:checked ~ .checkbox__check path {
-  animation: checkbox-draw 0.2s ease-out forwards;
-}
-
-@keyframes checkbox-draw {
-  0% {
+  /* pathLength="1" normalises the tick so the 0→1 dash draw covers it exactly. */
+  .checkbox__check path {
+    stroke-dasharray: 1;
     stroke-dashoffset: 1;
     opacity: 0;
   }
 
-  10% {
-    opacity: 1;
-  }
-
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
   .checkbox__input:checked ~ .checkbox__check path {
-    animation: none;
-    stroke-dashoffset: 0;
-    opacity: 1;
+    animation: checkbox-draw 0.2s ease-out forwards;
   }
-}
 
-.checkbox__input:disabled,
-.radio__input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  @keyframes checkbox-draw {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
 
-/* Checked — checkbox fills with primary; radio grows its border into a solid
+    10% {
+      opacity: 1;
+    }
+
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .checkbox__input:checked ~ .checkbox__check path {
+      animation: none;
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
+  .checkbox__input:disabled,
+  .radio__input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Checked — checkbox fills with primary; radio grows its border into a solid
    ring (Ruter draws the dot with border-width, no inner element — box-sizing
    keeps the 20px footprint fixed). */
-.checkbox__input:checked {
-  background-color: var(--primary);
-  border-color: var(--primary);
-}
-
-.radio__input:checked {
-  border-color: var(--primary);
-  border-width: 6px;
-}
-
-/* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
-   Declared last: higher specificity than the :disabled/:checked rules. */
-@media (hover: hover) {
-  .checkbox__input:not(:disabled, :checked):hover,
-  .radio__input:not(:disabled, :checked):hover {
-    background: var(--fill-quaternary-hover);
+  .checkbox__input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
   }
-}
 
-/* Radios/checkboxes ship as a group — a vertical stack of options. Radios
+  .radio__input:checked {
+    border-color: var(--primary);
+    border-width: 6px;
+  }
+
+  /* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
+   Declared last: higher specificity than the :disabled/:checked rules. */
+  @media (hover: hover) {
+    .checkbox__input:not(:disabled, :checked):hover,
+    .radio__input:not(:disabled, :checked):hover {
+      background: var(--fill-quaternary-hover);
+    }
+  }
+
+  /* Radios/checkboxes ship as a group — a vertical stack of options. Radios
    share one input name for mutual exclusion; checkboxes toggle independently. */
-.radio-group,
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  align-items: flex-start;
-}
+  .radio-group,
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
 
-.checkbox__label,
-.radio__label {
-  font-size: 1rem;
-  color: var(--ink-primary);
-  cursor: pointer;
-}
+  .checkbox__label,
+  .radio__label {
+    font-size: 1rem;
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
 
-.checkbox:has(:disabled) .checkbox__label,
-.radio:has(:disabled) .radio__label {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  .checkbox:has(:disabled) .checkbox__label,
+  .radio:has(:disabled) .radio__label {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-/* ── Tabs ──────────────────────────────────────────────────────────────── */
+  /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
-/* Segmented control — track is a fill tint over whatever surface the tabs
+  /* Segmented control — track is a fill tint over whatever surface the tabs
    sit on. Active pill uses --background-secondary so it matches the elevated
    surface (white in light, lighter-dark in dark), giving the "punched through"
    effect. Uses native radio inputs so no JavaScript is needed for mutual
@@ -285,85 +288,85 @@
      …
    </div> */
 
-.tabs {
-  display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.25rem;
-  background: var(--fill-tertiary);
-  border-radius: var(--radius-sm);
-}
+  .tabs {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--fill-tertiary);
+    border-radius: var(--radius-sm);
+  }
 
-.tabs__tab {
-  position: relative;
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  color: var(--ink-secondary);
-  border-radius: 6px;
-  cursor: pointer;
-  -webkit-user-select: none;
-  user-select: none;
+  .tabs__tab {
+    position: relative;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
 
-  /* Skip the browser's ~300ms double-tap-zoom wait so selection is instant on
+    /* Skip the browser's ~300ms double-tap-zoom wait so selection is instant on
      touch (the tab still checks on tap, just without the delay). */
-  touch-action: manipulation;
-  transition: background var(--motion-default);
-}
+    touch-action: manipulation;
+    transition: background var(--motion-default);
+  }
 
-.tabs__radio {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  clip-path: inset(50%);
-}
+  .tabs__radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+  }
 
-/* State is driven off the radio via the adjacent-sibling combinator (Ruter's
+  /* State is driven off the radio via the adjacent-sibling combinator (Ruter's
    pattern) — cheaper and more broadly supported than :has(). Base states first,
    then the higher-specificity interaction states. */
-.tabs__radio:checked + .tabs__tab {
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-}
-
-.tabs__radio:disabled + .tabs__tab {
-  cursor: not-allowed;
-  color: var(--ink-tertiary);
-  opacity: 0.5;
-}
-
-.tabs__radio:focus-visible + .tabs__tab {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  animation: focus-ring-converge var(--motion-default);
-}
-
-/* Hover only where a real pointer exists, so it doesn't stick after a tap on
-   touch; :active covers the pressed feedback. */
-@media (hover: hover) {
-  .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
-    background: var(--fill-quaternary-hover);
+  .tabs__radio:checked + .tabs__tab {
+    background: var(--background-secondary);
+    color: var(--ink-primary);
   }
-}
 
-.tabs__radio:not(:checked, :disabled) + .tabs__tab:active {
-  background: var(--fill-quaternary-active);
-}
+  .tabs__radio:disabled + .tabs__tab {
+    cursor: not-allowed;
+    color: var(--ink-tertiary);
+    opacity: 0.5;
+  }
 
-.tabs__radio:checked + .tabs__tab:active {
-  background: var(--background-secondary-active);
-}
+  .tabs__radio:focus-visible + .tabs__tab {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    animation: focus-ring-converge var(--motion-default);
+  }
 
-/* ── Input ─────────────────────────────────────────────────────────────── */
+  /* Hover only where a real pointer exists, so it doesn't stick after a tap on
+   touch; :active covers the pressed feedback. */
+  @media (hover: hover) {
+    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
+      background: var(--fill-quaternary-hover);
+    }
+  }
 
-/* Text input with optional label, leading/trailing slots, and fill/outline
+  .tabs__radio:not(:checked, :disabled) + .tabs__tab:active {
+    background: var(--fill-quaternary-active);
+  }
+
+  .tabs__radio:checked + .tabs__tab:active {
+    background: var(--background-secondary-active);
+  }
+
+  /* ── Input ─────────────────────────────────────────────────────────────── */
+
+  /* Text input with optional label, leading/trailing slots, and fill/outline
    variants. The container carries the border and the active state; the <input>
    is chromeless so leading/trailing icons sit flush inside the same box.
 
@@ -382,114 +385,114 @@
      --rounded   — pill-shaped
      --invalid   — danger border (red on focus too) */
 
-.input {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 100%;
-}
+  .input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+  }
 
-.input__label {
-  font-size: var(--font-caption-medium-size);
-  font-weight: var(--font-caption-medium-weight);
-  color: var(--ink-primary);
-}
+  .input__label {
+    font-size: var(--font-caption-medium-size);
+    font-weight: var(--font-caption-medium-weight);
+    color: var(--ink-primary);
+  }
 
-.input__label-required {
-  margin-inline-start: 0.25rem;
-  color: var(--red);
-}
+  .input__label-required {
+    margin-inline-start: 0.25rem;
+    color: var(--red);
+  }
 
-.input__container {
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  border: 1px solid var(--ink-tertiary);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-}
+  .input__container {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    border: 1px solid var(--ink-tertiary);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-primary);
+  }
 
-/* Active state is the border itself (MD3 outlined field): it turns the focus
+  /* Active state is the border itself (MD3 outlined field): it turns the focus
    colour and a 1px outset shadow doubles it to ~2px on the outside — no
    separate ring, no layout shift. Uses --focus (not raw primary) since this is
    a focus affordance, so it matches every other focus ring. */
-.input__container:focus-within {
-  border-color: var(--focus);
-  box-shadow: 0 0 0 1px var(--focus);
-}
+  .input__container:focus-within {
+    border-color: var(--focus);
+    box-shadow: 0 0 0 1px var(--focus);
+  }
 
-.input__container--fill {
-  background: var(--background-primary);
-  border-color: transparent;
-}
+  .input__container--fill {
+    background: var(--background-primary);
+    border-color: transparent;
+  }
 
-.input__container--rounded {
-  border-radius: var(--radius-full);
-}
+  .input__container--rounded {
+    border-radius: var(--radius-full);
+  }
 
-/* Invalid — either an explicit --invalid modifier, or a field the browser
+  /* Invalid — either an explicit --invalid modifier, or a field the browser
    itself reports as invalid after the user has interacted (:user-invalid), so
    live constraint validation needs no JS class-toggling. */
-.input__container--invalid,
-.input__container:has(:user-invalid) {
-  border-color: var(--red);
-}
+  .input__container--invalid,
+  .input__container:has(:user-invalid) {
+    border-color: var(--red);
+  }
 
-.input__container--invalid:focus-within,
-.input__container:has(:user-invalid):focus-within {
-  border-color: var(--red);
-  box-shadow: 0 0 0 1px var(--red);
-}
+  .input__container--invalid:focus-within,
+  .input__container:has(:user-invalid):focus-within {
+    border-color: var(--red);
+    box-shadow: 0 0 0 1px var(--red);
+  }
 
-.input__element {
-  flex: 1;
-  min-width: 0;
-  padding: 0 1rem;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  outline: none;
-  text-overflow: ellipsis;
-}
+  .input__element {
+    flex: 1;
+    min-width: 0;
+    padding: 0 1rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    outline: none;
+    text-overflow: ellipsis;
+  }
 
-.input__element::placeholder {
-  color: var(--ink-tertiary);
-}
+  .input__element::placeholder {
+    color: var(--ink-tertiary);
+  }
 
-.input__container:has(.input__element:disabled) {
-  color: var(--ink-tertiary);
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+  .input__container:has(.input__element:disabled) {
+    color: var(--ink-tertiary);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 
-.input__element:disabled {
-  cursor: not-allowed;
-}
+  .input__element:disabled {
+    cursor: not-allowed;
+  }
 
-.input__leading,
-.input__trailing {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding-inline: 0.75rem;
-  color: var(--ink-secondary);
-}
+  .input__leading,
+  .input__trailing {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0.75rem;
+    color: var(--ink-secondary);
+  }
 
-.input__leading + .input__element {
-  padding-inline-start: 0;
-}
+  .input__leading + .input__element {
+    padding-inline-start: 0;
+  }
 
-.input__element:has(+ .input__trailing) {
-  padding-inline-end: 0;
-}
+  .input__element:has(+ .input__trailing) {
+    padding-inline-end: 0;
+  }
 
-/* ── Textarea ──────────────────────────────────────────────────────────── */
+  /* ── Textarea ──────────────────────────────────────────────────────────── */
 
-/* Reuses the input shell (label + container + focus/invalid/disabled); the
+  /* Reuses the input shell (label + container + focus/invalid/disabled); the
    container just stretches and the field gets vertical resize.
 
    Structure:
@@ -499,24 +502,24 @@
        <textarea class="input__element" rows="4"></textarea>
      </span>
    </label> */
-.input__container--textarea {
-  align-items: stretch;
-  min-height: auto;
-}
+  .input__container--textarea {
+    align-items: stretch;
+    min-height: auto;
+  }
 
-.input__container--textarea .input__element {
-  min-height: 96px;
-  padding: 0.625rem 1rem;
-  resize: vertical;
+  .input__container--textarea .input__element {
+    min-height: 96px;
+    padding: 0.625rem 1rem;
+    resize: vertical;
 
-  /* Grow with content up to the user's manual resize (supported browsers);
+    /* Grow with content up to the user's manual resize (supported browsers);
      others just keep the fixed min-height + drag handle. */
-  field-sizing: content;
-}
+    field-sizing: content;
+  }
 
-/* ── Select ────────────────────────────────────────────────────────────── */
+  /* ── Select ────────────────────────────────────────────────────────────── */
 
-/* Native <select> in the input shell; the UA arrow is removed and our chevron
+  /* Native <select> in the input shell; the UA arrow is removed and our chevron
    is drawn with ::after, so no extra markup.
 
    Structure:
@@ -526,43 +529,43 @@
        <select class="input__element"><option>…</option></select>
      </span>
    </label> */
-.input__container--select {
-  position: relative;
-}
+  .input__container--select {
+    position: relative;
+  }
 
-.input__container--select .input__element {
-  appearance: none;
-  padding-inline-end: 2.5rem;
-  cursor: pointer;
-}
+  .input__container--select .input__element {
+    appearance: none;
+    padding-inline-end: 2.5rem;
+    cursor: pointer;
+  }
 
-.input__container--select::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  inset-inline-end: 1rem;
-  translate: 0 -50%;
-  width: 1.25em;
-  height: 1.25em;
-  background: var(--ink-secondary);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  pointer-events: none;
-}
+  .input__container--select::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 1rem;
+    translate: 0 -50%;
+    width: 1.25em;
+    height: 1.25em;
+    background: var(--ink-secondary);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    pointer-events: none;
+  }
 
-/* Kill the browser autofill surface tint — keep our own (often transparent)
+  /* Kill the browser autofill surface tint — keep our own (often transparent)
    background. The absurd transition duration defers the UA's autofill
    background-color paint indefinitely; text-fill-color keeps our ink. */
-.input__element:-webkit-autofill,
-.input__element:-webkit-autofill:hover,
-.input__element:-webkit-autofill:focus {
-  -webkit-text-fill-color: var(--ink-primary);
-  transition: background-color 100000s ease-out;
-}
+  .input__element:-webkit-autofill,
+  .input__element:-webkit-autofill:hover,
+  .input__element:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--ink-primary);
+    transition: background-color 100000s ease-out;
+  }
 
-/* ── Select ────────────────────────────────────────────────────────────── */
+  /* ── Select ────────────────────────────────────────────────────────────── */
 
-/* Custom listbox — a styled trigger + a floating option list, for when the
+  /* Custom listbox — a styled trigger + a floating option list, for when the
    native picker's look isn't enough (custom option rendering, a checkmark on
    the selected row). Prefer Native Select when you don't need that. app.js
    (initSelects) wires open/close, selection, and keyboard nav.
@@ -578,203 +581,203 @@
        …
      </ul>
    </div> */
-.select {
-  position: relative;
-}
+  .select {
+    position: relative;
+  }
 
-.select__trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  width: 100%;
-  min-height: 48px;
-  padding: 0 1rem;
-  border: 1px solid var(--ink-tertiary);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-  font: inherit;
-  font-size: var(--font-body-small-size);
-  text-align: start;
-  cursor: pointer;
-}
+  .select__trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 1rem;
+    border: 1px solid var(--ink-tertiary);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-primary);
+    font: inherit;
+    font-size: var(--font-body-small-size);
+    text-align: start;
+    cursor: pointer;
+  }
 
-/* Active border on keyboard focus and while open (focus moves to the list on
+  /* Active border on keyboard focus and while open (focus moves to the list on
    open, so key off aria-expanded to keep the border lit) — mirrors the input. */
-.select__trigger:focus-visible,
-.select__trigger[aria-expanded="true"] {
-  outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 1px var(--focus);
-}
+  .select__trigger:focus-visible,
+  .select__trigger[aria-expanded="true"] {
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 1px var(--focus);
+  }
 
-.select__chevron {
-  flex-shrink: 0;
-  width: 1.25em;
-  height: 1.25em;
-  color: var(--ink-secondary);
-}
+  .select__chevron {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    color: var(--ink-secondary);
+  }
 
-.select__trigger[aria-expanded="true"] .select__chevron {
-  rotate: 180deg;
-}
+  .select__trigger[aria-expanded="true"] .select__chevron {
+    rotate: 180deg;
+  }
 
-.select__list {
-  position: absolute;
-  top: calc(100% + 4px);
-  inset-inline-start: 0;
-  z-index: 30;
-  width: 100%;
-  max-height: 260px;
-  margin: 0;
-  padding: 4px;
-  overflow-y: auto;
-  list-style: none;
-  background: var(--background-secondary);
+  .select__list {
+    position: absolute;
+    top: calc(100% + 4px);
+    inset-inline-start: 0;
+    z-index: 30;
+    width: 100%;
+    max-height: 260px;
+    margin: 0;
+    padding: 4px;
+    overflow-y: auto;
+    list-style: none;
+    background: var(--background-secondary);
 
-  /* Concentric with 8px options: surface = option radius + 4px padding. */
-  border-radius: calc(var(--radius-sm) + 4px);
+    /* Concentric with 8px options: surface = option radius + 4px padding. */
+    border-radius: calc(var(--radius-sm) + 4px);
 
-  /* Matches Dropdown Menu — both are a trigger opening a floating list. */
-  box-shadow: var(--shadow-md), var(--surface-rim);
+    /* Matches Dropdown Menu — both are a trigger opening a floating list. */
+    box-shadow: var(--shadow-md), var(--surface-rim);
 
-  /* The list takes programmatic focus for key handling, but the active option
+    /* The list takes programmatic focus for key handling, but the active option
      (.is-active) is the visible indicator — so no ring on the surface itself. */
-  outline: none;
+    outline: none;
 
-  /* Open-only fade + rise, matching the Dropdown Menu popover. */
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
-.select__list[hidden] {
-  display: none;
-}
-
-.select__list:not([hidden]) {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.15s ease-out,
-    transform 0.15s ease-out;
-}
-
-@starting-style {
-  .select__list:not([hidden]) {
+    /* Open-only fade + rise, matching the Dropdown Menu popover. */
     opacity: 0;
     transform: translateY(-4px);
   }
-}
 
-.select__option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  min-height: 40px;
-  padding: 0 0.75rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--font-body-small-size);
-  color: var(--ink-primary);
-  cursor: pointer;
-}
+  .select__list[hidden] {
+    display: none;
+  }
 
-.select__option.is-active {
-  background: var(--background-secondary-hover);
-}
+  .select__list:not([hidden]) {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.15s ease-out,
+      transform 0.15s ease-out;
+  }
 
-@media (hover: hover) {
-  .select__option:hover {
+  @starting-style {
+    .select__list:not([hidden]) {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  .select__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 40px;
+    padding: 0 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-body-small-size);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  .select__option.is-active {
     background: var(--background-secondary-hover);
   }
-}
 
-.select__option[aria-selected="true"] {
-  font-weight: 500;
-}
+  @media (hover: hover) {
+    .select__option:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
 
-/* Tabler check on the selected row, tinted to match the row's text. */
-.select__option[aria-selected="true"]::after {
-  content: "";
-  flex-shrink: 0;
-  width: 1.125em;
-  height: 1.125em;
-  background: currentcolor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
+  .select__option[aria-selected="true"] {
+    font-weight: 500;
+  }
 
-/* ── Popover ───────────────────────────────────────────────────────────── */
+  /* Tabler check on the selected row, tinted to match the row's text. */
+  .select__option[aria-selected="true"]::after {
+    content: "";
+    flex-shrink: 0;
+    width: 1.125em;
+    height: 1.125em;
+    background: currentcolor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
 
-/* Reusable floating surface built on the native Popover API. Because it lives
+  /* ── Popover ───────────────────────────────────────────────────────────── */
+
+  /* Reusable floating surface built on the native Popover API. Because it lives
    in the top layer it escapes any overflow/stacking context, and popover="auto"
    gives light-dismiss (outside click), Esc, and focus-return for free. Placed
    with CSS anchor positioning against its invoker (the popovertarget button);
    app.js (positionPopover) covers engines without anchor positioning. Open-only
    fade + rise, matching Dialog — close is instant. */
-.popover {
-  position: fixed;
-  width: max-content;
-  max-width: min(320px, calc(100vw - 16px));
-  margin: 0;
-  padding: 4px;
-  border: 0;
-
-  /* Concentric with 8px items: surface = item radius + 4px padding. */
-  border-radius: calc(var(--radius-sm) + 4px);
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  box-shadow: var(--shadow-md), var(--surface-rim);
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
-/* Declarative placement where supported: below the invoker, start-aligned,
-   flipping above when there's no room. */
-@supports (position-area: bottom) {
   .popover {
-    margin-block-start: 4px;
-    position-area: block-end span-inline-end;
-    position-try-fallbacks: flip-block;
-  }
-}
+    position: fixed;
+    width: max-content;
+    max-width: min(320px, calc(100vw - 16px));
+    margin: 0;
+    padding: 4px;
+    border: 0;
 
-.popover:popover-open {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.15s ease-out,
-    transform 0.15s ease-out;
-}
-
-@starting-style {
-  .popover:popover-open {
+    /* Concentric with 8px items: surface = item radius + 4px padding. */
+    border-radius: calc(var(--radius-sm) + 4px);
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    box-shadow: var(--shadow-md), var(--surface-rim);
     opacity: 0;
     transform: translateY(-4px);
   }
-}
 
-/* Roomier padding for a popover holding prose/controls, rather than the 4px
-   used by the menu (where each row supplies its own padding). */
-.popover--panel {
-  padding: 1rem;
-  font-size: var(--font-body-small-size);
-  color: var(--ink-secondary);
-}
-
-/* Centre on the trigger instead of the menu's start-aligned edge (initPopovers
-   mirrors this for engines without anchor positioning). */
-@supports (position-area: bottom) {
-  .popover--center {
-    position-area: block-end;
-    justify-self: anchor-center;
+  /* Declarative placement where supported: below the invoker, start-aligned,
+   flipping above when there's no room. */
+  @supports (position-area: bottom) {
+    .popover {
+      margin-block-start: 4px;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-block;
+    }
   }
-}
 
-/* ── Dropdown Menu ─────────────────────────────────────────────────────── */
+  .popover:popover-open {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.15s ease-out,
+      transform 0.15s ease-out;
+  }
 
-/* Menu-button pattern: a trigger opens a floating list of actions (role="menu"
+  @starting-style {
+    .popover:popover-open {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  /* Roomier padding for a popover holding prose/controls, rather than the 4px
+   used by the menu (where each row supplies its own padding). */
+  .popover--panel {
+    padding: 1rem;
+    font-size: var(--font-body-small-size);
+    color: var(--ink-secondary);
+  }
+
+  /* Centre on the trigger instead of the menu's start-aligned edge (initPopovers
+   mirrors this for engines without anchor positioning). */
+  @supports (position-area: bottom) {
+    .popover--center {
+      position-area: block-end;
+      justify-self: anchor-center;
+    }
+  }
+
+  /* ── Dropdown Menu ─────────────────────────────────────────────────────── */
+
+  /* Menu-button pattern: a trigger opens a floating list of actions (role="menu"
    / menuitem) built on the Popover primitive above — as opposed to Select's
    single-value listbox. The native popover owns show/hide/dismiss; app.js
    (initMenus) adds the menu keyboard model (roving arrow focus + type-ahead).
@@ -789,127 +792,127 @@
        <button class="menu__item menu__item--danger" role="menuitem" tabindex="-1">…</button>
      </div>
    </div> */
-.menu {
-  display: inline-block;
-}
+  .menu {
+    display: inline-block;
+  }
 
-.menu__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 48px;
-  padding: 0 1rem;
-  border: 1px solid var(--ink-tertiary);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-  font: inherit;
-  font-size: var(--font-body-small-size);
-  cursor: pointer;
-}
+  .menu__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0 1rem;
+    border: 1px solid var(--ink-tertiary);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-primary);
+    font: inherit;
+    font-size: var(--font-body-small-size);
+    cursor: pointer;
+  }
 
-.menu__trigger:focus-visible,
-.menu__trigger[aria-expanded="true"] {
-  outline: none;
-  border-color: var(--focus);
-  box-shadow: 0 0 0 1px var(--focus);
-}
+  .menu__trigger:focus-visible,
+  .menu__trigger[aria-expanded="true"] {
+    outline: none;
+    border-color: var(--focus);
+    box-shadow: 0 0 0 1px var(--focus);
+  }
 
-.menu__chevron {
-  flex-shrink: 0;
-  width: 1.25em;
-  height: 1.25em;
-  color: var(--ink-secondary);
-}
+  .menu__chevron {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    color: var(--ink-secondary);
+  }
 
-.menu__trigger[aria-expanded="true"] .menu__chevron {
-  rotate: 180deg;
-}
+  .menu__trigger[aria-expanded="true"] .menu__chevron {
+    rotate: 180deg;
+  }
 
-/* Surface comes from .popover; the menu only sets its width. */
-.menu__list {
-  min-width: 220px;
-}
+  /* Surface comes from .popover; the menu only sets its width. */
+  .menu__list {
+    min-width: 220px;
+  }
 
-.menu__item {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  width: 100%;
-  min-height: 40px;
-  padding: 0 0.75rem;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-  font: inherit;
-  font-size: var(--font-body-small-size);
-  text-align: start;
-  cursor: pointer;
-}
+  .menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    min-height: 40px;
+    padding: 0 0.75rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-primary);
+    font: inherit;
+    font-size: var(--font-body-small-size);
+    text-align: start;
+    cursor: pointer;
+  }
 
-.menu__item:focus-visible {
-  outline: none;
-  background: var(--background-secondary-hover);
-}
-
-.menu__item[disabled] {
-  color: var(--ink-tertiary);
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .menu__item:hover {
+  .menu__item:focus-visible {
+    outline: none;
     background: var(--background-secondary-hover);
   }
 
-  .menu__item[disabled]:hover {
-    background: transparent;
+  .menu__item[disabled] {
+    color: var(--ink-tertiary);
+    cursor: not-allowed;
   }
-}
 
-/* Leading glyph; inherits the row colour so a danger row tints its icon too. */
-.menu__item-icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-}
+  @media (hover: hover) {
+    .menu__item:hover {
+      background: var(--background-secondary-hover);
+    }
 
-/* Trailing shortcut hint, pushed to the far edge. */
-.menu__shortcut {
-  margin-inline-start: auto;
-  padding-inline-start: 1rem;
-  color: var(--ink-tertiary);
-  font-size: 0.8125em;
-  font-variant-numeric: tabular-nums;
-}
+    .menu__item[disabled]:hover {
+      background: transparent;
+    }
+  }
 
-.menu__item--danger {
-  color: var(--red);
-}
+  /* Leading glyph; inherits the row colour so a danger row tints its icon too. */
+  .menu__item-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
 
-.menu__item--danger:focus-visible {
-  background: var(--red-soft-hover);
-}
+  /* Trailing shortcut hint, pushed to the far edge. */
+  .menu__shortcut {
+    margin-inline-start: auto;
+    padding-inline-start: 1rem;
+    color: var(--ink-tertiary);
+    font-size: 0.8125em;
+    font-variant-numeric: tabular-nums;
+  }
 
-@media (hover: hover) {
-  .menu__item--danger:hover {
+  .menu__item--danger {
+    color: var(--red);
+  }
+
+  .menu__item--danger:focus-visible {
     background: var(--red-soft-hover);
   }
-}
 
-/* Hairline divider between item groups. */
-.menu__separator {
-  height: 1px;
-  margin: 4px 0;
-  border: 0;
-  background: var(--ink-tertiary);
-  opacity: 0.4;
-}
+  @media (hover: hover) {
+    .menu__item--danger:hover {
+      background: var(--red-soft-hover);
+    }
+  }
 
-/* ── Button ────────────────────────────────────────────────────────────── */
+  /* Hairline divider between item groups. */
+  .menu__separator {
+    height: 1px;
+    margin: 4px 0;
+    border: 0;
+    background: var(--ink-tertiary);
+    opacity: 0.4;
+  }
 
-/* Structure:
+  /* ── Button ────────────────────────────────────────────────────────────── */
+
+  /* Structure:
    <button class="button button--{primary|secondary|flat|destructive}
                          [button--icon | button--with-start-icon | button--with-end-icon]">
      [<svg>…</svg>] Label [<svg>…</svg>]
@@ -919,146 +922,146 @@
    (root for site-wide, a wrapper for per-section) and the button
    (along with any density-driven component inside) rescales. */
 
-.button {
-  --button-px: 20px;
-  --button-gap: 6px;
+  .button {
+    --button-px: 20px;
+    --button-gap: 6px;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--button-gap);
-  height: calc(var(--ds-size-root) * 12);
-  padding-inline: var(--button-px);
-  border: 0;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--ink-primary);
-  font: inherit;
-  -webkit-user-select: none;
-  user-select: none;
-  font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
-  font-weight: var(--font-body-small-emphasized-weight);
-  line-height: 1;
-  cursor: pointer;
-  transition: background var(--motion-default);
-}
-
-[data-size="sm"] .button {
-  --button-px: 16px;
-  --button-gap: 4px;
-}
-
-[data-size="lg"] .button {
-  --button-px: 24px;
-  --button-gap: 8px;
-}
-
-.button svg {
-  width: 1.25em;
-  height: 1.25em;
-  flex-shrink: 0;
-}
-
-.button:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-
-/* Modifiers — tighten padding on whichever side the icon sits */
-
-.button--with-start-icon {
-  padding-inline-start: calc(var(--button-px) - 4px);
-}
-
-.button--with-end-icon {
-  padding-inline-end: calc(var(--button-px) - 4px);
-}
-
-/* Icon-only — square, no inline padding */
-
-.button--icon {
-  width: calc(var(--ds-size-root) * 12);
-  padding-inline: 0;
-}
-
-/* Skins — hover/active guarded with :not(:disabled) so disabled state wins. */
-
-.button--primary {
-  background: var(--primary);
-  color: var(--neutral-white);
-}
-
-@media (hover: hover) {
-  .button--primary:not(:disabled):hover {
-    background: var(--primary-hover);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--button-gap);
+    height: calc(var(--ds-size-root) * 12);
+    padding-inline: var(--button-px);
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--ink-primary);
+    font: inherit;
+    -webkit-user-select: none;
+    user-select: none;
+    font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--motion-default);
   }
-}
 
-.button--primary:not(:disabled):active {
-  background: var(--primary-active);
-}
-
-.button--secondary {
-  background: var(--primary-soft);
-  color: var(--primary-foreground);
-}
-
-@media (hover: hover) {
-  .button--secondary:not(:disabled):hover {
-    background: var(--primary-soft-hover);
+  [data-size="sm"] .button {
+    --button-px: 16px;
+    --button-gap: 4px;
   }
-}
 
-.button--secondary:not(:disabled):active {
-  background: var(--primary-soft-active);
-}
-
-.button--flat {
-  background: transparent;
-  color: var(--primary-foreground);
-}
-
-@media (hover: hover) {
-  .button--flat:not(:disabled):hover {
-    background: var(--primary-soft-hover);
+  [data-size="lg"] .button {
+    --button-px: 24px;
+    --button-gap: 8px;
   }
-}
 
-.button--flat:not(:disabled):active {
-  background: var(--primary-soft-active);
-}
-
-.button--destructive {
-  background: var(--red-soft);
-  color: var(--red);
-}
-
-@media (hover: hover) {
-  .button--destructive:not(:disabled):hover {
-    background: var(--red-soft-hover);
+  .button svg {
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
   }
-}
 
-.button--destructive:not(:disabled):active {
-  background: var(--red-soft-active);
-}
+  .button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-/* Disabled — fill-quaternary bg for filled skins, transparent for flat.
+  /* Modifiers — tighten padding on whichever side the icon sits */
+
+  .button--with-start-icon {
+    padding-inline-start: calc(var(--button-px) - 4px);
+  }
+
+  .button--with-end-icon {
+    padding-inline-end: calc(var(--button-px) - 4px);
+  }
+
+  /* Icon-only — square, no inline padding */
+
+  .button--icon {
+    width: calc(var(--ds-size-root) * 12);
+    padding-inline: 0;
+  }
+
+  /* Skins — hover/active guarded with :not(:disabled) so disabled state wins. */
+
+  .button--primary {
+    background: var(--primary);
+    color: var(--neutral-white);
+  }
+
+  @media (hover: hover) {
+    .button--primary:not(:disabled):hover {
+      background: var(--primary-hover);
+    }
+  }
+
+  .button--primary:not(:disabled):active {
+    background: var(--primary-active);
+  }
+
+  .button--secondary {
+    background: var(--primary-soft);
+    color: var(--primary-foreground);
+  }
+
+  @media (hover: hover) {
+    .button--secondary:not(:disabled):hover {
+      background: var(--primary-soft-hover);
+    }
+  }
+
+  .button--secondary:not(:disabled):active {
+    background: var(--primary-soft-active);
+  }
+
+  .button--flat {
+    background: transparent;
+    color: var(--primary-foreground);
+  }
+
+  @media (hover: hover) {
+    .button--flat:not(:disabled):hover {
+      background: var(--primary-soft-hover);
+    }
+  }
+
+  .button--flat:not(:disabled):active {
+    background: var(--primary-soft-active);
+  }
+
+  .button--destructive {
+    background: var(--red-soft);
+    color: var(--red);
+  }
+
+  @media (hover: hover) {
+    .button--destructive:not(:disabled):hover {
+      background: var(--red-soft-hover);
+    }
+  }
+
+  .button--destructive:not(:disabled):active {
+    background: var(--red-soft-active);
+  }
+
+  /* Disabled — fill-quaternary bg for filled skins, transparent for flat.
    Text/icon drop to fill-secondary. Higher specificity via double class. */
 
-.button:disabled {
-  color: var(--fill-secondary);
-  cursor: not-allowed;
-  background: var(--fill-quaternary);
-}
+  .button:disabled {
+    color: var(--fill-secondary);
+    cursor: not-allowed;
+    background: var(--fill-quaternary);
+  }
 
-.button.button--flat:disabled {
-  background: transparent;
-}
+  .button.button--flat:disabled {
+    background: transparent;
+  }
 
-/* ── Badge ─────────────────────────────────────────────────────────────── */
+  /* ── Badge ─────────────────────────────────────────────────────────────── */
 
-/* Structure:
+  /* Structure:
    <span class="badge badge--{primary|secondary|outline|red|amber|green|blue|fuchsia}
                             [badge--with-start-icon | badge--with-end-icon]">
      [<svg>…</svg>] Label [<svg>…</svg>]
@@ -1066,84 +1069,84 @@
 
    Fixed size — badges don't scale with data-size. */
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 24px;
-  padding-inline: 8px;
-  border: 0;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--ink-primary);
-  font-family: inherit;
-  font-size: var(--font-caption-medium-emphasized-size);
-  font-weight: var(--font-caption-medium-weight);
-  line-height: 1;
-  white-space: nowrap;
-}
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 24px;
+    padding-inline: 8px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--ink-primary);
+    font-family: inherit;
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-weight);
+    line-height: 1;
+    white-space: nowrap;
+  }
 
-.badge--with-start-icon {
-  padding-inline-start: 4px;
-}
+  .badge--with-start-icon {
+    padding-inline-start: 4px;
+  }
 
-.badge--with-end-icon {
-  padding-inline-end: 4px;
-}
+  .badge--with-end-icon {
+    padding-inline-end: 4px;
+  }
 
-.badge svg {
-  width: 1em;
-  height: 1em;
-  flex-shrink: 0;
-}
+  .badge svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
 
-/* Skins */
+  /* Skins */
 
-.badge--primary {
-  background: var(--ink-primary);
-  color: var(--background-primary);
-}
+  .badge--primary {
+    background: var(--ink-primary);
+    color: var(--background-primary);
+  }
 
-.badge--secondary {
-  background: var(--fill-quaternary);
-  color: var(--ink-primary);
-}
+  .badge--secondary {
+    background: var(--fill-quaternary);
+    color: var(--ink-primary);
+  }
 
-.badge--red {
-  background: var(--red-soft);
-  color: var(--red);
-}
+  .badge--red {
+    background: var(--red-soft);
+    color: var(--red);
+  }
 
-.badge--amber {
-  background: var(--amber-soft);
-  color: var(--amber);
-}
+  .badge--amber {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
 
-.badge--green {
-  background: var(--green-soft);
-  color: var(--green);
-}
+  .badge--green {
+    background: var(--green-soft);
+    color: var(--green);
+  }
 
-.badge--blue {
-  background: var(--blue-soft);
-  color: var(--blue);
-}
+  .badge--blue {
+    background: var(--blue-soft);
+    color: var(--blue);
+  }
 
-.badge--fuchsia {
-  background: var(--fuchsia-soft);
-  color: var(--fuchsia);
-}
+  .badge--fuchsia {
+    background: var(--fuchsia-soft);
+    color: var(--fuchsia);
+  }
 
-.badge--outline {
-  background: transparent;
-  color: var(--ink-primary);
-  border: 1px solid var(--fill-secondary);
-}
+  .badge--outline {
+    background: transparent;
+    color: var(--ink-primary);
+    border: 1px solid var(--fill-secondary);
+  }
 
-/* ── Card ──────────────────────────────────────────────────────────────── */
+  /* ── Card ──────────────────────────────────────────────────────────────── */
 
-/* Surface container. Render as `<div>`, `<a>`, or `<button>` — the anchor
+  /* Surface container. Render as `<div>`, `<a>`, or `<button>` — the anchor
    and button variants get hover/active/focus states automatically.
 
    Structure:
@@ -1161,171 +1164,171 @@
      --alternate       recessed surface (background-primary) instead of white
      --stretch-image   image fills remaining space (vertical card, fixed height) */
 
-.card {
-  display: block;
-  border-radius: var(--radius-md);
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  overflow: hidden;
-  transition: background var(--motion-default);
-}
+  .card {
+    display: block;
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    overflow: hidden;
+    transition: background var(--motion-default);
+  }
 
-.card--horizontal {
-  display: grid;
-  grid-template-columns: 6rem 1fr;
-}
+  .card--horizontal {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+  }
 
-.card--stretch-image {
-  display: flex;
-  flex-direction: column;
-}
+  .card--stretch-image {
+    display: flex;
+    flex-direction: column;
+  }
 
-.card--alternate {
-  background: var(--background-primary);
-}
+  .card--alternate {
+    background: var(--background-primary);
+  }
 
-/* Interactive — `<a>` and `<button>` get pointer + hover/active/focus.
+  /* Interactive — `<a>` and `<button>` get pointer + hover/active/focus.
    Disabled and focus-visible declared first so lower-specificity hover/active
    rules can follow without tripping stylelint's descending-specificity check. */
 
-a.card,
-button.card {
-  cursor: pointer;
-  text-decoration: none;
-}
-
-button.card {
-  border: 0;
-  padding: 0;
-  font: inherit;
-  text-align: start;
-}
-
-button.card:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-a.card:focus-visible,
-button.card:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-
-@media (hover: hover) {
-  a.card:hover,
-  button.card:not(:disabled):hover {
-    background: var(--background-secondary-hover);
+  a.card,
+  button.card {
+    cursor: pointer;
+    text-decoration: none;
   }
-}
 
-a.card:active,
-button.card:not(:disabled):active {
-  background: var(--background-secondary-active);
-}
-
-@media (hover: hover) {
-  a.card--alternate:hover,
-  button.card--alternate:not(:disabled):hover {
-    background: var(--background-primary-hover);
+  button.card {
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-align: start;
   }
-}
 
-a.card--alternate:active,
-button.card--alternate:not(:disabled):active {
-  background: var(--background-primary-active);
-}
+  button.card:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-/* ── Slots ── */
+  a.card:focus-visible,
+  button.card:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-.card__image {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
+  @media (hover: hover) {
+    a.card:hover,
+    button.card:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
 
-.card--horizontal .card__image {
-  grid-row: 1 / -1;
-  width: 6rem;
-  height: 100%;
-}
+  a.card:active,
+  button.card:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
 
-.card--stretch-image .card__image {
-  flex: 1;
-  min-height: 0;
-}
+  @media (hover: hover) {
+    a.card--alternate:hover,
+    button.card--alternate:not(:disabled):hover {
+      background: var(--background-primary-hover);
+    }
+  }
 
-/* Illustration wrapper. Pads on three sides so the artwork sits flush with
+  a.card--alternate:active,
+  button.card--alternate:not(:disabled):active {
+    background: var(--background-primary-active);
+  }
+
+  /* ── Slots ── */
+
+  .card__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .card--horizontal .card__image {
+    grid-row: 1 / -1;
+    width: 6rem;
+    height: 100%;
+  }
+
+  .card--stretch-image .card__image {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Illustration wrapper. Pads on three sides so the artwork sits flush with
    card__content on the fourth (bottom in vertical, inline-end in horizontal). */
-.card__illustration {
-  padding: 20px 20px 0;
-}
-
-.card--horizontal .card__illustration {
-  grid-row: 1 / -1;
-  padding-block: 20px;
-  padding-inline: 20px 0;
-}
-
-.card__illustration > * {
-  display: block;
-  width: 11rem;
-  max-width: 100%;
-  height: auto;
-  margin-inline: auto;
-}
-
-.card--horizontal .card__illustration > * {
-  width: 4.5rem;
-  margin-inline: 0;
-}
-
-.card__content {
-  padding: 20px;
-}
-
-.card__title {
-  margin: 0;
-  font-size: var(--font-body-large-emphasized-size);
-  font-weight: var(--font-body-large-emphasized-weight);
-  line-height: var(--font-body-large-emphasized-lh);
-  letter-spacing: 0;
-}
-
-.card__content > p {
-  margin: 8px 0 16px;
-  font-size: var(--font-body-small-size);
-  font-weight: var(--font-body-small-weight);
-  line-height: var(--font-body-small-lh);
-  color: var(--ink-secondary);
-}
-
-/* Tablet ≥640 — pad up and use title-small for the heading. */
-@media (min-width: 640px) {
   .card__illustration {
-    padding: 24px 24px 0;
+    padding: 20px 20px 0;
   }
 
   .card--horizontal .card__illustration {
-    padding-block: 24px;
-    padding-inline: 24px 0;
+    grid-row: 1 / -1;
+    padding-block: 20px;
+    padding-inline: 20px 0;
+  }
+
+  .card__illustration > * {
+    display: block;
+    width: 11rem;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .card--horizontal .card__illustration > * {
+    width: 4.5rem;
+    margin-inline: 0;
   }
 
   .card__content {
-    padding: 24px;
+    padding: 20px;
   }
 
   .card__title {
-    font-size: var(--font-title-small-size);
-    font-weight: var(--font-title-small-weight);
-    line-height: var(--font-title-small-lh);
+    margin: 0;
+    font-size: var(--font-body-large-emphasized-size);
+    font-weight: var(--font-body-large-emphasized-weight);
+    line-height: var(--font-body-large-emphasized-lh);
+    letter-spacing: 0;
   }
-}
 
-/* ── Chip ──────────────────────────────────────────────────────────────── */
+  .card__content > p {
+    margin: 8px 0 16px;
+    font-size: var(--font-body-small-size);
+    font-weight: var(--font-body-small-weight);
+    line-height: var(--font-body-small-lh);
+    color: var(--ink-secondary);
+  }
 
-/* Interactive filter/tag. Two interaction types:
+  /* Tablet ≥640 — pad up and use title-small for the heading. */
+  @media (min-width: 640px) {
+    .card__illustration {
+      padding: 24px 24px 0;
+    }
+
+    .card--horizontal .card__illustration {
+      padding-block: 24px;
+      padding-inline: 24px 0;
+    }
+
+    .card__content {
+      padding: 24px;
+    }
+
+    .card__title {
+      font-size: var(--font-title-small-size);
+      font-weight: var(--font-title-small-weight);
+      line-height: var(--font-title-small-lh);
+    }
+  }
+
+  /* ── Chip ──────────────────────────────────────────────────────────────── */
+
+  /* Interactive filter/tag. Two interaction types:
    checkbox (multi-select) and radio (single-select group). Native input
    is visually hidden; the chip surface shows the checked state via
    :has(). Same density knob as button/badge.
@@ -1339,54 +1342,54 @@ button.card--alternate:not(:disabled):active {
        <input type="radio" name="filter" class="chip__input" /> Today
      </label> */
 
-.chip {
-  --chip-h: 40px;
-  --chip-px: 12px;
-  --chip-gap: 6px;
+  .chip {
+    --chip-h: 40px;
+    --chip-px: 12px;
+    --chip-gap: 6px;
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--chip-gap);
-  min-height: var(--chip-h);
-  padding-block: 0;
-  padding-inline: var(--chip-px);
-  border: 1px solid var(--fill-secondary);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-  font-family: inherit;
-  font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
-  font-weight: var(--font-body-small-emphasized-weight);
-  line-height: 1;
-  text-align: start;
-  vertical-align: middle;
-  -webkit-user-select: none;
-  user-select: none;
-  transition:
-    background 75ms,
-    border-color 75ms,
-    color 75ms;
-}
+    display: inline-flex;
+    align-items: center;
+    gap: var(--chip-gap);
+    min-height: var(--chip-h);
+    padding-block: 0;
+    padding-inline: var(--chip-px);
+    border: 1px solid var(--fill-secondary);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-primary);
+    font-family: inherit;
+    font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1;
+    text-align: start;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    user-select: none;
+    transition:
+      background 75ms,
+      border-color 75ms,
+      color 75ms;
+  }
 
-[data-size="sm"] .chip {
-  --chip-h: 32px;
-  --chip-px: 8px;
-  --chip-gap: 4px;
-}
+  [data-size="sm"] .chip {
+    --chip-h: 32px;
+    --chip-px: 8px;
+    --chip-gap: 4px;
+  }
 
-[data-size="lg"] .chip {
-  --chip-h: 48px;
-  --chip-px: 16px;
-  --chip-gap: 8px;
-}
+  [data-size="lg"] .chip {
+    --chip-h: 48px;
+    --chip-px: 16px;
+    --chip-gap: 8px;
+  }
 
-.chip svg {
-  width: 1.25em;
-  height: 1.25em;
-  flex-shrink: 0;
-}
+  .chip svg {
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
+  }
 
-/* Material 3 leading checkmark on multi-select chips. A CSS mask tints a
+  /* Material 3 leading checkmark on multi-select chips. A CSS mask tints a
    currentColor background into the (Tabler) checkmark shape, so it inherits the
    chip's text colour across skins and themes.
 
@@ -1394,112 +1397,112 @@ button.card--alternate:not(:disabled):active {
    until checked, with a negative margin cancelling the flex gap so there's no
    phantom space. On check it expands to full width and the label slides right
    to make room — the MD3 filter-chip select motion, CSS-only. */
-.chip--as-checkbox::before {
-  content: "";
-  width: 0;
-  height: 1.125em;
-  flex-shrink: 0;
-  margin-inline-end: calc(-1 * var(--chip-gap));
-  background: currentcolor;
-  opacity: 0;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  transition:
-    width var(--motion-default),
-    margin-inline-end var(--motion-default),
-    opacity var(--motion-default);
-}
-
-.chip--as-checkbox:has(input:checked)::before {
-  width: 1.125em;
-  margin-inline-end: 0;
-  opacity: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
   .chip--as-checkbox::before {
-    transition: none;
+    content: "";
+    width: 0;
+    height: 1.125em;
+    flex-shrink: 0;
+    margin-inline-end: calc(-1 * var(--chip-gap));
+    background: currentcolor;
+    opacity: 0;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition:
+      width var(--motion-default),
+      margin-inline-end var(--motion-default),
+      opacity var(--motion-default);
   }
-}
 
-.chip__input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  border: 0;
-  clip-path: inset(50%);
-}
-
-/* Interactive types — cursor pointer when enabled */
-
-.chip--as-checkbox:not(:has(input:disabled)),
-.chip--as-radio:not(:has(input:disabled)) {
-  cursor: pointer;
-}
-
-/* Hover / active — unchecked, non-disabled */
-
-@media (hover: hover) {
-  .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
-  .chip--as-radio:not(:has(input:disabled, input:checked)):hover {
-    border-color: var(--fill-primary-hover);
+  .chip--as-checkbox:has(input:checked)::before {
+    width: 1.125em;
+    margin-inline-end: 0;
+    opacity: 1;
   }
-}
 
-.chip--as-checkbox:not(:has(input:disabled, input:checked)):active,
-.chip--as-radio:not(:has(input:disabled, input:checked)):active {
-  border-color: var(--fill-primary-active);
-}
+  @media (prefers-reduced-motion: reduce) {
+    .chip--as-checkbox::before {
+      transition: none;
+    }
+  }
 
-/* Focus — 3px ring set 1px outside the chip, either on the chip itself or via
+  .chip__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+  }
+
+  /* Interactive types — cursor pointer when enabled */
+
+  .chip--as-checkbox:not(:has(input:disabled)),
+  .chip--as-radio:not(:has(input:disabled)) {
+    cursor: pointer;
+  }
+
+  /* Hover / active — unchecked, non-disabled */
+
+  @media (hover: hover) {
+    .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
+    .chip--as-radio:not(:has(input:disabled, input:checked)):hover {
+      border-color: var(--fill-primary-hover);
+    }
+  }
+
+  .chip--as-checkbox:not(:has(input:disabled, input:checked)):active,
+  .chip--as-radio:not(:has(input:disabled, input:checked)):active {
+    border-color: var(--fill-primary-active);
+  }
+
+  /* Focus — 3px ring set 1px outside the chip, either on the chip itself or via
    the hidden input */
 
-.chip:focus-visible,
-.chip:has(:focus-visible) {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  animation: focus-ring-converge var(--motion-default);
-}
-
-/* Disabled */
-
-.chip:has(input:disabled) {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Checked state — soft primary tint bg, primary text, no border */
-
-.chip:has(input:checked) {
-  background: var(--primary-soft);
-  border-color: transparent;
-  color: var(--primary-foreground);
-}
-
-/* Hover / active — checked, non-disabled */
-
-@media (hover: hover) {
-  .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
-    background: var(--primary-soft-hover);
+  .chip:focus-visible,
+  .chip:has(:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    animation: focus-ring-converge var(--motion-default);
   }
-}
 
-.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
-  background: var(--primary-soft-active);
-}
+  /* Disabled */
 
-/* A checked single-select chip is the current choice — it can't be un-picked,
+  .chip:has(input:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* Checked state — soft primary tint bg, primary text, no border */
+
+  .chip:has(input:checked) {
+    background: var(--primary-soft);
+    border-color: transparent;
+    color: var(--primary-foreground);
+  }
+
+  /* Hover / active — checked, non-disabled */
+
+  @media (hover: hover) {
+    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
+      background: var(--primary-soft-hover);
+    }
+  }
+
+  .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
+    background: var(--primary-soft-active);
+  }
+
+  /* A checked single-select chip is the current choice — it can't be un-picked,
    so it isn't interactive: no pointer (and no hover/active feedback above). */
-.chip--as-radio:has(input:checked):not(:has(input:disabled)) {
-  cursor: default;
-}
+  .chip--as-radio:has(input:checked):not(:has(input:disabled)) {
+    cursor: default;
+  }
 
-/* ── Alert ─────────────────────────────────────────────────────────────── */
+  /* ── Alert ─────────────────────────────────────────────────────────────── */
 
-/* Inline status message. The variant sets a soft surface + matching icon
+  /* Inline status message. The variant sets a soft surface + matching icon
    colour; text stays ink for legibility. Title is optional — icon + text alone
    reads fine for a one-liner.
 
@@ -1511,77 +1514,77 @@ button.card--alternate:not(:disabled):active {
        <p class="alert__text">Message goes here.</p>
      </div>
    </div> */
-.alert {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
-  border-radius: var(--radius-md);
-  color: var(--ink-primary);
-}
+  .alert {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-md);
+    color: var(--ink-primary);
+  }
 
-.alert p {
-  margin: 0;
-}
+  .alert p {
+    margin: 0;
+  }
 
-.alert__icon {
-  flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: 1px;
-}
+  .alert__icon {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 1px;
+  }
 
-.alert__body {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
+  .alert__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
 
-.alert__title {
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-}
+  .alert__title {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
 
-.alert__text {
-  font-size: var(--font-body-small-size);
-  color: var(--ink-primary);
-}
+  .alert__text {
+    font-size: var(--font-body-small-size);
+    color: var(--ink-primary);
+  }
 
-.alert--info {
-  background: var(--blue-soft);
-}
+  .alert--info {
+    background: var(--blue-soft);
+  }
 
-.alert--info .alert__icon {
-  color: var(--blue);
-}
+  .alert--info .alert__icon {
+    color: var(--blue);
+  }
 
-.alert--success {
-  background: var(--green-soft);
-}
+  .alert--success {
+    background: var(--green-soft);
+  }
 
-.alert--success .alert__icon {
-  color: var(--green);
-}
+  .alert--success .alert__icon {
+    color: var(--green);
+  }
 
-.alert--warning {
-  background: var(--amber-soft);
-}
+  .alert--warning {
+    background: var(--amber-soft);
+  }
 
-.alert--warning .alert__icon {
-  color: var(--amber);
-}
+  .alert--warning .alert__icon {
+    color: var(--amber);
+  }
 
-.alert--error {
-  background: var(--red-soft);
-}
+  .alert--error {
+    background: var(--red-soft);
+  }
 
-.alert--error .alert__icon {
-  color: var(--red);
-}
+  .alert--error .alert__icon {
+    color: var(--red);
+  }
 
-/* ── Dialog ────────────────────────────────────────────────────────────── */
+  /* ── Dialog ────────────────────────────────────────────────────────────── */
 
-/* Native <dialog> — focus trap, Esc-to-close, and an inert background come for
+  /* Native <dialog> — focus trap, Esc-to-close, and an inert background come for
    free. Open with dialog.showModal(); app.js wires [data-dialog-open="id"] and
    [data-dialog-close], and a click on the backdrop closes it.
 
@@ -1596,83 +1599,83 @@ button.card--alternate:not(:disabled):active {
        </div>
      </div>
    </dialog> */
-.dialog {
-  width: min(92vw, 420px);
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  box-shadow: var(--shadow-lg);
+  .dialog {
+    width: min(92vw, 420px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    box-shadow: var(--shadow-lg);
 
-  /* Animate on open only — the transition lives on [open], so removing it
+    /* Animate on open only — the transition lives on [open], so removing it
      (close) is instant. @starting-style gives the entry state (fade + rise).
      Progressive enhancement — browsers without @starting-style just pop in. */
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.dialog[open] {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 0.2s ease-out,
-    transform 0.2s ease-out;
-}
-
-@starting-style {
-  .dialog[open] {
     opacity: 0;
     transform: translateY(10px);
   }
-}
 
-.dialog::backdrop {
-  background: var(--overlay);
-  opacity: 0;
-}
+  .dialog[open] {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.2s ease-out,
+      transform 0.2s ease-out;
+  }
 
-.dialog[open]::backdrop {
-  opacity: 1;
-  transition: opacity 0.2s ease-out;
-}
+  @starting-style {
+    .dialog[open] {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
 
-@starting-style {
-  .dialog[open]::backdrop {
+  .dialog::backdrop {
+    background: var(--overlay);
     opacity: 0;
   }
-}
 
-.dialog__inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1.5rem;
-}
+  .dialog[open]::backdrop {
+    opacity: 1;
+    transition: opacity 0.2s ease-out;
+  }
 
-.dialog__title {
-  margin: 0;
-  font-size: var(--font-body-large-emphasized-size);
-  font-weight: var(--font-body-large-emphasized-weight);
-  line-height: var(--font-body-large-emphasized-lh);
-}
+  @starting-style {
+    .dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
 
-.dialog__text {
-  margin: 0;
-  font-size: var(--font-body-small-size);
-  color: var(--ink-secondary);
-}
+  .dialog__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+  }
 
-.dialog__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
+  .dialog__title {
+    margin: 0;
+    font-size: var(--font-body-large-emphasized-size);
+    font-weight: var(--font-body-large-emphasized-weight);
+    line-height: var(--font-body-large-emphasized-lh);
+  }
 
-/* ── Sheet ─────────────────────────────────────────────────────────────── */
+  .dialog__text {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+    color: var(--ink-secondary);
+  }
 
-/* Edge-anchored panel on native <dialog> — same focus-trap, Esc, and inert
+  .dialog__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  /* ── Sheet ─────────────────────────────────────────────────────────────── */
+
+  /* Edge-anchored panel on native <dialog> — same focus-trap, Esc, and inert
    backdrop as Dialog, and the same data-dialog-open / data-dialog-close wiring
    (app.js). Anchored to the inline-end edge; --left flips it to inline-start.
    Same open-only fade + nudge as Dialog (here on the X axis, toward its edge) —
@@ -1689,127 +1692,127 @@ button.card--alternate:not(:disabled):active {
        <div class="sheet__body">…</div>
      </div>
    </dialog> */
-.sheet {
-  inset: 0 0 0 auto;
-  width: min(92vw, 400px);
-  max-width: none;
-  height: auto;
-  max-height: none;
-  padding: 0;
-  border: 0;
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  box-shadow: var(--shadow-lg);
-  opacity: 0;
-  transform: translateX(24px);
-}
-
-.sheet--left {
-  inset: 0 auto 0 0;
-  transform: translateX(-24px);
-}
-
-.sheet[open] {
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 0.2s ease-out,
-    transform 0.2s ease-out;
-}
-
-@starting-style {
-  .sheet[open] {
+  .sheet {
+    inset: 0 0 0 auto;
+    width: min(92vw, 400px);
+    max-width: none;
+    height: auto;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    box-shadow: var(--shadow-lg);
     opacity: 0;
     transform: translateX(24px);
   }
 
-  .sheet--left[open] {
-    opacity: 0;
+  .sheet--left {
+    inset: 0 auto 0 0;
     transform: translateX(-24px);
   }
-}
 
-.sheet::backdrop {
-  background: var(--overlay);
-  opacity: 0;
-}
+  .sheet[open] {
+    opacity: 1;
+    transform: translateX(0);
+    transition:
+      opacity 0.2s ease-out,
+      transform 0.2s ease-out;
+  }
 
-.sheet[open]::backdrop {
-  opacity: 1;
-  transition: opacity 0.2s ease-out;
-}
+  @starting-style {
+    .sheet[open] {
+      opacity: 0;
+      transform: translateX(24px);
+    }
 
-@starting-style {
-  .sheet[open]::backdrop {
+    .sheet--left[open] {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+  }
+
+  .sheet::backdrop {
+    background: var(--overlay);
     opacity: 0;
   }
-}
 
-.sheet__inner {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.sheet__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--fill-tertiary);
-}
-
-.sheet__title {
-  margin: 0;
-  font-size: var(--font-body-large-emphasized-size);
-  font-weight: var(--font-body-large-emphasized-weight);
-  line-height: var(--font-body-large-emphasized-lh);
-}
-
-.sheet__close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  margin-inline-end: -0.5rem;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-secondary);
-  cursor: pointer;
-  transition: background var(--motion-default);
-}
-
-@media (hover: hover) {
-  .sheet__close:hover {
-    background: var(--background-secondary-hover);
+  .sheet[open]::backdrop {
+    opacity: 1;
+    transition: opacity 0.2s ease-out;
   }
-}
 
-.sheet__close:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
+  @starting-style {
+    .sheet[open]::backdrop {
+      opacity: 0;
+    }
+  }
 
-.sheet__close svg {
-  width: 20px;
-  height: 20px;
-}
+  .sheet__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-.sheet__body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1.5rem;
-  font-size: var(--font-body-small-size);
-  color: var(--ink-secondary);
-}
+  .sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--fill-tertiary);
+  }
 
-/* ── Accordion ─────────────────────────────────────────────────────────── */
+  .sheet__title {
+    margin: 0;
+    font-size: var(--font-body-large-emphasized-size);
+    font-weight: var(--font-body-large-emphasized-weight);
+    line-height: var(--font-body-large-emphasized-lh);
+  }
 
-/* Native <details>/<summary> — no JS. Ruter's logic: a summary row with a
+  .sheet__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    margin-inline-end: -0.5rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--ink-secondary);
+    cursor: pointer;
+    transition: background var(--motion-default);
+  }
+
+  @media (hover: hover) {
+    .sheet__close:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .sheet__close:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .sheet__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .sheet__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    font-size: var(--font-body-small-size);
+    color: var(--ink-secondary);
+  }
+
+  /* ── Accordion ─────────────────────────────────────────────────────────── */
+
+  /* Native <details>/<summary> — no JS. Ruter's logic: a summary row with a
    chevron that rotates on open, on an elevated surface.
 
    Structure:
@@ -1822,109 +1825,109 @@ button.card--alternate:not(:disabled):active {
        <div class="accordion__body"><p>Answer.</p></div>
      </details>
    </div> */
-.accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.accordion__item {
-  overflow: hidden;
-  background: var(--background-secondary);
-  border-radius: var(--radius-md);
-}
-
-.accordion__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 12px 16px;
-  color: var(--ink-primary);
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  list-style: none;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.accordion__summary::-webkit-details-marker {
-  display: none;
-}
-
-.accordion__summary:focus-visible {
-  outline: none;
-}
-
-/* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
-@media (hover: hover) {
-  .accordion__item:not([open]) .accordion__summary:hover {
-    background: var(--background-secondary-hover);
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
-}
 
-/* Ring the whole item (not just the summary) when focused; converges in like
+  .accordion__item {
+    overflow: hidden;
+    background: var(--background-secondary);
+    border-radius: var(--radius-md);
+  }
+
+  .accordion__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 12px 16px;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .accordion__summary:focus-visible {
+    outline: none;
+  }
+
+  /* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
+  @media (hover: hover) {
+    .accordion__item:not([open]) .accordion__summary:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  /* Ring the whole item (not just the summary) when focused; converges in like
    the other focus rings. */
-.accordion__item:has(.accordion__summary:focus-visible) {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  animation: focus-ring-converge var(--motion-default);
-}
+  .accordion__item:has(.accordion__summary:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    animation: focus-ring-converge var(--motion-default);
+  }
 
-.accordion__chevron {
-  flex-shrink: 0;
-  width: 1.25em;
-  height: 1.25em;
-  color: var(--ink-tertiary);
-  transition: rotate var(--motion-default);
-}
+  .accordion__chevron {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    color: var(--ink-tertiary);
+    transition: rotate var(--motion-default);
+  }
 
-.accordion__item[open] .accordion__chevron {
-  rotate: 180deg;
-}
+  .accordion__item[open] .accordion__chevron {
+    rotate: 180deg;
+  }
 
-.accordion__body {
-  padding: 0 16px 16px;
-  color: var(--ink-secondary);
-  font-size: var(--font-body-small-size);
-}
+  .accordion__body {
+    padding: 0 16px 16px;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
 
-.accordion__body > :first-child {
-  margin-top: 0;
-}
+  .accordion__body > :first-child {
+    margin-top: 0;
+  }
 
-.accordion__body > :last-child {
-  margin-bottom: 0;
-}
+  .accordion__body > :last-child {
+    margin-bottom: 0;
+  }
 
-/* Animate open/close (Ruter's recipe): interpolate-size lets block-size go
+  /* Animate open/close (Ruter's recipe): interpolate-size lets block-size go
    to/from auto; ::details-content fades + expands. Progressive enhancement —
    browsers without ::details-content just toggle instantly. */
-@media (prefers-reduced-motion: no-preference) {
-  .accordion__item {
-    interpolate-size: allow-keywords;
+  @media (prefers-reduced-motion: no-preference) {
+    .accordion__item {
+      interpolate-size: allow-keywords;
+    }
   }
-}
 
-.accordion__item::details-content {
-  overflow: hidden;
-  block-size: 0;
-  opacity: 0;
-  transition:
-    content-visibility allow-discrete var(--motion-default),
-    opacity var(--motion-default),
-    block-size var(--motion-default);
-}
+  .accordion__item::details-content {
+    overflow: hidden;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      content-visibility allow-discrete var(--motion-default),
+      opacity var(--motion-default),
+      block-size var(--motion-default);
+  }
 
-.accordion__item[open]::details-content {
-  block-size: auto;
-  opacity: 1;
-}
+  .accordion__item[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
 
-/* ── Table ─────────────────────────────────────────────────────────────── */
+  /* ── Table ─────────────────────────────────────────────────────────────── */
 
-/* Plain data table. Wrap in .table-wrap so wide tables scroll instead of
+  /* Plain data table. Wrap in .table-wrap so wide tables scroll instead of
    breaking the page.
 
    Structure:
@@ -1934,45 +1937,45 @@ button.card--alternate:not(:disabled):active {
        <tbody><tr><td>…</td></tr></tbody>
      </table>
    </div> */
-.table-wrap {
-  overflow-x: auto;
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 12px;
-}
+  .table-wrap {
+    overflow-x: auto;
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 12px;
+  }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: var(--font-body-small-size);
-}
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-body-small-size);
+  }
 
-.table th,
-.table td {
-  padding: 0.625rem 0.75rem;
-  text-align: start;
-  border-bottom: 1px solid var(--fill-tertiary);
-}
+  .table th,
+  .table td {
+    padding: 0.625rem 0.75rem;
+    text-align: start;
+    border-bottom: 1px solid var(--fill-tertiary);
+  }
 
-.table th {
-  background: var(--fill-quaternary);
-  color: var(--ink-primary);
-  font-size: var(--font-body-small-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  white-space: nowrap;
-}
+  .table th {
+    background: var(--fill-quaternary);
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    white-space: nowrap;
+  }
 
-.table td {
-  color: var(--ink-primary);
-}
+  .table td {
+    color: var(--ink-primary);
+  }
 
-.table tbody tr:last-child td {
-  border-bottom: 0;
-}
+  .table tbody tr:last-child td {
+    border-bottom: 0;
+  }
 
-/* ── Tooltip ───────────────────────────────────────────────────────────── */
+  /* ── Tooltip ───────────────────────────────────────────────────────────── */
 
-/* CSS-only label on hover/focus. Wrap a focusable trigger; the bubble shows on
+  /* CSS-only label on hover/focus. Wrap a focusable trigger; the bubble shows on
    :hover and :focus-within, so keyboard users get it too.
 
    Structure:
@@ -1980,177 +1983,177 @@ button.card--alternate:not(:disabled):active {
      <button class="button …">Trigger</button>
      <span class="tooltip__bubble" role="tooltip">Label text</span>
    </span> */
-.tooltip {
-  display: inline-flex;
-}
+  .tooltip {
+    display: inline-flex;
+  }
 
-/* Position is set by initTooltips (fixed coords) so the bubble can flip
+  /* Position is set by initTooltips (fixed coords) so the bubble can flip
    above/below and clamp to the viewport. --tt-arrow is the arrow's x within
    the bubble, so it keeps pointing at the trigger even when the bubble shifts. */
-.tooltip__bubble {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 40;
-  padding: 0.375rem 0.625rem;
-  background: var(--ink-primary);
-  color: var(--background-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-caption-medium-size);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--motion-default);
-}
+  .tooltip__bubble {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    padding: 0.375rem 0.625rem;
+    background: var(--ink-primary);
+    color: var(--background-primary);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-caption-medium-size);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-default);
+  }
 
-.tooltip__bubble.is-visible {
-  opacity: 1;
-}
+  .tooltip__bubble.is-visible {
+    opacity: 1;
+  }
 
-.tooltip__bubble::after {
-  content: "";
-  position: absolute;
-  border: 5px solid transparent;
-}
+  .tooltip__bubble::after {
+    content: "";
+    position: absolute;
+    border: 5px solid transparent;
+  }
 
-/* --tt-arrow is the offset along the shared edge (x for top/bottom, y for
+  /* --tt-arrow is the offset along the shared edge (x for top/bottom, y for
    left/right), so the arrow keeps pointing at the trigger after clamping. */
-.tooltip__bubble[data-placement="top"]::after {
-  top: 100%;
-  left: var(--tt-arrow, 50%);
-  translate: -50% 0;
-  border-top-color: var(--ink-primary);
-}
+  .tooltip__bubble[data-placement="top"]::after {
+    top: 100%;
+    left: var(--tt-arrow, 50%);
+    translate: -50% 0;
+    border-top-color: var(--ink-primary);
+  }
 
-.tooltip__bubble[data-placement="bottom"]::after {
-  bottom: 100%;
-  left: var(--tt-arrow, 50%);
-  translate: -50% 0;
-  border-bottom-color: var(--ink-primary);
-}
+  .tooltip__bubble[data-placement="bottom"]::after {
+    bottom: 100%;
+    left: var(--tt-arrow, 50%);
+    translate: -50% 0;
+    border-bottom-color: var(--ink-primary);
+  }
 
-.tooltip__bubble[data-placement="left"]::after {
-  left: 100%;
-  top: var(--tt-arrow, 50%);
-  translate: 0 -50%;
-  border-left-color: var(--ink-primary);
-}
+  .tooltip__bubble[data-placement="left"]::after {
+    left: 100%;
+    top: var(--tt-arrow, 50%);
+    translate: 0 -50%;
+    border-left-color: var(--ink-primary);
+  }
 
-.tooltip__bubble[data-placement="right"]::after {
-  right: 100%;
-  top: var(--tt-arrow, 50%);
-  translate: 0 -50%;
-  border-right-color: var(--ink-primary);
-}
+  .tooltip__bubble[data-placement="right"]::after {
+    right: 100%;
+    top: var(--tt-arrow, 50%);
+    translate: 0 -50%;
+    border-right-color: var(--ink-primary);
+  }
 
-/* ── Spinner ───────────────────────────────────────────────────────────────
+  /* ── Spinner ───────────────────────────────────────────────────────────────
    Indeterminate loading indicator. Arc is currentColor so it inherits its
    context (button text, ink, etc.); pair with a visually-hidden label.
 
    Structure: <span class="spinner" role="status" aria-label="Loading"></span> */
-.spinner {
-  display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
-  border-top-color: currentcolor;
-  border-radius: var(--radius-full);
-  animation: spinner-rotate 0.7s linear infinite;
-}
-
-.spinner--sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-.spinner--lg {
-  width: 2rem;
-  height: 2rem;
-  border-width: 3px;
-}
-
-@keyframes spinner-rotate {
-  to {
-    rotate: 360deg;
+  .spinner {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
+    border-top-color: currentcolor;
+    border-radius: var(--radius-full);
+    animation: spinner-rotate 0.7s linear infinite;
   }
-}
 
-/* ── Progress ──────────────────────────────────────────────────────────────
+  .spinner--sm {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .spinner--lg {
+    width: 2rem;
+    height: 2rem;
+    border-width: 3px;
+  }
+
+  @keyframes spinner-rotate {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  /* ── Progress ──────────────────────────────────────────────────────────────
    Native <progress> for a task with measurable completion; reach for Spinner
    when progress can't be measured. The track + value have no standard selector,
    so each engine's pseudo-elements are styled separately.
 
    Structure: <progress class="progress" value="60" max="100" aria-label="Upload"></progress> */
-.progress {
-  appearance: none;
-  width: 100%;
-  height: 8px;
-  border: 0;
-  border-radius: var(--radius-full);
-  background: var(--fill-quaternary);
-  overflow: hidden;
-}
+  .progress {
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: var(--fill-quaternary);
+    overflow: hidden;
+  }
 
-.progress::-webkit-progress-bar {
-  background: var(--fill-quaternary);
-}
+  .progress::-webkit-progress-bar {
+    background: var(--fill-quaternary);
+  }
 
-.progress::-webkit-progress-value {
-  background: var(--primary-foreground);
-  border-radius: var(--radius-full);
-  transition: inline-size var(--motion-default);
-}
+  .progress::-webkit-progress-value {
+    background: var(--primary-foreground);
+    border-radius: var(--radius-full);
+    transition: inline-size var(--motion-default);
+  }
 
-.progress::-moz-progress-bar {
-  background: var(--primary-foreground);
-}
+  .progress::-moz-progress-bar {
+    background: var(--primary-foreground);
+  }
 
-/* ── Link ──────────────────────────────────────────────────────────────────
+  /* ── Link ──────────────────────────────────────────────────────────────────
    Inline text link. --cta for a standalone call-to-action with a trailing
    arrow. Focus ring comes from the shared rule.
 
    Structure:
    <a class="link" href="#">Read more</a>
    <a class="link link--cta" href="#">See all <svg>…</svg></a> */
-.link {
-  color: var(--ink-primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
+  .link {
+    color: var(--ink-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
 
-  /* 8px so the focus ring reads rounded, matching the nav/link-list rings. */
-  border-radius: 8px;
-  transition: color var(--motion-default);
-}
-
-@media (hover: hover) {
-  .link:hover {
-    color: var(--primary-foreground-hover);
+    /* 8px so the focus ring reads rounded, matching the nav/link-list rings. */
+    border-radius: 8px;
+    transition: color var(--motion-default);
   }
-}
 
-.link--cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--primary-foreground);
-  font-weight: 500;
-  text-decoration: none;
-}
+  @media (hover: hover) {
+    .link:hover {
+      color: var(--primary-foreground-hover);
+    }
+  }
 
-/* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
+  .link--cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--primary-foreground);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  /* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
    fades in and the chevron slides on hover, so the arrow grows out of the text. */
-@media (hover: hover) {
-  .link--cta:hover .link-arrow__line {
-    opacity: 1;
+  @media (hover: hover) {
+    .link--cta:hover .link-arrow__line {
+      opacity: 1;
+    }
+
+    .link--cta:hover .link-arrow__chevron {
+      translate: 3px 0;
+    }
   }
 
-  .link--cta:hover .link-arrow__chevron {
-    translate: 3px 0;
-  }
-}
-
-/* ── Breadcrumb ───────────────────────────────────────────────────────────
+  /* ── Breadcrumb ───────────────────────────────────────────────────────────
    Shows the current page's place in the hierarchy. Use on deep pages so users
    can step back up; skip it at the top level. Last crumb is the current page
    (aria-current), not a link.
@@ -2164,111 +2167,111 @@ button.card--alternate:not(:disabled):active {
        </li>
      </ol>
    </nav> */
-.breadcrumb__list {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--font-body-small-size);
-}
+  .breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--font-body-small-size);
+  }
 
-.breadcrumb__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+  .breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-.breadcrumb__item:not(:first-child)::before {
-  content: "";
-  width: 1em;
-  height: 1em;
-  background: var(--ink-tertiary);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6l-6 6'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-}
+  .breadcrumb__item:not(:first-child)::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    background: var(--ink-tertiary);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6l-6 6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
 
-.breadcrumb__link {
-  display: inline-flex;
-  align-items: center;
-  color: var(--ink-secondary);
-  text-decoration: none;
-  border-radius: 4px;
-  transition: color var(--motion-default);
-}
+  .breadcrumb__link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--ink-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: color var(--motion-default);
+  }
 
-@media (hover: hover) {
-  .breadcrumb__link:hover {
+  @media (hover: hover) {
+    .breadcrumb__link:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .breadcrumb__current {
     color: var(--ink-primary);
   }
-}
 
-.breadcrumb__current {
-  color: var(--ink-primary);
-}
-
-/* ── Forced colors (Windows High Contrast) ─────────────────────────────────
+  /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    These controls paint their state with background / mask / box-shadow, all of
    which the forced-colors palette strips — leaving toggles and focus rings
    invisible. Restore visibility with system colors and real borders/outlines.
    `forced-color-adjust: none` is used only where we must keep a painted fill
    (the checked checkbox/switch), and paired with system colors so it still
    respects the user's palette. */
-@media (forced-colors: active) {
-  /* Switch: outline the track, fill it on when checked, keep the knob solid. */
-  .switch__input {
-    border: 1px solid ButtonBorder;
-  }
+  @media (forced-colors: active) {
+    /* Switch: outline the track, fill it on when checked, keep the knob solid. */
+    .switch__input {
+      border: 1px solid ButtonBorder;
+    }
 
-  .switch__input:checked {
-    forced-color-adjust: none;
-    background: Highlight;
-  }
+    .switch__input:checked {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
 
-  .switch__knob {
-    background: ButtonText;
-  }
+    .switch__knob {
+      background: ButtonText;
+    }
 
-  .switch__input:checked + .switch__knob {
-    background: HighlightText;
-  }
+    .switch__input:checked + .switch__knob {
+      background: HighlightText;
+    }
 
-  /* Checkbox / radio: the painted checked fill would vanish otherwise. */
-  .checkbox__input:checked,
-  .radio__input:checked {
-    forced-color-adjust: none;
-    background: Highlight;
-    border-color: Highlight;
-  }
+    /* Checkbox / radio: the painted checked fill would vanish otherwise. */
+    .checkbox__input:checked,
+    .radio__input:checked {
+      forced-color-adjust: none;
+      background: Highlight;
+      border-color: Highlight;
+    }
 
-  .checkbox__check {
-    color: HighlightText;
-  }
+    .checkbox__check {
+      color: HighlightText;
+    }
 
-  /* Focus affordances built from box-shadow (input, custom select) disappear —
+    /* Focus affordances built from box-shadow (input, custom select) disappear —
      substitute a real outline, which forced-colors always renders. */
-  .input__container:focus-within,
-  .select__trigger:focus-visible,
-  .select__trigger[aria-expanded="true"] {
-    outline: 2px solid Highlight;
-    outline-offset: 1px;
-  }
+    .input__container:focus-within,
+    .select__trigger:focus-visible,
+    .select__trigger[aria-expanded="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: 1px;
+    }
 
-  /* The active option is shown only by a background tint — make it a system
+    /* The active option is shown only by a background tint — make it a system
      selection instead. */
-  .select__option:hover,
-  .select__option.is-active {
-    forced-color-adjust: none;
-    background: Highlight;
-    color: HighlightText;
+    .select__option:hover,
+    .select__option.is-active {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
   }
-}
 
-/* ── Avatar ────────────────────────────────────────────────────────────── */
+  /* ── Avatar ────────────────────────────────────────────────────────────── */
 
-/* A user's image, with initials (or a glyph) as the fallback when no image is
+  /* A user's image, with initials (or a glyph) as the fallback when no image is
    set. Overlap several in an .avatar-group.
 
    The media (img / glyph) clips itself rather than the .avatar, so a status dot
@@ -2278,95 +2281,95 @@ button.card--alternate:not(:disabled):active {
    Structure:
    <span class="avatar"><img class="avatar__img" src="…" alt="Ada Lovelace" /></span>
    <span class="avatar"><span class="avatar__fallback">AL</span></span> */
-.avatar {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: var(--neutral-gray-3);
-  color: var(--ink-secondary);
-  font-size: var(--font-body-small-size);
-  font-weight: 600;
-  -webkit-user-select: none;
-  user-select: none;
-}
+  .avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--neutral-gray-3);
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    font-weight: 600;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 
-.avatar--sm {
-  width: 32px;
-  height: 32px;
-  font-size: 0.8125rem;
-}
+  .avatar--sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8125rem;
+  }
 
-.avatar--lg {
-  width: 56px;
-  height: 56px;
-  font-size: var(--font-body-large-size);
-}
+  .avatar--lg {
+    width: 56px;
+    height: 56px;
+    font-size: var(--font-body-large-size);
+  }
 
-.avatar__img {
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  object-fit: cover;
-}
+  .avatar__img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+  }
 
-/* Fills the avatar and clips the glyph to the circle (the .avatar itself no
+  /* Fills the avatar and clips the glyph to the circle (the .avatar itself no
    longer clips, so the status dot can overflow the edge). */
-.avatar__fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: inherit;
-}
+  .avatar__fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+  }
 
-.avatar__fallback svg {
-  width: 50%;
-  height: 50%;
-}
+  .avatar__fallback svg {
+    width: 50%;
+    height: 50%;
+  }
 
-/* Presence dot sitting on the lower edge; the ring punches it out of the
+  /* Presence dot sitting on the lower edge; the ring punches it out of the
    surface behind. */
-.avatar__status {
-  position: absolute;
-  inset-inline-end: 1%;
-  inset-block-end: 1%;
-  width: 28%;
-  height: 28%;
-  border-radius: var(--radius-full);
-  background: var(--green);
-  box-shadow: 0 0 0 2px var(--background-secondary);
-}
+  .avatar__status {
+    position: absolute;
+    inset-inline-end: 1%;
+    inset-block-end: 1%;
+    width: 28%;
+    height: 28%;
+    border-radius: var(--radius-full);
+    background: var(--green);
+    box-shadow: 0 0 0 2px var(--background-secondary);
+  }
 
-/* Overlapping stack — a ring separates neighbours; later avatars sit on top.
+  /* Overlapping stack — a ring separates neighbours; later avatars sit on top.
    The ring matches the surface behind (elevated --background-secondary), so it
    reads as a seamless gap rather than a visible border. */
-.avatar-group {
-  display: inline-flex;
-}
+  .avatar-group {
+    display: inline-flex;
+  }
 
-.avatar-group .avatar {
-  box-shadow: 0 0 0 2px var(--background-secondary);
-}
+  .avatar-group .avatar {
+    box-shadow: 0 0 0 2px var(--background-secondary);
+  }
 
-.avatar-group .avatar + .avatar {
-  margin-inline-start: -0.75rem;
-}
+  .avatar-group .avatar + .avatar {
+    margin-inline-start: -0.75rem;
+  }
 
-/* Overflow count ("+3") reads a touch smaller than initials. */
-.avatar--count {
-  font-size: 0.875rem;
-}
+  /* Overflow count ("+3") reads a touch smaller than initials. */
+  .avatar--count {
+    font-size: 0.875rem;
+  }
 
-/* ── Pagination ────────────────────────────────────────────────────────── */
+  /* ── Pagination ────────────────────────────────────────────────────────── */
 
-/* Numbered page navigation. app.js (initPagination) renders a bounded window —
+  /* Numbered page navigation. app.js (initPagination) renders a bounded window —
    first + last always shown, the current page ±1, ellipses bridging the gaps —
    from a data-total / data-page seed, and keeps it interactive. The current
    page carries aria-current="page"; the icon-only prev/next carry an aria-label.
@@ -2374,81 +2377,81 @@ button.card--alternate:not(:disabled):active {
    Structure:
    <nav class="pagination" data-pagination data-total="12" data-page="1"
         aria-label="Pagination"></nav> */
-.pagination__list {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.pagination__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  padding: 0 0.5rem;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--ink-primary);
-  font: inherit;
-  font-size: var(--font-body-small-size);
-  text-decoration: none;
-  cursor: pointer;
-  transition: background var(--motion-default);
-}
-
-@media (hover: hover) {
-  .pagination__link:hover {
-    background: var(--background-secondary-hover);
+  .pagination__list {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
-}
 
-/* No offset: the ring sits flush so it isn't clipped by the adjacent buttons. */
-.pagination__link:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 0;
-}
-
-/* Active page reads as a solid primary chip. */
-.pagination__link[aria-current="page"],
-.pagination__link[aria-current="page"]:hover {
-  background: var(--primary);
-  color: var(--neutral-white);
-  font-weight: 500;
-}
-
-.pagination__link:disabled {
-  color: var(--ink-tertiary);
-  cursor: not-allowed;
-}
-
-@media (hover: hover) {
-  .pagination__link:disabled:hover {
+  .pagination__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: var(--radius-sm);
     background: transparent;
+    color: var(--ink-primary);
+    font: inherit;
+    font-size: var(--font-body-small-size);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--motion-default);
   }
-}
 
-.pagination__link svg {
-  width: 20px;
-  height: 20px;
-}
+  @media (hover: hover) {
+    .pagination__link:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
 
-.pagination__ellipsis {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  height: 40px;
-  color: var(--ink-tertiary);
-}
+  /* No offset: the ring sits flush so it isn't clipped by the adjacent buttons. */
+  .pagination__link:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+  }
 
-/* ── Slider ────────────────────────────────────────────────────────────── */
+  /* Active page reads as a solid primary chip. */
+  .pagination__link[aria-current="page"],
+  .pagination__link[aria-current="page"]:hover {
+    background: var(--primary);
+    color: var(--neutral-white);
+    font-weight: 500;
+  }
 
-/* Native <input type="range"> with appearance:none — keyboard, step, and
+  .pagination__link:disabled {
+    color: var(--ink-tertiary);
+    cursor: not-allowed;
+  }
+
+  @media (hover: hover) {
+    .pagination__link:disabled:hover {
+      background: transparent;
+    }
+  }
+
+  .pagination__link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .pagination__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    color: var(--ink-tertiary);
+  }
+
+  /* ── Slider ────────────────────────────────────────────────────────────── */
+
+  /* Native <input type="range"> with appearance:none — keyboard, step, and
    min/max come for free. Track + thumb are themed for both engines
    (::-webkit-slider-* and ::-moz-range-*).
 
@@ -2458,85 +2461,85 @@ button.card--alternate:not(:disabled):active {
 
    Structure:
    <input class="slider" type="range" min="0" max="100" value="50" /> */
-.slider {
-  --slider-fill: 0%;
+  .slider {
+    --slider-fill: 0%;
 
-  appearance: none;
-  width: 100%;
-  max-width: 320px;
-  height: 20px;
-  background: transparent;
-  cursor: pointer;
-}
+    appearance: none;
+    width: 100%;
+    max-width: 320px;
+    height: 20px;
+    background: transparent;
+    cursor: pointer;
+  }
 
-/* Ring lives on the thumb only (below); suppress the element-level ring so the
+  /* Ring lives on the thumb only (below); suppress the element-level ring so the
    whole bar doesn't also outline. */
-.slider:focus-visible {
-  outline: none;
-}
+  .slider:focus-visible {
+    outline: none;
+  }
 
-.slider::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(
-    to right,
-    var(--primary-foreground) var(--slider-fill),
-    var(--fill-tertiary) var(--slider-fill)
-  );
-}
+  .slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(
+      to right,
+      var(--primary-foreground) var(--slider-fill),
+      var(--fill-tertiary) var(--slider-fill)
+    );
+  }
 
-.slider::-moz-range-track {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--fill-tertiary);
-}
+  .slider::-moz-range-track {
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--fill-tertiary);
+  }
 
-.slider::-moz-range-progress {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--primary-foreground);
-}
+  .slider::-moz-range-progress {
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--primary-foreground);
+  }
 
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
 
-  /* Centre the 20px thumb on the 6px track: (20 − 6) / 2 = 7px. */
-  margin-top: -7px;
-  border: 2px solid var(--background-secondary);
-  border-radius: var(--radius-full);
-  background: var(--primary-foreground);
-  box-shadow: var(--shadow-sm);
-}
+    /* Centre the 20px thumb on the 6px track: (20 − 6) / 2 = 7px. */
+    margin-top: -7px;
+    border: 2px solid var(--background-secondary);
+    border-radius: var(--radius-full);
+    background: var(--primary-foreground);
+    box-shadow: var(--shadow-sm);
+  }
 
-.slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--background-secondary);
-  border-radius: var(--radius-full);
-  background: var(--primary-foreground);
-  box-shadow: var(--shadow-sm);
-}
+  .slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--background-secondary);
+    border-radius: var(--radius-full);
+    background: var(--primary-foreground);
+    box-shadow: var(--shadow-sm);
+  }
 
-.slider:focus-visible::-webkit-slider-thumb {
-  outline: 3px solid var(--focus);
-  outline-offset: 0;
-  animation: focus-ring-converge var(--motion-default);
-}
+  .slider:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    animation: focus-ring-converge var(--motion-default);
+  }
 
-.slider:focus-visible::-moz-range-thumb {
-  outline: 3px solid var(--focus);
-  outline-offset: 0;
-  animation: focus-ring-converge var(--motion-default);
-}
+  .slider:focus-visible::-moz-range-thumb {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    animation: focus-ring-converge var(--motion-default);
+  }
 
-.slider:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
+  .slider:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 
-/* Optional wrapper: a label on the inline-start and a live value on the
+  /* Optional wrapper: a label on the inline-start and a live value on the
    inline-end, above the track. app.js (initSliders) keeps the <output> in sync.
 
    Structure:
@@ -2547,33 +2550,34 @@ button.card--alternate:not(:disabled):active {
      </div>
      <input class="slider" type="range" id="x" min="0" max="100" value="50" />
    </div> */
-.slider-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 100%;
-  max-width: 320px;
-}
+  .slider-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 320px;
+  }
 
-.slider-field__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: var(--font-body-small-size);
-}
+  .slider-field__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: var(--font-body-small-size);
+  }
 
-.slider-field__label {
-  color: var(--ink-primary);
-}
+  .slider-field__label {
+    color: var(--ink-primary);
+  }
 
-.slider-field__value {
-  color: var(--ink-secondary);
-  font-variant-numeric: tabular-nums;
-}
+  .slider-field__value {
+    color: var(--ink-secondary);
+    font-variant-numeric: tabular-nums;
+  }
 
-/* Dim the label + value alongside a disabled track. */
-.slider-field:has(.slider:disabled) .slider-field__label,
-.slider-field:has(.slider:disabled) .slider-field__value {
-  opacity: 0.5;
+  /* Dim the label + value alongside a disabled track. */
+  .slider-field:has(.slider:disabled) .slider-field__label,
+  .slider-field:has(.slider:disabled) .slider-field__value {
+    opacity: 0.5;
+  }
 }

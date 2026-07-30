@@ -7,1797 +7,1805 @@
    an @import here — @import would make the browser fetch this file first and
    only then discover the font stylesheet, serialising two round-trips. */
 
-:root {
-  color-scheme: light dark;
+/* Cascade layers. Declared once here (idempotently re-declared in tokens.css and
+   components.css so the order holds regardless of load sequence). Order low→high:
+   base (site chrome) < tokens < components. Any UNLAYERED CSS a consumer writes
+   beats all of these, so overrides need no specificity gymnastics. */
+@layer base, tokens, components;
 
-  /* Direction sign for transforms that can't use logical properties (e.g. a
+@layer base {
+  :root {
+    color-scheme: light dark;
+
+    /* Direction sign for transforms that can't use logical properties (e.g. a
      translateX knob slide): multiply the offset by --flip so RTL mirrors it. */
-  --flip: 1;
-  --radius: 10px;
-  --nav-h: 56px;
-  --sidebar-w: 15rem;
-  --page-gutter: 1.5rem; /* fixed 24px chrome gutter for header + sidebar */
-  --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
-  --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
-  --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
-}
+    --flip: 1;
+    --radius: 10px;
+    --nav-h: 56px;
+    --sidebar-w: 15rem;
+    --page-gutter: 1.5rem; /* fixed 24px chrome gutter for header + sidebar */
+    --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
+    --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
+    --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
+  }
 
-:root[data-theme="dark"] {
-  color-scheme: dark;
-}
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
 
-:root[data-theme="light"] {
-  color-scheme: light;
-}
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
 
-[dir="rtl"] {
-  --flip: -1;
-}
+  [dir="rtl"] {
+    --flip: -1;
+  }
 
-/* Cross-document view transitions: a soft cross-fade between pages as you
+  /* Cross-document view transitions: a soft cross-fade between pages as you
    navigate the docs. Both pages opt in (base.css is on every page) and same-
    origin nav is required. Progressive enhancement — unsupported browsers just
    navigate normally. Disabled at mobile widths: there the nav is a hamburger
    drawer, and transitioning an open drawer into the next page reads as a jump. */
-@media (min-width: 640px) {
-  @view-transition {
-    navigation: auto;
+  @media (min-width: 640px) {
+    @view-transition {
+      navigation: auto;
+    }
   }
-}
 
-/* The `*` reduced-motion guard above can't reach view-transition pseudos, so
+  /* The `*` reduced-motion guard above can't reach view-transition pseudos, so
    silence the page-transition animation explicitly under reduced motion. */
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
   }
-}
 
-* {
-  box-sizing: border-box;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-html {
-  -webkit-text-size-adjust: 100%;
+  html {
+    -webkit-text-size-adjust: 100%;
 
-  /* Kill the mobile tap-highlight (a square, radius-ignoring translucent overlay
+    /* Kill the mobile tap-highlight (a square, radius-ignoring translucent overlay
      the browser paints on tap). Our own :active states are the press feedback. */
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 
-  /* Sticky nav overlaps the top — reserve its height when jumping to any
+    /* Sticky nav overlaps the top — reserve its height when jumping to any
      in-page anchor (Skip-to-content, hash links). */
-  scroll-padding-top: var(--nav-h);
-}
+    scroll-padding-top: var(--nav-h);
+  }
 
-body {
-  min-width: 360px;
-  margin: 0;
-  background: var(--background-primary);
-  color: var(--ink-primary);
-  font-family: var(--font);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    min-width: 360px;
+    margin: 0;
+    background: var(--background-primary);
+    color: var(--ink-primary);
+    font-family: var(--font);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Applied briefly during a theme swap so no element animates its colour change. */
-.no-transitions,
-.no-transitions *,
-.no-transitions *::before,
-.no-transitions *::after {
-  transition: none !important;
-}
+  /* Applied briefly during a theme swap so no element animates its colour change. */
+  .no-transitions,
+  .no-transitions *,
+  .no-transitions *::before,
+  .no-transitions *::after {
+    transition: none !important;
+  }
 
-/* MD3-style focus ring: every time an element gains a visible focus ring, the
+  /* MD3-style focus ring: every time an element gains a visible focus ring, the
    ring converges from a wider offset down to its resting one. Each component
    sets its own outline + resting offset (3px / 2px by convention); this only
    animates the settle, so moving focus between elements feels like the ring
    snaps in. */
-@keyframes focus-ring-converge {
-  from {
-    outline-offset: 6px;
+  @keyframes focus-ring-converge {
+    from {
+      outline-offset: 6px;
+    }
   }
-}
 
-:focus-visible {
-  animation: focus-ring-converge var(--motion-default);
-}
+  :focus-visible {
+    animation: focus-ring-converge var(--motion-default);
+  }
 
-/* One global guard replaces every per-component reduced-motion override: near-
+  /* One global guard replaces every per-component reduced-motion override: near-
    instant animations/transitions (0.01ms, not 0, so animationend still fires),
    single iteration (kills infinite spinners), and instant anchor scrolling. */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
-}
 
-/* Shared keyboard focus ring at zero specificity, so every interactive element
+  /* Shared keyboard focus ring at zero specificity, so every interactive element
    gets it once and components override only what differs (offset, radius, or
    outline:none). */
-:where(a, button, summary, [tabindex], input, select, textarea, pre):focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
+  :where(a, button, summary, [tabindex], input, select, textarea, pre):focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-/* Accessibility: skip-to-content — hidden until keyboard-focused. */
-.skip-link {
-  position: fixed;
-  top: 0.75rem;
-  left: 50%;
-  z-index: 100;
-  padding: 0.5rem 1.25rem;
-  color: var(--background-primary);
-  background: var(--ink-primary);
-  border-radius: 999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  transform: translate(-50%, calc(-100% - 1rem));
-}
+  /* Accessibility: skip-to-content — hidden until keyboard-focused. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    z-index: 100;
+    padding: 0.5rem 1.25rem;
+    color: var(--background-primary);
+    background: var(--ink-primary);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transform: translate(-50%, calc(-100% - 1rem));
+  }
 
-.skip-link:focus-visible {
-  transform: translate(-50%, 0);
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
+  .skip-link:focus-visible {
+    transform: translate(-50%, 0);
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
 
-/* Site nav (injected on every page) */
-.site-nav {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: var(--background-primary);
-}
+  /* Site nav (injected on every page) */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--background-primary);
+  }
 
-/* Root landing: transparent, brandless — just the theme toggle. */
-.site-nav--bare {
-  background: transparent;
-}
+  /* Root landing: transparent, brandless — just the theme toggle. */
+  .site-nav--bare {
+    background: transparent;
+  }
 
-.site-nav__inner {
-  height: var(--nav-h);
-  padding-inline: var(--page-gutter);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+  .site-nav__inner {
+    height: var(--nav-h);
+    padding-inline: var(--page-gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.site-nav__left {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
+  .site-nav__left {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
 
-.site-nav__menu {
-  display: none; /* mobile only */
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  .site-nav__menu {
+    display: none; /* mobile only */
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
 
-  /* Mirror the theme toggle: 32px hit target, pulled 8px toward the corner
+    /* Mirror the theme toggle: 32px hit target, pulled 8px toward the corner
      so the icon's visible content sits at the page-gutter. */
-  margin-inline-start: -0.5rem;
-  padding: 0;
-  color: var(--ink-primary);
-  background: none;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-}
+    margin-inline-start: -0.5rem;
+    padding: 0;
+    color: var(--ink-primary);
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 
-/* Hamburger ↔ X morph. Both lines pivot around the SVG's centre. To keep the
+  /* Hamburger ↔ X morph. Both lines pivot around the SVG's centre. To keep the
    crossover perfectly symmetrical, we normalise each line to y=12 first
    (translate) then rotate ±45° around the same origin. */
-.site-nav__menu .ham-line {
-  /* Custom mark — pin its own weight so the shared icon stroke can be Tabler's 2. */
-  stroke-width: 1.75;
-  transform-origin: center;
-  transform-box: fill-box;
-  transition: transform 0.2s ease;
-}
+  .site-nav__menu .ham-line {
+    /* Custom mark — pin its own weight so the shared icon stroke can be Tabler's 2. */
+    stroke-width: 1.75;
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: transform 0.2s ease;
+  }
 
-.site-nav__menu[aria-expanded="true"] .ham-line--top {
-  transform: translateY(3px) rotate(45deg);
-}
+  .site-nav__menu[aria-expanded="true"] .ham-line--top {
+    transform: translateY(3px) rotate(45deg);
+  }
 
-.site-nav__menu[aria-expanded="true"] .ham-line--bot {
-  transform: translateY(-3px) rotate(-45deg);
-}
+  .site-nav__menu[aria-expanded="true"] .ham-line--bot {
+    transform: translateY(-3px) rotate(-45deg);
+  }
 
-/* Sidebar (injected). Desktop: sticky left column inside the shell.
+  /* Sidebar (injected). Desktop: sticky left column inside the shell.
    Mobile: an off-canvas drawer (see media query below). */
-.sidebar {
-  position: sticky;
-  top: var(--nav-h);
-  align-self: flex-start;
-  flex: none;
-  width: var(--sidebar-w);
-  max-height: calc(100dvh - var(--nav-h));
-  overflow-y: auto;
-  scrollbar-width: none;
-
-  /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
-
-  /* Inline-start = page-gutter minus link's inline padding, so link text lands
-     at 24px and its hover/active surface extends 8px before the text. */
-  padding-block: 0.75rem 3rem;
-  padding-inline: calc(var(--page-gutter) - 0.5rem) 1.5rem;
-  background: var(--background-primary);
-  z-index: 18;
-}
-
-/* Container is only a programmatic focus holder on drawer open — never show a
-   ring on it (the links have their own focus styles). */
-.sidebar:focus-visible {
-  outline: none;
-}
-
-.sidebar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Scroll fade: when the sticky sidebar overflows, its top/bottom edges fade to
-   hint more content. Scroll-driven, so the top fades only once scrolled down and
-   the bottom only while there's more below — and neither fades when the list
-   fits (an inactive scroll timeline leaves the fade sizes at 0). Chrome/Edge;
-   other browsers just show no fade. @property makes the fade sizes animatable. */
-@property --sidebar-fade-top {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0;
-}
-
-@property --sidebar-fade-bottom {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0;
-}
-
-@media (min-width: 1024px) {
-  @supports (animation-timeline: scroll()) {
-    .sidebar {
-      --sidebar-fade: 2.5rem;
-
-      /* Clear strip of page surface below the bottom fade — the fade finishes
-         this far above the edge instead of running to it. */
-      --sidebar-fade-gap: 2rem;
-
-      mask-image: linear-gradient(
-        to bottom,
-        transparent 0,
-        #000 var(--sidebar-fade-top),
-        #000 calc(100% - var(--sidebar-fade-gap) - var(--sidebar-fade-bottom)),
-        transparent calc(100% - var(--sidebar-fade-gap))
-      );
-      animation:
-        sidebar-fade-top linear both,
-        sidebar-fade-bottom linear both;
-      animation-timeline: scroll(self), scroll(self);
-      animation-range:
-        0 var(--sidebar-fade),
-        calc(100% - var(--sidebar-fade)) 100%;
-    }
-  }
-
-  @keyframes sidebar-fade-top {
-    from {
-      --sidebar-fade-top: 0;
-    }
-
-    to {
-      --sidebar-fade-top: var(--sidebar-fade);
-    }
-  }
-
-  @keyframes sidebar-fade-bottom {
-    from {
-      --sidebar-fade-bottom: var(--sidebar-fade);
-    }
-
-    to {
-      --sidebar-fade-bottom: 0;
-    }
-  }
-}
-
-.sidebar__group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.sidebar__group + .sidebar__group {
-  margin-top: 1.5rem;
-}
-
-.sidebar__group-title {
-  display: flex;
-  align-items: center;
-  height: 32px;
-  margin: 0;
-  padding-inline: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--ink-secondary);
-}
-
-.sidebar__link,
-.sidebar__back {
-  display: block;
-  font-size: 0.875rem;
-  text-decoration: none;
-}
-
-.sidebar__link {
-  line-height: 20px;
-  color: var(--ink-primary);
-  font-weight: 500;
-}
-
-/* "New" dot — primary marker next to recently-added pages. Sits inside the
-   link's inner span, so the flex gap spaces it off the label. */
-.sidebar__new {
-  flex-shrink: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--primary);
-}
-
-.sidebar__back {
-  margin-bottom: 1.25rem;
-  color: var(--ink-secondary);
-  font-weight: 500;
-}
-
-/* Visual pill wraps just the label; the anchor stays full width for clicks. */
-.sidebar__link > span,
-.sidebar__back > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.5rem;
-  border-radius: 8px;
-}
-
-@media (hover: hover) {
-  .sidebar__link:hover > span {
-    background: var(--background-secondary);
-  }
-}
-
-.sidebar__link:focus-visible,
-.sidebar__back:focus-visible {
-  outline: none;
-}
-
-.sidebar__link:focus-visible > span,
-.sidebar__back:focus-visible > span {
-  outline: 3px solid var(--focus);
-  outline-offset: 0;
-  animation: focus-ring-converge var(--motion-default);
-}
-
-.sidebar__link.is-active > span {
-  background: var(--background-secondary-active);
-}
-
-@media (hover: hover) {
-  .sidebar__back:hover {
-    color: var(--ink-primary);
-  }
-}
-
-.sidebar-backdrop {
-  display: none;
-}
-
-/* Mobile: sidebar is an off-canvas drawer toggled from the nav */
-@media (max-width: 1023px) {
-  .site-nav__menu {
-    display: inline-flex;
-  }
-
   .sidebar {
-    position: fixed;
-    inset: 0;
-    width: auto;
-    height: 100dvh;
-    max-height: none;
-    padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
-    background: color-mix(in srgb, var(--background-primary) 85%, transparent);
-    -webkit-backdrop-filter: saturate(1.4) blur(12px);
-    backdrop-filter: saturate(1.4) blur(12px);
-    z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
-    opacity: 0;
-
-    /* Drawer scrolls internally but hides its own scrollbar — the outer page
-       scrollbar stays visible for visual continuity (matches shadcn). Overscroll
-       is contained so reaching the end of the drawer doesn't bleed to the page. */
+    position: sticky;
+    top: var(--nav-h);
+    align-self: flex-start;
+    flex: none;
+    width: var(--sidebar-w);
+    max-height: calc(100dvh - var(--nav-h));
     overflow-y: auto;
-    overscroll-behavior: contain;
     scrollbar-width: none;
 
-    /* visibility: hidden stops the browser from painting the drawer at all —
-       prevents a brief flash of the full-screen open state when the viewport
-       crosses the breakpoint. */
-    visibility: hidden;
-    pointer-events: none;
+    /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
+
+    /* Inline-start = page-gutter minus link's inline padding, so link text lands
+     at 24px and its hover/active surface extends 8px before the text. */
+    padding-block: 0.75rem 3rem;
+    padding-inline: calc(var(--page-gutter) - 0.5rem) 1.5rem;
+    background: var(--background-primary);
+    z-index: 18;
+  }
+
+  /* Container is only a programmatic focus holder on drawer open — never show a
+   ring on it (the links have their own focus styles). */
+  .sidebar:focus-visible {
+    outline: none;
   }
 
   .sidebar::-webkit-scrollbar {
     display: none;
   }
 
-  /* Big links, no hover pill — shadcn-style fullscreen drawer. */
-  .sidebar__link {
-    font-size: 1.5rem;
-    line-height: 1.4;
-    font-weight: 500;
+  /* Scroll fade: when the sticky sidebar overflows, its top/bottom edges fade to
+   hint more content. Scroll-driven, so the top fades only once scrolled down and
+   the bottom only while there's more below — and neither fades when the list
+   fits (an inactive scroll timeline leaves the fade sizes at 0). Chrome/Edge;
+   other browsers just show no fade. @property makes the fade sizes animatable. */
+  @property --sidebar-fade-top {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0;
   }
 
-  .sidebar__link > span,
-  .sidebar__back > span {
-    padding: 0;
-    background: none !important;
-
-    /* No pill in the drawer, but keep 8px so the focus ring reads rounded. */
-    border-radius: 8px;
+  @property --sidebar-fade-bottom {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 0;
   }
 
-  /* Bare text has no padding, so push the ring out a touch for breathing room. */
-  .sidebar__link:focus-visible > span,
-  .sidebar__back:focus-visible > span {
-    outline-offset: 4px;
-  }
+  @media (min-width: 1024px) {
+    @supports (animation-timeline: scroll()) {
+      .sidebar {
+        --sidebar-fade: 2.5rem;
 
-  .sidebar__back {
-    font-size: 1rem;
-    margin-bottom: 1.75rem;
+        /* Clear strip of page surface below the bottom fade — the fade finishes
+         this far above the edge instead of running to it. */
+        --sidebar-fade-gap: 2rem;
+
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          #000 var(--sidebar-fade-top),
+          #000 calc(100% - var(--sidebar-fade-gap) - var(--sidebar-fade-bottom)),
+          transparent calc(100% - var(--sidebar-fade-gap))
+        );
+        animation:
+          sidebar-fade-top linear both,
+          sidebar-fade-bottom linear both;
+        animation-timeline: scroll(self), scroll(self);
+        animation-range:
+          0 var(--sidebar-fade),
+          calc(100% - var(--sidebar-fade)) 100%;
+      }
+    }
+
+    @keyframes sidebar-fade-top {
+      from {
+        --sidebar-fade-top: 0;
+      }
+
+      to {
+        --sidebar-fade-top: var(--sidebar-fade);
+      }
+    }
+
+    @keyframes sidebar-fade-bottom {
+      from {
+        --sidebar-fade-bottom: var(--sidebar-fade);
+      }
+
+      to {
+        --sidebar-fade-bottom: 0;
+      }
+    }
   }
 
   .sidebar__group {
-    gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .sidebar__group + .sidebar__group {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
   }
 
   .sidebar__group-title {
-    margin-bottom: 0;
-    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    margin: 0;
+    padding-inline: 0.5rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    padding-inline: 0;
+    color: var(--ink-secondary);
   }
 
-  /* Animate the drawer only when the user actually toggles it — not on the
-     media-query flip when the viewport crosses the mobile breakpoint. JS adds
-     .is-anim on first interaction so pure resize snaps instead of slides. */
-  .sidebar.is-anim {
-    transition:
-      opacity 0.2s ease-out,
-      visibility 0s linear 0.2s;
+  .sidebar__link,
+  .sidebar__back {
+    display: block;
+    font-size: 0.875rem;
+    text-decoration: none;
   }
 
-  .sidebar.is-anim.is-open {
-    transition: opacity 0.2s ease-out;
+  .sidebar__link {
+    line-height: 20px;
+    color: var(--ink-primary);
+    font-weight: 500;
   }
 
-  .sidebar.is-open {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+  /* "New" dot — primary marker next to recently-added pages. Sits inside the
+   link's inner span, so the flex gap spaces it off the label. */
+  .sidebar__new {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
   }
 
-  /* Backdrop not needed — the drawer already covers the whole viewport. */
-}
-
-.site-nav__brand {
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--ink-primary);
-  text-decoration: none;
-}
-
-.site-nav__brand:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font: inherit;
-  width: 32px;
-  height: 32px;
-
-  /* Sit 16px from the viewport edge (rather than 24) — tighter to the corner. */
-  margin-inline-end: -0.5rem;
-  padding: 0;
-  color: var(--ink-primary);
-  background: none;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  .theme-toggle:hover {
-    background: var(--background-secondary);
-  }
-}
-
-/* Show the icon for the theme you'd switch TO: sun in dark, moon in light. */
-:root[data-theme="light"] .icon-sun,
-:root[data-theme="dark"] .icon-moon {
-  display: none;
-}
-
-.wrap {
-  max-width: calc(40rem + 2 * var(--grid-margin, 1.5rem));
-  margin-inline: auto;
-  padding: 3rem var(--grid-margin, 1.5rem) 6rem;
-}
-
-/* Wrap gets focused (tabindex=-1) via the skip link — kill the default focus ring. */
-.wrap:focus-visible {
-  outline: none;
-}
-
-/* Shell: full width; the sidebar carries its own left gutter, and .wrap carries
-   its own side gutter (grid-margin). No shell padding, so nothing double-stacks. */
-.shell {
-  display: flex;
-  align-items: flex-start;
-}
-
-.content-region {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.site-head {
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  justify-content: space-between;
-}
-
-/* Divider only when the page has a subhead below. Pages without subheads
-   (e.g. Typography) go straight from lede into content — no floating rule. */
-body:has(.subhead) .site-head {
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--fill-tertiary);
-}
-
-.site-head__body {
-  flex: 1;
-  min-width: 0;
-}
-
-/* Title + Copy Tokens on the same row, above the lede. h1's own margin-bottom
-   provides the gap to the lede. */
-.site-head__title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-
-@media (max-width: 640px) {
-  .site-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  .sidebar__back {
+    margin-bottom: 1.25rem;
+    color: var(--ink-secondary);
+    font-weight: 500;
   }
 
-  /* Hide the topic-page Copy Tokens on mobile; the intro's toolbar button
-     is outside .site-head__title and stays. */
-  .site-head__title .btn {
+  /* Visual pill wraps just the label; the anchor stays full width for clicks. */
+  .sidebar__link > span,
+  .sidebar__back > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 8px;
+  }
+
+  @media (hover: hover) {
+    .sidebar__link:hover > span {
+      background: var(--background-secondary);
+    }
+  }
+
+  .sidebar__link:focus-visible,
+  .sidebar__back:focus-visible {
+    outline: none;
+  }
+
+  .sidebar__link:focus-visible > span,
+  .sidebar__back:focus-visible > span {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  .sidebar__link.is-active > span {
+    background: var(--background-secondary-active);
+  }
+
+  @media (hover: hover) {
+    .sidebar__back:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .sidebar-backdrop {
     display: none;
   }
-}
 
-h1 {
-  font-size: 1.875rem; /* 30px */
-  line-height: 2.25rem; /* 36px */
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 0.5rem;
-}
+  /* Mobile: sidebar is an off-canvas drawer toggled from the nav */
+  @media (max-width: 1023px) {
+    .site-nav__menu {
+      display: inline-flex;
+    }
 
-.lede {
-  color: var(--ink-secondary);
-  font-size: 1rem;
-  margin: 0;
-}
+    .sidebar {
+      position: fixed;
+      inset: 0;
+      width: auto;
+      height: 100dvh;
+      max-height: none;
+      padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
+      background: color-mix(in srgb, var(--background-primary) 85%, transparent);
+      -webkit-backdrop-filter: saturate(1.4) blur(12px);
+      backdrop-filter: saturate(1.4) blur(12px);
+      z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
+      opacity: 0;
 
-@media (min-width: 40rem) {
+      /* Drawer scrolls internally but hides its own scrollbar — the outer page
+       scrollbar stays visible for visual continuity (matches shadcn). Overscroll
+       is contained so reaching the end of the drawer doesn't bleed to the page. */
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+
+      /* visibility: hidden stops the browser from painting the drawer at all —
+       prevents a brief flash of the full-screen open state when the viewport
+       crosses the breakpoint. */
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Big links, no hover pill — shadcn-style fullscreen drawer. */
+    .sidebar__link {
+      font-size: 1.5rem;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .sidebar__link > span,
+    .sidebar__back > span {
+      padding: 0;
+      background: none !important;
+
+      /* No pill in the drawer, but keep 8px so the focus ring reads rounded. */
+      border-radius: 8px;
+    }
+
+    /* Bare text has no padding, so push the ring out a touch for breathing room. */
+    .sidebar__link:focus-visible > span,
+    .sidebar__back:focus-visible > span {
+      outline-offset: 4px;
+    }
+
+    .sidebar__back {
+      font-size: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .sidebar__group {
+      gap: 0.75rem;
+    }
+
+    .sidebar__group + .sidebar__group {
+      margin-top: 2rem;
+    }
+
+    .sidebar__group-title {
+      margin-bottom: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding-inline: 0;
+    }
+
+    /* Animate the drawer only when the user actually toggles it — not on the
+     media-query flip when the viewport crosses the mobile breakpoint. JS adds
+     .is-anim on first interaction so pure resize snaps instead of slides. */
+    .sidebar.is-anim {
+      transition:
+        opacity 0.2s ease-out,
+        visibility 0s linear 0.2s;
+    }
+
+    .sidebar.is-anim.is-open {
+      transition: opacity 0.2s ease-out;
+    }
+
+    .sidebar.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Backdrop not needed — the drawer already covers the whole viewport. */
+  }
+
+  .site-nav__brand {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  .site-nav__brand:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    width: 32px;
+    height: 32px;
+
+    /* Sit 16px from the viewport edge (rather than 24) — tighter to the corner. */
+    margin-inline-end: -0.5rem;
+    padding: 0;
+    color: var(--ink-primary);
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .theme-toggle:hover {
+      background: var(--background-secondary);
+    }
+  }
+
+  /* Show the icon for the theme you'd switch TO: sun in dark, moon in light. */
+  :root[data-theme="light"] .icon-sun,
+  :root[data-theme="dark"] .icon-moon {
+    display: none;
+  }
+
+  .wrap {
+    max-width: calc(40rem + 2 * var(--grid-margin, 1.5rem));
+    margin-inline: auto;
+    padding: 3rem var(--grid-margin, 1.5rem) 6rem;
+  }
+
+  /* Wrap gets focused (tabindex=-1) via the skip link — kill the default focus ring. */
+  .wrap:focus-visible {
+    outline: none;
+  }
+
+  /* Shell: full width; the sidebar carries its own left gutter, and .wrap carries
+   its own side gutter (grid-margin). No shell padding, so nothing double-stacks. */
+  .shell {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .content-region {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .site-head {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    justify-content: space-between;
+  }
+
+  /* Divider only when the page has a subhead below. Pages without subheads
+   (e.g. Typography) go straight from lede into content — no floating rule. */
+  body:has(.subhead) .site-head {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--fill-tertiary);
+  }
+
+  .site-head__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Title + Copy Tokens on the same row, above the lede. h1's own margin-bottom
+   provides the gap to the lede. */
+  .site-head__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .site-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    /* Hide the topic-page Copy Tokens on mobile; the intro's toolbar button
+     is outside .site-head__title and stays. */
+    .site-head__title .btn {
+      display: none;
+    }
+  }
+
+  h1 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 2.25rem; /* 36px */
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.5rem;
+  }
+
   .lede {
-    text-wrap: balance;
+    color: var(--ink-secondary);
+    font-size: 1rem;
+    margin: 0;
   }
-}
 
-@media (min-width: 48rem) {
-  .lede {
-    max-width: 80%;
+  @media (min-width: 40rem) {
+    .lede {
+      text-wrap: balance;
+    }
   }
-}
 
-.toolbar {
-  margin-top: 1.5rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  height: 32px;
-  padding: 0 0.625rem;
-  font: inherit;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--ink-primary);
-  background: var(--background-secondary);
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
-}
-
-@media (hover: hover) {
-  .btn:hover {
-    background: var(--background-secondary-hover);
+  @media (min-width: 48rem) {
+    .lede {
+      max-width: 80%;
+    }
   }
-}
 
-.btn:active {
-  background: var(--background-secondary-active);
-  transform: scale(0.97);
-}
+  .toolbar {
+    margin-top: 1.5rem;
+  }
 
-section + section {
-  margin-top: 3.5rem;
-  padding-top: 3.5rem;
-  border-top: 1px solid var(--fill-tertiary);
-}
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 0.625rem;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-primary);
+    background: var(--background-secondary);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      transform 0.1s ease;
+  }
 
-h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin: 0 0 0.75rem;
-}
+  @media (hover: hover) {
+    .btn:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
 
-.section-note {
-  color: var(--ink-primary);
-  font-size: 0.9375rem;
-  max-width: var(--measure);
-  margin: 0.25rem 0 0;
-}
+  .btn:active {
+    background: var(--background-secondary-active);
+    transform: scale(0.97);
+  }
 
-/* Inline text links in prose: medium-weight ink text (same when visited), an
+  section + section {
+    margin-top: 3.5rem;
+    padding-top: 3.5rem;
+    border-top: 1px solid var(--fill-tertiary);
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.75rem;
+  }
+
+  .section-note {
+    color: var(--ink-primary);
+    font-size: 0.9375rem;
+    max-width: var(--measure);
+    margin: 0.25rem 0 0;
+  }
+
+  /* Inline text links in prose: medium-weight ink text (same when visited), an
    ink-tertiary underline that lifts to ink-primary on hover. */
-.section-note a,
-.lede a {
-  color: var(--ink-primary);
-  font-weight: 500;
-  text-decoration: underline;
-  text-decoration-color: var(--ink-tertiary);
-  text-underline-offset: 2px;
+  .section-note a,
+  .lede a {
+    color: var(--ink-primary);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--ink-tertiary);
+    text-underline-offset: 2px;
 
-  /* Rounds the focus ring a touch. */
-  border-radius: 4px;
-  transition: text-decoration-color var(--motion-default);
-}
-
-@media (hover: hover) {
-  .section-note a:where(:hover),
-  .lede a:where(:hover) {
-    text-decoration-color: var(--ink-primary);
+    /* Rounds the focus ring a touch. */
+    border-radius: 4px;
+    transition: text-decoration-color var(--motion-default);
   }
-}
 
-/* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
+  @media (hover: hover) {
+    .section-note a:where(:hover),
+    .lede a:where(:hover) {
+      text-decoration-color: var(--ink-primary);
+    }
+  }
+
+  /* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
    contrasts against any surface it's placed on (whether that's the tinted page
    or an elevated card). */
-code {
-  font-family: var(--mono);
-  font-size: 0.8125rem;
-  padding: 0.1rem 0.3rem;
-  background: var(--fill-quaternary);
-  border: 0;
-  border-radius: 4px;
-}
+  code {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    padding: 0.1rem 0.3rem;
+    background: var(--fill-quaternary);
+    border: 0;
+    border-radius: 4px;
+  }
 
-.code-block {
-  position: relative;
-  margin: 0 0 1rem;
-}
+  .code-block {
+    position: relative;
+    margin: 0 0 1rem;
+  }
 
-pre {
-  margin: 0;
-  padding: 0.875rem 1rem;
-  background: var(--background-secondary);
-  border: 0;
-  border-radius: 16px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
+  pre {
+    margin: 0;
+    padding: 0.875rem 1rem;
+    background: var(--background-secondary);
+    border: 0;
+    border-radius: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 
-/* Chrome makes horizontally-scrollable <pre> keyboard-focusable (to scroll it);
+  /* Chrome makes horizontally-scrollable <pre> keyboard-focusable (to scroll it);
    the shared :where ring already covers it. */
-pre::-webkit-scrollbar {
-  display: none;
-}
+  pre::-webkit-scrollbar {
+    display: none;
+  }
 
-/* Copy button auto-injected by app.js on every <pre>. Sits on the same
+  /* Copy button auto-injected by app.js on every <pre>. Sits on the same
    surface as the code block so the icon reads as a floating affordance
    rather than a distinct pill. */
-.code-copy {
-  position: absolute;
-  top: 10px;
-  inset-inline-end: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  color: var(--ink-secondary);
-  background: var(--background-secondary);
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition:
-    color var(--motion-default),
-    background var(--motion-default);
-}
-
-@media (hover: hover) {
-  .code-copy:hover {
-    color: var(--ink-primary);
-    background: var(--background-secondary-hover);
+  .code-copy {
+    position: absolute;
+    top: 10px;
+    inset-inline-end: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    color: var(--ink-secondary);
+    background: var(--background-secondary);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition:
+      color var(--motion-default),
+      background var(--motion-default);
   }
-}
 
-.code-copy svg {
-  width: 16px;
-  height: 16px;
-}
+  @media (hover: hover) {
+    .code-copy:hover {
+      color: var(--ink-primary);
+      background: var(--background-secondary-hover);
+    }
+  }
 
-.code-copy .code-copy__check {
-  display: none;
-}
+  .code-copy svg {
+    width: 16px;
+    height: 16px;
+  }
 
-.code-copy.is-copied .code-copy__copy {
-  display: none;
-}
+  .code-copy .code-copy__check {
+    display: none;
+  }
 
-.code-copy.is-copied .code-copy__check {
-  display: block;
-}
+  .code-copy.is-copied .code-copy__copy {
+    display: none;
+  }
 
-pre code {
-  padding: 0;
-  background: none;
-  border: 0;
-  font-size: 0.8125rem;
-  line-height: 1.6;
-}
+  .code-copy.is-copied .code-copy__check {
+    display: block;
+  }
 
-/* GitHub-flavoured syntax tokens for the intro code sample. Manual spans in
+  pre code {
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  /* GitHub-flavoured syntax tokens for the intro code sample. Manual spans in
    HTML — no highlighter dependency for a single snippet. light-dark() picks the
    theme via color-scheme (set per theme on :root), so each token is one rule. */
-pre .tok-key {
-  color: light-dark(#cf222e, #ff7b72);
-}
+  pre .tok-key {
+    color: light-dark(#cf222e, #ff7b72);
+  }
 
-pre .tok-selector {
-  color: light-dark(#116329, #7ee787);
-}
+  pre .tok-selector {
+    color: light-dark(#116329, #7ee787);
+  }
 
-pre .tok-prop {
-  color: light-dark(#953800, #ffa657);
-}
+  pre .tok-prop {
+    color: light-dark(#953800, #ffa657);
+  }
 
-pre .tok-fn {
-  color: light-dark(#8250df, #d2a8ff);
-}
+  pre .tok-fn {
+    color: light-dark(#8250df, #d2a8ff);
+  }
 
-pre .tok-str {
-  color: light-dark(#0a3069, #a5d6ff);
-}
+  pre .tok-str {
+    color: light-dark(#0a3069, #a5d6ff);
+  }
 
-pre .tok-var {
-  color: light-dark(#0550ae, #79c0ff);
-}
+  pre .tok-var {
+    color: light-dark(#0550ae, #79c0ff);
+  }
 
-/* Palette table — one card per colour family, rows for base tokens, columns
+  /* Palette table — one card per colour family, rows for base tokens, columns
    for states (default / hover / active). Content-driven min-width triggers
    horizontal scroll on narrow viewports instead of squeezing swatches. */
-.palette-table {
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 16px;
-  overflow: hidden;
-  padding-right: 4px;
-}
-
-.palette-table__scroll {
-  overflow-x: auto;
-}
-
-.palette-table table {
-  width: 100%;
-  min-width: 480px;
-  border-collapse: collapse;
-}
-
-.palette-table thead th {
-  height: 48px;
-  padding: 0 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 20px;
-  text-align: start;
-}
-
-.palette-table__state {
-  width: 72px;
-  padding-inline: 0.5rem !important;
-  text-align: center !important;
-}
-
-.palette-table tbody th,
-.palette-table tbody td {
-  height: 72px;
-  padding: 0 1rem;
-  font-size: 0.875rem;
-  vertical-align: middle;
-  border-top: 1px solid var(--fill-tertiary);
-}
-
-.palette-table tbody th[scope="row"] {
-  padding-inline-end: 0.75rem;
-  font-weight: 400;
-  text-align: start;
-}
-
-.palette-table tbody td.palette-table__state {
-  text-align: center;
-}
-
-.palette-swatch {
-  display: inline-block;
-  width: 64px;
-  height: 48px;
-  padding: 0;
-  border: 1px solid var(--fill-quaternary);
-  border-radius: 6px;
-  background: var(--c);
-  cursor: pointer;
-  vertical-align: middle;
-}
-
-/* Section subhead — vertical rhythm builds upward: only push down against
-   what the heading introduces, and rely on the next element's margin-top for
-   the gap below (so removing a description doesn't collapse the layout). */
-.subhead {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 1.75rem 0 0;
-}
-
-.subhead + :not(.section-note),
-.section-note + * {
-  margin-top: 1rem;
-}
-
-/* Breakpoint indicator */
-.bp-indicator {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--ink-primary);
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 999px;
-  padding: 0.25rem 0.7rem;
-  margin: 0;
-}
-
-/* Type role card — one bordered card per tier, rows separated by dividers. */
-.type-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-/* Restore the 16px above the type card that .type-list's margin:0 wipes. */
-.section-note + .type-list {
-  margin-top: 1rem;
-}
-
-.type-list > li + li {
-  border-top: 1px solid var(--fill-tertiary);
-}
-
-.type-row {
-  display: block;
-  padding: 1rem;
-}
-
-.type-row__sample {
-  display: block;
-  margin-bottom: 0.4rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.type-row__meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.8125rem;
-  color: var(--ink-secondary);
-}
-
-.type-row__name {
-  color: var(--ink-primary);
-}
-
-/* Hydration leaves lh/weight empty (spec is compacted into the size slot), so
-   suppress the empty spans instead of letting them consume space-between. */
-.type-row__meta [data-spec]:empty {
-  display: none;
-}
-
-/* Role classes — reference the type tokens directly */
-.t-headline-large {
-  font-size: var(--font-headline-large-size);
-  line-height: var(--font-headline-large-lh);
-  font-weight: var(--font-headline-large-weight);
-  letter-spacing: -0.02em;
-}
-
-.t-headline-medium {
-  font-size: var(--font-headline-medium-size);
-  line-height: var(--font-headline-medium-lh);
-  font-weight: var(--font-headline-medium-weight);
-  letter-spacing: -0.02em;
-}
-
-.t-headline-small {
-  font-size: var(--font-headline-small-size);
-  line-height: var(--font-headline-small-lh);
-  font-weight: var(--font-headline-small-weight);
-  letter-spacing: -0.01em;
-}
-
-.t-title-large {
-  font-size: var(--font-title-large-size);
-  line-height: var(--font-title-large-lh);
-  font-weight: var(--font-title-large-weight);
-}
-
-.t-title-medium {
-  font-size: var(--font-title-medium-size);
-  line-height: var(--font-title-medium-lh);
-  font-weight: var(--font-title-medium-weight);
-}
-
-.t-title-small {
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-}
-
-.t-body-large {
-  font-size: var(--font-body-large-size);
-  line-height: var(--font-body-large-lh);
-  font-weight: var(--font-body-large-weight);
-}
-
-.t-body-large-emphasized {
-  font-weight: var(--font-body-large-emphasized-weight);
-}
-
-.t-body-medium {
-  font-size: var(--font-body-medium-size);
-  line-height: var(--font-body-medium-lh);
-  font-weight: var(--font-body-medium-weight);
-}
-
-.t-body-medium-emphasized {
-  font-weight: var(--font-body-medium-emphasized-weight);
-}
-
-.t-body-small {
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-}
-
-.t-body-small-emphasized {
-  font-weight: var(--font-body-small-emphasized-weight);
-}
-
-.t-caption-medium {
-  font-size: var(--font-caption-medium-size);
-  line-height: var(--font-caption-medium-lh);
-  font-weight: var(--font-caption-medium-weight);
-}
-
-.t-caption-medium-emphasized {
-  font-weight: var(--font-caption-medium-emphasized-weight);
-}
-
-.t-caption-small {
-  font-size: var(--font-caption-small-size);
-  line-height: var(--font-caption-small-lh);
-  font-weight: var(--font-caption-small-weight);
-}
-
-.t-caption-small-emphasized {
-  font-weight: var(--font-caption-small-emphasized-weight);
-}
-
-/* Prev/next docs pager — shadcn-style 64px row with 24px gap above. Distinct
-   from the Pagination component (.pagination); this is the between-pages nav. */
-.pager {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  height: 64px;
-  margin-top: 1.5rem;
-}
-
-.pager__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  height: 32px;
-  padding: 0 0.625rem;
-  color: var(--ink-primary);
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  background: var(--background-secondary);
-  border-radius: 8px;
-  transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
-}
-
-@media (hover: hover) {
-  .pager__link:hover {
-    background: var(--background-secondary-hover);
-  }
-}
-
-.pager__link:active {
-  background: var(--background-secondary-active);
-  transform: scale(0.97);
-}
-
-.pager__link--next {
-  margin-inline-start: auto;
-}
-
-/* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */
-.docs-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  cursor: pointer;
-}
-
-.docs-switch__toggle {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  padding: 0;
-  background: var(--fill-secondary);
-  border: 0;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.docs-switch__toggle::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  inset-inline-start: 2px;
-  width: 16px;
-  height: 16px;
-  background: var(--background-secondary);
-  border-radius: 50%;
-  transition: transform 0.15s ease;
-}
-
-.docs-switch__toggle[aria-checked="true"] {
-  background: var(--primary);
-}
-
-.docs-switch__toggle[aria-checked="true"]::before {
-  transform: translateX(calc(16px * var(--flip)));
-}
-
-.docs-switch__label {
-  font-size: 0.875rem;
-  color: var(--ink-primary);
-}
-
-/* Shadcn-style underlined tabs. Active tab has a text-coloured bottom line
-   that sits over the tablist's bottom border. */
-.docs-tabs {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.docs-tabs__tab {
-  position: relative;
-  padding: 0.375rem 0;
-  color: var(--ink-secondary);
-  background: none;
-  border: 0;
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  .docs-tabs__tab:hover {
-    color: var(--ink-primary);
-  }
-}
-
-.docs-tabs__tab:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.docs-tabs__tab[aria-selected="true"] {
-  color: var(--ink-primary);
-}
-
-.docs-tabs__tab[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 1px;
-  height: 2px;
-  background: var(--ink-primary);
-}
-
-/* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Each <a>
-   fills its column width so the click target spans the cell horizontally;
-   vertical rhythm comes from the grid row-gap, not per-link padding. */
-.link-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem 2rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (min-width: 640px) {
-  .link-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.link-list a {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  justify-content: flex-start;
-  color: var(--ink-primary);
-  font-size: 1rem;
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.link-list a:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 8px;
-}
-
-/* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
-   easing as the UngSex button arrow it's borrowed from. */
-.link-arrow {
-  width: 12px;
-  height: 12px;
-  overflow: visible;
-  flex-shrink: 0;
-}
-
-.link-arrow__line {
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.link-arrow__chevron {
-  transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-@media (hover: hover) {
-  .link-list a:hover .link-arrow__line {
-    opacity: 1;
+  .palette-table {
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 16px;
+    overflow: hidden;
+    padding-right: 4px;
   }
 
-  .link-list a:hover .link-arrow__chevron {
-    translate: 3px 0;
-  }
-}
-
-/* Single-card token list — one bordered box, rows separated by dividers.
-   Used on the Layout page for both Grid values and the Spacing scale. */
-.token-list {
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.token-list__row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0.75rem 0.5rem 1rem;
-  min-height: 48px;
-}
-
-.token-list__row + .token-list__row {
-  border-top: 1px solid var(--fill-tertiary);
-}
-
-.token-list__name {
-  font-size: 0.875rem;
-  white-space: nowrap;
-}
-
-.token-list__bar {
-  flex: none;
-  height: 8px;
-  background: var(--ink-primary);
-  border-radius: 4px;
-}
-
-.token-list__value {
-  margin-inline-start: auto;
-  font-size: 0.875rem;
-}
-
-/* Linked rows (used on the intro to jump into each section). Chevron appended
-   via a mask so we don't repeat SVG markup on every row. */
-a.token-list__row {
-  color: inherit;
-  text-decoration: none;
-}
-
-a.token-list__row .token-list__name {
-  font-weight: 500;
-}
-
-a.token-list__row .token-list__value {
-  color: var(--ink-secondary);
-}
-
-a.token-list__row::after {
-  content: "";
-  flex: none;
-  width: 16px;
-  height: 16px;
-  background: currentcolor;
-  color: var(--ink-tertiary);
-  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>")
-    no-repeat center / 16px;
-  transition: color var(--motion-default);
-}
-
-@media (hover: hover) {
-  a.token-list__row:hover::after {
-    color: var(--ink-primary);
-  }
-}
-
-/* Full-width rows: ring sits just inside so it never collides with the
-   container edge. No converge — a 6px→-2px sweep would fly in from outside. */
-a.token-list__row:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: -2px;
-  animation: none;
-}
-
-/* On narrow screens the description drops under the label (left-aligned)
-   and the chevron stays vertically centred beside them. */
-@media (max-width: 640px) {
-  a.token-list__row {
-    position: relative;
-    flex-wrap: wrap;
-    row-gap: 0;
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
+  .palette-table__scroll {
+    overflow-x: auto;
   }
 
-  a.token-list__row .token-list__name {
-    flex-basis: 100%;
+  .palette-table table {
+    width: 100%;
+    min-width: 480px;
+    border-collapse: collapse;
   }
 
-  a.token-list__row .token-list__value {
-    margin-inline-start: 0;
+  .palette-table thead th {
+    height: 48px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 20px;
     text-align: start;
   }
 
-  a.token-list__row::after {
-    position: absolute;
-    top: 50%;
-    inset-inline-end: 12px;
-    transform: translateY(-50%);
+  .palette-table__state {
+    width: 72px;
+    padding-inline: 0.5rem !important;
+    text-align: center !important;
   }
-}
 
-/* Flush variant — drops the box so each linked row is its own action-row-style
-   surface: resting on --background-secondary with card hover/active. Used on
-   the project landing. */
-.token-list--flush {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-  overflow: visible;
-}
-
-.token-list--flush .token-list__row + .token-list__row {
-  border-top: 0;
-}
-
-.token-list--flush a.token-list__row {
-  min-height: 0;
-  padding: 12px 16px;
-  background: var(--background-secondary);
-  border-radius: 16px;
-  transition: background var(--motion-default);
-}
-
-.token-list--flush a.token-list__row .token-list__name {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.token-list--flush a.token-list__row::after {
-  width: 20px;
-  height: 20px;
-  mask-size: 20px;
-}
-
-@media (hover: hover) {
-  .token-list--flush a.token-list__row:hover {
-    background: var(--background-secondary-hover);
+  .palette-table tbody th,
+  .palette-table tbody td {
+    height: 72px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    vertical-align: middle;
+    border-top: 1px solid var(--fill-tertiary);
   }
-}
 
-.token-list--flush a.token-list__row:active {
-  background: var(--background-secondary-active);
-}
-
-/* Only the surface reacts to hover — keep the chevron steady. */
-@media (hover: hover) {
-  .token-list--flush a.token-list__row:hover::after {
-    color: var(--ink-tertiary);
+  .palette-table tbody th[scope="row"] {
+    padding-inline-end: 0.75rem;
+    font-weight: 400;
+    text-align: start;
   }
-}
 
-/* These rows are spaced cards, not edge-to-edge, so they take the standard
-   outset ring + converge instead of the inset treatment above. */
-.token-list--flush a.token-list__row:focus-visible {
-  outline-offset: 2px;
-  animation: focus-ring-converge var(--motion-default);
-}
-
-/* Preview blocks — heading + description above, boxed demo + token below. */
-.preview-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 3rem;
-}
-
-/* Tighter rhythm — used on the intro where sections are short link lists. */
-.preview-grid--tight {
-  gap: 2rem;
-}
-
-.preview-block {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.preview-block > .subhead {
-  margin-top: 0;
-}
-
-/* Adjacent generic <section>s draw a divider; preview-blocks flow together instead. */
-.preview-block + .preview-block {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.preview-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 16px;
-}
-
-.preview-card__demo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 220px;
-  padding: 2rem;
-  background: var(--background-primary);
-}
-
-/* Component demo container — a "stage" that isolates the live example on the
-   project's elevated surface (--background-secondary). Components that need
-   to match this surface (Tabs' active pill, Switch's knob) reference it too. */
-.component-preview {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  min-height: calc(200px + 5rem);
-  padding: 2.5rem;
-  background: var(--background-secondary);
-  border: 1px solid var(--fill-tertiary);
-  border-radius: 16px;
-}
-
-.preview-card__chip {
-  display: block;
-  width: 100%;
-  max-width: 196px;
-  height: 128px;
-  background: var(--background-secondary);
-  border-radius: 12px;
-}
-
-/* Shadow demo keeps a subtler surface so the shadow reads against the card. */
-.preview-card__chip[data-shadow-demo] {
-  background: var(--background-secondary);
-}
-
-/* Radius demo — subtle surface + alpha ring (matches shadcn's card look).
-   Uses --fill-tertiary for the ring so the alpha overlay reads correctly on
-   the demo's own surface across both themes — no per-theme override needed. */
-.preview-card__chip[data-radius-demo] {
-  background: var(--background-secondary);
-  border: 0;
-  box-shadow: 0 0 0 1px var(--fill-tertiary);
-}
-
-.preview-card__meta {
-  position: relative;
-  padding: 0.875rem 1rem;
-  border-top: 1px solid var(--fill-tertiary);
-}
-
-.preview-card__meta-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
-}
-
-.preview-card__name {
-  position: absolute;
-  inset-block-start: 1rem;
-  inset-inline-start: 1rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  white-space: nowrap;
-}
-
-.preview-card__value {
-  font-size: 0.875rem;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-/* Motion demo — small horizontal track with a dot that slides across on card
-   hover, using the token duration + easing so you can see each token in action. */
-.motion-demo {
-  --motion-demo-transition: var(--motion-default);
-
-  position: relative;
-  width: 100%;
-  max-width: 160px;
-  height: 24px;
-  background: var(--background-secondary);
-  border-radius: 999px;
-}
-
-.motion-demo::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: 16px;
-  background: var(--ink-primary);
-  border-radius: 999px;
-  transition: left var(--motion-demo-transition);
-}
-
-.preview-card:hover .motion-demo::after {
-  left: calc(100% - 20px);
-}
-
-/* Ease-in / ease-out demos use a longer duration so the curve shape is legible. */
-.motion-demo[data-motion="ease-in"] {
-  --motion-demo-transition: 400ms var(--motion-ease-in);
-}
-
-.motion-demo[data-motion="ease-out"] {
-  --motion-demo-transition: 400ms var(--motion-ease-out);
-}
-
-/* Grid overlay — pinned over the content column so its columns line up with the page.
-   The overlay box spans the content region; the inner mirrors .wrap (capped + centered). */
-.grid-overlay {
-  --grid-overlay-color: #ef4444;
-
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-}
-
-.grid-overlay__inner {
-  position: relative;
-  height: 100%;
-
-  /* content + the outer margins (32px each), so columns fill the 1200 content
-     and the margin bands sit OUTSIDE it — matching "1200 content, 1264 w/ margins". */
-  max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
-  margin-inline: auto;
-}
-
-.grid-overlay[hidden] {
-  display: none;
-}
-
-.grid-overlay__cols {
-  position: absolute;
-  inset: 0;
-  padding-inline: var(--grid-margin, 0);
-  display: grid;
-  grid-template-columns: repeat(var(--grid-columns), 1fr);
-  gap: var(--grid-gutter);
-}
-
-.grid-overlay__col {
-  background: color-mix(in srgb, var(--grid-overlay-color) 16%, transparent);
-  border-inline: 1px solid color-mix(in srgb, var(--grid-overlay-color) 30%, transparent);
-}
-
-/* Outer margin bands, with their measured value */
-.grid-overlay__margin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: var(--grid-margin, 0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--grid-overlay-color) 7%, transparent);
-}
-
-.grid-overlay__margin--left {
-  left: 0;
-  border-left: 1px dashed color-mix(in srgb, var(--grid-overlay-color) 40%, transparent);
-}
-
-.grid-overlay__margin--right {
-  right: 0;
-  border-right: 1px dashed color-mix(in srgb, var(--grid-overlay-color) 40%, transparent);
-}
-
-.grid-overlay__margin-label {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  white-space: nowrap;
-  color: var(--grid-overlay-color);
-  transform: rotate(-90deg);
-}
-
-/* Toast — light surface (like Alert/cards) so semantic type icons read. */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 1.5rem;
-  transform: translateX(-50%) translateY(1rem);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-
-  /* % (not 100vw) resolves against the viewport minus any scrollbar, so a wide
-     toast can't itself trigger a horizontal scrollbar. */
-  max-width: calc(100% - 2rem);
-  padding: 0.75rem 1.25rem;
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  border-radius: 999px;
-  box-shadow: var(--shadow-lg), var(--surface-rim);
-  font-size: 0.875rem;
-  font-weight: 500;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
-  z-index: 10;
-}
-
-.toast.is-visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Leading icon carries its own optical space — tighten the left, like badge. */
-.toast:has(.toast__icon svg) {
-  padding-left: 16px;
-}
-
-.toast__icon {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 1.125rem;
-  height: 1.125rem;
-}
-
-.toast__icon:empty {
-  display: none;
-}
-
-.toast__icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.toast[data-type="success"] .toast__icon {
-  color: var(--green);
-}
-
-.toast[data-type="info"] .toast__icon {
-  color: var(--blue);
-}
-
-.toast[data-type="warning"] .toast__icon {
-  color: var(--amber);
-}
-
-.toast[data-type="error"] .toast__icon {
-  color: var(--red);
-}
-
-.toast[data-type="loading"] .toast__icon {
-  color: var(--ink-secondary);
-}
-
-/* Ring spinner matching the Spinner component (which lives in components.css,
-   not loaded site-wide — so the toast keeps its own copy here). */
-.toast__spinner {
-  /* ~75% of the icon slot so it optically matches the other glyphs' inset
-     circles (their paths sit inside a 24 viewBox), not the full box. */
-  width: 0.85rem;
-  height: 0.85rem;
-  border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
-  border-top-color: currentcolor;
-  border-radius: 50%;
-  animation: toast-spin 0.7s linear infinite;
-}
-
-@keyframes toast-spin {
-  to {
-    rotate: 360deg;
+  .palette-table tbody td.palette-table__state {
+    text-align: center;
   }
-}
 
-/* ── Preference fallbacks ────────────────────────────────────────────────────
-   Each block only activates on a matching OS/user setting, so the default look
-   is untouched. */
-
-/* Reduced transparency: drop the drawer's blur + translucency for an opaque
-   surface. */
-@media (max-width: 1023px) and (prefers-reduced-transparency: reduce) {
-  .sidebar {
-    background: var(--background-primary);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+  .palette-swatch {
+    display: inline-block;
+    width: 64px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid var(--fill-quaternary);
+    border-radius: 6px;
+    background: var(--c);
+    cursor: pointer;
+    vertical-align: middle;
   }
-}
 
-/* More contrast: firm up the hairline dividers/borders (normally a faint
-   --fill-tertiary) to an ink tone so they're clearly visible. */
-@media (prefers-contrast: more) {
-  .palette-table,
-  .type-list,
-  .token-list,
-  .preview-card,
-  .component-preview,
-  .bp-indicator,
-  .site-head,
-  section + section,
-  .type-list > li + li,
-  .token-list__row + .token-list__row,
-  .preview-card__meta {
-    border-color: var(--ink-tertiary);
+  /* Section subhead — vertical rhythm builds upward: only push down against
+   what the heading introduces, and rely on the next element's margin-top for
+   the gap below (so removing a description doesn't collapse the layout). */
+  .subhead {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 1.75rem 0 0;
   }
-}
 
-/* Forced colors (Windows High Contrast) for the site chrome. Only active in
-   that mode; uses system-color keywords and never touches the token pipeline,
-   so neutral retinting is unaffected. (Component library has its own block.) */
-@media (forced-colors: active) {
+  .subhead + :not(.section-note),
+  .section-note + * {
+    margin-top: 1rem;
+  }
+
+  /* Breakpoint indicator */
+  .bp-indicator {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-primary);
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    margin: 0;
+  }
+
+  /* Type role card — one bordered card per tier, rows separated by dividers. */
+  .type-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* Restore the 16px above the type card that .type-list's margin:0 wipes. */
+  .section-note + .type-list {
+    margin-top: 1rem;
+  }
+
+  .type-list > li + li {
+    border-top: 1px solid var(--fill-tertiary);
+  }
+
+  .type-row {
+    display: block;
+    padding: 1rem;
+  }
+
+  .type-row__sample {
+    display: block;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .type-row__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.8125rem;
+    color: var(--ink-secondary);
+  }
+
+  .type-row__name {
+    color: var(--ink-primary);
+  }
+
+  /* Hydration leaves lh/weight empty (spec is compacted into the size slot), so
+   suppress the empty spans instead of letting them consume space-between. */
+  .type-row__meta [data-spec]:empty {
+    display: none;
+  }
+
+  /* Role classes — reference the type tokens directly */
+  .t-headline-large {
+    font-size: var(--font-headline-large-size);
+    line-height: var(--font-headline-large-lh);
+    font-weight: var(--font-headline-large-weight);
+    letter-spacing: -0.02em;
+  }
+
+  .t-headline-medium {
+    font-size: var(--font-headline-medium-size);
+    line-height: var(--font-headline-medium-lh);
+    font-weight: var(--font-headline-medium-weight);
+    letter-spacing: -0.02em;
+  }
+
+  .t-headline-small {
+    font-size: var(--font-headline-small-size);
+    line-height: var(--font-headline-small-lh);
+    font-weight: var(--font-headline-small-weight);
+    letter-spacing: -0.01em;
+  }
+
+  .t-title-large {
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
+  }
+
+  .t-title-medium {
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+  }
+
+  .t-title-small {
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  .t-body-large {
+    font-size: var(--font-body-large-size);
+    line-height: var(--font-body-large-lh);
+    font-weight: var(--font-body-large-weight);
+  }
+
+  .t-body-large-emphasized {
+    font-weight: var(--font-body-large-emphasized-weight);
+  }
+
+  .t-body-medium {
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
+  }
+
+  .t-body-medium-emphasized {
+    font-weight: var(--font-body-medium-emphasized-weight);
+  }
+
+  .t-body-small {
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+  }
+
+  .t-body-small-emphasized {
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .t-caption-medium {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-weight);
+  }
+
+  .t-caption-medium-emphasized {
+    font-weight: var(--font-caption-medium-emphasized-weight);
+  }
+
+  .t-caption-small {
+    font-size: var(--font-caption-small-size);
+    line-height: var(--font-caption-small-lh);
+    font-weight: var(--font-caption-small-weight);
+  }
+
+  .t-caption-small-emphasized {
+    font-weight: var(--font-caption-small-emphasized-weight);
+  }
+
+  /* Prev/next docs pager — shadcn-style 64px row with 24px gap above. Distinct
+   from the Pagination component (.pagination); this is the between-pages nav. */
+  .pager {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 64px;
+    margin-top: 1.5rem;
+  }
+
+  .pager__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 32px;
+    padding: 0 0.625rem;
+    color: var(--ink-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    background: var(--background-secondary);
+    border-radius: 8px;
+    transition:
+      background-color 0.15s ease,
+      transform 0.1s ease;
+  }
+
+  @media (hover: hover) {
+    .pager__link:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .pager__link:active {
+    background: var(--background-secondary-active);
+    transform: scale(0.97);
+  }
+
+  .pager__link--next {
+    margin-inline-start: auto;
+  }
+
+  /* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */
+  .docs-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    cursor: pointer;
+  }
+
   .docs-switch__toggle {
-    border: 1px solid ButtonBorder;
-  }
-
-  .docs-switch__toggle[aria-checked="true"] {
-    forced-color-adjust: none;
-    background: Highlight;
+    position: relative;
+    width: 36px;
+    height: 20px;
+    padding: 0;
+    background: var(--fill-secondary);
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
   }
 
   .docs-switch__toggle::before {
-    background: ButtonText;
+    content: "";
+    position: absolute;
+    top: 2px;
+    inset-inline-start: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--background-secondary);
+    border-radius: 50%;
+    transition: transform 0.15s ease;
+  }
+
+  .docs-switch__toggle[aria-checked="true"] {
+    background: var(--primary);
   }
 
   .docs-switch__toggle[aria-checked="true"]::before {
-    background: HighlightText;
+    transform: translateX(calc(16px * var(--flip)));
   }
 
-  /* Swatches convey meaning via background alone — keep an outline so the grid
+  .docs-switch__label {
+    font-size: 0.875rem;
+    color: var(--ink-primary);
+  }
+
+  /* Shadcn-style underlined tabs. Active tab has a text-coloured bottom line
+   that sits over the tablist's bottom border. */
+  .docs-tabs {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .docs-tabs__tab {
+    position: relative;
+    padding: 0.375rem 0;
+    color: var(--ink-secondary);
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .docs-tabs__tab:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .docs-tabs__tab:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .docs-tabs__tab[aria-selected="true"] {
+    color: var(--ink-primary);
+  }
+
+  .docs-tabs__tab[aria-selected="true"]::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    height: 2px;
+    background: var(--ink-primary);
+  }
+
+  /* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Each <a>
+   fills its column width so the click target spans the cell horizontally;
+   vertical rhythm comes from the grid row-gap, not per-link padding. */
+  .link-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    .link-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .link-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-content: flex-start;
+    color: var(--ink-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .link-list a:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
+   easing as the UngSex button arrow it's borrowed from. */
+  .link-arrow {
+    width: 12px;
+    height: 12px;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
+  .link-arrow__line {
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .link-arrow__chevron {
+    transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  @media (hover: hover) {
+    .link-list a:hover .link-arrow__line {
+      opacity: 1;
+    }
+
+    .link-list a:hover .link-arrow__chevron {
+      translate: 3px 0;
+    }
+  }
+
+  /* Single-card token list — one bordered box, rows separated by dividers.
+   Used on the Layout page for both Grid values and the Spacing scale. */
+  .token-list {
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .token-list__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.75rem 0.5rem 1rem;
+    min-height: 48px;
+  }
+
+  .token-list__row + .token-list__row {
+    border-top: 1px solid var(--fill-tertiary);
+  }
+
+  .token-list__name {
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .token-list__bar {
+    flex: none;
+    height: 8px;
+    background: var(--ink-primary);
+    border-radius: 4px;
+  }
+
+  .token-list__value {
+    margin-inline-start: auto;
+    font-size: 0.875rem;
+  }
+
+  /* Linked rows (used on the intro to jump into each section). Chevron appended
+   via a mask so we don't repeat SVG markup on every row. */
+  a.token-list__row {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a.token-list__row .token-list__name {
+    font-weight: 500;
+  }
+
+  a.token-list__row .token-list__value {
+    color: var(--ink-secondary);
+  }
+
+  a.token-list__row::after {
+    content: "";
+    flex: none;
+    width: 16px;
+    height: 16px;
+    background: currentcolor;
+    color: var(--ink-tertiary);
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>")
+      no-repeat center / 16px;
+    transition: color var(--motion-default);
+  }
+
+  @media (hover: hover) {
+    a.token-list__row:hover::after {
+      color: var(--ink-primary);
+    }
+  }
+
+  /* Full-width rows: ring sits just inside so it never collides with the
+   container edge. No converge — a 6px→-2px sweep would fly in from outside. */
+  a.token-list__row:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: -2px;
+    animation: none;
+  }
+
+  /* On narrow screens the description drops under the label (left-aligned)
+   and the chevron stays vertically centred beside them. */
+  @media (max-width: 640px) {
+    a.token-list__row {
+      position: relative;
+      flex-wrap: wrap;
+      row-gap: 0;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+    }
+
+    a.token-list__row .token-list__name {
+      flex-basis: 100%;
+    }
+
+    a.token-list__row .token-list__value {
+      margin-inline-start: 0;
+      text-align: start;
+    }
+
+    a.token-list__row::after {
+      position: absolute;
+      top: 50%;
+      inset-inline-end: 12px;
+      transform: translateY(-50%);
+    }
+  }
+
+  /* Flush variant — drops the box so each linked row is its own action-row-style
+   surface: resting on --background-secondary with card hover/active. Used on
+   the project landing. */
+  .token-list--flush {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .token-list--flush .token-list__row + .token-list__row {
+    border-top: 0;
+  }
+
+  .token-list--flush a.token-list__row {
+    min-height: 0;
+    padding: 12px 16px;
+    background: var(--background-secondary);
+    border-radius: 16px;
+    transition: background var(--motion-default);
+  }
+
+  .token-list--flush a.token-list__row .token-list__name {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .token-list--flush a.token-list__row::after {
+    width: 20px;
+    height: 20px;
+    mask-size: 20px;
+  }
+
+  @media (hover: hover) {
+    .token-list--flush a.token-list__row:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .token-list--flush a.token-list__row:active {
+    background: var(--background-secondary-active);
+  }
+
+  /* Only the surface reacts to hover — keep the chevron steady. */
+  @media (hover: hover) {
+    .token-list--flush a.token-list__row:hover::after {
+      color: var(--ink-tertiary);
+    }
+  }
+
+  /* These rows are spaced cards, not edge-to-edge, so they take the standard
+   outset ring + converge instead of the inset treatment above. */
+  .token-list--flush a.token-list__row:focus-visible {
+    outline-offset: 2px;
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  /* Preview blocks — heading + description above, boxed demo + token below. */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  /* Tighter rhythm — used on the intro where sections are short link lists. */
+  .preview-grid--tight {
+    gap: 2rem;
+  }
+
+  .preview-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .preview-block > .subhead {
+    margin-top: 0;
+  }
+
+  /* Adjacent generic <section>s draw a divider; preview-blocks flow together instead. */
+  .preview-block + .preview-block {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .preview-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 16px;
+  }
+
+  .preview-card__demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 2rem;
+    background: var(--background-primary);
+  }
+
+  /* Component demo container — a "stage" that isolates the live example on the
+   project's elevated surface (--background-secondary). Components that need
+   to match this surface (Tabs' active pill, Switch's knob) reference it too. */
+  .component-preview {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    min-height: calc(200px + 5rem);
+    padding: 2.5rem;
+    background: var(--background-secondary);
+    border: 1px solid var(--fill-tertiary);
+    border-radius: 16px;
+  }
+
+  .preview-card__chip {
+    display: block;
+    width: 100%;
+    max-width: 196px;
+    height: 128px;
+    background: var(--background-secondary);
+    border-radius: 12px;
+  }
+
+  /* Shadow demo keeps a subtler surface so the shadow reads against the card. */
+  .preview-card__chip[data-shadow-demo] {
+    background: var(--background-secondary);
+  }
+
+  /* Radius demo — subtle surface + alpha ring (matches shadcn's card look).
+   Uses --fill-tertiary for the ring so the alpha overlay reads correctly on
+   the demo's own surface across both themes — no per-theme override needed. */
+  .preview-card__chip[data-radius-demo] {
+    background: var(--background-secondary);
+    border: 0;
+    box-shadow: 0 0 0 1px var(--fill-tertiary);
+  }
+
+  .preview-card__meta {
+    position: relative;
+    padding: 0.875rem 1rem;
+    border-top: 1px solid var(--fill-tertiary);
+  }
+
+  .preview-card__meta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .preview-card__name {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-start: 1rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .preview-card__value {
+    font-size: 0.875rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  /* Motion demo — small horizontal track with a dot that slides across on card
+   hover, using the token duration + easing so you can see each token in action. */
+  .motion-demo {
+    --motion-demo-transition: var(--motion-default);
+
+    position: relative;
+    width: 100%;
+    max-width: 160px;
+    height: 24px;
+    background: var(--background-secondary);
+    border-radius: 999px;
+  }
+
+  .motion-demo::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: 16px;
+    background: var(--ink-primary);
+    border-radius: 999px;
+    transition: left var(--motion-demo-transition);
+  }
+
+  .preview-card:hover .motion-demo::after {
+    left: calc(100% - 20px);
+  }
+
+  /* Ease-in / ease-out demos use a longer duration so the curve shape is legible. */
+  .motion-demo[data-motion="ease-in"] {
+    --motion-demo-transition: 400ms var(--motion-ease-in);
+  }
+
+  .motion-demo[data-motion="ease-out"] {
+    --motion-demo-transition: 400ms var(--motion-ease-out);
+  }
+
+  /* Grid overlay — pinned over the content column so its columns line up with the page.
+   The overlay box spans the content region; the inner mirrors .wrap (capped + centered). */
+  .grid-overlay {
+    --grid-overlay-color: #ef4444;
+
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .grid-overlay__inner {
+    position: relative;
+    height: 100%;
+
+    /* content + the outer margins (32px each), so columns fill the 1200 content
+     and the margin bands sit OUTSIDE it — matching "1200 content, 1264 w/ margins". */
+    max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
+    margin-inline: auto;
+  }
+
+  .grid-overlay[hidden] {
+    display: none;
+  }
+
+  .grid-overlay__cols {
+    position: absolute;
+    inset: 0;
+    padding-inline: var(--grid-margin, 0);
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns), 1fr);
+    gap: var(--grid-gutter);
+  }
+
+  .grid-overlay__col {
+    background: color-mix(in srgb, var(--grid-overlay-color) 16%, transparent);
+    border-inline: 1px solid color-mix(in srgb, var(--grid-overlay-color) 30%, transparent);
+  }
+
+  /* Outer margin bands, with their measured value */
+  .grid-overlay__margin {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--grid-margin, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--grid-overlay-color) 7%, transparent);
+  }
+
+  .grid-overlay__margin--left {
+    left: 0;
+    border-left: 1px dashed color-mix(in srgb, var(--grid-overlay-color) 40%, transparent);
+  }
+
+  .grid-overlay__margin--right {
+    right: 0;
+    border-right: 1px dashed color-mix(in srgb, var(--grid-overlay-color) 40%, transparent);
+  }
+
+  .grid-overlay__margin-label {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--grid-overlay-color);
+    transform: rotate(-90deg);
+  }
+
+  /* Toast — light surface (like Alert/cards) so semantic type icons read. */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%) translateY(1rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+
+    /* % (not 100vw) resolves against the viewport minus any scrollbar, so a wide
+     toast can't itself trigger a horizontal scrollbar. */
+    max-width: calc(100% - 2rem);
+    padding: 0.75rem 1.25rem;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    border-radius: 999px;
+    box-shadow: var(--shadow-lg), var(--surface-rim);
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+    z-index: 10;
+  }
+
+  .toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Leading icon carries its own optical space — tighten the left, like badge. */
+  .toast:has(.toast__icon svg) {
+    padding-left: 16px;
+  }
+
+  .toast__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .toast__icon:empty {
+    display: none;
+  }
+
+  .toast__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .toast[data-type="success"] .toast__icon {
+    color: var(--green);
+  }
+
+  .toast[data-type="info"] .toast__icon {
+    color: var(--blue);
+  }
+
+  .toast[data-type="warning"] .toast__icon {
+    color: var(--amber);
+  }
+
+  .toast[data-type="error"] .toast__icon {
+    color: var(--red);
+  }
+
+  .toast[data-type="loading"] .toast__icon {
+    color: var(--ink-secondary);
+  }
+
+  /* Ring spinner matching the Spinner component (which lives in components.css,
+   not loaded site-wide — so the toast keeps its own copy here). */
+  .toast__spinner {
+    /* ~75% of the icon slot so it optically matches the other glyphs' inset
+     circles (their paths sit inside a 24 viewBox), not the full box. */
+    width: 0.85rem;
+    height: 0.85rem;
+    border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
+    border-top-color: currentcolor;
+    border-radius: 50%;
+    animation: toast-spin 0.7s linear infinite;
+  }
+
+  @keyframes toast-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  /* ── Preference fallbacks ────────────────────────────────────────────────────
+   Each block only activates on a matching OS/user setting, so the default look
+   is untouched. */
+
+  /* Reduced transparency: drop the drawer's blur + translucency for an opaque
+   surface. */
+  @media (max-width: 1023px) and (prefers-reduced-transparency: reduce) {
+    .sidebar {
+      background: var(--background-primary);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  /* More contrast: firm up the hairline dividers/borders (normally a faint
+   --fill-tertiary) to an ink tone so they're clearly visible. */
+  @media (prefers-contrast: more) {
+    .palette-table,
+    .type-list,
+    .token-list,
+    .preview-card,
+    .component-preview,
+    .bp-indicator,
+    .site-head,
+    section + section,
+    .type-list > li + li,
+    .token-list__row + .token-list__row,
+    .preview-card__meta {
+      border-color: var(--ink-tertiary);
+    }
+  }
+
+  /* Forced colors (Windows High Contrast) for the site chrome. Only active in
+   that mode; uses system-color keywords and never touches the token pipeline,
+   so neutral retinting is unaffected. (Component library has its own block.) */
+  @media (forced-colors: active) {
+    .docs-switch__toggle {
+      border: 1px solid ButtonBorder;
+    }
+
+    .docs-switch__toggle[aria-checked="true"] {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .docs-switch__toggle::before {
+      background: ButtonText;
+    }
+
+    .docs-switch__toggle[aria-checked="true"]::before {
+      background: HighlightText;
+    }
+
+    /* Swatches convey meaning via background alone — keep an outline so the grid
      doesn't flatten into blank cells. */
-  .palette-swatch {
-    border: 1px solid ButtonBorder;
+    .palette-swatch {
+      border: 1px solid ButtonBorder;
+    }
   }
 }

@@ -42,18 +42,24 @@
           </p>
           <div class="component-preview">
             <div class="tabs" role="tablist">
-              <label class="tabs__tab">
-                <input type="radio" name="tabs-default" class="tabs__radio" checked />
-                <span class="tabs__label">Overview</span>
-              </label>
-              <label class="tabs__tab">
-                <input type="radio" name="tabs-default" class="tabs__radio" />
-                <span class="tabs__label">Details</span>
-              </label>
-              <label class="tabs__tab">
-                <input type="radio" name="tabs-default" class="tabs__radio" />
-                <span class="tabs__label">Settings</span>
-              </label>
+              <input
+                type="radio"
+                name="tabs-default"
+                id="tab-default-1"
+                class="tabs__radio"
+                checked
+              />
+              <label class="tabs__tab" for="tab-default-1"
+                ><span class="tabs__label">Overview</span></label
+              >
+              <input type="radio" name="tabs-default" id="tab-default-2" class="tabs__radio" />
+              <label class="tabs__tab" for="tab-default-2"
+                ><span class="tabs__label">Details</span></label
+              >
+              <input type="radio" name="tabs-default" id="tab-default-3" class="tabs__radio" />
+              <label class="tabs__tab" for="tab-default-3"
+                ><span class="tabs__label">Settings</span></label
+              >
             </div>
           </div>
         </section>
@@ -62,14 +68,12 @@
           <h3 class="subhead">Disabled</h3>
           <div class="component-preview">
             <div class="tabs" role="tablist" style="width: 200px">
-              <label class="tabs__tab">
-                <input type="radio" name="tabs-two" class="tabs__radio" checked />
-                <span class="tabs__label">Home</span>
-              </label>
-              <label class="tabs__tab">
-                <input type="radio" name="tabs-two" class="tabs__radio" disabled />
-                <span class="tabs__label">Disabled</span>
-              </label>
+              <input type="radio" name="tabs-two" id="tab-two-1" class="tabs__radio" checked />
+              <label class="tabs__tab" for="tab-two-1"><span class="tabs__label">Home</span></label>
+              <input type="radio" name="tabs-two" id="tab-two-2" class="tabs__radio" disabled />
+              <label class="tabs__tab" for="tab-two-2"
+                ><span class="tabs__label">Disabled</span></label
+              >
             </div>
           </div>
         </section>
@@ -77,14 +81,10 @@
         <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
-    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;</span>
-  <span class="tok-key">&lt;/label&gt;</span>
-  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">/&gt;</span>
-    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Details<span class="tok-key">&lt;/span&gt;</span>
-  <span class="tok-key">&lt;/label&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t1"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t2"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t2"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Details<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>
       </div>

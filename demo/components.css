@@ -271,12 +271,15 @@
    Place tabs on a --background-secondary surface (card, sheet) for the effect
    to read correctly.
 
+   Each radio sits just before its label so state flows through the adjacent
+   sibling (.tabs__radio:checked + .tabs__tab) — cheaper and more compatible
+   than :has(). The radios are visually hidden and out of flow, so the flex
+   track lays out only the labels.
+
    Structure:
    <div class="tabs" role="tablist">
-     <label class="tabs__tab">
-       <input type="radio" name="group" class="tabs__radio" checked />
-       <span class="tabs__label">Overview</span>
-     </label>
+     <input type="radio" name="group" id="t1" class="tabs__radio" checked />
+     <label class="tabs__tab" for="t1"><span class="tabs__label">Overview</span></label>
      …
    </div> */
 
@@ -320,37 +323,39 @@
   clip-path: inset(50%);
 }
 
-/* Hover only where a real pointer exists, so the state doesn't stick after a
-   tap on touch (Ruter's pattern); :active below covers the pressed feedback. */
-@media (hover: hover) {
-  .tabs__tab:hover:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
-    background: var(--fill-quaternary-hover);
-    color: var(--ink-primary);
-  }
-}
-
-.tabs__tab:active:where(:not(:has(.tabs__radio:checked, .tabs__radio:disabled))) {
-  background: var(--fill-quaternary-active);
-}
-
-.tabs__tab:has(.tabs__radio:checked) {
+/* State is driven off the radio via the adjacent-sibling combinator (Ruter's
+   pattern) — cheaper and more broadly supported than :has(). Base states first,
+   then the higher-specificity interaction states. */
+.tabs__radio:checked + .tabs__tab {
   background: var(--background-secondary);
   color: var(--ink-primary);
 }
 
-.tabs__tab:has(.tabs__radio:disabled) {
+.tabs__radio:disabled + .tabs__tab {
   cursor: not-allowed;
   color: var(--ink-tertiary);
   opacity: 0.5;
 }
 
-.tabs__tab:has(.tabs__radio:focus-visible) {
+.tabs__radio:focus-visible + .tabs__tab {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
   animation: focus-ring-converge var(--motion-default);
 }
 
-.tabs__tab:has(.tabs__radio:checked):active {
+/* Hover only where a real pointer exists, so it doesn't stick after a tap on
+   touch; :active covers the pressed feedback. */
+@media (hover: hover) {
+  .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
+    background: var(--fill-quaternary-hover);
+  }
+}
+
+.tabs__radio:not(:checked, :disabled) + .tabs__tab:active {
+  background: var(--fill-quaternary-active);
+}
+
+.tabs__radio:checked + .tabs__tab:active {
   background: var(--background-secondary-active);
 }
 

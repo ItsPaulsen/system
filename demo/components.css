@@ -2078,6 +2078,54 @@
     }
   }
 
+  /* ── Skeleton ────────────────────────────────────────────────────────────────
+   Purely presentational placeholder for content that hasn't loaded. Size it to
+   match the real content (explicit width/height, or let it fill its container)
+   so the layout doesn't shift on swap. Calm opacity pulse — not a sweeping
+   shimmer — so a screenful of them doesn't distract; the global reduced-motion
+   guard settles it to a static block.
+
+   A11y: a skeleton conveys nothing to assistive tech. Mark the loading region
+   aria-busy="true" and announce state with a role="status" text (or aria-hidden
+   the placeholders). Never let the shapes be the only "loading" signal.
+
+   Structure: <div class="skeleton" style="width: 12rem; height: 1rem"></div> */
+  .skeleton {
+    display: block;
+    background: var(--fill-secondary);
+    border-radius: var(--radius-sm);
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Text line — rounded like a run of text, sized to the current font by default
+     so it drops into prose without a width. Use width to trim the last line. */
+  .skeleton--text {
+    height: 0.7em;
+    border-radius: var(--radius-full);
+  }
+
+  /* Circle — width sets the diameter; aspect-ratio keeps it round (avatars). */
+  .skeleton--circle {
+    aspect-ratio: 1;
+    border-radius: var(--radius-full);
+  }
+
+  @keyframes skeleton-pulse {
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  /* Forced colors strips the alpha fill — keep a visible bordered box so the
+     placeholder doesn't vanish into the background. */
+  @media (forced-colors: active) {
+    .skeleton {
+      forced-color-adjust: none;
+      background: Canvas;
+      border: 1px solid GrayText;
+    }
+  }
+
   /* ── Progress ──────────────────────────────────────────────────────────────
    Native <progress> for a task with measurable completion; reach for Spinner
    when progress can't be measured. The track + value have no standard selector,

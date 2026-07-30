@@ -31,6 +31,17 @@
       .component-preview .progress {
         max-width: 360px;
       }
+
+      /* Demo-only: a longer, eased fill so the entrance animation reads. The
+         component default is a quick 150ms for real value nudges. */
+      .component-preview .progress::-webkit-progress-value {
+        transition-duration: 800ms;
+        transition-timing-function: var(--motion-ease-out);
+      }
+
+      .component-preview .progress::-moz-progress-bar {
+        transition: inline-size 800ms var(--motion-ease-out);
+      }
     </style>
   </head>
   <body>
@@ -48,23 +59,18 @@
         <section class="preview-block">
           <h3 class="subhead">Determinate</h3>
           <p class="section-note">
-            Use when completion is measurable (upload, import, multi-step form). Native
-            <code>&lt;progress&gt;</code> carries the value semantics, so set <code>value</code> and
-            <code>max</code>. When progress can't be measured, use
+            Use when completion is measurable (upload, import, multi-step form): set
+            <code>value</code> and <code>max</code> on the native <code>&lt;progress&gt;</code>,
+            which reports them to assistive tech. When you can't measure progress, use
             <a href="/demo/components/spinner/">Spinner</a> instead.
           </p>
           <div class="component-preview">
             <progress
+              id="demo-progress"
               class="progress"
-              value="30"
+              value="15"
               max="100"
-              aria-label="Example progress"
-            ></progress>
-            <progress
-              class="progress"
-              value="70"
-              max="100"
-              aria-label="Example progress"
+              aria-label="Uploading files"
             ></progress>
           </div>
         </section>
@@ -76,6 +82,25 @@
         </section>
       </div>
     </div>
+    <script>
+      // Demo entrance: let the low starting value paint, then bump it so the
+      // bar fills on load (like shadcn's docs). Reduced motion jumps straight
+      // to the target. Progressive enhancement — no JS leaves a static 15%.
+      (function () {
+        var bar = document.getElementById("demo-progress");
+        if (!bar) return;
+        var target = 75;
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          bar.value = target;
+          return;
+        }
+        requestAnimationFrame(function () {
+          setTimeout(function () {
+            bar.value = target;
+          }, 500);
+        });
+      })();
+    </script>
     <script src="/assets/app.js" defer></script>
   </body>
 </html>

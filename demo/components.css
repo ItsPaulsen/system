@@ -232,9 +232,11 @@
 
 /* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
    Declared last: higher specificity than the :disabled/:checked rules. */
-.checkbox__input:not(:disabled, :checked):hover,
-.radio__input:not(:disabled, :checked):hover {
-  background: var(--fill-quaternary-hover);
+@media (hover: hover) {
+  .checkbox__input:not(:disabled, :checked):hover,
+  .radio__input:not(:disabled, :checked):hover {
+    background: var(--fill-quaternary-hover);
+  }
 }
 
 /* Radios/checkboxes ship as a group — a vertical stack of options. Radios
@@ -678,9 +680,14 @@
   cursor: pointer;
 }
 
-.select__option:hover,
 .select__option.is-active {
   background: var(--background-secondary-hover);
+}
+
+@media (hover: hover) {
+  .select__option:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 .select__option[aria-selected="true"] {
@@ -841,7 +848,6 @@
   cursor: pointer;
 }
 
-.menu__item:hover,
 .menu__item:focus-visible {
   outline: none;
   background: var(--background-secondary-hover);
@@ -852,8 +858,14 @@
   cursor: not-allowed;
 }
 
-.menu__item[disabled]:hover {
-  background: transparent;
+@media (hover: hover) {
+  .menu__item:hover {
+    background: var(--background-secondary-hover);
+  }
+
+  .menu__item[disabled]:hover {
+    background: transparent;
+  }
 }
 
 /* Leading glyph; inherits the row colour so a danger row tints its icon too. */
@@ -876,9 +888,14 @@
   color: var(--red);
 }
 
-.menu__item--danger:hover,
 .menu__item--danger:focus-visible {
   background: var(--red-soft-hover);
+}
+
+@media (hover: hover) {
+  .menu__item--danger:hover {
+    background: var(--red-soft-hover);
+  }
 }
 
 /* Hairline divider between item groups. */
@@ -971,8 +988,10 @@
   color: var(--neutral-white);
 }
 
-.button--primary:not(:disabled):hover {
-  background: var(--primary-hover);
+@media (hover: hover) {
+  .button--primary:not(:disabled):hover {
+    background: var(--primary-hover);
+  }
 }
 
 .button--primary:not(:disabled):active {
@@ -984,8 +1003,10 @@
   color: var(--primary-foreground);
 }
 
-.button--secondary:not(:disabled):hover {
-  background: var(--primary-soft-hover);
+@media (hover: hover) {
+  .button--secondary:not(:disabled):hover {
+    background: var(--primary-soft-hover);
+  }
 }
 
 .button--secondary:not(:disabled):active {
@@ -997,8 +1018,10 @@
   color: var(--primary-foreground);
 }
 
-.button--flat:not(:disabled):hover {
-  background: var(--primary-soft-hover);
+@media (hover: hover) {
+  .button--flat:not(:disabled):hover {
+    background: var(--primary-soft-hover);
+  }
 }
 
 .button--flat:not(:disabled):active {
@@ -1010,8 +1033,10 @@
   color: var(--red);
 }
 
-.button--destructive:not(:disabled):hover {
-  background: var(--red-soft-hover);
+@media (hover: hover) {
+  .button--destructive:not(:disabled):hover {
+    background: var(--red-soft-hover);
+  }
 }
 
 .button--destructive:not(:disabled):active {
@@ -1187,9 +1212,11 @@ button.card:focus-visible {
   outline-offset: 2px;
 }
 
-a.card:hover,
-button.card:not(:disabled):hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  a.card:hover,
+  button.card:not(:disabled):hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 a.card:active,
@@ -1197,9 +1224,11 @@ button.card:not(:disabled):active {
   background: var(--background-secondary-active);
 }
 
-a.card--alternate:hover,
-button.card--alternate:not(:disabled):hover {
-  background: var(--background-primary-hover);
+@media (hover: hover) {
+  a.card--alternate:hover,
+  button.card--alternate:not(:disabled):hover {
+    background: var(--background-primary-hover);
+  }
 }
 
 a.card--alternate:active,
@@ -1413,9 +1442,11 @@ button.card--alternate:not(:disabled):active {
 
 /* Hover / active — unchecked, non-disabled */
 
-.chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
-.chip--as-radio:not(:has(input:disabled, input:checked)):hover {
-  border-color: var(--fill-primary-hover);
+@media (hover: hover) {
+  .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
+  .chip--as-radio:not(:has(input:disabled, input:checked)):hover {
+    border-color: var(--fill-primary-hover);
+  }
 }
 
 .chip--as-checkbox:not(:has(input:disabled, input:checked)):active,
@@ -1450,8 +1481,10 @@ button.card--alternate:not(:disabled):active {
 
 /* Hover / active — checked, non-disabled */
 
-.chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
-  background: var(--primary-soft-hover);
+@media (hover: hover) {
+  .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
+    background: var(--primary-soft-hover);
+  }
 }
 
 .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
@@ -1750,8 +1783,10 @@ button.card--alternate:not(:disabled):active {
   transition: background var(--motion-default);
 }
 
-.sheet__close:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .sheet__close:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 .sheet__close:focus-visible {
@@ -1823,8 +1858,10 @@ button.card--alternate:not(:disabled):active {
 }
 
 /* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
-.accordion__item:not([open]) .accordion__summary:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .accordion__item:not([open]) .accordion__summary:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 /* Ring the whole item (not just the summary) when focused; converges in like
@@ -2084,8 +2121,10 @@ button.card--alternate:not(:disabled):active {
   transition: color var(--motion-default);
 }
 
-.link:hover {
-  color: var(--primary-foreground-hover);
+@media (hover: hover) {
+  .link:hover {
+    color: var(--primary-foreground-hover);
+  }
 }
 
 .link--cta {
@@ -2099,12 +2138,14 @@ button.card--alternate:not(:disabled):active {
 
 /* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
    fades in and the chevron slides on hover, so the arrow grows out of the text. */
-.link--cta:hover .link-arrow__line {
-  opacity: 1;
-}
+@media (hover: hover) {
+  .link--cta:hover .link-arrow__line {
+    opacity: 1;
+  }
 
-.link--cta:hover .link-arrow__chevron {
-  translate: 3px 0;
+  .link--cta:hover .link-arrow__chevron {
+    translate: 3px 0;
+  }
 }
 
 /* ── Breadcrumb ───────────────────────────────────────────────────────────
@@ -2156,8 +2197,10 @@ button.card--alternate:not(:disabled):active {
   transition: color var(--motion-default);
 }
 
-.breadcrumb__link:hover {
-  color: var(--ink-primary);
+@media (hover: hover) {
+  .breadcrumb__link:hover {
+    color: var(--ink-primary);
+  }
 }
 
 .breadcrumb__current {
@@ -2356,8 +2399,10 @@ button.card--alternate:not(:disabled):active {
   transition: background var(--motion-default);
 }
 
-.pagination__link:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .pagination__link:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 /* No offset: the ring sits flush so it isn't clipped by the adjacent buttons. */
@@ -2379,8 +2424,10 @@ button.card--alternate:not(:disabled):active {
   cursor: not-allowed;
 }
 
-.pagination__link:disabled:hover {
-  background: transparent;
+@media (hover: hover) {
+  .pagination__link:disabled:hover {
+    background: transparent;
+  }
 }
 
 .pagination__link svg {

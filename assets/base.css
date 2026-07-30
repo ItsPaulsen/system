@@ -363,8 +363,10 @@ body {
   border-radius: 8px;
 }
 
-.sidebar__link:hover > span {
-  background: var(--background-secondary);
+@media (hover: hover) {
+  .sidebar__link:hover > span {
+    background: var(--background-secondary);
+  }
 }
 
 .sidebar__link:focus-visible,
@@ -383,8 +385,10 @@ body {
   background: var(--background-secondary-active);
 }
 
-.sidebar__back:hover {
-  color: var(--ink-primary);
+@media (hover: hover) {
+  .sidebar__back:hover {
+    color: var(--ink-primary);
+  }
 }
 
 .sidebar-backdrop {
@@ -516,8 +520,10 @@ body {
   cursor: pointer;
 }
 
-.theme-toggle:hover {
-  background: var(--background-secondary);
+@media (hover: hover) {
+  .theme-toggle:hover {
+    background: var(--background-secondary);
+  }
 }
 
 /* Show the icon for the theme you'd switch TO: sun in dark, moon in light. */
@@ -640,8 +646,10 @@ h1 {
     transform 0.1s ease;
 }
 
-.btn:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 .btn:active {
@@ -681,9 +689,11 @@ h2 {
   transition: text-decoration-color var(--motion-default);
 }
 
-.section-note a:where(:hover),
-.lede a:where(:hover) {
-  text-decoration-color: var(--ink-primary);
+@media (hover: hover) {
+  .section-note a:where(:hover),
+  .lede a:where(:hover) {
+    text-decoration-color: var(--ink-primary);
+  }
 }
 
 /* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
@@ -742,9 +752,11 @@ pre::-webkit-scrollbar {
     background var(--motion-default);
 }
 
-.code-copy:hover {
-  color: var(--ink-primary);
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .code-copy:hover {
+    color: var(--ink-primary);
+    background: var(--background-secondary-hover);
+  }
 }
 
 .code-copy svg {
@@ -1061,8 +1073,10 @@ pre .tok-var {
     transform 0.1s ease;
 }
 
-.pager__link:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .pager__link:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 .pager__link:active {
@@ -1139,8 +1153,10 @@ pre .tok-var {
   cursor: pointer;
 }
 
-.docs-tabs__tab:hover {
-  color: var(--ink-primary);
+@media (hover: hover) {
+  .docs-tabs__tab:hover {
+    color: var(--ink-primary);
+  }
 }
 
 .docs-tabs__tab:focus-visible {
@@ -1216,12 +1232,14 @@ pre .tok-var {
   transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.link-list a:hover .link-arrow__line {
-  opacity: 1;
-}
+@media (hover: hover) {
+  .link-list a:hover .link-arrow__line {
+    opacity: 1;
+  }
 
-.link-list a:hover .link-arrow__chevron {
-  translate: 3px 0;
+  .link-list a:hover .link-arrow__chevron {
+    translate: 3px 0;
+  }
 }
 
 /* Single-card token list — one bordered box, rows separated by dividers.
@@ -1289,8 +1307,10 @@ a.token-list__row::after {
   transition: color var(--motion-default);
 }
 
-a.token-list__row:hover::after {
-  color: var(--ink-primary);
+@media (hover: hover) {
+  a.token-list__row:hover::after {
+    color: var(--ink-primary);
+  }
 }
 
 /* Full-width rows: ring sits just inside so it never collides with the
@@ -1364,8 +1384,10 @@ a.token-list__row:focus-visible {
   mask-size: 20px;
 }
 
-.token-list--flush a.token-list__row:hover {
-  background: var(--background-secondary-hover);
+@media (hover: hover) {
+  .token-list--flush a.token-list__row:hover {
+    background: var(--background-secondary-hover);
+  }
 }
 
 .token-list--flush a.token-list__row:active {
@@ -1373,8 +1395,10 @@ a.token-list__row:focus-visible {
 }
 
 /* Only the surface reacts to hover — keep the chevron steady. */
-.token-list--flush a.token-list__row:hover::after {
-  color: var(--ink-tertiary);
+@media (hover: hover) {
+  .token-list--flush a.token-list__row:hover::after {
+    color: var(--ink-tertiary);
+  }
 }
 
 /* These rows are spaced cards, not edge-to-edge, so they take the standard

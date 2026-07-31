@@ -58,10 +58,10 @@
     --ink-primary: var(--ink-base);
     --ink-primary-hover: color-mix(in oklab, var(--ink-primary) 88%, var(--background-secondary));
     --ink-primary-active: color-mix(in oklab, var(--ink-primary) 82%, var(--background-secondary));
-    --ink-secondary: rgb(from var(--ink-base) r g b / 0.702);
+    --ink-secondary: rgb(from var(--ink-base) r g b / 0.7);
     --ink-secondary-hover: rgb(from var(--ink-base) r g b / 0.81);
     --ink-secondary-active: rgb(from var(--ink-base) r g b / 0.85);
-    --ink-tertiary: rgb(from var(--ink-base) r g b / 0.549);
+    --ink-tertiary: rgb(from var(--ink-base) r g b / 0.55);
     --ink-tertiary-hover: rgb(from var(--ink-base) r g b / 0.66);
     --ink-tertiary-active: rgb(from var(--ink-base) r g b / 0.7);
 
@@ -107,22 +107,22 @@
 
     /* Soft alpha variants — for chip/badge backgrounds where the tint sits
      behind foreground-color text. Hover/active ramp deeper. */
-    --primary-soft: rgb(from var(--primary) r g b / 0.122);
+    --primary-soft: rgb(from var(--primary) r g b / 0.12);
     --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
     --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
-    --red-soft: rgb(from var(--red) r g b / 0.122);
+    --red-soft: rgb(from var(--red) r g b / 0.12);
     --red-soft-hover: rgb(from var(--red) r g b / 0.23);
     --red-soft-active: rgb(from var(--red) r g b / 0.27);
-    --amber-soft: rgb(from var(--amber) r g b / 0.122);
+    --amber-soft: rgb(from var(--amber) r g b / 0.12);
     --amber-soft-hover: rgb(from var(--amber) r g b / 0.23);
     --amber-soft-active: rgb(from var(--amber) r g b / 0.27);
-    --green-soft: rgb(from var(--green) r g b / 0.122);
+    --green-soft: rgb(from var(--green) r g b / 0.12);
     --green-soft-hover: rgb(from var(--green) r g b / 0.23);
     --green-soft-active: rgb(from var(--green) r g b / 0.27);
-    --blue-soft: rgb(from var(--blue) r g b / 0.122);
+    --blue-soft: rgb(from var(--blue) r g b / 0.12);
     --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
     --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
-    --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.122);
+    --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.12);
     --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.23);
     --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.27);
 
@@ -159,13 +159,13 @@
      selected rows). Each tier has its own hover/active alphas so
      fill-backed controls move through interactive states without
      swapping tokens. */
-    --fill-primary: rgb(from var(--fill-base) r g b / 0.259);
+    --fill-primary: rgb(from var(--fill-base) r g b / 0.26);
     --fill-primary-hover: rgb(from var(--fill-base) r g b / 0.37);
     --fill-primary-active: rgb(from var(--fill-base) r g b / 0.41);
     --fill-secondary: rgb(from var(--fill-base) r g b / 0.2);
     --fill-secondary-hover: rgb(from var(--fill-base) r g b / 0.31);
     --fill-secondary-active: rgb(from var(--fill-base) r g b / 0.35);
-    --fill-tertiary: rgb(from var(--fill-base) r g b / 0.122);
+    --fill-tertiary: rgb(from var(--fill-base) r g b / 0.12);
     --fill-tertiary-hover: rgb(from var(--fill-base) r g b / 0.23);
     --fill-tertiary-active: rgb(from var(--fill-base) r g b / 0.27);
     --fill-quaternary: rgb(from var(--fill-base) r g b / 0.08);

@@ -523,7 +523,31 @@ function renderPalette() {
   host.innerHTML = PALETTE_FAMILIES.map(renderPaletteFamily).join("");
 }
 
-// Fill each swatch's colour + copy target from its :root token.
+// A hidden probe lets the browser resolve any token — color-mix, relative
+// rgb(from …), var() chains — down to a concrete sRGB value we can serialise.
+// So swatches copy a clean, paste-ready hex (#6C2BF5) instead of the authored
+// expression, always in sync with the tokens because it's read live, never
+// stored. See-through tokens copy as 8-digit hex (#404040B3).
+let colorProbe;
+function tokenToHex(token) {
+  if (!colorProbe) {
+    colorProbe = document.createElement("span");
+    colorProbe.style.cssText = "position:absolute;width:0;height:0;visibility:hidden";
+    document.body.appendChild(colorProbe);
+  }
+  colorProbe.style.color = `var(--${token})`;
+  const computed = getComputedStyle(colorProbe).color; // rgb(…) / rgba(…)
+  const parts = computed.match(/[\d.]+/g);
+  if (!computed.startsWith("rgb") || !parts) return null;
+  const [r, g, b, a] = parts.map(Number);
+  const h = (n) => Math.round(n).toString(16).padStart(2, "0");
+  let hex = `#${h(r)}${h(g)}${h(b)}`;
+  if (a !== undefined && a < 1) hex += h(a * 255); // 8-digit only when alpha < 1
+  return hex.toUpperCase();
+}
+
+// Fill each swatch's colour from its :root token; copy target is the resolved
+// hex (falls back to the raw value if a browser won't serialise it as rgb).
 function hydratePalette() {
   const rootStyle = getComputedStyle(document.documentElement);
   document.querySelectorAll(".palette-swatch").forEach((el) => {
@@ -532,7 +556,7 @@ function hydratePalette() {
     const value = rootStyle.getPropertyValue(`--${token}`).trim();
     if (!value) return;
     el.style.setProperty("--c", value);
-    el.dataset.copy = value;
+    el.dataset.copy = tokenToHex(token) || value;
   });
 }
 

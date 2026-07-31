@@ -663,10 +663,6 @@ function hydrateType() {
     setSpec(row, "size", `${sizePx}/${lh}/${cs.fontWeight}`);
     setSpec(row, "lh", "");
     setSpec(row, "weight", "");
-
-    if (token) {
-      row.dataset.copy = rootStyle.getPropertyValue(`--${token}-size`).trim();
-    }
   });
 }
 

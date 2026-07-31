@@ -528,21 +528,52 @@ function renderPalette() {
 // So swatches copy a clean, paste-ready hex (#6C2BF5) instead of the authored
 // expression, always in sync with the tokens because it's read live, never
 // stored. See-through tokens copy as 8-digit hex (#404040B3).
-let colorProbe;
+//
+// A hidden probe resolves the token (color-mix, relative rgb(from …), var()
+// chains) to a computed color, which we then rasterise on a 1×1 canvas to get
+// concrete 8-bit sRGB channels. The canvas step matters: browsers serialise a
+// resolved color-mix as oklab()/color(srgb …), not rgb(), so string-parsing
+// alone would miss every mixed hover/active token — rasterising normalises them
+// all to bytes.
+let colorProbe, colorCtx;
 function tokenToHex(token) {
   if (!colorProbe) {
     colorProbe = document.createElement("span");
     colorProbe.style.cssText = "position:absolute;width:0;height:0;visibility:hidden";
     document.body.appendChild(colorProbe);
+    colorCtx = document.createElement("canvas").getContext("2d");
   }
+  colorProbe.style.color = "";
   colorProbe.style.color = `var(--${token})`;
-  const computed = getComputedStyle(colorProbe).color; // rgb(…) / rgba(…)
-  const parts = computed.match(/[\d.]+/g);
-  if (!computed.startsWith("rgb") || !parts) return null;
-  const [r, g, b, a] = parts.map(Number);
-  const h = (n) => Math.round(n).toString(16).padStart(2, "0");
+  const resolved = getComputedStyle(colorProbe).color;
+  if (!resolved) return null;
+
+  // Split the resolved color into an opaque form + its alpha. We only ever
+  // rasterise the OPAQUE form: an opaque pixel round-trips through canvas
+  // exactly, whereas a transparent one is stored premultiplied and drifts ±1.
+  // The alpha comes straight from the string, so both stay exact.
+  let alpha = 1;
+  let opaque = resolved;
+  const modern = resolved.match(/\/\s*([\d.]+%?)\s*\)$/); // "oklab(… / 0.7)" etc.
+  const legacy = resolved.match(/^rgba?\(([^)]+)\)$/); // "rgba(40, 40, 40, 0.7)"
+  if (modern) {
+    alpha = modern[1].endsWith("%") ? parseFloat(modern[1]) / 100 : parseFloat(modern[1]);
+    opaque = resolved.replace(/\/\s*[\d.]+%?\s*\)$/, ")");
+  } else if (legacy) {
+    const n = legacy[1].split(",").map((s) => s.trim());
+    if (n.length === 4) {
+      alpha = parseFloat(n[3]);
+      opaque = `rgb(${n[0]}, ${n[1]}, ${n[2]})`;
+    }
+  }
+
+  colorCtx.clearRect(0, 0, 1, 1);
+  colorCtx.fillStyle = opaque;
+  colorCtx.fillRect(0, 0, 1, 1);
+  const [r, g, b] = colorCtx.getImageData(0, 0, 1, 1).data; // exact — pixel is opaque
+  const h = (n) => n.toString(16).padStart(2, "0");
   let hex = `#${h(r)}${h(g)}${h(b)}`;
-  if (a !== undefined && a < 1) hex += h(a * 255); // 8-digit only when alpha < 1
+  if (alpha < 1) hex += h(Math.round(alpha * 255)); // 8-digit only when transparent
   return hex.toUpperCase();
 }
 

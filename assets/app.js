@@ -158,6 +158,8 @@ function injectSkipLink() {
 
 function injectNav() {
   if (document.querySelector(".site-nav")) return;
+  // The example is a standalone product mock with its own nav — no docs chrome.
+  if (isExamplePath()) return;
   const nav = document.createElement("header");
   nav.className = "site-nav";
   const isRoot = location.pathname === "/" || location.pathname === "/index.html";
@@ -191,15 +193,25 @@ function injectNav() {
     ? `<button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">${icon("menu", 24)}</button>`
     : "";
 
+  // Single entry point into the composed example, shown on every docs page of a
+  // project (not the root landing). Opens in a new tab so the docs stay put and
+  // the example needs no back affordance of its own.
+  const exampleBtn = currentProjectPages()
+    ? `<a class="btn btn--outline" href="${EXAMPLE_HREF}" target="_blank" rel="noopener">Example</a>`
+    : "";
+
   nav.innerHTML = `
     <div class="site-nav__inner">
       <div class="site-nav__left">
         ${menuBtn}
         ${isRoot ? "" : `<a class="site-nav__brand" href="${projectHref}"></a>`}
       </div>
-      <button class="theme-toggle" type="button" aria-label="Switch theme">
-        ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
-      </button>
+      <div class="site-nav__right">
+        ${exampleBtn}
+        <button class="theme-toggle" type="button" aria-label="Switch theme">
+          ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
+        </button>
+      </div>
     </div>`;
   document.body.prepend(nav);
   // Set the brand label as text (not interpolated into innerHTML) since it's
@@ -272,6 +284,15 @@ function currentProjectPages() {
   return (slug && PROJECT_PAGES[slug]) || null;
 }
 
+// The composed "components in a real UI" example — one mini-product (Home →
+// Blog → Article → Settings) that navigates itself. It's reached from the
+// Example button in the docs nav and opens in its own tab. These screens bring
+// their own chrome, so the docs nav + sidebar opt out on this path (below).
+const EXAMPLE_HREF = "/demo/example/";
+function isExamplePath() {
+  return location.pathname.startsWith(EXAMPLE_HREF);
+}
+
 // Tabler arrow-left at 16px with stroke 2 — matches shadcn pagination weight.
 const ARROW_LEFT_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
@@ -286,6 +307,8 @@ function isCurrentPage(href) {
 // sidebar can sit beside it as a sticky left column (shadcn-style layout).
 function injectSidebar() {
   // No project pages (site root, or an unknown project) → leave it chrome-free.
+  // The example path matches a project but is a standalone mock — no sidebar.
+  if (isExamplePath()) return;
   const pages = currentProjectPages();
   if (!pages) return;
   if (document.querySelector(".sidebar")) return;

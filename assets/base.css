@@ -182,6 +182,14 @@
     gap: 0.25rem;
   }
 
+  /* Right cluster: the Example link sits beside the theme toggle, which keeps
+   its own -0.5rem end margin so its icon lands on the page-gutter. */
+  .site-nav__right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .site-nav__menu {
     display: none; /* mobile only */
     position: relative;
@@ -658,9 +666,10 @@
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--ink-primary);
+    text-decoration: none;
     background: var(--background-secondary);
     border: 0;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition:
       background-color 0.15s ease,
@@ -676,6 +685,23 @@
   .btn:active {
     background: var(--background-secondary-active);
     transform: scale(0.97);
+  }
+
+  /* Outlined variant: transparent surface with a hairline stroke; hover fills
+   with the same subtle wash the solid .btn rests on. */
+  .btn--outline {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--fill-secondary);
+  }
+
+  @media (hover: hover) {
+    .btn--outline:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .btn--outline:active {
+    background: var(--background-secondary-active);
   }
 
   section + section {
@@ -896,7 +922,7 @@
     height: 48px;
     padding: 0;
     border: 1px solid var(--fill-quaternary);
-    border-radius: 6px;
+    border-radius: 8px;
     background: var(--c);
     cursor: pointer;
     vertical-align: middle;
@@ -1091,7 +1117,7 @@
     font-weight: 500;
     text-decoration: none;
     background: var(--background-secondary);
-    border-radius: 8px;
+    border-radius: 10px;
     transition:
       background-color 0.15s ease,
       transform 0.1s ease;

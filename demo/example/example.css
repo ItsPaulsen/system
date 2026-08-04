@@ -39,7 +39,7 @@
 /* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
    plus the top-rim highlight — the dark counterpart to a drop shadow's top edge. */
 :root[data-theme="dark"] .ex {
-  --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.12);
+  --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
@@ -204,7 +204,7 @@
    is just the white surface it floats on in the marquee, 4px around the track. */
 .ex-theme-wrap {
   display: inline-flex;
-  padding: 4px;
+  padding: 8px;
   border-radius: var(--radius-full);
 }
 

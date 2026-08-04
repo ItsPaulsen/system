@@ -450,7 +450,9 @@
     /* A dark shadow can't define a top edge on a dark page, so catch the top rim
      with a faint light highlight instead — the dark-theme counterpart to the
      drop shadow (see --surface-rim in :root). */
-    --surface-rim: inset 0 1px 0 rgb(255 255 255 / 0.04);
+    --surface-rim:
+      inset 0 1px 0 rgb(255 255 255 / 0.04), inset 1px 0 0 rgb(255 255 255 / 0.02),
+      inset -1px 0 0 rgb(255 255 255 / 0.02);
   }
 
   /* ── Density knob ──────────────────────────────────────────────────────────

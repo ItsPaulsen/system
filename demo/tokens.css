@@ -106,25 +106,39 @@
     --primary-foreground-active: var(--primary-active);
 
     /* Soft alpha variants — for chip/badge backgrounds where the tint sits
-     behind foreground-color text. Hover/active ramp deeper. */
-    --primary-soft: rgb(from var(--primary) r g b / 0.12);
-    --primary-soft-hover: rgb(from var(--primary) r g b / 0.23);
-    --primary-soft-active: rgb(from var(--primary) r g b / 0.27);
-    --red-soft: rgb(from var(--red) r g b / 0.12);
-    --red-soft-hover: rgb(from var(--red) r g b / 0.23);
-    --red-soft-active: rgb(from var(--red) r g b / 0.27);
-    --amber-soft: rgb(from var(--amber) r g b / 0.12);
-    --amber-soft-hover: rgb(from var(--amber) r g b / 0.23);
-    --amber-soft-active: rgb(from var(--amber) r g b / 0.27);
-    --green-soft: rgb(from var(--green) r g b / 0.12);
-    --green-soft-hover: rgb(from var(--green) r g b / 0.23);
-    --green-soft-active: rgb(from var(--green) r g b / 0.27);
-    --blue-soft: rgb(from var(--blue) r g b / 0.12);
-    --blue-soft-hover: rgb(from var(--blue) r g b / 0.23);
-    --blue-soft-active: rgb(from var(--blue) r g b / 0.27);
-    --fuchsia-soft: rgb(from var(--fuchsia) r g b / 0.12);
-    --fuchsia-soft-hover: rgb(from var(--fuchsia) r g b / 0.23);
-    --fuchsia-soft-active: rgb(from var(--fuchsia) r g b / 0.27);
+     behind foreground-color text. Hover/active ramp deeper.
+       Each derives from a *lightened* base (`--<color>-tint`), not the raw
+     accent: a dark, saturated accent at low alpha jumps hard as the alpha
+     climbs, so the resting tint and its hover step feel heavy (this is why our
+     purple felt off vs Ruter's lighter blue tint). Lifting the base toward
+     white first — one knob, `--soft-lift`, for every accent — keeps the tint
+     gentle and the ramp even. Alpha ladder stays 0.12 / 0.23 / 0.27. */
+    --soft-lift: 20%;
+    --primary-tint: color-mix(in oklab, var(--primary), white var(--soft-lift));
+    --red-tint: color-mix(in oklab, var(--red), white var(--soft-lift));
+    --amber-tint: color-mix(in oklab, var(--amber), white var(--soft-lift));
+    --green-tint: color-mix(in oklab, var(--green), white var(--soft-lift));
+    --blue-tint: color-mix(in oklab, var(--blue), white var(--soft-lift));
+    --fuchsia-tint: color-mix(in oklab, var(--fuchsia), white var(--soft-lift));
+
+    --primary-soft: rgb(from var(--primary-tint) r g b / 0.12);
+    --primary-soft-hover: rgb(from var(--primary-tint) r g b / 0.23);
+    --primary-soft-active: rgb(from var(--primary-tint) r g b / 0.27);
+    --red-soft: rgb(from var(--red-tint) r g b / 0.12);
+    --red-soft-hover: rgb(from var(--red-tint) r g b / 0.23);
+    --red-soft-active: rgb(from var(--red-tint) r g b / 0.27);
+    --amber-soft: rgb(from var(--amber-tint) r g b / 0.12);
+    --amber-soft-hover: rgb(from var(--amber-tint) r g b / 0.23);
+    --amber-soft-active: rgb(from var(--amber-tint) r g b / 0.27);
+    --green-soft: rgb(from var(--green-tint) r g b / 0.12);
+    --green-soft-hover: rgb(from var(--green-tint) r g b / 0.23);
+    --green-soft-active: rgb(from var(--green-tint) r g b / 0.27);
+    --blue-soft: rgb(from var(--blue-tint) r g b / 0.12);
+    --blue-soft-hover: rgb(from var(--blue-tint) r g b / 0.23);
+    --blue-soft-active: rgb(from var(--blue-tint) r g b / 0.27);
+    --fuchsia-soft: rgb(from var(--fuchsia-tint) r g b / 0.12);
+    --fuchsia-soft-hover: rgb(from var(--fuchsia-tint) r g b / 0.23);
+    --fuchsia-soft-active: rgb(from var(--fuchsia-tint) r g b / 0.27);
 
     /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
     --overlay: rgb(from var(--overlay-base) r g b / 0.45);

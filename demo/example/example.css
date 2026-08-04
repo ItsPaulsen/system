@@ -60,23 +60,22 @@
 }
 
 /* Example only: the secondary button's tint is translucent, so over the dot
-   grid it reads as see-through. Back it with an opaque surface here (the
-   component stays translucent for normal, plain backgrounds). */
+   grid it reads as see-through. Composite the tint onto an opaque surface (same
+   look as the translucent tint over white) using a single background-color —
+   which, unlike a gradient double-fill, transitions smoothly on hover/active.
+   The component stays translucent for normal, plain backgrounds. */
 .ex-hero__actions .button--secondary {
-  background-color: var(--background-secondary);
-  background-image: linear-gradient(var(--primary-soft), var(--primary-soft));
+  background-color: color-mix(in oklab, var(--primary-tint) 12%, var(--background-secondary));
 }
 
 @media (hover: hover) {
   .ex-hero__actions .button--secondary:hover {
-    background-color: var(--background-secondary);
-    background-image: linear-gradient(var(--primary-soft-hover), var(--primary-soft-hover));
+    background-color: color-mix(in oklab, var(--primary-tint) 23%, var(--background-secondary));
   }
 }
 
 .ex-hero__actions .button--secondary:active {
-  background-color: var(--background-secondary);
-  background-image: linear-gradient(var(--primary-soft-active), var(--primary-soft-active));
+  background-color: color-mix(in oklab, var(--primary-tint) 27%, var(--background-secondary));
 }
 
 /* ── Marquee ──────────────────────────────────────────────────────────────
@@ -143,7 +142,7 @@
 
 /* Settings — stacked switch rows with hairline dividers between them. */
 .ex-settings {
-  width: 487px;
+  width: 460px;
 }
 
 .ex-settings__row {
@@ -374,7 +373,7 @@
   width: 460px;
   padding: 24px;
   display: grid;
-  gap: 4px;
+  gap: 8px;
 }
 
 .ex-device__head {

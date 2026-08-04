@@ -9,10 +9,21 @@
      surface on light theme. Dots derive from --ink-base, so they auto-invert in
      dark theme (light dots on dark). */
   --ex-dot: rgb(from var(--ink-base) r g b / 0.1);
+  /* Deep soft lift for the floating marquee cards. Follows the system's shadow
+     logic: light tints with --neutral-black (~40 40 40); the --surface-rim
+     prepend is transparent on light but a faint top-edge highlight on dark
+     (see dark override below). */
+  --ex-shadow: var(--surface-rim), 0 16px 48px 0 color-mix(in oklab, var(--neutral-black) 12%, transparent);
   padding-block: 5rem 6rem;
   background-color: var(--background-secondary);
   background-image: radial-gradient(var(--ex-dot) 1.5px, transparent 1.5px);
   background-size: 22px 22px;
+}
+
+/* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
+   plus the top-rim highlight — the dark counterpart to a drop shadow's top edge. */
+:root[data-theme="dark"] .ex {
+  --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.12);
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
@@ -46,6 +57,26 @@
   display: flex;
   justify-content: center;
   gap: 0.75rem;
+}
+
+/* Example only: the secondary button's tint is translucent, so over the dot
+   grid it reads as see-through. Back it with an opaque surface here (the
+   component stays translucent for normal, plain backgrounds). */
+.ex-hero__actions .button--secondary {
+  background-color: var(--background-secondary);
+  background-image: linear-gradient(var(--primary-soft), var(--primary-soft));
+}
+
+@media (hover: hover) {
+  .ex-hero__actions .button--secondary:hover {
+    background-color: var(--background-secondary);
+    background-image: linear-gradient(var(--primary-soft-hover), var(--primary-soft-hover));
+  }
+}
+
+.ex-hero__actions .button--secondary:active {
+  background-color: var(--background-secondary);
+  background-image: linear-gradient(var(--primary-soft-active), var(--primary-soft-active));
 }
 
 /* ── Marquee ──────────────────────────────────────────────────────────────
@@ -106,7 +137,7 @@
   box-sizing: border-box;
   background: var(--background-secondary);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--ex-shadow);
   padding: 20px;
 }
 
@@ -298,6 +329,7 @@
    centered) and sitting ABOVE the text, plus a text CTA. */
 .ex-illus {
   width: 380px;
+  box-shadow: var(--ex-shadow);
 }
 
 .ex-illus .card__illustration > * {
@@ -441,7 +473,7 @@
 }
 
 .ex-faq .accordion__item {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--ex-shadow);
 }
 
 /* Small pill badge used in the device card. */

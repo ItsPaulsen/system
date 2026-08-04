@@ -1325,6 +1325,23 @@ function init() {
     frame = requestAnimationFrame(refreshResponsive);
   });
 
+  // Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
+  // standard modal behaviour (matches Radix/shadcn) — one scroll context, no
+  // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
+  // page doesn't shift as it disappears.
+  function lockBodyScroll() {
+    const root = document.documentElement;
+    if (root.classList.contains("is-scroll-locked")) return;
+    const comp = window.innerWidth - root.clientWidth;
+    root.style.setProperty("--scrollbar-comp", comp + "px");
+    root.classList.add("is-scroll-locked");
+  }
+  function unlockBodyScroll() {
+    const root = document.documentElement;
+    root.classList.remove("is-scroll-locked");
+    root.style.removeProperty("--scrollbar-comp");
+  }
+
   document.addEventListener("click", (event) => {
     // Placeholder demo links (href="#") shouldn't scroll to top or add a hash.
     const placeholder = event.target.closest('a[href="#"]');
@@ -1379,7 +1396,22 @@ function init() {
     const dialogOpen = event.target.closest("[data-dialog-open]");
     if (dialogOpen) {
       const dlg = document.getElementById(dialogOpen.dataset.dialogOpen);
-      if (dlg && typeof dlg.showModal === "function") dlg.showModal();
+      if (dlg && typeof dlg.showModal === "function") {
+        lockBodyScroll();
+        dlg.showModal();
+        // Unlock on ANY close path — the close button, a backdrop click, or Esc
+        // (Esc closes natively without a click, so hook the dialog's own event).
+        dlg.addEventListener("close", unlockBodyScroll, { once: true });
+        // showModal() auto-focuses the first focusable child (e.g. the close
+        // button), which paints a stray focus ring on open. Move focus to a
+        // non-visible holder — the panel inner — so keyboard/Esc still work with
+        // nothing highlighted (matches the sidebar drawer).
+        const holder = dlg.querySelector(".sheet__inner, .dialog__inner");
+        if (holder) {
+          holder.tabIndex = -1;
+          holder.focus({ preventScroll: true });
+        }
+      }
       return;
     }
     const dialogClose = event.target.closest("[data-dialog-close]");

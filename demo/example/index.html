@@ -825,72 +825,76 @@
           </button>
         </div>
 
-        <nav class="ex-menu__nav" aria-label="Pages">
-          <a href="#">Blog</a>
-          <a href="#">Article</a>
-          <a href="#">Settings</a>
-        </nav>
+        <div class="ex-menu__scroll">
+          <nav class="ex-menu__nav" aria-label="Pages">
+            <a href="#">Blog</a>
+            <a href="#">Article</a>
+            <a href="#">Settings</a>
+          </nav>
 
-        <hr class="ex-menu__divider" />
+          <hr class="ex-menu__divider" />
 
-        <div class="ex-menu__links">
-          <a href="#">Blog</a>
-          <a href="#">Blog</a>
-          <a href="#">Article</a>
-          <a href="#">Article</a>
-          <a href="#">Settings</a>
-          <a href="#">Settings</a>
+          <div class="ex-menu__links">
+            <a href="#">Blog</a>
+            <a href="#">Blog</a>
+            <a href="#">Article</a>
+            <a href="#">Article</a>
+            <a href="#">Settings</a>
+            <a href="#">Settings</a>
+          </div>
         </div>
 
-        <div class="tabs tabs--pill ex-menu__theme" role="tablist" aria-label="Theme">
-          <input
-            type="radio"
-            name="ex-theme-menu"
-            id="ex-theme-menu-light"
-            class="tabs__radio"
-            data-theme-opt="light"
-            checked
-          />
-          <label class="tabs__tab" for="ex-theme-menu-light">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-              <path
-                d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
-              />
-            </svg>
-            <span class="tabs__label">Lyst tema</span>
-          </label>
-          <input
-            type="radio"
-            name="ex-theme-menu"
-            id="ex-theme-menu-dark"
-            class="tabs__radio"
-            data-theme-opt="dark"
-          />
-          <label class="tabs__tab" for="ex-theme-menu-dark">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path
-                d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
-              />
-            </svg>
-            <span class="tabs__label">Mørkt tema</span>
-          </label>
+        <div class="ex-menu__foot">
+          <div class="tabs tabs--pill ex-menu__theme" role="tablist" aria-label="Theme">
+            <input
+              type="radio"
+              name="ex-theme-menu"
+              id="ex-theme-menu-light"
+              class="tabs__radio"
+              data-theme-opt="light"
+              checked
+            />
+            <label class="tabs__tab" for="ex-theme-menu-light">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                <path
+                  d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+                />
+              </svg>
+              <span class="tabs__label">Lyst tema</span>
+            </label>
+            <input
+              type="radio"
+              name="ex-theme-menu"
+              id="ex-theme-menu-dark"
+              class="tabs__radio"
+              data-theme-opt="dark"
+            />
+            <label class="tabs__tab" for="ex-theme-menu-dark">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+                />
+              </svg>
+              <span class="tabs__label">Mørkt tema</span>
+            </label>
+          </div>
         </div>
       </div>
     </dialog>

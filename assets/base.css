@@ -88,6 +88,14 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Body scroll-lock while a modal (Dialog/Sheet) is open. padding-inline-end
+   reserves the removed scrollbar's width (JS sets --scrollbar-comp) so the page
+   never shifts — the scrollbar track stays, only its handle goes. */
+  html.is-scroll-locked {
+    overflow: hidden;
+    padding-inline-end: var(--scrollbar-comp, 0);
+  }
+
   /* Applied briefly during a theme swap so no element animates its colour change. */
   .no-transitions,
   .no-transitions *,

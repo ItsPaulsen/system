@@ -527,24 +527,57 @@
    ::backdrop, Esc + focus trap, and open/close wiring (app.js, via
    data-dialog-open/close). Only the menu-specific layout lives here. */
 
-/* Base = mobile: full-bleed panel (32px backdrop). Gains the 400px cap at sm. */
 .ex-menu {
-  width: calc(100vw - 32px);
+  /* Caps at 400px; only narrows when the panel would come within 32px of the
+   left edge (small phones). Same at every width — no full-bleed jump. */
+  width: min(100vw - 32px, 400px);
   max-width: none;
   border-radius: 32px 0 0 32px;
+
+  /* The dialog clips (rounded corners); the single scroll container is
+   .sheet__inner below. */
+  overflow: hidden;
 }
 
+/* Fixed column: head and foot are non-scrolling flex items (genuinely pinned);
+   only the middle scrolls. The page is scroll-locked while the menu is open
+   (app.js), so no chaining to worry about — the inner just clips. */
 .ex-menu .sheet__inner {
   padding: 0 32px 32px;
+  overflow: hidden;
 }
 
-/* Header row inside the panel — matches the top bar height; close button right. */
+/* Header row — close button right. Pinned at the top (doesn't scroll). */
 .ex-menu__head {
+  flex-shrink: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   height: 72px;
   margin-inline-end: -16px;
+}
+
+/* The only scrolling region — nav + links. Scrollbar hidden (the page is
+   scroll-locked while open, so no chaining to contain). */
+.ex-menu__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ex-menu__scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Footer — pinned at the bottom (doesn't scroll), on a panel surface. Bleeds
+   over the panel's 32px padding; 16px inset places the toggle 16px from the
+   edges + bottom. */
+.ex-menu__foot {
+  flex-shrink: 0;
+  margin: 0 -32px -32px;
+  padding: 16px;
+  background: var(--background-secondary);
 }
 
 /* Big primary links. */
@@ -587,12 +620,9 @@
   text-decoration: none;
 }
 
-/* Theme toggle pinned to the bottom. The panel pads content 32px; pull the
-   toggle out to sit 16px from the sides and bottom. */
+/* Theme toggle fills the footer width. */
 .ex-menu__theme.tabs {
-  margin-top: auto;
-  margin-inline: -16px;
-  margin-bottom: -16px;
+  display: flex;
 }
 
 /* ── Responsive (mobile-first: min-width overrides build up from the base) ──── */
@@ -606,10 +636,6 @@
   /* Close button 24px from the edge, in the 72px compact head. */
   .ex-menu__head {
     margin-inline-end: -8px;
-  }
-
-  .ex-menu {
-    width: min(100vw - 32px, 400px);
   }
 }
 

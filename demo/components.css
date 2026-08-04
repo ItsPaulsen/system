@@ -1782,6 +1782,13 @@
     height: 100%;
   }
 
+  /* On open, focus is parked here (JS sets tabindex -1) so no button shows a
+   stray focus ring. It's only a programmatic focus holder — never ring it. */
+  .sheet__inner:focus-visible,
+  .dialog__inner:focus-visible {
+    outline: none;
+  }
+
   .sheet__header {
     display: flex;
     align-items: center;

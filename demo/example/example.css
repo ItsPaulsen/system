@@ -17,7 +17,13 @@
   --ex-shadow:
     var(--surface-rim), 0 16px 48px 0 color-mix(in oklab, var(--neutral-black) 12%, transparent);
 
-  padding-block: 8rem 6rem;
+  /* Sections stack with the container owning the rhythm: padding-block = space
+     above the hero + below the slider; gap = space between hero and slider.
+     Base (mobile) values; both grow at md. */
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding-block: 6rem 4rem;
   background-color: var(--background-secondary);
 
   /* Dots, with a top wash of the surface colour fading them in from the top so
@@ -36,6 +42,13 @@
     22px 22px;
 }
 
+@media (min-width: 768px) {
+  .ex {
+    gap: 6rem; /* 96 (hero → slider) */
+    padding-block: 8rem 6rem; /* 128 top, 96 bottom */
+  }
+}
+
 /* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
    plus the top-rim highlight — the dark counterpart to a drop shadow's top edge. */
 :root[data-theme="dark"] .ex {
@@ -45,7 +58,7 @@
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 
 .ex-hero {
-  max-width: 40rem;
+  max-width: 48rem;
   margin-inline: auto;
   padding-inline: var(--grid-margin, 1rem);
   text-align: center;
@@ -63,7 +76,7 @@
 
 .ex-hero__intro {
   margin: 1rem auto 0;
-  max-width: 34rem;
+  max-width: 48rem;
   color: var(--ink-secondary);
 
   /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */
@@ -117,8 +130,11 @@
   --ex-stride: 2920px;
 
   position: relative;
-  margin-top: 6rem;
-  height: 430px;
+
+  /* Height fits the tallest card (illustration at y=32, bottom ≈347) + the full
+     64px shadow reach ≈ 411. Base is the mobile value — the whole slider scales
+     to 75% below md (see track), so the height scales with it (420 × 0.75). */
+  height: 315px;
   overflow: hidden;
 }
 
@@ -131,6 +147,12 @@
   position: absolute;
   inset: 0;
   width: calc(var(--ex-stride) * 2);
+
+  /* Base (mobile): whole slider at 75%. `scale` is its own property, so it
+     composes with the animation's `transform: translateX` and the loop stays
+     seamless (positions, stride and translate all scale together). Full size at md. */
+  scale: 0.75;
+  transform-origin: 0 0;
   animation: ex-marquee-scroll 55s linear infinite;
 }
 
@@ -147,6 +169,17 @@
 
   to {
     transform: translateX(calc(var(--ex-stride) * -1));
+  }
+}
+
+/* md ≥768: slider at full size. */
+@media (min-width: 768px) {
+  .ex-marquee {
+    height: 420px;
+  }
+
+  .ex-marquee__track {
+    scale: 1;
   }
 }
 

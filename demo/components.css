@@ -967,6 +967,11 @@
     text-decoration: none;
     -webkit-user-select: none;
     user-select: none;
+
+    /* Opt out of the iOS double-tap-zoom gesture (and its ~300ms tap delay) so
+     buttons register taps instantly — e.g. the menu button no longer zooms on a
+     quick double-tap. */
+    touch-action: manipulation;
     font-size: calc(var(--font-body-small-emphasized-size) + var(--ds-font-size-addition));
     font-weight: var(--font-body-small-emphasized-weight);
     line-height: 1;

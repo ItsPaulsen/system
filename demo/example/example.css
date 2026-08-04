@@ -1,0 +1,465 @@
+/* Example front page — composed "components in action" screen. This file owns
+   layout + the marquee only; every component inside reuses base.css /
+   components.css and its real classes, so dark mode is a token swap with
+   nothing to redraw. All type uses the --font-* tokens; supporting text is
+   --ink-secondary (not tertiary). */
+
+.ex {
+  padding-block: 5rem 6rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+
+.ex-hero {
+  max-width: 40rem;
+  margin-inline: auto;
+  padding-inline: var(--grid-margin, 1rem);
+  text-align: center;
+}
+
+.ex-hero__title {
+  margin: 0;
+  font-size: var(--font-headline-medium-size);
+  line-height: var(--font-headline-medium-lh);
+  font-weight: var(--font-headline-medium-weight);
+  color: var(--ink-primary);
+}
+
+.ex-hero__intro {
+  margin: 1rem auto 0;
+  max-width: 34rem;
+  color: var(--ink-secondary);
+  font-size: var(--font-body-large-size);
+  line-height: var(--font-body-large-lh);
+  font-weight: var(--font-body-large-weight);
+}
+
+.ex-hero__actions {
+  margin-top: 1.75rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* ── Marquee ──────────────────────────────────────────────────────────────
+   One band on two levels, scrolling forever. Tall cards ride the top line;
+   short items (`--low`) drop to a lower line and tuck into the gaps, matching
+   the Sketch frame. The track holds the sequence twice; translating by exactly
+   -50% lands the second copy where the first began, so the loop point is
+   invisible. Each item carries its own trailing gap (margin, not flex `gap`) so
+   the half-width is exact. `inert` (set in the HTML) makes the track show-only:
+   no clicks, no focus, out of the a11y tree. The block padding gives the
+   dropped items and card shadows room inside the clip so the edge mask and
+   overflow don't shave them. */
+.ex-marquee {
+  --ex-stride: 2920px;
+  position: relative;
+  margin-top: 6rem;
+  height: 430px;
+  overflow: hidden;
+}
+
+/* Cards are absolutely placed at their Sketch x/y (via inline --x/--y) so a
+   low card can sit horizontally beneath a top card — a flex row can't. The
+   sequence is laid out once, then copy 2 repeats it shifted right by one stride;
+   translating the track by -stride lands copy 2 where copy 1 was, so the loop
+   is seamless. `inert` (in the HTML) keeps it show-only. */
+.ex-marquee__track {
+  position: absolute;
+  inset: 0;
+  width: calc(var(--ex-stride) * 2);
+  animation: ex-marquee-scroll 55s linear infinite;
+}
+
+.ex-marquee__item {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+}
+
+@keyframes ex-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(var(--ex-stride) * -1));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ex-marquee__track {
+    animation: none;
+  }
+}
+
+/* ── Composed card surface ────────────────────────────────────────────────
+   For cards that aren't a single component (settings, profile, device). Same
+   recipe as .card: elevated secondary surface, medium radius, soft shadow. */
+.ex-card {
+  box-sizing: border-box;
+  background: var(--background-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 20px;
+}
+
+/* Settings — stacked switch rows with hairline dividers between them. */
+.ex-settings {
+  width: 487px;
+}
+
+.ex-settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 16px;
+}
+
+.ex-settings__row:first-child {
+  padding-top: 0;
+}
+
+.ex-settings__row:last-child {
+  padding-bottom: 0;
+}
+
+.ex-settings__row + .ex-settings__row {
+  border-top: 1px solid var(--fill-tertiary);
+}
+
+.ex-settings__text {
+  display: grid;
+  gap: 2px;
+}
+
+.ex-settings__title {
+  font-size: var(--font-body-small-emphasized-size);
+  font-weight: var(--font-body-small-emphasized-weight);
+  line-height: var(--font-body-small-emphasized-lh);
+  color: var(--ink-primary);
+}
+
+.ex-settings__note {
+  font-size: var(--font-caption-medium-size);
+  line-height: var(--font-caption-medium-lh);
+  color: var(--ink-secondary);
+}
+
+/* Filter-chips card — wide enough to wrap 3 + 2 like the frame. */
+.ex-chips {
+  width: 390px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Segmented theme toggle (Lyst / Mørkt) — no component yet, built from tokens.
+   Presentational: it labels light/dark, it doesn't drive the theme. */
+/* White surface behind the tabs, 4px around the gray track. */
+.ex-segmented-wrap {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: var(--radius-full);
+}
+
+.ex-segmented {
+  display: inline-flex;
+  width: 368px;
+  padding: 4px;
+  gap: 4px;
+  background: var(--fill-tertiary);
+  border-radius: var(--radius-full);
+}
+
+.ex-segmented__option {
+  flex: 1;
+  justify-content: center;
+}
+
+.ex-segmented__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding-inline: 16px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-body-small-size);
+  font-weight: var(--font-body-small-emphasized-weight);
+  line-height: 1;
+  color: var(--ink-tertiary);
+  white-space: nowrap;
+}
+
+.ex-segmented__option svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ex-segmented__option[aria-selected="true"] {
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Profile row card. */
+.ex-profile {
+  width: 280px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ex-profile__text {
+  flex: 1;
+  display: grid;
+  gap: 0;
+}
+
+.ex-profile__name {
+  font-size: var(--font-body-small-emphasized-size);
+  font-weight: var(--font-body-small-emphasized-weight);
+  line-height: 1.35;
+  color: var(--ink-primary);
+}
+
+.ex-profile__role {
+  font-size: var(--font-body-small-size);
+  line-height: 1.35;
+  color: var(--ink-secondary);
+}
+
+.ex-profile__chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-tertiary);
+}
+
+/* Privacy card — icon + title + chevron over a supporting line. No component
+   for this composition yet; built from tokens. */
+.ex-privacy {
+  width: 387px;
+  display: grid;
+  gap: 10px;
+}
+
+.ex-privacy__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ex-privacy__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--primary) 12%, var(--background-secondary));
+  color: var(--primary);
+}
+
+.ex-privacy__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ex-privacy__title {
+  flex: 1;
+  font-size: var(--font-body-medium-emphasized-size);
+  font-weight: var(--font-body-medium-emphasized-weight);
+  color: var(--ink-primary);
+}
+
+.ex-privacy__chevron {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-tertiary);
+}
+
+.ex-privacy__note {
+  margin: 0;
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  color: var(--ink-secondary);
+}
+
+/* Illustration card — the vertical .card with the artwork left-aligned (not
+   centered) and sitting ABOVE the text, plus a text CTA. */
+.ex-illus {
+  width: 380px;
+}
+
+.ex-illus .card__illustration > * {
+  margin-inline: 0;
+  width: 176px;
+}
+
+.ex-illus .card__title {
+  font-size: var(--font-title-small-size);
+  font-weight: var(--font-title-small-weight);
+  line-height: var(--font-title-small-lh);
+}
+
+/* 24px below the CTA to the card bottom. */
+.ex-illus .card__content {
+  padding-bottom: 24px;
+}
+
+/* CTA link sits in a 40px target area, 8px below the title. */
+.ex-illus .ex-textlink {
+  margin-top: 8px;
+  height: 40px;
+}
+
+.ex-textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-size: var(--font-body-small-emphasized-size);
+  font-weight: var(--font-body-small-emphasized-weight);
+  text-decoration: none;
+}
+
+.ex-textlink svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Device / session card. */
+.ex-device {
+  width: 460px;
+  padding: 24px;
+  display: grid;
+  gap: 4px;
+}
+
+.ex-device__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ex-device__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-body-medium-emphasized-size);
+  font-weight: var(--font-body-medium-emphasized-weight);
+  color: var(--ink-primary);
+}
+
+.ex-device__title svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-secondary);
+}
+
+.ex-device__logout {
+  margin-inline-start: auto;
+}
+
+.ex-device__meta {
+  display: grid;
+  gap: 4px;
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  color: var(--ink-secondary);
+}
+
+.ex-device__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Location + timestamp in primary ink (OS line stays secondary). */
+.ex-device__meta > span:nth-child(2),
+.ex-device__meta > span:nth-child(3) {
+  color: var(--ink-primary);
+}
+
+/* Log out — a small (36px) soft-destructive button. No soft-destructive variant
+   in the button component yet, so built from tokens. */
+.ex-logout {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding-inline: 14px;
+  border: 0;
+  border-radius: var(--radius-full);
+  font: inherit;
+  font-size: var(--font-caption-medium-emphasized-size);
+  font-weight: var(--font-caption-medium-emphasized-weight);
+  color: var(--red);
+  background: rgb(from var(--red) r g b / 0.12);
+}
+
+/* Info icon: 18px glyph in a 24px target area. */
+.ex-device__info {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  color: var(--ink-primary);
+}
+
+.ex-device__info svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Volume slider card. The round icon button is a separate marquee item, not
+   part of this card. */
+.ex-slider {
+  width: 355px;
+}
+
+/* Round icon button (FAB) — its own element in the strip. */
+.ex-fab {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+}
+
+/* FAQ — the real .accordion (already a stack of separate rounded boxes). Give
+   each item the same soft shadow as the other cards so it reads as elevated. */
+.ex-faq {
+  width: 387px;
+}
+
+.ex-faq .accordion__item {
+  box-shadow: var(--shadow-md);
+}
+
+/* Match Sketch: 48px collapsed rows. */
+.ex-faq .accordion__summary {
+  min-height: 48px;
+}
+
+/* Small pill badge used in the device card. */
+.ex-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-caption-medium-size);
+  font-weight: var(--font-caption-medium-weight);
+  line-height: 1;
+}
+
+.ex-badge--success {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.ex-badge--danger {
+  background: rgb(from var(--red) r g b / 0.12);
+  color: var(--red);
+}

@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Example — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="ex">
+      <header class="ex-hero">
+        <h1 class="ex-hero__title">Building bridges between you and customers</h1>
+        <p class="ex-hero__intro">
+          I ferment my own upcycled succulents from scratch. Honestly cold-pressed vinyl changed my
+          entire perspective. You probably haven't heard of my plant-based terrarium. My food truck
+          is artisanal and the cold brew.
+        </p>
+        <div class="ex-hero__actions" data-size="lg">
+          <a class="button button--primary" href="#">Blog</a>
+          <a class="button button--secondary" href="#">Article</a>
+        </div>
+      </header>
+
+      <!-- Marquee: cards absolutely placed at their Sketch x/y (inline --x/--y)
+           so low items tuck under the tall cards. The track is `inert`
+           (show-only) and holds the sequence twice — copy 2 = copy 1 shifted
+           right by --ex-stride. Edit copy 1 and mirror into copy 2. -->
+      <div class="ex-marquee">
+        <div class="ex-marquee__track" inert>
+          <!-- ============ Sequence (copy 1) ============ -->
+
+          <!-- Settings / switches -->
+          <div class="ex-marquee__item" style="--x: 24px; --y: 32px">
+            <div class="ex-card ex-settings">
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">Pause all</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">Reminder emails</span>
+                  <span class="ex-settings__note">See notifications you may have missed</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" checked />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">News emails</span>
+                  <span class="ex-settings__note">Learn about new features</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter chips -->
+          <div class="ex-marquee__item" style="--x: 575px; --y: 32px">
+            <div class="ex-card ex-chips">
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Design
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Engineering
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Product
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Legal
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Marketing
+              </label>
+            </div>
+          </div>
+
+          <!-- Theme segmented toggle (low) -->
+          <div class="ex-marquee__item" style="--x: 680px; --y: 248px">
+            <div class="ex-card ex-segmented-wrap">
+              <div class="ex-segmented">
+                <span class="ex-segmented__option" aria-selected="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"/></svg>
+                  Lyst tema
+                </span>
+                <span class="ex-segmented__option" aria-selected="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>
+                  Mørkt tema
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy and security -->
+          <div class="ex-marquee__item" style="--x: 1005px; --y: 32px">
+            <div class="ex-card ex-privacy">
+              <div class="ex-privacy__head">
+                <span class="ex-privacy__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9.5 12l1.5 1.5l3 -3.5"/></svg>
+                </span>
+                <span class="ex-privacy__title">Privacy and security</span>
+                <svg class="ex-privacy__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+              </div>
+              <p class="ex-privacy__note">Show and edit your privacy and security settings</p>
+            </div>
+          </div>
+
+          <!-- Profile (low) -->
+          <div class="ex-marquee__item" style="--x: 1172px; --y: 248px">
+            <div class="ex-card ex-profile">
+              <span class="avatar">
+                <img class="avatar__img" src="/assets/illustrations/avatar-1.png" alt="Courtney Doe" />
+                <span class="avatar__status" aria-hidden="true"></span>
+              </span>
+              <div class="ex-profile__text">
+                <span class="ex-profile__name">Courtney Doe</span>
+                <span class="ex-profile__role">Chief of Systems</span>
+              </div>
+              <svg class="ex-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+            </div>
+          </div>
+
+          <!-- Illustration card (top, tall) -->
+          <div class="ex-marquee__item" style="--x: 1520px; --y: 32px">
+            <a class="card ex-illus" href="#">
+              <div class="card__illustration">
+                <img src="/assets/illustrations/wfh.svg" alt="" />
+              </div>
+              <div class="card__content">
+                <h2 class="card__title">Risograph print for a more sustainable lifestyle</h2>
+                <span class="ex-textlink">
+                  See all components
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Device / session -->
+          <div class="ex-marquee__item" style="--x: 1988px; --y: 32px">
+            <div class="ex-card ex-device">
+              <div class="ex-device__head">
+                <span class="ex-device__title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M7 20h10M9 16v4M15 16v4"/></svg>
+                  Web
+                </span>
+                <span class="ex-badge ex-badge--success">This device</span>
+                <button type="button" class="ex-logout ex-device__logout">Log out</button>
+              </div>
+              <div class="ex-device__meta">
+                <span>macOS 26.5.2</span>
+                <span>
+                  Jørpeland, Norway
+                  <span class="ex-device__info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 17l0 .01"/><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"/></svg></span>
+                </span>
+                <span>1. aug. 2026, 11:30</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Volume slider (low) -->
+          <div class="ex-marquee__item" style="--x: 1963px; --y: 248px">
+            <div class="ex-card ex-slider">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="ex-volume">Volume</label>
+                  <output class="slider-field__value" for="ex-volume">50</output>
+                </div>
+                <input class="slider" type="range" id="ex-volume" min="0" max="100" value="50" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Round icon button (low, standalone) -->
+          <div class="ex-marquee__item" style="--x: 2367px; --y: 264px">
+            <button type="button" class="button button--primary button--icon ex-fab" aria-label="Go">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7l-10 10M8 7l9 0l0 9"/></svg>
+            </button>
+          </div>
+
+          <!-- FAQ accordion (top) -->
+          <div class="ex-marquee__item" style="--x: 2488px; --y: 32px">
+            <div class="accordion ex-faq">
+              <details class="accordion__item" open>
+                <summary class="accordion__summary">
+                  How do I get started?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Import the tokens, then reference them with <code>var(--…)</code>.</p>
+                </div>
+              </details>
+              <details class="accordion__item">
+                <summary class="accordion__summary">
+                  Can I change the colours?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Retint the whole system by swapping the anchor colour.</p>
+                </div>
+              </details>
+              <details class="accordion__item">
+                <summary class="accordion__summary">
+                  Does it support dark mode?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Yes — every colour is a semantic token, so it's a single swap.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+
+          <!-- ============ Sequence (copy 2 — identical, shifted +stride) ============ -->
+
+          <!-- Settings -->
+          <div class="ex-marquee__item" style="--x: calc(24px + var(--ex-stride)); --y: 32px">
+            <div class="ex-card ex-settings">
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">Pause all</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">Reminder emails</span>
+                  <span class="ex-settings__note">See notifications you may have missed</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" checked />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="ex-settings__row">
+                <div class="ex-settings__text">
+                  <span class="ex-settings__title">News emails</span>
+                  <span class="ex-settings__note">Learn about new features</span>
+                </div>
+                <label class="switch">
+                  <span class="switch__input-wrapper">
+                    <input type="checkbox" class="switch__input" />
+                    <span class="switch__knob"></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter chips -->
+          <div class="ex-marquee__item" style="--x: calc(575px + var(--ex-stride)); --y: 32px">
+            <div class="ex-card ex-chips">
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Design
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Engineering
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Product
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Legal
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Marketing
+              </label>
+            </div>
+          </div>
+
+          <!-- Theme segmented toggle (low) -->
+          <div class="ex-marquee__item" style="--x: calc(680px + var(--ex-stride)); --y: 248px">
+            <div class="ex-card ex-segmented-wrap">
+              <div class="ex-segmented">
+                <span class="ex-segmented__option" aria-selected="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"/></svg>
+                  Lyst tema
+                </span>
+                <span class="ex-segmented__option" aria-selected="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/></svg>
+                  Mørkt tema
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy and security -->
+          <div class="ex-marquee__item" style="--x: calc(1005px + var(--ex-stride)); --y: 32px">
+            <div class="ex-card ex-privacy">
+              <div class="ex-privacy__head">
+                <span class="ex-privacy__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9.5 12l1.5 1.5l3 -3.5"/></svg>
+                </span>
+                <span class="ex-privacy__title">Privacy and security</span>
+                <svg class="ex-privacy__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+              </div>
+              <p class="ex-privacy__note">Show and edit your privacy and security settings</p>
+            </div>
+          </div>
+
+          <!-- Profile (low) -->
+          <div class="ex-marquee__item" style="--x: calc(1172px + var(--ex-stride)); --y: 248px">
+            <div class="ex-card ex-profile">
+              <span class="avatar">
+                <img class="avatar__img" src="/assets/illustrations/avatar-1.png" alt="" />
+                <span class="avatar__status" aria-hidden="true"></span>
+              </span>
+              <div class="ex-profile__text">
+                <span class="ex-profile__name">Courtney Doe</span>
+                <span class="ex-profile__role">Chief of Systems</span>
+              </div>
+              <svg class="ex-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+            </div>
+          </div>
+
+          <!-- Illustration card -->
+          <div class="ex-marquee__item" style="--x: calc(1520px + var(--ex-stride)); --y: 32px">
+            <a class="card ex-illus" href="#">
+              <div class="card__illustration">
+                <img src="/assets/illustrations/wfh.svg" alt="" />
+              </div>
+              <div class="card__content">
+                <h2 class="card__title">Risograph print for a more sustainable lifestyle</h2>
+                <span class="ex-textlink">
+                  See all components
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </span>
+              </div>
+            </a>
+          </div>
+
+          <!-- Device / session -->
+          <div class="ex-marquee__item" style="--x: calc(1988px + var(--ex-stride)); --y: 32px">
+            <div class="ex-card ex-device">
+              <div class="ex-device__head">
+                <span class="ex-device__title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z"/><path d="M7 20h10M9 16v4M15 16v4"/></svg>
+                  Web
+                </span>
+                <span class="ex-badge ex-badge--success">This device</span>
+                <button type="button" class="ex-logout ex-device__logout">Log out</button>
+              </div>
+              <div class="ex-device__meta">
+                <span>macOS 26.5.2</span>
+                <span>
+                  Jørpeland, Norway
+                  <span class="ex-device__info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 17l0 .01"/><path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4"/></svg></span>
+                </span>
+                <span>1. aug. 2026, 11:30</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Volume slider (low) -->
+          <div class="ex-marquee__item" style="--x: calc(1963px + var(--ex-stride)); --y: 248px">
+            <div class="ex-card ex-slider">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="ex-volume-2">Volume</label>
+                  <output class="slider-field__value" for="ex-volume-2">50</output>
+                </div>
+                <input class="slider" type="range" id="ex-volume-2" min="0" max="100" value="50" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Round icon button (low, standalone) -->
+          <div class="ex-marquee__item" style="--x: calc(2367px + var(--ex-stride)); --y: 264px">
+            <button type="button" class="button button--primary button--icon ex-fab" aria-label="Go">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7l-10 10M8 7l9 0l0 9"/></svg>
+            </button>
+          </div>
+
+          <!-- FAQ accordion -->
+          <div class="ex-marquee__item" style="--x: calc(2488px + var(--ex-stride)); --y: 32px">
+            <div class="accordion ex-faq">
+              <details class="accordion__item" open>
+                <summary class="accordion__summary">
+                  How do I get started?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Import the tokens, then reference them with <code>var(--…)</code>.</p>
+                </div>
+              </details>
+              <details class="accordion__item">
+                <summary class="accordion__summary">
+                  Can I change the colours?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Retint the whole system by swapping the anchor colour.</p>
+                </div>
+              </details>
+              <details class="accordion__item">
+                <summary class="accordion__summary">
+                  Does it support dark mode?
+                  <svg class="accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </summary>
+                <div class="accordion__body">
+                  <p>Yes — every colour is a semantic token, so it's a single swap.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

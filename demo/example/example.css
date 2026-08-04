@@ -592,14 +592,13 @@
    data-dialog-open/close). Only the menu-specific layout lives here. */
 
 .ex-menu {
-  /* Caps at 400px; only narrows when the panel would come within 32px of the
-   left edge (small phones). Same at every width — no full-bleed jump. */
-  width: min(100vw - 32px, 400px);
+  /* Base (small phones): fullscreen, no radius. Becomes a floating 400px rounded
+   panel from sm up. */
+  width: 100vw;
   max-width: none;
-  border-radius: 32px 0 0 32px;
+  border-radius: 0;
 
-  /* The dialog clips (rounded corners); the single scroll container is
-   .sheet__inner below. */
+  /* The dialog clips; the single scroll container is .sheet__inner below. */
   overflow: hidden;
 }
 
@@ -700,6 +699,12 @@
   /* Close button 24px from the edge, in the 72px compact head. */
   .ex-menu__head {
     margin-inline-end: -8px;
+  }
+
+  /* sm up: floating 400px rounded panel (fullscreen below this). */
+  .ex-menu {
+    width: min(100vw - 32px, 400px);
+    border-radius: 32px 0 0 32px;
   }
 }
 

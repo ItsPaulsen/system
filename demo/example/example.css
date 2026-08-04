@@ -76,7 +76,7 @@
 
 .ex-hero__intro {
   margin: 1rem auto 0;
-  max-width: 48rem;
+  max-width: 36rem;
   color: var(--ink-secondary);
 
   /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */

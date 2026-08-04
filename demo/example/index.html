@@ -25,12 +25,15 @@
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
     <header class="ex-topbar">
       <a class="ex-topbar__brand" href="#">Demo</a>
-      <nav class="ex-topbar__nav" aria-label="Primary">
-        <a class="ex-topbar__link" href="#">Blog</a>
-        <a class="ex-topbar__link" href="#">Article</a>
-        <a class="ex-topbar__link" href="#">Settings</a>
+      <nav class="nav-menu ex-topbar__nav" aria-label="Primary">
+        <ul class="nav-menu__list">
+          <li><a class="nav-menu__link" href="#">Blog</a></li>
+          <li><a class="nav-menu__link" href="#">Article</a></li>
+          <li><a class="nav-menu__link" href="#">Settings</a></li>
+        </ul>
       </nav>
       <button
         class="button button--secondary button--with-end-icon ex-topbar__menu"
@@ -54,7 +57,7 @@
       </button>
     </header>
 
-    <main class="ex">
+    <main class="ex" id="ex-main" tabindex="-1">
       <header class="ex-hero">
         <h1 class="ex-hero__title">Some of the components, working together</h1>
         <p class="ex-hero__intro">

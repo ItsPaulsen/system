@@ -614,10 +614,19 @@
 .ex-menu__head {
   flex-shrink: 0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   height: 72px;
-  margin-inline-end: -16px;
+
+  /* Pull brand + close to 16px from the panel edges (matches the topbar). */
+  margin-inline: -16px;
+}
+
+/* Demo logo in the fullscreen menu head so it reads like the topbar. Hidden from
+   sm up, where the real topbar shows beside the floating panel. */
+.ex-menu__brand {
+  display: inline-flex;
+  align-items: center;
 }
 
 /* The only scrolling region — nav + links. Scrollbar hidden (the page is
@@ -696,9 +705,15 @@
     padding-inline: 24px;
   }
 
-  /* Close button 24px from the edge, in the 72px compact head. */
+  /* sm up: real topbar shows beside the panel, so drop the menu's own logo and
+     go back to a close-only head (button 24px from the edge). */
+  .ex-menu__brand {
+    display: none;
+  }
+
   .ex-menu__head {
-    margin-inline-end: -8px;
+    justify-content: flex-end;
+    margin-inline: 0 -8px;
   }
 
   /* sm up: floating 400px rounded panel (fullscreen below this). */

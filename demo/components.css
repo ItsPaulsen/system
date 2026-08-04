@@ -46,7 +46,7 @@
   }
 
   .switch__input:checked {
-    background: var(--primary);
+    background: var(--green);
   }
 
   .switch__input:focus-visible {
@@ -1843,10 +1843,11 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 12px 16px;
+    min-height: 64px;
+    padding: 16px;
     color: var(--ink-primary);
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
     list-style: none;
     cursor: pointer;
     user-select: none;
@@ -1876,16 +1877,30 @@
     animation: focus-ring-converge var(--motion-default);
   }
 
-  .accordion__chevron {
+  /* +/- toggle on a soft-primary surface. The vertical stroke hides when the
+   item is open, so the plus reads as a minus. */
+  .accordion__toggle {
     flex-shrink: 0;
-    width: 1.25em;
-    height: 1.25em;
-    color: var(--ink-tertiary);
-    transition: rotate var(--motion-default);
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--primary-soft);
+    color: var(--primary);
   }
 
-  .accordion__item[open] .accordion__chevron {
-    rotate: 180deg;
+  .accordion__toggle-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .accordion__toggle-v {
+    transition: opacity var(--motion-default);
+  }
+
+  .accordion__item[open] .accordion__toggle-v {
+    opacity: 0;
   }
 
   .accordion__body {

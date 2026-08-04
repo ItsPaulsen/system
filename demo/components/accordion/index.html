@@ -51,18 +51,20 @@
               <details class="accordion__item" open>
                 <summary class="accordion__summary">
                   How do I get started?
-                  <svg
-                    class="accordion__chevron"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
+                  <span class="accordion__toggle" aria-hidden="true">
+                    <svg
+                      class="accordion__toggle-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12l14 0" />
+                      <path class="accordion__toggle-v" d="M12 5l0 14" />
+                    </svg>
+                  </span>
                 </summary>
                 <div class="accordion__body">
                   <p>Import the tokens, then reference them with <code>var(--…)</code>.</p>
@@ -71,18 +73,20 @@
               <details class="accordion__item">
                 <summary class="accordion__summary">
                   Can I change the colours?
-                  <svg
-                    class="accordion__chevron"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
+                  <span class="accordion__toggle" aria-hidden="true">
+                    <svg
+                      class="accordion__toggle-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12l14 0" />
+                      <path class="accordion__toggle-v" d="M12 5l0 14" />
+                    </svg>
+                  </span>
                 </summary>
                 <div class="accordion__body">
                   <p>Swap the anchor values in <code>tokens.css</code> and everything retints.</p>
@@ -91,18 +95,20 @@
               <details class="accordion__item">
                 <summary class="accordion__summary">
                   Does it support dark mode?
-                  <svg
-                    class="accordion__chevron"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
+                  <span class="accordion__toggle" aria-hidden="true">
+                    <svg
+                      class="accordion__toggle-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12l14 0" />
+                      <path class="accordion__toggle-v" d="M12 5l0 14" />
+                    </svg>
+                  </span>
                 </summary>
                 <div class="accordion__body">
                   <p>Yes — set <code>data-theme="dark"</code> on the root.</p>
@@ -118,7 +124,7 @@
   <span class="tok-key">&lt;details</span> <span class="tok-prop">class</span>=<span class="tok-str">"accordion__item"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;summary</span> <span class="tok-prop">class</span>=<span class="tok-str">"accordion__summary"</span><span class="tok-key">&gt;</span>
       Question
-      <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"accordion__chevron"</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
+      <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"accordion__toggle"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/span&gt;</span>
     <span class="tok-key">&lt;/summary&gt;</span>
     <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"accordion__body"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;p&gt;</span>Answer.<span class="tok-key">&lt;/p&gt;</span><span class="tok-key">&lt;/div&gt;</span>
   <span class="tok-key">&lt;/details&gt;</span>

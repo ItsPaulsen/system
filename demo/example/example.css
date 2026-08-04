@@ -5,7 +5,14 @@
    --ink-secondary (not tertiary). */
 
 .ex {
+  /* Dot-grid background so white (secondary) cards separate from the near-white
+     surface on light theme. Dots derive from --ink-base, so they auto-invert in
+     dark theme (light dots on dark). */
+  --ex-dot: rgb(from var(--ink-base) r g b / 0.1);
   padding-block: 5rem 6rem;
+  background-color: var(--background-secondary);
+  background-image: radial-gradient(var(--ex-dot) 1.5px, transparent 1.5px);
+  background-size: 22px 22px;
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
@@ -257,7 +264,7 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--primary) 12%, var(--background-secondary));
+  background: var(--primary-soft);
   color: var(--primary);
 }
 
@@ -435,11 +442,6 @@
 
 .ex-faq .accordion__item {
   box-shadow: var(--shadow-md);
-}
-
-/* Match Sketch: 48px collapsed rows. */
-.ex-faq .accordion__summary {
-  min-height: 48px;
 }
 
 /* Small pill badge used in the device card. */

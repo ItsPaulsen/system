@@ -759,28 +759,28 @@ function hydratePreviews() {
 // resize. Values mirror the media queries in demo/tokens.css.
 const GRID_BREAKPOINTS = {
   mobile: {
-    name: "Mobile",
-    threshold: "< 640px",
+    name: "Base",
+    threshold: "< 768px",
     "grid-columns": "4",
     "grid-gutter": "16px",
     "grid-margin": "16px",
-    "container-max": "1200px"
+    "container-max": "1280px"
   },
   tablet: {
-    name: "<code>bp-tablet</code>",
-    threshold: "640px",
+    name: "<code>breakpoint-md</code>",
+    threshold: "≥ 768px",
     "grid-columns": "12",
     "grid-gutter": "20px",
     "grid-margin": "24px",
-    "container-max": "1200px"
+    "container-max": "1280px"
   },
   desktop: {
-    name: "<code>bp-desktop</code>",
-    threshold: "1024px",
+    name: "<code>breakpoint-lg</code>",
+    threshold: "≥ 1024px",
     "grid-columns": "12",
     "grid-gutter": "20px",
     "grid-margin": "32px",
-    "container-max": "1200px"
+    "container-max": "1280px"
   }
 };
 

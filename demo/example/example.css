@@ -53,9 +53,11 @@
 
 .ex-hero__title {
   margin: 0;
-  font-size: var(--font-headline-medium-size);
-  line-height: var(--font-headline-medium-lh);
-  font-weight: var(--font-headline-medium-weight);
+
+  /* Base (mobile, < md): headline-small 38px. Bumps to headline-medium 48px at md. */
+  font-size: var(--font-headline-small-size);
+  line-height: var(--font-headline-small-lh);
+  font-weight: var(--font-headline-small-weight);
   color: var(--ink-primary);
 }
 
@@ -63,9 +65,25 @@
   margin: 1rem auto 0;
   max-width: 34rem;
   color: var(--ink-secondary);
-  font-size: var(--font-body-large-size);
-  line-height: var(--font-body-large-lh);
-  font-weight: var(--font-body-large-weight);
+
+  /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */
+  font-size: var(--font-body-medium-size);
+  line-height: var(--font-body-medium-lh);
+  font-weight: var(--font-body-medium-weight);
+}
+
+@media (min-width: 768px) {
+  .ex-hero__title {
+    font-size: var(--font-headline-medium-size);
+    line-height: var(--font-headline-medium-lh);
+    font-weight: var(--font-headline-medium-weight);
+  }
+
+  .ex-hero__intro {
+    font-size: var(--font-body-large-size);
+    line-height: var(--font-body-large-lh);
+    font-weight: var(--font-body-large-weight);
+  }
 }
 
 .ex-hero__actions {
@@ -459,21 +477,24 @@
 /* ── Top bar ──────────────────────────────────────────────────────────────
    80px header: brand left, nav centered, Menu button right. Sticky and opaque
    so it stays above the dotted surface while scrolling. */
+
+/* Base = mobile: compact flex header, nav hidden (hamburger). Builds up to the
+   full grid header at lg. */
 .ex-topbar {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  height: 80px;
-  padding-inline: 32px;
+  height: 72px;
+  padding-inline: 16px;
   background: var(--background-secondary);
 }
 
 .ex-topbar__brand {
   justify-self: start;
-  font-size: var(--font-title-large-size);
+  font-size: 26px;
   font-weight: 700;
   color: var(--ink-primary);
   text-decoration: none;
@@ -481,7 +502,7 @@
 
 .ex-topbar__nav {
   justify-self: center;
-  display: flex;
+  display: none;
   gap: 3.25rem;
 }
 
@@ -501,14 +522,15 @@
   height: 20px;
 }
 
-/* Below the desktop breakpoint (1024): a more compact header. */
-
 /* ── Menu ───────────────────────────────────────────────────────────────────
    The real Sheet component (.sheet) provides the panel, slide-in animation,
    ::backdrop, Esc + focus trap, and open/close wiring (app.js, via
    data-dialog-open/close). Only the menu-specific layout lives here. */
+
+/* Base = mobile: full-bleed panel (32px backdrop). Gains the 400px cap at sm. */
 .ex-menu {
-  width: min(100vw - 32px, 400px);
+  width: calc(100vw - 32px);
+  max-width: none;
   border-radius: 32px 0 0 32px;
 }
 
@@ -521,7 +543,8 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  height: 80px;
+  height: 72px;
+  margin-inline-end: -16px;
 }
 
 /* Big primary links. */
@@ -572,43 +595,43 @@
   margin-bottom: -16px;
 }
 
-/* ── Responsive (breakpoint overrides, after base rules so they win) ───────── */
-@media (max-width: 1023px) {
+/* ── Responsive (mobile-first: min-width overrides build up from the base) ──── */
+
+/* sm ≥640 — roomier compact header; menu regains its 400px cap. */
+@media (min-width: 640px) {
   .ex-topbar {
-    height: 72px;
-    display: flex;
-    justify-content: space-between;
     padding-inline: 24px;
   }
 
-  .ex-topbar__brand {
-    font-size: 26px;
-  }
-
-  .ex-topbar__nav {
-    display: none;
-  }
-
-  /* Close button lines up with the Menu button it replaces (24px from the edge,
-     in a 72px head to match the compact header). */
+  /* Close button 24px from the edge, in the 72px compact head. */
   .ex-menu__head {
-    height: 72px;
     margin-inline-end: -8px;
+  }
+
+  .ex-menu {
+    width: min(100vw - 32px, 400px);
   }
 }
 
-@media (max-width: 640px) {
+/* lg ≥1024 — full desktop header: 3-column grid, nav visible. */
+@media (min-width: 1024px) {
   .ex-topbar {
-    padding-inline: 16px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    height: 80px;
+    padding-inline: 32px;
+  }
+
+  .ex-topbar__brand {
+    font-size: var(--font-title-large-size);
+  }
+
+  .ex-topbar__nav {
+    display: flex;
   }
 
   .ex-menu__head {
-    margin-inline-end: -16px;
-  }
-
-  /* Exactly 32px of backdrop on the left, no 400px cap. */
-  .ex-menu {
-    width: calc(100vw - 32px);
-    max-width: none;
+    height: 80px;
+    margin-inline-end: 0;
   }
 }

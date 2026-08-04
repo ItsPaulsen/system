@@ -191,7 +191,7 @@
   }
 
   .site-nav__menu {
-    display: none; /* mobile only */
+    display: inline-flex; /* mobile drawer toggle; hidden at lg */
     position: relative;
     align-items: center;
     justify-content: center;
@@ -228,26 +228,31 @@
     transform: translateY(-3px) rotate(-45deg);
   }
 
-  /* Sidebar (injected). Desktop: sticky left column inside the shell.
-   Mobile: an off-canvas drawer (see media query below). */
+  /* Sidebar (injected). Base = mobile off-canvas drawer; becomes a sticky left
+   rail inside the shell at lg (≥1024, see media query below). */
   .sidebar {
-    position: sticky;
-    top: var(--nav-h);
-    align-self: flex-start;
-    flex: none;
-    width: var(--sidebar-w);
-    max-height: calc(100dvh - var(--nav-h));
+    position: fixed;
+    inset: 0;
+    width: auto;
+    height: 100dvh;
+    padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
+    background: color-mix(in srgb, var(--background-primary) 85%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    backdrop-filter: saturate(1.4) blur(12px);
+    z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
+    opacity: 0;
+
+    /* Drawer scrolls internally but hides its own scrollbar — the outer page
+     scrollbar stays visible for continuity (matches shadcn). Overscroll is
+     contained so reaching the end doesn't bleed to the page. */
     overflow-y: auto;
+    overscroll-behavior: contain;
     scrollbar-width: none;
 
-    /* Chrome's 24px gutter on the left; internal 1.5rem on the right. */
-
-    /* Inline-start = page-gutter minus link's inline padding, so link text lands
-     at 24px and its hover/active surface extends 8px before the text. */
-    padding-block: 0.75rem 3rem;
-    padding-inline: calc(var(--page-gutter) - 0.5rem) 1.5rem;
-    background: var(--background-primary);
-    z-index: 18;
+    /* visibility: hidden stops the browser painting the drawer at all — prevents
+     a flash of the open state when the viewport crosses the breakpoint. */
+    visibility: hidden;
+    pointer-events: none;
   }
 
   /* Container is only a programmatic focus holder on drawer open — never show a
@@ -258,6 +263,25 @@
 
   .sidebar::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Animate the drawer only when the user actually toggles it — not on the
+   media-query flip when the viewport crosses the breakpoint. JS adds .is-anim
+   on first interaction so pure resize snaps instead of slides. */
+  .sidebar.is-anim {
+    transition:
+      opacity 0.2s ease-out,
+      visibility 0s linear 0.2s;
+  }
+
+  .sidebar.is-anim.is-open {
+    transition: opacity 0.2s ease-out;
+  }
+
+  .sidebar.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   /* Scroll fade: when the sticky sidebar overflows, its top/bottom edges fade to
@@ -278,6 +302,29 @@
   }
 
   @media (min-width: 1024px) {
+    /* Rail: undo the drawer — sticky left column, opaque, no blur, always shown.
+     Inline-start padding = page-gutter minus the link's inline padding, so link
+     text lands at 24px and its hover/active pill extends 8px before the text. */
+    .sidebar {
+      position: sticky;
+      inset: auto;
+      top: var(--nav-h);
+      align-self: flex-start;
+      flex: none;
+      width: var(--sidebar-w);
+      height: auto;
+      max-height: calc(100dvh - var(--nav-h));
+      padding-block: 0.75rem 3rem;
+      padding-inline: calc(var(--page-gutter) - 0.5rem) 1.5rem;
+      background: var(--background-primary);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      z-index: 18;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
     @supports (animation-timeline: scroll()) {
       .sidebar {
         --sidebar-fade: 2.5rem;
@@ -322,16 +369,22 @@
         --sidebar-fade-bottom: 0;
       }
     }
+
+    /* Hamburger toggle is drawer-only. */
+    .site-nav__menu {
+      display: none;
+    }
   }
 
+  /* Base = mobile drawer: big links, no pill. Compact rail values restored at lg. */
   .sidebar__group {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0.75rem;
   }
 
   .sidebar__group + .sidebar__group {
-    margin-top: 1.5rem;
+    margin-top: 2rem;
   }
 
   .sidebar__group-title {
@@ -339,8 +392,8 @@
     align-items: center;
     height: 32px;
     margin: 0;
-    padding-inline: 0.5rem;
-    font-size: 0.75rem;
+    padding-inline: 0;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--ink-secondary);
   }
@@ -348,12 +401,12 @@
   .sidebar__link,
   .sidebar__back {
     display: block;
-    font-size: 0.875rem;
     text-decoration: none;
   }
 
   .sidebar__link {
-    line-height: 20px;
+    font-size: 1.5rem;
+    line-height: 1.4;
     color: var(--ink-primary);
     font-weight: 500;
   }
@@ -369,25 +422,22 @@
   }
 
   .sidebar__back {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.75rem;
+    font-size: 1rem;
     color: var(--ink-secondary);
     font-weight: 500;
   }
 
-  /* Visual pill wraps just the label; the anchor stays full width for clicks. */
+  /* Visual pill wraps just the label; the anchor stays full width for clicks.
+   The drawer shows no pill (background added at lg); keep the radius so the
+   focus ring reads rounded. */
   .sidebar__link > span,
   .sidebar__back > span {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
-    padding: 0.375rem 0.5rem;
+    padding: 0;
     border-radius: 8px;
-  }
-
-  @media (hover: hover) {
-    .sidebar__link:hover > span {
-      background: var(--background-secondary);
-    }
   }
 
   .sidebar__link:focus-visible,
@@ -395,15 +445,12 @@
     outline: none;
   }
 
+  /* Bare text in the drawer — push the ring out for breathing room (0 at lg). */
   .sidebar__link:focus-visible > span,
   .sidebar__back:focus-visible > span {
     outline: 3px solid var(--focus);
-    outline-offset: 0;
+    outline-offset: 4px;
     animation: focus-ring-converge var(--motion-default);
-  }
-
-  .sidebar__link.is-active > span {
-    background: var(--background-secondary-active);
   }
 
   @media (hover: hover) {
@@ -416,105 +463,53 @@
     display: none;
   }
 
-  /* Mobile: sidebar is an off-canvas drawer toggled from the nav */
-  @media (max-width: 1023px) {
-    .site-nav__menu {
-      display: inline-flex;
-    }
-
-    .sidebar {
-      position: fixed;
-      inset: 0;
-      width: auto;
-      height: 100dvh;
-      max-height: none;
-      padding: calc(var(--nav-h) + 1.5rem) var(--page-gutter) 3rem;
-      background: color-mix(in srgb, var(--background-primary) 85%, transparent);
-      -webkit-backdrop-filter: saturate(1.4) blur(12px);
-      backdrop-filter: saturate(1.4) blur(12px);
-      z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
-      opacity: 0;
-
-      /* Drawer scrolls internally but hides its own scrollbar — the outer page
-       scrollbar stays visible for visual continuity (matches shadcn). Overscroll
-       is contained so reaching the end of the drawer doesn't bleed to the page. */
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: none;
-
-      /* visibility: hidden stops the browser from painting the drawer at all —
-       prevents a brief flash of the full-screen open state when the viewport
-       crosses the breakpoint. */
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .sidebar::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Big links, no hover pill — shadcn-style fullscreen drawer. */
-    .sidebar__link {
-      font-size: 1.5rem;
-      line-height: 1.4;
-      font-weight: 500;
-    }
-
-    .sidebar__link > span,
-    .sidebar__back > span {
-      padding: 0;
-      background: none !important;
-
-      /* No pill in the drawer, but keep 8px so the focus ring reads rounded. */
-      border-radius: 8px;
-    }
-
-    /* Bare text has no padding, so push the ring out a touch for breathing room. */
-    .sidebar__link:focus-visible > span,
-    .sidebar__back:focus-visible > span {
-      outline-offset: 4px;
-    }
-
-    .sidebar__back {
-      font-size: 1rem;
-      margin-bottom: 1.75rem;
-    }
-
+  /* lg ≥1024: restore the compact rail typography + pill that the drawer enlarged.
+   Placed AFTER the base drawer rules so these overrides win on desktop. */
+  @media (min-width: 1024px) {
     .sidebar__group {
-      gap: 0.75rem;
+      gap: 2px;
     }
 
     .sidebar__group + .sidebar__group {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .sidebar__group-title {
-      margin-bottom: 0;
+      padding-inline: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .sidebar__link {
       font-size: 0.875rem;
-      font-weight: 500;
-      padding-inline: 0;
+      line-height: 20px;
     }
 
-    /* Animate the drawer only when the user actually toggles it — not on the
-     media-query flip when the viewport crosses the mobile breakpoint. JS adds
-     .is-anim on first interaction so pure resize snaps instead of slides. */
-    .sidebar.is-anim {
-      transition:
-        opacity 0.2s ease-out,
-        visibility 0s linear 0.2s;
+    .sidebar__back {
+      margin-bottom: 1.25rem;
+      font-size: 0.875rem;
     }
 
-    .sidebar.is-anim.is-open {
-      transition: opacity 0.2s ease-out;
+    /* Pill returns: label-hugging surface, ring sits tight to it. */
+    .sidebar__link > span,
+    .sidebar__back > span {
+      padding: 0.375rem 0.5rem;
     }
 
-    .sidebar.is-open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
+    .sidebar__link:focus-visible > span,
+    .sidebar__back:focus-visible > span {
+      outline-offset: 0;
     }
 
-    /* Backdrop not needed — the drawer already covers the whole viewport. */
+    .sidebar__link.is-active > span {
+      background: var(--background-secondary-active);
+    }
+  }
+
+  /* Hover pill — desktop rail only (pointer-capable). */
+  @media (min-width: 1024px) and (hover: hover) {
+    .sidebar__link:hover > span {
+      background: var(--background-secondary);
+    }
   }
 
   .site-nav__brand {
@@ -584,12 +579,14 @@
     min-width: 0;
   }
 
+  /* Base = mobile: stacked column. Copy-tokens button is hidden until md
+   (rule sits after .btn below to keep specificity ascending). */
   .site-head {
     margin-bottom: 2rem;
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 1.5rem;
-    justify-content: space-between;
+    gap: 1rem;
   }
 
   /* Divider only when the page has a subhead below. Pages without subheads
@@ -613,17 +610,12 @@
     gap: 1.5rem;
   }
 
-  @media (max-width: 640px) {
+  /* sm ≥640: header returns to a row (title left, actions right). */
+  @media (min-width: 640px) {
     .site-head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-
-    /* Hide the topic-page Copy Tokens on mobile; the intro's toolbar button
-     is outside .site-head__title and stays. */
-    .site-head__title .btn {
-      display: none;
+      flex-direction: row;
+      gap: 1.5rem;
+      justify-content: space-between;
     }
   }
 
@@ -685,6 +677,19 @@
   .btn:active {
     background: var(--background-secondary-active);
     transform: scale(0.97);
+  }
+
+  /* Copy-tokens button hidden by default; reappears at md ≥768 (hidden on phones
+   + small tablets). Ordered after .btn so specificity ascends, and the md query
+   sits after this base rule so the show wins. */
+  .site-head__title .btn {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .site-head__title .btn {
+      display: inline-flex;
+    }
   }
 
   /* Outlined variant: transparent surface with a hairline stroke; hover fills
@@ -1332,21 +1337,34 @@
 
   /* Linked rows (used on the intro to jump into each section). Chevron appended
    via a mask so we don't repeat SVG markup on every row. */
+
+  /* Base = mobile: the value drops under the label (left-aligned) and the
+   chevron is pinned to the vertical centre. Returns to a single row at sm. */
   a.token-list__row {
+    position: relative;
+    flex-wrap: wrap;
+    row-gap: 0;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
     color: inherit;
     text-decoration: none;
   }
 
   a.token-list__row .token-list__name {
+    flex-basis: 100%;
     font-weight: 500;
   }
 
   a.token-list__row .token-list__value {
+    margin-inline-start: 0;
     color: var(--ink-secondary);
+    text-align: start;
   }
 
   a.token-list__row::after {
     content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 12px;
     flex: none;
     width: 16px;
     height: 16px;
@@ -1354,6 +1372,7 @@
     color: var(--ink-tertiary);
     mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m9 18 6-6-6-6'/></svg>")
       no-repeat center / 16px;
+    transform: translateY(-50%);
     transition: color var(--motion-default);
   }
 
@@ -1371,30 +1390,24 @@
     animation: none;
   }
 
-  /* On narrow screens the description drops under the label (left-aligned)
-   and the chevron stays vertically centred beside them. */
-  @media (max-width: 640px) {
+  /* sm ≥640: label + value share one row; chevron returns to the flex flow. */
+  @media (min-width: 640px) {
     a.token-list__row {
-      position: relative;
-      flex-wrap: wrap;
-      row-gap: 0;
-      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      flex-wrap: nowrap;
+      padding: 0.5rem 0.75rem 0.5rem 1rem;
     }
 
     a.token-list__row .token-list__name {
-      flex-basis: 100%;
+      flex-basis: auto;
     }
 
     a.token-list__row .token-list__value {
-      margin-inline-start: 0;
-      text-align: start;
+      margin-inline-start: auto;
     }
 
     a.token-list__row::after {
-      position: absolute;
-      top: 50%;
-      inset-inline-end: 12px;
-      transform: translateY(-50%);
+      position: static;
+      transform: none;
     }
   }
 
@@ -1780,8 +1793,9 @@
    is untouched. */
 
   /* Reduced transparency: drop the drawer's blur + translucency for an opaque
-   surface. */
-  @media (max-width: 1023px) and (prefers-reduced-transparency: reduce) {
+   surface. Only the base drawer has blur; the lg rail is already opaque, so this
+   needs no width bound. */
+  @media (prefers-reduced-transparency: reduce) {
     .sidebar {
       background: var(--background-primary);
       -webkit-backdrop-filter: none;

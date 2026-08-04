@@ -245,21 +245,36 @@
     --font-caption-small-emphasized-lh: 1.5;
     --font-caption-small-emphasized-weight: 500;
 
-    /* Grid (mobile-first) — content max 1200 (1264 incl. margins) */
-    --container-max: 1200px;
+    /* Breakpoints — standard scale (matches Tailwind/Ruter). Reach for the
+     name; the px is the min-width the layout switches at. */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Grid (mobile-first) — content max 1280 (aligns with the xl breakpoint) */
+    --container-max: 1280px;
     --grid-columns: 4;
     --grid-gutter: 16px;
     --grid-margin: 16px;
 
     /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
+    --space-0: 0;
+    --space-2: 0.125rem;
     --space-4: 0.25rem;
     --space-8: 0.5rem;
     --space-12: 0.75rem;
     --space-16: 1rem;
+    --space-20: 1.25rem;
     --space-24: 1.5rem;
     --space-32: 2rem;
     --space-48: 3rem;
     --space-64: 4rem;
+    --space-80: 5rem;
+    --space-96: 6rem;
+    --space-112: 7rem;
+    --space-128: 8rem;
 
     /* Radii — on the spacing rhythm (8/16/24) */
     --radius-sm: 8px;
@@ -315,8 +330,8 @@
     --z-toast: 50;
   }
 
-  /* Tablet ≥640 — grid jumps to 12 columns (px literals: media can't read vars) */
-  @media (min-width: 640px) {
+  /* Tablet ≥768 (md) — grid jumps to 12 columns (px literals: media can't read vars) */
+  @media (min-width: 768px) {
     :root {
       --grid-columns: 12;
       --grid-gutter: 20px;

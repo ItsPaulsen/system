@@ -22,8 +22,8 @@
      Base (mobile) values; both grow at md. */
   display: flex;
   flex-direction: column;
-  gap: 4rem;
-  padding-block: 6rem 4rem;
+  gap: 3rem;
+  padding-block: 5rem 3rem;
   background-color: var(--background-secondary);
 
   /* Dots, with a top wash of the surface colour fading them in from the top so
@@ -99,11 +99,40 @@
   }
 }
 
+/* lg ≥1024: title steps up to headline-large (small → medium → large). */
+@media (min-width: 1024px) {
+  .ex-hero__title {
+    font-size: var(--font-headline-large-size);
+    line-height: var(--font-headline-large-lh);
+    font-weight: var(--font-headline-large-weight);
+  }
+}
+
 .ex-hero__actions {
   margin-top: 1.75rem;
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem; /* 8 on mobile; 12 at md */
+}
+
+/* Base (mobile): render the lg-marked hero buttons at md scale (mirrors the
+   [data-size="md"] tokens). They go back to lg at md. */
+.ex-hero__actions[data-size="lg"] {
+  --ds-size-root: 0.25rem;
+  --ds-radius-root: 0.25rem;
+  --ds-font-size-addition: 0rem;
+}
+
+@media (min-width: 768px) {
+  .ex-hero__actions {
+    gap: 0.75rem;
+  }
+
+  .ex-hero__actions[data-size="lg"] {
+    --ds-size-root: 0.3125rem;
+    --ds-radius-root: 0.3125rem;
+    --ds-font-size-addition: 0.125rem;
+  }
 }
 
 /* Example only: the secondary button's tint is translucent, so over the dot

@@ -17,7 +17,7 @@
   --ex-shadow:
     var(--surface-rim), 0 16px 48px 0 color-mix(in oklab, var(--neutral-black) 12%, transparent);
 
-  padding-block: 6rem;
+  padding-block: 8rem 6rem;
   background-color: var(--background-secondary);
 
   /* Dots, with a top wash of the surface colour fading them in from the top so

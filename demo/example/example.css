@@ -501,11 +501,14 @@
   height: 20px;
 }
 
+/* Below the desktop breakpoint (1024): a more compact header. */
+
 /* ── Menu ───────────────────────────────────────────────────────────────────
    The real Sheet component (.sheet) provides the panel, slide-in animation,
    ::backdrop, Esc + focus trap, and open/close wiring (app.js, via
    data-dialog-open/close). Only the menu-specific layout lives here. */
 .ex-menu {
+  width: min(100vw - 32px, 400px);
   border-radius: 32px 0 0 32px;
 }
 
@@ -525,10 +528,12 @@
 .ex-menu__nav {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .ex-menu__nav a {
+  display: flex;
+  align-items: center;
+  height: 56px;
   font-size: var(--font-title-small-size);
   font-weight: var(--font-title-small-weight);
   line-height: var(--font-title-small-lh);
@@ -547,10 +552,12 @@
 .ex-menu__links {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .ex-menu__links a {
+  display: flex;
+  align-items: center;
+  height: 48px;
   font-size: var(--font-body-small-emphasized-size);
   font-weight: var(--font-body-small-emphasized-weight);
   color: var(--ink-primary);
@@ -563,4 +570,45 @@
   margin-top: auto;
   margin-inline: -16px;
   margin-bottom: -16px;
+}
+
+/* ── Responsive (breakpoint overrides, after base rules so they win) ───────── */
+@media (max-width: 1023px) {
+  .ex-topbar {
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    padding-inline: 24px;
+  }
+
+  .ex-topbar__brand {
+    font-size: 26px;
+  }
+
+  .ex-topbar__nav {
+    display: none;
+  }
+
+  /* Close button lines up with the Menu button it replaces (24px from the edge,
+     in a 72px head to match the compact header). */
+  .ex-menu__head {
+    height: 72px;
+    margin-inline-end: -8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ex-topbar {
+    padding-inline: 16px;
+  }
+
+  .ex-menu__head {
+    margin-inline-end: -16px;
+  }
+
+  /* Exactly 32px of backdrop on the left, no 400px cap. */
+  .ex-menu {
+    width: calc(100vw - 32px);
+    max-width: none;
+  }
 }

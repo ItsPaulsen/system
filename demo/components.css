@@ -296,15 +296,25 @@
     border-radius: var(--radius-sm);
   }
 
+  /* Pill variant — fully rounded track (the tabs match, below). */
+  .tabs--pill {
+    border-radius: var(--radius-full);
+  }
+
   .tabs__tab {
     position: relative;
     flex: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.375rem;
     padding: 0.5rem;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
     font-size: var(--font-body-small-emphasized-size);
     font-weight: var(--font-body-small-emphasized-weight);
+    line-height: inherit;
     color: var(--ink-secondary);
     border-radius: 6px;
     cursor: pointer;
@@ -331,7 +341,23 @@
   /* State is driven off the radio via the adjacent-sibling combinator (Ruter's
    pattern) — cheaper and more broadly supported than :has(). Base states first,
    then the higher-specificity interaction states. */
-  .tabs__radio:checked + .tabs__tab {
+
+  .tabs--pill .tabs__tab {
+    border-radius: var(--radius-full);
+  }
+
+  /* Optional leading icon inside a tab. */
+  .tabs__tab svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+
+  /* Selected — radio-driven (default) or state-driven via aria-selected, so a
+   tab set can also reflect external state (e.g. the current theme) without a
+   form control. */
+  .tabs__radio:checked + .tabs__tab,
+  .tabs__tab[aria-selected="true"] {
     background: var(--background-secondary);
     color: var(--ink-primary);
   }
@@ -351,7 +377,8 @@
   /* Hover only where a real pointer exists, so it doesn't stick after a tap on
    touch; :active covers the pressed feedback. */
   @media (hover: hover) {
-    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
+    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover,
+    .tabs__tab[aria-selected="false"]:hover {
       background: var(--fill-quaternary-hover);
     }
   }
@@ -1887,7 +1914,7 @@
     height: 32px;
     border-radius: var(--radius-full);
     background: var(--primary-soft);
-    color: var(--primary);
+    color: var(--primary-foreground);
   }
 
   .accordion__toggle-icon {

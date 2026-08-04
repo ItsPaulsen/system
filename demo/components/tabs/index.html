@@ -79,6 +79,53 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">With icons</h3>
+          <p class="section-note">
+            Put an icon before <code>tabs__label</code>. <code>tabs--pill</code> fully rounds the
+            track.
+          </p>
+          <div class="component-preview">
+            <div class="tabs tabs--pill" role="tablist" style="width: 260px">
+              <input type="radio" name="tabs-icon" id="tab-icon-1" class="tabs__radio" checked />
+              <label class="tabs__tab" for="tab-icon-1">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                  <path
+                    d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+                  />
+                </svg>
+                <span class="tabs__label">Light</span>
+              </label>
+              <input type="radio" name="tabs-icon" id="tab-icon-2" class="tabs__radio" />
+              <label class="tabs__tab" for="tab-icon-2">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+                  />
+                </svg>
+                <span class="tabs__label">Dark</span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>

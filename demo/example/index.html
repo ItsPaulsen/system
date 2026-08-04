@@ -25,6 +25,35 @@
     </script>
   </head>
   <body>
+    <header class="ex-topbar">
+      <a class="ex-topbar__brand" href="#">Demo</a>
+      <nav class="ex-topbar__nav" aria-label="Primary">
+        <a class="ex-topbar__link" href="#">Blog</a>
+        <a class="ex-topbar__link" href="#">Article</a>
+        <a class="ex-topbar__link" href="#">Settings</a>
+      </nav>
+      <button
+        class="button button--secondary button--with-end-icon ex-topbar__menu"
+        type="button"
+        data-dialog-open="ex-menu-sheet"
+        aria-haspopup="dialog"
+      >
+        Menu
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 9h16" />
+          <path d="M4 15h16" />
+        </svg>
+      </button>
+    </header>
+
     <main class="ex">
       <header class="ex-hero">
         <h1 class="ex-hero__title">Building bridges between you and customers</h1>
@@ -35,7 +64,9 @@
         </p>
         <div class="ex-hero__actions" data-size="lg">
           <a class="button button--primary" href="#">Blog</a>
-          <a class="button button--secondary" href="#">Article</a>
+          <span class="ex-secondary-solid">
+            <a class="button button--secondary" href="#">Article</a>
+          </span>
         </div>
       </header>
 
@@ -116,9 +147,9 @@
 
           <!-- Theme segmented toggle (low) -->
           <div class="ex-marquee__item" style="--x: 680px; --y: 248px">
-            <div class="ex-card ex-segmented-wrap">
-              <div class="ex-segmented">
-                <span class="ex-segmented__option" aria-selected="true">
+            <div class="ex-card ex-theme-wrap">
+              <div class="tabs tabs--pill" role="tablist" aria-label="Theme">
+                <button class="tabs__tab" type="button" data-theme-opt="light" aria-selected="true">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -133,9 +164,9 @@
                       d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
                     />
                   </svg>
-                  Lyst tema
-                </span>
-                <span class="ex-segmented__option" aria-selected="false">
+                  <span class="tabs__label">Lyst tema</span>
+                </button>
+                <button class="tabs__tab" type="button" data-theme-opt="dark" aria-selected="false">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -149,8 +180,8 @@
                       d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
                     />
                   </svg>
-                  Mørkt tema
-                </span>
+                  <span class="tabs__label">Mørkt tema</span>
+                </button>
               </div>
             </div>
           </div>
@@ -231,18 +262,26 @@
               </div>
               <div class="card__content">
                 <h2 class="card__title">Risograph print for a more sustainable lifestyle</h2>
-                <span class="ex-textlink">
+                <span class="link link--cta">
                   See all components
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
+                  <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path
+                      class="link-arrow__line"
+                      d="M1.5 6h8"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <g class="link-arrow__chevron">
+                      <path
+                        d="M3.5 2l4 4-4 4"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
                   </svg>
                 </span>
               </div>
@@ -471,9 +510,9 @@
 
           <!-- Theme segmented toggle (low) -->
           <div class="ex-marquee__item" style="--x: calc(680px + var(--ex-stride)); --y: 248px">
-            <div class="ex-card ex-segmented-wrap">
-              <div class="ex-segmented">
-                <span class="ex-segmented__option" aria-selected="true">
+            <div class="ex-card ex-theme-wrap">
+              <div class="tabs tabs--pill" role="tablist" aria-label="Theme">
+                <button class="tabs__tab" type="button" data-theme-opt="light" aria-selected="true">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -488,9 +527,9 @@
                       d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
                     />
                   </svg>
-                  Lyst tema
-                </span>
-                <span class="ex-segmented__option" aria-selected="false">
+                  <span class="tabs__label">Lyst tema</span>
+                </button>
+                <button class="tabs__tab" type="button" data-theme-opt="dark" aria-selected="false">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -504,8 +543,8 @@
                       d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
                     />
                   </svg>
-                  Mørkt tema
-                </span>
+                  <span class="tabs__label">Mørkt tema</span>
+                </button>
               </div>
             </div>
           </div>
@@ -582,18 +621,26 @@
               </div>
               <div class="card__content">
                 <h2 class="card__title">Risograph print for a more sustainable lifestyle</h2>
-                <span class="ex-textlink">
+                <span class="link link--cta">
                   See all components
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
+                  <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path
+                      class="link-arrow__line"
+                      d="M1.5 6h8"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <g class="link-arrow__chevron">
+                      <path
+                        d="M3.5 2l4 4-4 4"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
                   </svg>
                 </span>
               </div>
@@ -753,6 +800,137 @@
         </div>
       </div>
     </main>
+
+    <dialog class="sheet ex-menu" id="ex-menu-sheet" aria-label="Menu">
+      <div class="sheet__inner">
+        <div class="ex-menu__head">
+          <button
+            class="button button--secondary button--with-end-icon ex-menu__close"
+            type="button"
+            data-dialog-close
+          >
+            Lukk
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6l-12 12" />
+              <path d="M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <nav class="ex-menu__nav" aria-label="Pages">
+          <a href="#">Blog</a>
+          <a href="#">Article</a>
+          <a href="#">Settings</a>
+        </nav>
+
+        <hr class="ex-menu__divider" />
+
+        <div class="ex-menu__links">
+          <a href="#">Blog</a>
+          <a href="#">Blog</a>
+          <a href="#">Article</a>
+          <a href="#">Article</a>
+          <a href="#">Settings</a>
+          <a href="#">Settings</a>
+        </div>
+
+        <div class="tabs tabs--pill ex-menu__theme" role="tablist" aria-label="Theme">
+          <input
+            type="radio"
+            name="ex-theme-menu"
+            id="ex-theme-menu-light"
+            class="tabs__radio"
+            data-theme-opt="light"
+            checked
+          />
+          <label class="tabs__tab" for="ex-theme-menu-light">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+              <path
+                d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+              />
+            </svg>
+            <span class="tabs__label">Lyst tema</span>
+          </label>
+          <input
+            type="radio"
+            name="ex-theme-menu"
+            id="ex-theme-menu-dark"
+            class="tabs__radio"
+            data-theme-opt="dark"
+          />
+          <label class="tabs__tab" for="ex-theme-menu-dark">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+              />
+            </svg>
+            <span class="tabs__label">Mørkt tema</span>
+          </label>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      // Theme control. The drawer's Tabs use real radios (:checked = active,
+      // native); changing one sets the theme. The marquee copies are inert and
+      // decorative, so they mirror the theme via the component's aria-selected
+      // state. apply() keeps every theme control in sync.
+      (function () {
+        var radios = document.querySelectorAll(".tabs__radio[data-theme-opt]");
+        function apply(t) {
+          // Suppress transitions across the swap so no element animates its
+          // colour change into a flash (mirrors app.js setTheme).
+          var root = document.documentElement;
+          root.classList.add("no-transitions");
+          root.dataset.theme = t;
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              root.classList.remove("no-transitions");
+            });
+          });
+          try {
+            localStorage.setItem("theme", t);
+          } catch (e) {}
+          radios.forEach(function (r) {
+            r.checked = r.dataset.themeOpt === t;
+          });
+          document.querySelectorAll(".tabs__tab[data-theme-opt]").forEach(function (tab) {
+            tab.setAttribute("aria-selected", tab.dataset.themeOpt === t ? "true" : "false");
+          });
+        }
+        radios.forEach(function (r) {
+          r.addEventListener("change", function () {
+            if (r.checked) apply(r.dataset.themeOpt);
+          });
+        });
+        apply(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+      })();
+    </script>
     <script src="/assets/app.js" defer></script>
   </body>
 </html>

@@ -1731,32 +1731,30 @@
     background: var(--background-secondary);
     color: var(--ink-primary);
     box-shadow: var(--shadow-lg);
-    opacity: 0;
-    transform: translateX(24px);
+
+    /* Subtle slide in, fully opaque (no opacity fade) so the panel never goes
+       see-through over the darkening backdrop mid-animation. Only the backdrop
+       fades. */
+    transform: translateX(32px);
   }
 
   .sheet--left {
     inset: 0 auto 0 0;
-    transform: translateX(-24px);
+    transform: translateX(-32px);
   }
 
   .sheet[open] {
-    opacity: 1;
     transform: translateX(0);
-    transition:
-      opacity 0.2s ease-out,
-      transform 0.2s ease-out;
+    transition: transform 0.2s ease-out;
   }
 
   @starting-style {
     .sheet[open] {
-      opacity: 0;
-      transform: translateX(24px);
+      transform: translateX(32px);
     }
 
     .sheet--left[open] {
-      opacity: 0;
-      transform: translateX(-24px);
+      transform: translateX(-32px);
     }
   }
 

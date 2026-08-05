@@ -828,6 +828,10 @@
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
+
+  /* object-fit crops the photo to whatever ratio the slot sets; the muted fill
+     shows through while the image loads (and behind any transparency). */
+  object-fit: cover;
   background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
 }
 
@@ -1053,9 +1057,13 @@
 
 .ex-footer__col-list {
   margin: 0;
-  padding: 0;
   list-style: none;
   display: grid;
+
+  /* Block padding gives the first/last link's focus outline (offset 2 + 3px)
+     room inside the clipped ::details-content; it lives on the list, not the
+     clip box, so the accordion still collapses to zero cleanly. */
+  padding: 8px 0;
 }
 
 .ex-footer__col-list a {
@@ -1077,6 +1085,13 @@
 
 .ex-footer__col::details-content {
   overflow: hidden;
+
+  /* The overflow needed for the height animation would otherwise shave the
+     full-width links' focus outline on the sides. Bleed the clip box past the
+     list inline (negative margin) and restore the list's edge with matching
+     padding, so the ring has room while the links stay aligned with the head. */
+  margin-inline: -8px;
+  padding-inline: 8px;
   block-size: 0;
   opacity: 0;
   transition:

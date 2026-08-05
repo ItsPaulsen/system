@@ -811,7 +811,25 @@
         <div class="ex-work__inner">
           <!-- Featured -->
           <a class="card ex-featured" href="#">
-            <div class="ex-ph ex-featured__img" aria-hidden="true"></div>
+            <picture>
+              <source
+                type="image/webp"
+                srcset="
+                  /assets/images/abstract_1-400.webp   400w,
+                  /assets/images/abstract_1-640.webp   640w,
+                  /assets/images/abstract_1-800.webp   800w,
+                  /assets/images/abstract_1-1044.webp 1044w
+                "
+                sizes="(min-width: 768px) 50vw, 92vw"
+              />
+              <img
+                class="ex-ph ex-featured__img"
+                src="/assets/images/abstract_1-800.jpg"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
             <div class="ex-featured__body">
               <h2 class="ex-featured__title">One system, light and dark, with no rework</h2>
               <p class="ex-featured__text">
@@ -825,7 +843,25 @@
           <!-- Two-up -->
           <div class="ex-work__row ex-work__row--2">
             <a class="card" href="#">
-              <div class="ex-ph ex-ph--wide" aria-hidden="true"></div>
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/images/abstract_2-400.webp   400w,
+                    /assets/images/abstract_2-640.webp   640w,
+                    /assets/images/abstract_2-800.webp   800w,
+                    /assets/images/abstract_2-1044.webp 1044w
+                  "
+                  sizes="(min-width: 768px) 50vw, 92vw"
+                />
+                <img
+                  class="ex-ph ex-ph--wide"
+                  src="/assets/images/abstract_2-800.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div class="card__content">
                 <h3 class="card__title">Density is a single knob</h3>
                 <p>
@@ -835,7 +871,25 @@
               </div>
             </a>
             <a class="card" href="#">
-              <div class="ex-ph ex-ph--wide" aria-hidden="true"></div>
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/images/abstract_3-400.webp   400w,
+                    /assets/images/abstract_3-640.webp   640w,
+                    /assets/images/abstract_3-800.webp   800w,
+                    /assets/images/abstract_3-1044.webp 1044w
+                  "
+                  sizes="(min-width: 768px) 50vw, 92vw"
+                />
+                <img
+                  class="ex-ph ex-ph--wide"
+                  src="/assets/images/abstract_3-800.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div class="card__content">
                 <h3 class="card__title">Type that scales with the layout</h3>
                 <p>
@@ -849,7 +903,25 @@
           <!-- Three-up -->
           <div class="ex-work__row ex-work__row--3">
             <a class="card" href="#">
-              <div class="ex-ph" aria-hidden="true"></div>
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/images/abstract_4-400.webp   400w,
+                    /assets/images/abstract_4-640.webp   640w,
+                    /assets/images/abstract_4-800.webp   800w,
+                    /assets/images/abstract_4-1044.webp 1044w
+                  "
+                  sizes="(min-width: 1024px) 400px, (min-width: 640px) 46vw, 92vw"
+                />
+                <img
+                  class="ex-ph"
+                  src="/assets/images/abstract_4-800.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div class="card__content">
                 <h3 class="card__title">Tokens over hex codes</h3>
                 <p>
@@ -858,14 +930,50 @@
               </div>
             </a>
             <a class="card" href="#">
-              <div class="ex-ph" aria-hidden="true"></div>
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/images/abstract_5-400.webp   400w,
+                    /assets/images/abstract_5-640.webp   640w,
+                    /assets/images/abstract_5-800.webp   800w,
+                    /assets/images/abstract_5-1044.webp 1044w
+                  "
+                  sizes="(min-width: 1024px) 400px, (min-width: 640px) 46vw, 92vw"
+                />
+                <img
+                  class="ex-ph"
+                  src="/assets/images/abstract_5-800.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div class="card__content">
                 <h3 class="card__title">Components that compose</h3>
                 <p>Small parts snap together into pages without a single bespoke override.</p>
               </div>
             </a>
             <a class="card" href="#">
-              <div class="ex-ph" aria-hidden="true"></div>
+              <picture>
+                <source
+                  type="image/webp"
+                  srcset="
+                    /assets/images/abstract_6-400.webp   400w,
+                    /assets/images/abstract_6-640.webp   640w,
+                    /assets/images/abstract_6-800.webp   800w,
+                    /assets/images/abstract_6-1044.webp 1044w
+                  "
+                  sizes="(min-width: 1024px) 400px, (min-width: 640px) 46vw, 92vw"
+                />
+                <img
+                  class="ex-ph"
+                  src="/assets/images/abstract_6-800.jpg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
               <div class="card__content">
                 <h3 class="card__title">Accessible from the start</h3>
                 <p>Focus rings, contrast and reduced-motion are built in, not bolted on later.</p>

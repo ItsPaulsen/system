@@ -233,6 +233,24 @@
     border-width: 6px;
   }
 
+  /* Dark theme: the deep-violet --primary reads as a muddy fill on a dark
+   surface, so switch to the lifted --primary-foreground (same swap secondary
+   buttons/links use). The checkbox tick then flips dark so it reads as cut out
+   of the bright fill — matching the radio, whose transparent centre already
+   shows the dark surface as its "dot". */
+  :root[data-theme="dark"] .checkbox__input:checked {
+    background-color: var(--primary-foreground);
+    border-color: var(--primary-foreground);
+  }
+
+  :root[data-theme="dark"] .radio__input:checked {
+    border-color: var(--primary-foreground);
+  }
+
+  :root[data-theme="dark"] .checkbox__check {
+    color: var(--background-primary);
+  }
+
   /* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
    Declared last: higher specificity than the :disabled/:checked rules. */
   @media (hover: hover) {

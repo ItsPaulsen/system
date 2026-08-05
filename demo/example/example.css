@@ -805,7 +805,8 @@
 
 .ex-work__row {
   display: grid;
-  gap: var(--grid-gutter, 1rem);
+  row-gap: 2.5rem; /* 40 between stacked or wrapped cards */
+  column-gap: var(--grid-gutter, 1rem); /* tighter gutter when they're side by side */
 }
 
 /* Placeholder image blocks — muted fill mixed against the card surface (not
@@ -850,8 +851,9 @@
 .ex-featured__body {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 24px;
+  align-items: center;
+  padding: 24px 32px;
+  text-align: center;
 }
 
 .ex-featured__title {
@@ -881,7 +883,7 @@
   inset: 0;
 }
 
-/* sm ≥640 — the 3-up splits to two columns before it reaches three. */
+/* sm ≥640 — the 3-up splits to two columns (40 row-gap, gutter column-gap). */
 @media (min-width: 640px) {
   .ex-work__row--3 {
     grid-template-columns: repeat(2, 1fr);

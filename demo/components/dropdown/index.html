@@ -96,6 +96,51 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Filled</h3>
+          <p class="section-note">
+            The <code>--fill</code> skin on the trigger swaps the outline for a solid surface, same
+            as <a href="/demo/components/input/">Input</a> and
+            <a href="/demo/components/select/">Select</a>. Focus and open still light the border.
+          </p>
+          <div class="component-preview">
+            <div class="menu menu--fill">
+              <button
+                class="menu__trigger"
+                type="button"
+                popovertarget="menu-filled"
+                aria-haspopup="menu"
+                aria-expanded="false"
+              >
+                Options
+                <svg
+                  class="menu__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </button>
+              <div class="menu__list popover" id="menu-filled" popover role="menu">
+                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                  Edit<span class="menu__shortcut" aria-hidden="true">⌘E</span>
+                </button>
+                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                  Duplicate<span class="menu__shortcut" aria-hidden="true">⌘D</span>
+                </button>
+                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                  Rename
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">With icons</h3>
           <p class="section-note">
             A leading <code>menu__item-icon</code> gives each action a glyph.

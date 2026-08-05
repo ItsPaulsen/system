@@ -75,6 +75,47 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Filled</h3>
+          <p class="section-note">
+            The <code>--fill</code> skin swaps the outline for a solid surface, same as
+            <a href="/demo/components/input/">Input</a> and
+            <a href="/demo/components/navigation-menu/">Dropdown Menu</a>. Focus and open still
+            light the border.
+          </p>
+          <div class="component-preview">
+            <div id="select-filled" class="select select--fill" data-select style="width: 280px">
+              <button
+                class="select__trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+              >
+                <span class="select__value">Design</span>
+                <svg
+                  class="select__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </button>
+              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+              <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <li class="select__option" role="option" aria-selected="true">Design</li>
+                <li class="select__option" role="option">Engineering</li>
+                <li class="select__option" role="option">Product</li>
+                <li class="select__option" role="option">Marketing</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"select"</span> <span class="tok-prop">data-select</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__trigger"</span> <span class="tok-prop">aria-haspopup</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">aria-expanded</span>=<span class="tok-str">"false"</span><span class="tok-key">&gt;</span>

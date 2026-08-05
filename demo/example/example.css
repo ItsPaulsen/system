@@ -827,24 +827,12 @@
   }
 }
 
-/* Featured — stacks on mobile (image over body), splits 1:1 at md.
-   The whole card is clickable: the "Read more" link is stretched over the
-   card (::after), which also lets it drive the card's hover/active surface
-   via :has() — the same interactive feel as the plain a.card cards, without
-   nesting anchors. The opaque image still doesn't react. */
+/* Featured — stacks on mobile (image over body), splits 1:1 at md. Same recipe
+   as the "with button" card: the whole card is the <a> (so a.card:hover/active
+   drives the surface), and the Read more is a decorative .button span that only
+   reacts to a direct hover. The opaque image still doesn't react. */
 .ex-featured {
   display: grid;
-  position: relative;
-}
-
-@media (hover: hover) {
-  .ex-featured:has(.ex-featured__cta:hover) {
-    background: var(--background-secondary-hover);
-  }
-}
-
-.ex-featured:has(.ex-featured__cta:active) {
-  background: var(--background-secondary-active);
 }
 
 .ex-featured__img {
@@ -877,13 +865,6 @@
 
 .ex-featured__cta {
   margin-top: 1.5rem;
-}
-
-/* Stretch the CTA over the whole card so a click anywhere follows it. */
-.ex-featured__cta::after {
-  content: "";
-  position: absolute;
-  inset: 0;
 }
 
 /* sm ≥640 — the 3-up splits to two columns (40 row-gap, gutter column-gap). */

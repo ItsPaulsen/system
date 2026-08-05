@@ -979,13 +979,21 @@
   gap: 1.5rem; /* logo → language, 24 on every breakpoint */
 }
 
+/* Mirrors the header brand: 26px on mobile, stepping to title-large at lg so the
+   wordmark reads the same size top and bottom at every breakpoint. */
 .ex-footer__brand {
   display: inline-block;
   color: var(--ink-primary);
   text-decoration: none;
-  font-size: var(--font-title-large-size);
+  font-size: 26px;
   line-height: var(--font-title-large-lh);
-  font-weight: var(--font-title-large-weight);
+  font-weight: 700; /* matches the header brand (bold), not the title-large 500 */
+}
+
+@media (min-width: 1024px) {
+  .ex-footer__brand {
+    font-size: var(--font-title-large-size);
+  }
 }
 
 /* Language picker — the Select component, sized to the footer (fixed 240 like the
@@ -1075,14 +1083,6 @@
   font-size: var(--font-body-small-size);
 }
 
-/* Ease the accordion open/close on mobile — same recipe as .accordion.
-   (Desktop columns stay open, so this never animates there.) */
-@media (prefers-reduced-motion: no-preference) {
-  .ex-footer__col {
-    interpolate-size: allow-keywords;
-  }
-}
-
 .ex-footer__col::details-content {
   overflow: hidden;
 
@@ -1092,17 +1092,42 @@
      padding, so the ring has room while the links stay aligned with the head. */
   margin-inline: -8px;
   padding-inline: 8px;
-  block-size: 0;
-  opacity: 0;
-  transition:
-    content-visibility allow-discrete var(--motion-default),
-    opacity var(--motion-default),
-    block-size var(--motion-default);
 }
 
-.ex-footer__col[open]::details-content {
-  block-size: auto;
-  opacity: 1;
+/* Ease the accordion open/close on mobile — same recipe as .accordion. Gated on
+   interpolate-size (animating block-size to auto), which is Chromium-only today:
+   browsers without it (e.g. iOS Safari) fall back to the native instant toggle
+   instead of half-running the opacity fade against a snapped height — the jank
+   you'd otherwise see there. The md override below keeps it mobile-only. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    .ex-footer__col {
+      interpolate-size: allow-keywords;
+    }
+
+    .ex-footer__col::details-content {
+      block-size: 0;
+      opacity: 0;
+      transition:
+        content-visibility allow-discrete var(--motion-default),
+        opacity var(--motion-default),
+        block-size var(--motion-default);
+    }
+
+    .ex-footer__col[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+}
+
+/* Desktop columns are static, but syncFooterColumns() sets open=true from JS
+   after first paint — with the transition still live, columns that start closed
+   in the HTML would slide open on load. Kill the transition at md so they snap. */
+@media (min-width: 768px) {
+  .ex-footer__col::details-content {
+    transition: none;
+  }
 }
 
 .ex-footer__divider {

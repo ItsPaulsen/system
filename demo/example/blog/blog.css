@@ -20,7 +20,10 @@
 .blog {
   background: var(--background-primary);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  padding-block: 3rem 4rem;
+
+  /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
+     64 bottom gray gap before the footer (→ 128 at md). */
+  padding-block: 2rem 4rem;
 }
 
 .blog__inner {
@@ -32,6 +35,12 @@
 }
 
 /* ── Filter rail ─────────────────────────────────────────────────────────── */
+
+/* Hidden at/below 1024 for now — a sheet trigger will replace it there. Shown
+   beside the posts above 1024 (see the responsive block). */
+.blog-filter {
+  display: none;
+}
 
 .blog-filter__title {
   margin: 0 0 1rem; /* 16 down to the first divider */
@@ -140,6 +149,11 @@
 
 .blog-card__title {
   margin: 0;
+
+  /* Locked to title-small; don't drop to body-large below 640 like .card__title. */
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
 }
 
 .blog-card__tag {
@@ -157,13 +171,13 @@
   flex: none;
   width: 20px;
   height: 20px;
-  stroke-width: 1;
+  stroke-width: 1.25;
 }
 
 .blog__pagination {
   margin-top: 2.5rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
@@ -175,14 +189,38 @@
   }
 }
 
-/* lg ≥1024 — filter rail moves beside the posts; posts reach three columns. */
-@media (min-width: 1024px) {
+/* md ≥768 — deeper gray gap above the footer (front-page band parity). */
+@media (min-width: 768px) {
+  .blog {
+    padding-bottom: 8rem;
+  }
+}
+
+/* >1024 — the filter rail returns beside the posts (hidden at/below 1024, a
+   sheet trigger will replace it there), the top gap opens to 64, and the
+   pagination moves from centre to the right. */
+@media (min-width: 1025px) {
+  .blog {
+    padding-top: 4rem;
+  }
+
+  .blog-filter {
+    display: block;
+  }
+
   .blog__inner {
     grid-template-columns: 264px 1fr;
     align-items: start;
     gap: 4rem;
   }
 
+  .blog__pagination {
+    justify-content: flex-end;
+  }
+}
+
+/* >1280 — posts reach three columns. */
+@media (min-width: 1281px) {
   .blog__grid {
     grid-template-columns: repeat(3, 1fr);
   }

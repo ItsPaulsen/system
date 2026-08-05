@@ -1,0 +1,164 @@
+/* Blog listing — reuses the example shell (topbar, hero, footer) and the card,
+   radio, checkbox, and pagination components. This file owns the listing band:
+   a recessed 2xl surface holding a filter rail + a post-card grid + pagination.
+   The page opts into the 2xl width via data-width="2xl" on <html>. */
+
+/* Hero → band gap matches the space above the hero (the main's top padding):
+   80 on mobile, 128 at md. */
+.blog-page {
+  gap: 5rem;
+}
+
+@media (min-width: 768px) {
+  .blog-page {
+    gap: 8rem;
+  }
+}
+
+/* Recessed band with a 32px rounded top, sitting flush above the footer — same
+   treatment as the example card band. */
+.blog {
+  background: var(--background-primary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding-block: 3rem 4rem;
+}
+
+.blog__inner {
+  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+  margin-inline: auto;
+  padding-inline: var(--grid-margin, 1rem);
+  display: grid;
+  gap: 2.5rem;
+}
+
+/* ── Filter rail ─────────────────────────────────────────────────────────── */
+
+.blog-filter__title {
+  margin: 0 0 1rem; /* 16 down to the first divider */
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+  color: var(--ink-primary);
+}
+
+/* Collapsible groups (native <details>) with a hairline above and a chevron
+   that flips when open. Interactive at every width, unlike the footer columns. */
+.blog-filter__group {
+  border-top: 1px solid var(--fill-tertiary);
+}
+
+.blog-filter__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-primary);
+  font-size: var(--font-body-small-emphasized-size);
+  line-height: var(--font-body-small-emphasized-lh);
+  font-weight: var(--font-body-small-emphasized-weight);
+}
+
+.blog-filter__head::-webkit-details-marker {
+  display: none;
+}
+
+.blog-filter__chevron {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--ink-tertiary);
+  transition: rotate var(--motion-default);
+}
+
+.blog-filter__group[open] .blog-filter__chevron {
+  rotate: 180deg;
+}
+
+.blog-filter__body {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+/* No block-size/overflow-hidden ease here: it would clip the checkbox/radio
+   focus rings at the rail's edge. The chevron rotation is the open/close cue. */
+
+/* ── Post grid ───────────────────────────────────────────────────────────── */
+
+.blog__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gutter, 1rem);
+}
+
+/* Cards stack the image, meta, title, and a category tag pinned to the bottom
+   so tags line up across a row regardless of title length. */
+.blog-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.blog-card__date {
+  color: var(--ink-secondary);
+  font-size: var(--font-caption-medium-size);
+  line-height: var(--font-caption-medium-lh);
+}
+
+.blog-card__title {
+  margin: 0;
+}
+
+.blog-card__tag {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-secondary);
+  font-size: var(--font-body-small-size);
+}
+
+.blog-card__tag svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+
+.blog__pagination {
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+/* sm ≥640 — posts go two-up. */
+@media (min-width: 640px) {
+  .blog__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* lg ≥1024 — filter rail moves beside the posts; posts reach three columns. */
+@media (min-width: 1024px) {
+  .blog__inner {
+    grid-template-columns: 264px 1fr;
+    align-items: start;
+    gap: 4rem;
+  }
+
+  .blog__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

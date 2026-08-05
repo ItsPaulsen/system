@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en" data-width="2xl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Blog — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <link rel="stylesheet" href="/demo/example/blog/blog.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <header class="ex-topbar">
+      <a class="ex-topbar__brand" href="/demo/example/">Demo</a>
+      <nav class="nav-menu ex-topbar__nav" aria-label="Primary">
+        <ul class="nav-menu__list">
+          <li><a class="nav-menu__link" href="/demo/example/blog/" aria-current="page">Blog</a></li>
+          <li><a class="nav-menu__link" href="#">Article</a></li>
+          <li><a class="nav-menu__link" href="#">Settings</a></li>
+        </ul>
+      </nav>
+      <button
+        class="button button--secondary button--with-end-icon ex-topbar__menu"
+        type="button"
+        data-dialog-open="ex-menu-sheet"
+        aria-haspopup="dialog"
+      >
+        Menu
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 9h16" />
+          <path d="M4 15h16" />
+        </svg>
+      </button>
+    </header>
+
+    <main class="ex blog-page" id="ex-main" tabindex="-1">
+      <header class="ex-hero">
+        <h1 class="ex-hero__title">Blog</h1>
+        <p class="ex-hero__intro">
+          Notes on the system: releases, the patterns behind the components, and the thinking that
+          keeps light and dark in step.
+        </p>
+      </header>
+
+      <!-- Listing band: filter rail + post grid + pagination, on the recessed
+           2xl surface. The page opts into the 2xl width via data-width on <html>. -->
+      <section class="blog" aria-label="Posts">
+        <div class="blog__inner">
+          <!-- Filter rail — collapsible Sort / Category groups. -->
+          <aside class="blog-filter" aria-label="Filter and sort">
+            <h2 class="blog-filter__title">Filter and sort</h2>
+
+            <details class="blog-filter__group" open>
+              <summary class="blog-filter__head">
+                Sort by
+                <svg
+                  class="blog-filter__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </summary>
+              <div class="blog-filter__body">
+                <label class="radio">
+                  <input type="radio" name="blog-sort" class="radio__input" checked />
+                  <span class="radio__label">Newest</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="blog-sort" class="radio__input" />
+                  <span class="radio__label">Popular</span>
+                </label>
+              </div>
+            </details>
+
+            <details class="blog-filter__group" open>
+              <summary class="blog-filter__head">
+                Category
+                <svg
+                  class="blog-filter__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </summary>
+              <div class="blog-filter__body">
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Announcement</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Event</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Strategy</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Technology</span>
+                </label>
+              </div>
+            </details>
+          </aside>
+
+          <!-- Posts -->
+          <div class="blog__main">
+            <div class="blog__grid">
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">
+                    Design tokens, from anchor to component
+                  </h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7" />
+                      <path
+                        d="M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3"
+                      />
+                      <path d="M9.7 17l4.6 0" />
+                    </svg>
+                    Strategy
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">
+                    Theming: light and dark from one swap
+                  </h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 6a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -12"
+                      />
+                      <path d="M9 9h6v6h-6l0 -6" />
+                      <path d="M3 10h2M3 14h2M10 3v2M14 3v2M21 10h-2M21 14h-2M14 21v-2M10 21v-2" />
+                    </svg>
+                    Technology
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">Density as a single knob</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 6a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -12"
+                      />
+                      <path d="M9 9h6v6h-6l0 -6" />
+                      <path d="M3 10h2M3 14h2M10 3v2M14 3v2M21 10h-2M21 14h-2M14 21v-2M10 21v-2" />
+                    </svg>
+                    Technology
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">What shipped in the July release</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 8a3 3 0 0 1 0 6" />
+                      <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" />
+                      <path
+                        d="M12 8l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8"
+                      />
+                    </svg>
+                    Announcement
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">Meet the team behind the system</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M15 5l0 2M15 11l0 2M15 17l0 2" />
+                      <path
+                        d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2"
+                      />
+                    </svg>
+                    Event
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">Writing components that compose</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7" />
+                      <path
+                        d="M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3"
+                      />
+                      <path d="M9.7 17l4.6 0" />
+                    </svg>
+                    Strategy
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">Accessible by default, not by audit</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12h1m8 -9v1m8 8h1m-15.4 -6.4l.7 .7m12.1 -.7l-.7 .7" />
+                      <path
+                        d="M9 16a5 5 0 1 1 6 0a3.5 3.5 0 0 0 -1 3a2 2 0 0 1 -4 0a3.5 3.5 0 0 0 -1 -3"
+                      />
+                      <path d="M9.7 17l4.6 0" />
+                    </svg>
+                    Strategy
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">Our first community design day</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M15 5l0 2M15 11l0 2M15 17l0 2" />
+                      <path
+                        d="M5 5h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-3a2 2 0 0 0 0 -4v-3a2 2 0 0 1 2 -2"
+                      />
+                    </svg>
+                    Event
+                  </span>
+                </div>
+              </a>
+
+              <a class="card blog-card" href="#">
+                <div class="ex-ph blog-card__img" aria-hidden="true"></div>
+                <div class="card__content blog-card__content">
+                  <span class="blog-card__date">23 Jul 2026</span>
+                  <h3 class="card__title blog-card__title">The new 2xl grid tier</h3>
+                  <span class="blog-card__tag">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 8a3 3 0 0 1 0 6" />
+                      <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" />
+                      <path
+                        d="M12 8l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8"
+                      />
+                    </svg>
+                    Announcement
+                  </span>
+                </div>
+              </a>
+            </div>
+
+            <nav
+              class="pagination blog__pagination"
+              data-pagination
+              data-total="6"
+              data-page="1"
+              aria-label="Blog pages"
+            ></nav>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="ex-footer">
+      <div class="ex-footer__inner">
+        <div class="ex-footer__top">
+          <div class="ex-footer__brand-block">
+            <a class="ex-footer__brand" href="/demo/example/">Demo</a>
+            <div class="select select--fill ex-footer__lang" data-select>
+              <button
+                class="select__trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-label="Language"
+              >
+                <span class="select__value">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/gb.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  English
+                </span>
+                <svg
+                  class="select__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </button>
+              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+              <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <li class="select__option" role="option" aria-selected="true">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/gb.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  English
+                </li>
+                <li class="select__option" role="option">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/no.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  Norsk
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <nav class="ex-footer__nav" aria-label="Footer">
+            <details class="ex-footer__col" open>
+              <summary class="ex-footer__col-head">
+                Foundations
+                <svg
+                  class="ex-footer__col-chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </summary>
+              <ul class="ex-footer__col-list">
+                <li><a href="/demo/colors/">Colours</a></li>
+                <li><a href="/demo/typography/">Typography</a></li>
+                <li><a href="/demo/radii/">Radii</a></li>
+              </ul>
+            </details>
+
+            <details class="ex-footer__col">
+              <summary class="ex-footer__col-head">
+                Components
+                <svg
+                  class="ex-footer__col-chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </summary>
+              <ul class="ex-footer__col-list">
+                <li><a href="/demo/components/button/">Buttons</a></li>
+                <li><a href="/demo/components/card/">Cards</a></li>
+                <li><a href="/demo/components/input/">Inputs</a></li>
+                <li><a href="/demo/components/dialog/">Dialogs</a></li>
+              </ul>
+            </details>
+
+            <details class="ex-footer__col">
+              <summary class="ex-footer__col-head">
+                Resources
+                <svg
+                  class="ex-footer__col-chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </summary>
+              <ul class="ex-footer__col-list">
+                <li><a href="#">Getting started</a></li>
+                <li><a href="#">Tokens</a></li>
+                <li><a href="#">Theming</a></li>
+                <li><a href="#">Accessibility</a></li>
+                <li><a href="#">Changelog</a></li>
+              </ul>
+            </details>
+          </nav>
+        </div>
+
+        <hr class="ex-footer__divider" />
+
+        <div class="ex-footer__bottom">
+          <p class="ex-footer__copy">© 2026 Demo</p>
+          <div class="ex-footer__legal">
+            <a href="#">Privacy</a>
+            <span class="ex-footer__dot" aria-hidden="true">·</span>
+            <a href="#">Terms</a>
+          </div>
+          <ul class="ex-footer__social">
+            <li>
+              <a href="#" aria-label="X">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 4l11.733 16h4.267l-11.733 -16l-4.267 0" />
+                  <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Instagram">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"
+                  />
+                  <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  <path d="M16.5 7.5v.01" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Discord">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+                  <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+                  <path
+                    d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3"
+                  />
+                  <path d="M7 16.5c3.5 1 6.5 1 10 0" />
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-label="Facebook">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"
+                  />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <dialog class="sheet ex-menu" id="ex-menu-sheet" aria-label="Menu">
+      <div class="sheet__inner">
+        <div class="ex-menu__head">
+          <a class="ex-topbar__brand ex-menu__brand" href="/demo/example/">Demo</a>
+          <button
+            class="button button--secondary button--with-end-icon ex-menu__close"
+            type="button"
+            data-dialog-close
+          >
+            Lukk
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6l-12 12" />
+              <path d="M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="ex-menu__scroll">
+          <nav class="ex-menu__nav" aria-label="Pages">
+            <a href="/demo/example/blog/" aria-current="page">Blog</a>
+            <a href="#">Article</a>
+            <a href="#">Settings</a>
+          </nav>
+
+          <hr class="ex-menu__divider" />
+
+          <div class="ex-menu__links">
+            <a href="#">Blog</a>
+            <a href="#">Blog</a>
+            <a href="#">Article</a>
+            <a href="#">Article</a>
+            <a href="#">Settings</a>
+            <a href="#">Settings</a>
+          </div>
+        </div>
+
+        <div class="ex-menu__foot">
+          <div class="tabs tabs--pill ex-menu__theme" role="tablist" aria-label="Theme">
+            <input
+              type="radio"
+              name="ex-theme-menu"
+              id="ex-theme-menu-light"
+              class="tabs__radio"
+              data-theme-opt="light"
+              checked
+            />
+            <label class="tabs__tab" for="ex-theme-menu-light">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                <path
+                  d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+                />
+              </svg>
+              <span class="tabs__label">Lyst tema</span>
+            </label>
+            <input
+              type="radio"
+              name="ex-theme-menu"
+              id="ex-theme-menu-dark"
+              class="tabs__radio"
+              data-theme-opt="dark"
+            />
+            <label class="tabs__tab" for="ex-theme-menu-dark">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+                />
+              </svg>
+              <span class="tabs__label">Mørkt tema</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <div class="grid-overlay__inner">
+        <span class="grid-overlay__margin grid-overlay__margin--left">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <span class="grid-overlay__margin grid-overlay__margin--right">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <div class="grid-overlay__cols" data-grid-cols></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var radios = document.querySelectorAll(".tabs__radio[data-theme-opt]");
+        function apply(t) {
+          var root = document.documentElement;
+          root.classList.add("no-transitions");
+          root.dataset.theme = t;
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              root.classList.remove("no-transitions");
+            });
+          });
+          try {
+            localStorage.setItem("theme", t);
+          } catch (e) {}
+          radios.forEach(function (r) {
+            r.checked = r.dataset.themeOpt === t;
+          });
+          document.querySelectorAll(".tabs__tab[data-theme-opt]").forEach(function (tab) {
+            tab.setAttribute("aria-selected", tab.dataset.themeOpt === t ? "true" : "false");
+          });
+        }
+        radios.forEach(function (r) {
+          r.addEventListener("change", function () {
+            if (r.checked) apply(r.dataset.themeOpt);
+          });
+        });
+        apply(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+      })();
+    </script>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

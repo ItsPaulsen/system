@@ -811,8 +811,9 @@
 
 /* Placeholder image blocks — muted fill mixed against the card surface (not
    transparent) so it stays opaque like a real <img> and doesn't pick up the
-   card's hover/active background. Aspect ratios mirror the Sketch masks:
-   16/9 default (3-up), wider for the 2-up. */
+   card's hover/active background. 16/9 is the default (3-up, and the 2-up while
+   it's also two-per-row below lg, so the states match); the 2-up widens to 21/9
+   once it's the only wide row at lg. */
 .ex-ph {
   display: block;
   width: 100%;
@@ -820,8 +821,10 @@
   background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
 }
 
-.ex-ph--wide {
-  aspect-ratio: 12 / 5;
+@media (min-width: 1024px) {
+  .ex-ph--wide {
+    aspect-ratio: 21 / 9;
+  }
 }
 
 /* Featured — stacks on mobile (image over body), splits 1:1 at md.

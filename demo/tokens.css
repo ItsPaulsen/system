@@ -492,4 +492,14 @@
     --ds-radius-root: 0.3125rem;
     --ds-font-size-addition: 0.125rem;
   }
+
+  /* ── Container width tier ───────────────────────────────────────────────────
+   The default content cap is xl (--container-max, 1280). A page opts into the
+   wider 2xl tier with `data-width="2xl"` on <html> (like data-theme). Anything
+   reading --container-max — page content, the card grid, the footer — follows,
+   so their edges stay aligned. Only the cap changes; columns/gutters/margins,
+   radii, and type are identical across tiers. */
+  [data-width="2xl"] {
+    --container-max: var(--breakpoint-2xl);
+  }
 }

@@ -23,7 +23,10 @@
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  padding-block: 5rem 3rem;
+
+  /* No bottom padding: the card band is the last child, so its gray runs flush
+     into the (gray) body behind the footer — no white gap before the footer. */
+  padding-block: 5rem 0;
   background-color: var(--background-secondary);
 
   /* Dots, with a top wash of the surface colour fading them in from the top so
@@ -45,7 +48,7 @@
 @media (min-width: 768px) {
   .ex {
     gap: 6rem; /* 96 (hero → slider) */
-    padding-block: 8rem 6rem; /* 128 top, 96 bottom */
+    padding-block: 8rem 0; /* 128 top, 0 bottom (footer follows the gray) */
   }
 }
 
@@ -754,5 +757,437 @@
 
   .ex-menu__head {
     height: 80px;
+  }
+}
+
+/* ── Card grid ("From the system") ────────────────────────────────────────
+   The shared .card component in three rhythms. A full-bleed recessed band
+   holds a centred column capped at the real --container-max (not the 1200
+   the Sketch guide stops at); horizontal gutters use --grid-gutter, row gaps
+   are a fixed 40. Featured is a bespoke split; the six cards are plain .card. */
+
+.ex-work {
+  background: var(--background-primary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+  /* Bottom padding is the gray gap between the last cards and the footer. */
+  padding-block: 3rem 4rem;
+}
+
+.ex-work__inner {
+  /* Same recipe as .wrap and the grid overlay: --container-max is the CONTENT
+     width (1280); the margins sit OUTSIDE it, so the cap is content + 2·margin
+     and the padding is one margin each side. Columns land on exactly 1280. */
+  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+  margin-inline: auto;
+  padding-inline: var(--grid-margin, 1rem);
+  display: grid;
+  gap: 2.5rem; /* 40 between rows */
+}
+
+.ex-work__row {
+  display: grid;
+  gap: var(--grid-gutter, 1rem);
+}
+
+/* Placeholder image blocks — muted fill mixed against the card surface (not
+   transparent) so it stays opaque like a real <img> and doesn't pick up the
+   card's hover/active background. Aspect ratios mirror the Sketch masks:
+   16/9 default (3-up), wider for the 2-up. */
+.ex-ph {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
+}
+
+.ex-ph--wide {
+  aspect-ratio: 12 / 5;
+}
+
+/* Featured — stacks on mobile (image over body), splits 1:1 at md.
+   The whole card is clickable: the "Read more" link is stretched over the
+   card (::after), which also lets it drive the card's hover/active surface
+   via :has() — the same interactive feel as the plain a.card cards, without
+   nesting anchors. The opaque image still doesn't react. */
+.ex-featured {
+  display: grid;
+  position: relative;
+}
+
+@media (hover: hover) {
+  .ex-featured:has(.ex-featured__cta:hover) {
+    background: var(--background-secondary-hover);
+  }
+}
+
+.ex-featured:has(.ex-featured__cta:active) {
+  background: var(--background-secondary-active);
+}
+
+.ex-featured__img {
+  aspect-ratio: 3 / 2;
+}
+
+.ex-featured__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+}
+
+.ex-featured__title {
+  margin: 0;
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+  color: var(--ink-primary);
+}
+
+.ex-featured__text {
+  margin: 0.75rem 0 0;
+  color: var(--ink-secondary);
+  font-size: var(--font-body-medium-size);
+  line-height: var(--font-body-medium-lh);
+  font-weight: var(--font-body-medium-weight);
+}
+
+.ex-featured__cta {
+  margin-top: 1.5rem;
+}
+
+/* Stretch the CTA over the whole card so a click anywhere follows it. */
+.ex-featured__cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* sm ≥640 — the 3-up splits to two columns before it reaches three. */
+@media (min-width: 640px) {
+  .ex-work__row--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* md ≥768 — 2-up and featured take their side-by-side form. */
+@media (min-width: 768px) {
+  .ex-work {
+    padding-block: 5rem 8rem; /* 128 gray gap above the footer */
+  }
+
+  .ex-work__row--2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ex-featured {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ex-featured__img {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  .ex-featured__body {
+    justify-content: center;
+    align-items: center;
+    padding: 48px 64px;
+    text-align: center;
+  }
+
+  .ex-featured__title {
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
+  }
+}
+
+/* lg ≥1024 — the 3-up reaches full three columns. */
+@media (min-width: 1024px) {
+  .ex-work__row--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────────
+   Brand + language on the left, three link columns on the right. On mobile the
+   columns are <details> accordions (initFooterAccordion opens the first, closes
+   the rest); at md they're forced open and static (chevron hidden, summary inert)
+   and the bottom bar spreads copyright / legal / socials across the width. */
+
+/* White panel with a 32px rounded top, sitting on the (gray) body so the gray
+   shows through the corner notches — the card band above runs flush into it. */
+.ex-footer {
+  position: relative;
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.ex-footer__inner {
+  /* Same content column as the card grid (content = --container-max, margins
+     outside), so the footer lines up with the rest of the page. */
+  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+  margin-inline: auto;
+  padding: 3rem var(--grid-margin) 2rem;
+}
+
+.ex-footer__top {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.ex-footer__brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem; /* logo → language, 24 on every breakpoint */
+}
+
+.ex-footer__brand {
+  display: inline-block;
+  color: var(--ink-primary);
+  text-decoration: none;
+  font-size: var(--font-title-large-size);
+  line-height: var(--font-title-large-lh);
+  font-weight: var(--font-title-large-weight);
+}
+
+.ex-footer__lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 240px;
+  max-width: 100%;
+  height: 48px;
+  padding-inline: 16px;
+  border: 1px solid var(--fill-tertiary);
+  border-radius: var(--radius-sm);
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+  font: inherit;
+  font-size: var(--font-body-small-size);
+  cursor: pointer;
+}
+
+.ex-footer__lang-flag {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-full);
+}
+
+.ex-footer__lang-chevron {
+  width: 20px;
+  height: 20px;
+  margin-inline-start: auto;
+  color: var(--ink-tertiary);
+}
+
+/* Nav columns — accordions on mobile: 56px header rows, 8px apart, no dividers. */
+.ex-footer__nav {
+  display: grid;
+  gap: 8px;
+}
+
+.ex-footer__col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 56px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink-primary);
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+}
+
+.ex-footer__col-head::-webkit-details-marker {
+  display: none;
+}
+
+.ex-footer__col-chevron {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--ink-tertiary);
+  transition: rotate var(--motion-default);
+}
+
+.ex-footer__col[open] .ex-footer__col-chevron {
+  rotate: 180deg;
+}
+
+.ex-footer__col-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+}
+
+.ex-footer__col-list a {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--ink-primary);
+  text-decoration: none;
+  font-size: var(--font-body-small-size);
+}
+
+.ex-footer__divider {
+  height: 1px;
+  margin: 4rem 0 2rem;
+  border: 0;
+  background: var(--fill-tertiary);
+}
+
+.ex-footer__bottom {
+  display: grid;
+  gap: 1.5rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.ex-footer__copy {
+  margin: 0;
+  color: var(--ink-secondary);
+  font-size: var(--font-caption-medium-size);
+}
+
+.ex-footer__legal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ex-footer__legal a {
+  color: var(--ink-primary);
+  text-decoration: underline;
+  font-size: var(--font-caption-medium-size);
+}
+
+.ex-footer__dot {
+  color: var(--ink-tertiary);
+}
+
+.ex-footer__social {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0;
+  margin-inline-end: -6px; /* offset the target padding so the last icon aligns to the edge */
+  padding: 0;
+  list-style: none;
+}
+
+/* 32×32 tap/focus target (8px radius shows on focus-visible); icon centred. */
+.ex-footer__social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-secondary);
+}
+
+.ex-footer__social svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.5;
+}
+
+@media (hover: hover) {
+  /* Links: primary already; underline appears on hover. Legal (Privacy/Terms)
+     stays underlined with no hover change. Socials brighten to primary. */
+  .ex-footer__col-list a:hover {
+    text-decoration: underline;
+  }
+
+  .ex-footer__social a:hover {
+    color: var(--ink-primary);
+  }
+}
+
+/* md ≥768 — brand-block left, columns right; accordions become static columns. */
+@media (min-width: 768px) {
+  .ex-footer__inner {
+    padding: 3rem var(--grid-margin) 3rem;
+  }
+
+  /* Two columns: the brand/language block (its own width) and the nav area. */
+  .ex-footer__top {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: start;
+    gap: 4rem;
+  }
+
+  /* 768–1023: link groups sit in two columns beside the brand. */
+  .ex-footer__nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .ex-footer__col-head {
+    min-height: 0;
+    padding-block: 0 16px;
+    cursor: default;
+    pointer-events: none;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-weight);
+  }
+
+  .ex-footer__col-chevron {
+    display: none;
+  }
+
+  .ex-footer__col-list {
+    gap: 12px;
+  }
+
+  .ex-footer__col-list a {
+    display: block;
+    min-height: 0;
+  }
+
+  .ex-footer__bottom {
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    text-align: start;
+  }
+
+  .ex-footer__copy {
+    justify-self: start;
+  }
+
+  .ex-footer__social {
+    justify-self: end;
+  }
+}
+
+/* lg ≥1024 — fixed 5-column grid. Logo/lang is column 1; the link groups are
+   pinned to the right (span from the end), so 3 groups leave one empty column
+   between. Add a group → bump the span to fill it; remove one → two empties. */
+@media (min-width: 1024px) {
+  .ex-footer__top {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+
+  .ex-footer__brand-block {
+    grid-column: 1;
+  }
+
+  .ex-footer__nav {
+    grid-column: span 3 / -1;
+    grid-template-columns: subgrid;
   }
 }

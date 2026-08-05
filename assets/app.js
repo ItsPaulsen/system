@@ -726,11 +726,38 @@ function buildGridOverlay() {
   });
 }
 
+// Show/hide the grid overlay and keep any [data-grid-toggle] control in sync.
+// Pass a boolean to set explicitly, or omit to flip the current state.
+function setGridOverlay(show) {
+  const overlay = document.querySelector("[data-grid-overlay]");
+  if (!overlay) return;
+  const next = typeof show === "boolean" ? show : overlay.hidden;
+  overlay.hidden = !next;
+  overlay.setAttribute("aria-hidden", String(!next));
+  document.querySelectorAll("[data-grid-toggle]").forEach((btn) => {
+    btn.setAttribute("aria-checked", String(next));
+  });
+}
+
+// Footer link columns are <details>. On mobile they behave as accordions with
+// the first open; at md they're forced open (CSS hides the chevron and makes the
+// summary inert) so they read as static columns. Driving `open` from JS keeps it
+// robust across engines without relying on the ::details-content pseudo.
+function syncFooterColumns() {
+  const cols = document.querySelectorAll(".ex-footer__col");
+  if (!cols.length) return;
+  const wide = window.matchMedia("(min-width: 768px)").matches;
+  cols.forEach((col, i) => {
+    col.open = wide ? true : i === 0;
+  });
+}
+
 function refreshResponsive() {
   hydrateType();
   // Layout-page grid tokens (--grid-columns etc.) change with viewport, so re-hydrate.
   hydratePreviews();
   buildGridOverlay();
+  syncFooterColumns();
   updateBreakpoint();
 }
 
@@ -1325,6 +1352,19 @@ function init() {
     frame = requestAnimationFrame(refreshResponsive);
   });
 
+  // "g" toggles the grid overlay on any page that includes it. Ignore the key
+  // while typing in a field or when a modifier is held, so shortcuts and text
+  // entry aren't hijacked.
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "g" && event.key !== "G") return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const el = event.target;
+    if (el.closest("input, textarea, select, [contenteditable]")) return;
+    if (!document.querySelector("[data-grid-overlay]")) return;
+    event.preventDefault();
+    setGridOverlay();
+  });
+
   // Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
   // standard modal behaviour (matches Radix/shadcn) — one scroll context, no
   // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
@@ -1361,11 +1401,7 @@ function init() {
     }
     const gridBtn = event.target.closest("[data-grid-toggle]");
     if (gridBtn) {
-      const overlay = document.querySelector("[data-grid-overlay]");
-      if (!overlay) return;
-      const show = overlay.hidden;
-      overlay.hidden = !show;
-      gridBtn.setAttribute("aria-checked", String(show));
+      setGridOverlay();
       return;
     }
     const cssBtn = event.target.closest("[data-copy-css]");

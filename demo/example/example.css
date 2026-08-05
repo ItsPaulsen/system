@@ -835,6 +835,10 @@
   background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
 }
 
+.ex-ph--3-2 {
+  aspect-ratio: 3 / 2;
+}
+
 @media (min-width: 1024px) {
   .ex-ph--wide {
     aspect-ratio: 21 / 9;
@@ -847,10 +851,6 @@
    reacts to a direct hover. The opaque image still doesn't react. */
 .ex-featured {
   display: grid;
-}
-
-.ex-featured__img {
-  aspect-ratio: 3 / 2;
 }
 
 .ex-featured__body {

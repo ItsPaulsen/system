@@ -748,7 +748,18 @@ function syncFooterColumns() {
   if (!cols.length) return;
   const wide = window.matchMedia("(min-width: 768px)").matches;
   cols.forEach((col, i) => {
+    // Mobile: a shared name makes them an exclusive accordion (one open at a
+    // time), natively. Desktop drops the name so every column can stay open.
+    if (wide) col.removeAttribute("name");
+    else col.setAttribute("name", "ex-footer-nav");
     col.open = wide ? true : i === 0;
+    // Desktop columns are static labels, not controls — drop the summary from
+    // the tab order (it's already pointer-events:none in CSS).
+    const head = col.querySelector("summary");
+    if (head) {
+      if (wide) head.setAttribute("tabindex", "-1");
+      else head.removeAttribute("tabindex");
+    }
   });
 }
 

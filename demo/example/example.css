@@ -387,6 +387,12 @@
   box-shadow: var(--ex-shadow);
 }
 
+/* The marquee is a fixed desktop element, so pin the card padding to the ≥640
+   (desktop) values — otherwise the component's 640px breakpoint retightens it. */
+.ex-illus .card__illustration {
+  padding: 24px 24px 0;
+}
+
 .ex-illus .card__illustration > * {
   margin-inline: auto;
   width: 176px;
@@ -401,7 +407,7 @@
 /* Centered composition: illustration, title and CTA all centre-aligned.
    24px below the CTA to the card bottom. */
 .ex-illus .card__content {
-  padding-bottom: 24px;
+  padding: 24px;
   text-align: center;
 }
 
@@ -571,6 +577,18 @@
 .ex-topbar__nav {
   justify-self: center;
   display: none;
+}
+
+/* The three header nav links step down to body-small at ≤1024, back to
+   body-medium above. Scoped to the example topbar, not the shared component. */
+.ex-topbar__nav .nav-menu__link {
+  font-size: var(--font-body-small-size);
+}
+
+@media (min-width: 1024px) {
+  .ex-topbar__nav .nav-menu__link {
+    font-size: var(--font-body-medium-size);
+  }
 }
 
 .ex-topbar__menu {
@@ -933,6 +951,11 @@
   padding: 3rem var(--grid-margin) 2rem;
 }
 
+/* Every footer link/summary shares the 8px focus-ring rounding by default. */
+.ex-footer :where(a, summary) {
+  border-radius: var(--radius-sm);
+}
+
 .ex-footer__top {
   display: grid;
   gap: 2.5rem;
@@ -1035,6 +1058,29 @@
   color: var(--ink-primary);
   text-decoration: none;
   font-size: var(--font-body-small-size);
+}
+
+/* Ease the accordion open/close on mobile — same recipe as .accordion.
+   (Desktop columns stay open, so this never animates there.) */
+@media (prefers-reduced-motion: no-preference) {
+  .ex-footer__col {
+    interpolate-size: allow-keywords;
+  }
+}
+
+.ex-footer__col::details-content {
+  overflow: hidden;
+  block-size: 0;
+  opacity: 0;
+  transition:
+    content-visibility allow-discrete var(--motion-default),
+    opacity var(--motion-default),
+    block-size var(--motion-default);
+}
+
+.ex-footer__col[open]::details-content {
+  block-size: auto;
+  opacity: 1;
 }
 
 .ex-footer__divider {

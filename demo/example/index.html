@@ -885,28 +885,61 @@
         <div class="ex-footer__top">
           <div class="ex-footer__brand-block">
             <a class="ex-footer__brand" href="#">Demo</a>
-            <button class="ex-footer__lang" type="button">
-              <img
-                class="ex-footer__lang-flag"
-                src="/assets/flags/gb.svg"
-                alt=""
-                width="20"
-                height="20"
-              />
-              English
-              <svg
-                class="ex-footer__lang-chevron"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
+            <div class="select select--fill ex-footer__lang" data-select>
+              <button
+                class="select__trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-label="Language"
               >
-                <path d="M6 9l6 6l6 -6" />
-              </svg>
-            </button>
+                <span class="select__value">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/gb.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  English
+                </span>
+                <svg
+                  class="select__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6l6 -6" />
+                </svg>
+              </button>
+              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+              <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <li class="select__option" role="option" aria-selected="true">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/gb.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  English
+                </li>
+                <li class="select__option" role="option">
+                  <img
+                    class="ex-lang-flag"
+                    src="/assets/flags/no.svg"
+                    alt=""
+                    width="20"
+                    height="20"
+                  />
+                  Norsk
+                </li>
+              </ul>
+            </div>
           </div>
 
           <nav class="ex-footer__nav" aria-label="Footer">

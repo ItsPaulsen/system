@@ -630,6 +630,15 @@
     cursor: pointer;
   }
 
+  /* Filled skin — solid surface instead of the outline, mirroring
+   .input__container--fill. :where() keeps this at the same low specificity the
+   input fill has (0,1,0) so the focus/open border rule below always wins on open,
+   just like :focus-within beats --fill on the input. */
+  :where(.select--fill) .select__trigger {
+    border-color: transparent;
+    background: var(--background-primary);
+  }
+
   /* Active border on keyboard focus and while open (focus moves to the list on
    open, so key off aria-expanded to keep the border lit) — mirrors the input. */
   .select__trigger:focus-visible,
@@ -720,9 +729,7 @@
     }
   }
 
-  .select__option[aria-selected="true"] {
-    font-weight: 500;
-  }
+  /* Selected row is marked by the check mark + surface alone — no weight bump. */
 
   /* Tabler check on the selected row, tinted to match the row's text. */
   .select__option[aria-selected="true"]::after {
@@ -836,6 +843,13 @@
     font: inherit;
     font-size: var(--font-body-small-size);
     cursor: pointer;
+  }
+
+  /* Filled skin — same logic as the input and select fills. :where() keeps it at
+   0,1,0 so the focus/open border rule below always wins on open. */
+  :where(.menu--fill) .menu__trigger {
+    border-color: transparent;
+    background: var(--background-primary);
   }
 
   .menu__trigger:focus-visible,

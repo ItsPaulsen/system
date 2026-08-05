@@ -942,7 +942,12 @@ function initSelects() {
     };
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
-      if (valueEl) valueEl.textContent = options[i].textContent.trim();
+      // Rich options (e.g. a flag + label) mirror their markup into the trigger;
+      // text-only options stay plain text.
+      if (valueEl) {
+        if (options[i].querySelector("*")) valueEl.innerHTML = options[i].innerHTML;
+        else valueEl.textContent = options[i].textContent.trim();
+      }
       activeIndex = i;
       close();
     };

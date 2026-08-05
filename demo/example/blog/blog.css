@@ -84,8 +84,31 @@
   padding-bottom: 20px;
 }
 
-/* No block-size/overflow-hidden ease here: it would clip the checkbox/radio
-   focus rings at the rail's edge. The chevron rotation is the open/close cue. */
+/* Same open/close ease as the accordion + footer, but with `overflow: clip` +
+   `overflow-clip-margin` instead of `overflow: hidden` — the height animation
+   still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
+   through the 6px margin instead of being cut at the rail edge. */
+@media (prefers-reduced-motion: no-preference) {
+  .blog-filter__group {
+    interpolate-size: allow-keywords;
+  }
+}
+
+.blog-filter__group::details-content {
+  overflow: clip;
+  overflow-clip-margin: 6px;
+  block-size: 0;
+  opacity: 0;
+  transition:
+    content-visibility allow-discrete var(--motion-default),
+    opacity var(--motion-default),
+    block-size var(--motion-default);
+}
+
+.blog-filter__group[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
 
 /* ── Post grid ───────────────────────────────────────────────────────────── */
 

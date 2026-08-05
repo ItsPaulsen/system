@@ -42,6 +42,30 @@
   display: none;
 }
 
+/* Filter toggle bar — shown ≤1024 where the rail is hidden (hidden again ≥1024
+   in the responsive block). The button opens the left sheet. */
+.blog__bar {
+  margin-bottom: 1.5rem;
+}
+
+/* Card-surface button: reads on the white band by the same primary→secondary
+   tonal step the cards use — no border — and takes the card hover/active states.
+   Base .button gives the pill shape, icon layout, and typography. */
+.blog__filter-toggle {
+  background: var(--background-secondary);
+  color: var(--ink-primary);
+}
+
+@media (hover: hover) {
+  .blog__filter-toggle:not(:disabled):hover {
+    background: var(--background-secondary-hover);
+  }
+}
+
+.blog__filter-toggle:not(:disabled):active {
+  background: var(--background-secondary-active);
+}
+
 .blog-filter__title {
   margin: 0 0 1rem; /* 16 down to the first divider */
   font-size: var(--font-title-small-size);
@@ -206,14 +230,19 @@
 
   .blog-filter {
     display: block;
+    margin-top: -8px; /* nudge the rail up to align with the posts */
+  }
+
+  .blog__bar {
+    display: none;
   }
 
   .blog__inner {
-    grid-template-columns: 232px 1fr;
+    grid-template-columns: 216px 1fr;
     align-items: start;
 
-    /* Fluid gap: 32 at 1024, scaling with window width to 96 at 1600. */
-    gap: clamp(2rem, calc(2rem + (100vw - 64rem) / 9), 6rem);
+    /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
+    gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
   }
 
   .blog__pagination {
@@ -225,5 +254,69 @@
 @media (min-width: 1281px) {
   .blog__grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* When JS relocates the filter into the left sheet (≤1024), show it there
+   (overriding the rail's default hide) and drop its heading — the sheet header
+   already reads "Filter". Placed last so specificity stays ascending. */
+.sheet .blog-filter {
+  display: block;
+}
+
+.sheet .blog-filter__title {
+  display: none;
+}
+
+/* Filter sheet header: 72 tall (16 block padding around the 40 close button),
+   no divider — the first filter group's hairline reads as the top edge. */
+.blog__sheet .sheet__header {
+  padding-block: 1rem;
+  border-bottom: 0;
+}
+
+.blog__sheet .sheet__title {
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+}
+
+.blog__sheet .sheet__body {
+  padding-top: 0;
+}
+
+/* Close button: a generous 48 hit target (::before) with a compact, centred 36
+   hover surface (::after). The button box stays 40 so the 72 header height holds;
+   the base 40 hover fill is disabled in favour of the 36 one. */
+.blog__sheet .sheet__close {
+  position: relative;
+}
+
+.blog__sheet .sheet__close::before {
+  content: "";
+  position: absolute;
+  inset: -4px; /* 40 → 48 hit target */
+}
+
+.blog__sheet .sheet__close::after {
+  content: "";
+  position: absolute;
+  inset: 2px; /* 40 → 36 visible surface */
+  border-radius: var(--radius-full);
+  transition: background var(--motion-default);
+}
+
+.blog__sheet .sheet__close svg {
+  position: relative;
+  z-index: 1;
+}
+
+@media (hover: hover) {
+  .blog__sheet .sheet__close:hover {
+    background: transparent;
+  }
+
+  .blog__sheet .sheet__close:hover::after {
+    background: var(--background-secondary-hover);
   }
 }

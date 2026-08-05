@@ -44,7 +44,7 @@
         <div class="blog__inner">
           <!-- Filter rail — collapsible Sort / Category groups. -->
           <aside class="blog-filter" aria-label="Filter and sort">
-            <h2 class="blog-filter__title">Filter and sort</h2>
+            <h2 class="blog-filter__title">Filter</h2>
 
             <details class="blog-filter__group" open>
               <summary class="blog-filter__head">
@@ -169,6 +169,37 @@
 
           <!-- Posts -->
           <div class="blog__main">
+            <!-- Filter toggle — shown ≤1024 (the rail is hidden there); opens the
+                 left sheet, into which JS relocates the one .blog-filter node. -->
+            <div class="blog__bar" data-size="sm">
+              <button
+                type="button"
+                class="button button--with-start-icon blog__filter-toggle"
+                data-dialog-open="blog-filter-sheet"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M4 6l8 0" />
+                  <path d="M16 6l4 0" />
+                  <path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M4 12l2 0" />
+                  <path d="M10 12l10 0" />
+                  <path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                  <path d="M4 18l11 0" />
+                  <path d="M19 18l1 0" />
+                </svg>
+                Filter
+              </button>
+            </div>
+
             <div class="blog__grid">
               <a class="card blog-card" href="#">
                 <picture>
@@ -578,6 +609,32 @@
             ></nav>
           </div>
         </div>
+
+        <!-- Left sheet holding the filter ≤1024. JS moves the .blog-filter node
+             into .sheet__body here, and back to the rail above 1024. The generic
+             data-dialog-open/close wiring (app.js) drives open/close/focus. -->
+        <dialog class="sheet sheet--left blog__sheet" id="blog-filter-sheet">
+          <div class="sheet__inner">
+            <header class="sheet__header">
+              <h2 class="sheet__title">Filter</h2>
+              <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6l-12 12" />
+                  <path d="M6 6l12 12" />
+                </svg>
+              </button>
+            </header>
+            <div class="sheet__body" data-blog-filter-slot></div>
+          </div>
+        </dialog>
       </section>
     </main>
 
@@ -599,5 +656,6 @@
 
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/blog/blog.js" defer></script>
   </body>
 </html>

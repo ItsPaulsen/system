@@ -209,9 +209,11 @@
   }
 
   .blog__inner {
-    grid-template-columns: 264px 1fr;
+    grid-template-columns: 232px 1fr;
     align-items: start;
-    gap: 4rem;
+
+    /* Fluid gap: 32 at 1024, scaling with window width to 96 at 1600. */
+    gap: clamp(2rem, calc(2rem + (100vw - 64rem) / 9), 6rem);
   }
 
   .blog__pagination {

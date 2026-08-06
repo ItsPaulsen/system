@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Communication — Settings — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <link rel="stylesheet" href="/demo/example/settings/settings.css" />
+    <link rel="stylesheet" href="/demo/example/settings/communication/communication.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <div data-chrome="topbar"></div>
+
+    <main class="ex settings-page" id="ex-main" tabindex="-1">
+      <header class="settings-hero">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol class="breadcrumb__list">
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/">Home</a>
+            </li>
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/settings/">Settings</a>
+            </li>
+            <li class="breadcrumb__item">
+              <span class="breadcrumb__current" aria-current="page">Communication</span>
+            </li>
+          </ol>
+        </nav>
+        <h1 class="settings-hero__title">Communication</h1>
+      </header>
+
+      <!-- Each card is a channel; each row is a toggle. The whole row is a
+           <label>, so the row text names the switch and clicking anywhere on the
+           row flips it. Switches are the base component (green on-state). -->
+      <section class="comm" aria-label="Communication preferences">
+        <div class="card comm-card">
+          <h2 class="comm-card__title">E-mail</h2>
+          <div class="comm-list">
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">Pause all</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">Product updates</span>
+                <span class="comm-row__desc">News about releases and improvements</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">Reminder emails</span>
+                <span class="comm-row__desc">See notifications you may have missed</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" checked />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">News emails</span>
+                <span class="comm-row__desc">Learn about new features</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" checked />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card comm-card">
+          <h2 class="comm-card__title">SMS</h2>
+          <div class="comm-list">
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">Security alerts</span>
+                <span class="comm-row__desc">Get a text when a new device signs in</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" checked />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+            <label class="comm-row">
+              <span class="comm-row__text">
+                <span class="comm-row__label">Order updates</span>
+                <span class="comm-row__desc">Delivery and status messages</span>
+              </span>
+              <span class="switch__input-wrapper">
+                <input type="checkbox" class="switch__input" />
+                <span class="switch__knob"></span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div data-chrome="footer"></div>
+
+    <div data-chrome="menu"></div>
+
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <div class="grid-overlay__inner">
+        <span class="grid-overlay__margin grid-overlay__margin--left">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <span class="grid-overlay__margin grid-overlay__margin--right">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <div class="grid-overlay__cols" data-grid-cols></div>
+      </div>
+    </div>
+
+    <script src="/demo/example/chrome.js" defer></script>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

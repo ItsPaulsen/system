@@ -62,7 +62,14 @@
                     <path d="M15 6l-6 6l6 6" />
                   </svg>
                 </button>
-                <span class="calendar__title" data-cal-title aria-live="polite"></span>
+                <div class="calendar__period">
+                  <span class="calendar__select">
+                    <select data-cal-month aria-label="Month"></select>
+                  </span>
+                  <span class="calendar__select">
+                    <select data-cal-year aria-label="Year"></select>
+                  </span>
+                </div>
                 <button class="calendar__nav" type="button" data-cal-next aria-label="Next month">
                   <svg
                     viewBox="0 0 24 24"
@@ -135,7 +142,14 @@
                       <path d="M15 6l-6 6l6 6" />
                     </svg>
                   </button>
-                  <span class="calendar__title" data-cal-title aria-live="polite"></span>
+                  <div class="calendar__period">
+                    <span class="calendar__select">
+                      <select data-cal-month aria-label="Month"></select>
+                    </span>
+                    <span class="calendar__select">
+                      <select data-cal-year aria-label="Year"></select>
+                    </span>
+                  </div>
                   <button class="calendar__nav" type="button" data-cal-next aria-label="Next month">
                     <svg
                       viewBox="0 0 24 24"
@@ -162,7 +176,10 @@
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar"</span> <span class="tok-prop">data-calendar</span> <span class="tok-prop">data-cal-value</span>=<span class="tok-str">"2026-08-12"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__head"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav"</span> <span class="tok-prop">data-cal-prev</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
-    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__title"</span> <span class="tok-prop">data-cal-title</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__period"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__select"</span><span class="tok-key">&gt;&lt;select</span> <span class="tok-prop">data-cal-month</span><span class="tok-key">&gt;&lt;/select&gt;&lt;/span&gt;</span>
+      <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__select"</span><span class="tok-key">&gt;&lt;select</span> <span class="tok-prop">data-cal-year</span><span class="tok-key">&gt;&lt;/select&gt;&lt;/span&gt;</span>
+    <span class="tok-key">&lt;/div&gt;</span>
     <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav"</span> <span class="tok-prop">data-cal-next</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__weekdays"</span><span class="tok-key">&gt;&lt;/div&gt;</span>

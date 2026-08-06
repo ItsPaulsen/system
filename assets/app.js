@@ -1172,10 +1172,25 @@ function initComboboxes() {
 // that's the date-picker recipe.
 function initCalendars() {
   const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  const MONTHS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
   document.querySelectorAll("[data-calendar]").forEach((root) => {
     const daysEl = root.querySelector("[data-cal-days]");
-    const titleEl = root.querySelector("[data-cal-title]");
-    if (!daysEl || !titleEl) return;
+    const monthSel = root.querySelector("[data-cal-month]");
+    const yearSel = root.querySelector("[data-cal-year]");
+    if (!daysEl || !monthSel || !yearSel) return;
 
     // Weekday header (once).
     const head = root.querySelector(".calendar__weekdays");
@@ -1201,6 +1216,10 @@ function initCalendars() {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    // Cap at 31 Dec of the current year: no later month, year, or day.
+    const maxYear = today.getFullYear();
+    const maxDate = new Date(maxYear, 11, 31);
+    maxDate.setHours(0, 0, 0, 0);
     let selected = null;
     const initial = root.getAttribute("data-cal-value");
     if (initial) {
@@ -1210,13 +1229,42 @@ function initCalendars() {
     let view = new Date(selected || today);
     view.setDate(1);
 
+    // Month dropdown (3-letter labels) + a year range around the current view.
+    if (!monthSel.children.length) {
+      MONTHS.forEach((m, i) => {
+        const o = document.createElement("option");
+        o.value = String(i);
+        o.textContent = m;
+        monthSel.appendChild(o);
+      });
+    }
+    const ensureYearOption = (y) => {
+      if (y > maxYear) return; // never offer a year past the cap
+      if ([...yearSel.options].some((o) => Number(o.value) === y)) return;
+      const o = document.createElement("option");
+      o.value = String(y);
+      o.textContent = String(y);
+      yearSel.appendChild(o);
+    };
+    if (!yearSel.children.length) {
+      for (let y = maxYear - 10; y <= maxYear; y += 1) ensureYearOption(y);
+    }
+
     function render() {
-      titleEl.textContent = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      monthSel.value = String(view.getMonth());
+      ensureYearOption(view.getFullYear());
+      yearSel.value = String(view.getFullYear());
+      // No month beyond the one holding maxDate.
+      const nextStart = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+      if (next) next.disabled = nextStart > maxDate;
       const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
       const start = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
       daysEl.replaceChildren();
       for (let i = 0; i < 42; i += 1) {
         const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        // Don't render trailing days past the cap — there's no month to reach them
+        // in (the cap is always end of December, so this only trims the spill-over).
+        if (d > maxDate) break;
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "calendar__day";
@@ -1245,6 +1293,7 @@ function initCalendars() {
     }
 
     function focusDate(d) {
+      if (d > maxDate) return; // don't roam past the cap
       if (d.getMonth() !== view.getMonth() || d.getFullYear() !== view.getFullYear()) {
         view = new Date(d.getFullYear(), d.getMonth(), 1);
         render();
@@ -1259,6 +1308,7 @@ function initCalendars() {
     }
 
     function select(d) {
+      if (d > maxDate) return; // can't pick past the cap
       selected = d;
       root.setAttribute("data-cal-value", iso(d));
       render();
@@ -1287,6 +1337,15 @@ function initCalendars() {
     const next = root.querySelector("[data-cal-next]");
     if (prev) prev.addEventListener("click", () => step(-1));
     if (next) next.addEventListener("click", () => step(1));
+
+    monthSel.addEventListener("change", () => {
+      view = new Date(view.getFullYear(), Number(monthSel.value), 1);
+      render();
+    });
+    yearSel.addEventListener("change", () => {
+      view = new Date(Number(yearSel.value), view.getMonth(), 1);
+      render();
+    });
 
     daysEl.addEventListener("click", (e) => {
       const btn = e.target.closest(".calendar__day");

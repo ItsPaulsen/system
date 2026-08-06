@@ -290,19 +290,19 @@
         <div class="ex-menu__scroll">
           <nav class="ex-menu__nav" aria-label="Pages">
             <a href="/demo/example/blog/">Blog</a>
-            <a href="#">Article</a>
+            <a href="/demo/example/blog/post/">Article</a>
             <a href="#">Settings</a>
           </nav>
 
           <hr class="ex-menu__divider" />
 
           <div class="ex-menu__links">
-            <a href="#">Blog</a>
-            <a href="#">Blog</a>
-            <a href="#">Article</a>
-            <a href="#">Article</a>
-            <a href="#">Settings</a>
-            <a href="#">Settings</a>
+            <a href="#">Colours</a>
+            <a href="#">Typography</a>
+            <a href="#">Radii</a>
+            <a href="#">Buttons</a>
+            <a href="#">Cards</a>
+            <a href="#">Inputs</a>
           </div>
         </div>
 

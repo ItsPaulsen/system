@@ -693,11 +693,9 @@
   text-decoration: none;
 }
 
+/* Hairline comes from .separator; this only sets the menu's spacing. */
 .ex-menu__divider {
-  height: 1px;
   margin: 24px 0;
-  border: 0;
-  background: var(--fill-tertiary);
 }
 
 /* Smaller secondary link list. */
@@ -1139,11 +1137,9 @@
   }
 }
 
+/* Hairline comes from .separator; this only sets the footer's spacing. */
 .ex-footer__divider {
-  height: 1px;
   margin: 4rem 0 2rem;
-  border: 0;
-  background: var(--fill-tertiary);
 }
 
 .ex-footer__bottom {

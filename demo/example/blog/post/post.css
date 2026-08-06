@@ -256,12 +256,7 @@
     margin-top: var(--space-96);
   }
 
-  .article-related__divider {
-    height: 1px;
-    margin: 0;
-    border: 0;
-    background: var(--fill-tertiary);
-  }
+  /* Divider hairline comes from .separator (margin 0 is its default too). */
 
   .article-related__title {
     margin: var(--space-64) 0 0;

@@ -175,7 +175,7 @@
           </nav>
         </div>
 
-        <hr class="ex-footer__divider" />
+        <hr class="separator ex-footer__divider" />
 
         <div class="ex-footer__bottom">
           <p class="ex-footer__copy">© 2026 Kristian Paulsen</p>
@@ -295,7 +295,7 @@
             <a href="/demo/example/settings/">Settings</a>
           </nav>
 
-          <hr class="ex-menu__divider" />
+          <hr class="separator ex-menu__divider" />
 
           <div class="ex-menu__links">
             <a href="#">Colours</a>

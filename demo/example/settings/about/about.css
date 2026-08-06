@@ -31,7 +31,13 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-16);
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-24); /* 24 on mobile, 32 from md */
+}
+
+@media (min-width: 768px) {
+  .about-card__head {
+    margin-bottom: var(--space-32);
+  }
 }
 
 .about-card__title {
@@ -76,12 +82,21 @@
   color: var(--ink-secondary);
 }
 
+/* body-small on mobile, stepping up to body-medium from md (see block below). */
 .about-field__value {
   margin: 0; /* reset the browser's default <dd> indent */
-  font-size: var(--font-body-medium-size);
-  line-height: var(--font-body-medium-lh);
-  font-weight: var(--font-body-medium-weight);
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  font-weight: var(--font-body-small-weight);
   color: var(--ink-primary);
+}
+
+@media (min-width: 768px) {
+  .about-field__value {
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
+  }
 }
 
 /* ── Edit: form ─────────────────────────────────────────────────────────────

@@ -31,21 +31,26 @@
     <div data-chrome="topbar"></div>
 
     <main class="ex-article" id="ex-main" tabindex="-1">
-      <!-- Intro sits on the page (white) surface: breadcrumb, title + standfirst,
+      <!-- Intro sits on the page (white) surface: back-link, title + standfirst,
            byline, then the full-width cover. -->
       <header class="article-intro">
-        <div class="article-wrap">
-          <nav class="breadcrumb" aria-label="Breadcrumb">
-            <ol class="breadcrumb__list">
-              <li class="breadcrumb__item">
-                <a class="breadcrumb__link" href="/demo/example/blog/">Blog</a>
-              </li>
-              <li class="breadcrumb__item">
-                <span class="breadcrumb__current" aria-current="page">Article</span>
-              </li>
-            </ol>
-          </nav>
+        <a class="article-back" href="/demo/example/blog/" aria-label="Back to Blog">
+          <svg
+            class="article-back__icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M15 6l-6 6l6 6" />
+          </svg>
+          Blog
+        </a>
 
+        <div class="article-wrap">
           <div class="article-intro__row">
             <div class="article-intro__lead">
               <h1 class="article-title">Designing pages the CMS can compose</h1>

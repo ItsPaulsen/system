@@ -25,10 +25,41 @@
   }
 
   /* ── Intro (on the page surface) ─────────────────────────────────────────
-     Breadcrumb → title → standfirst, with the byline beside the text above 1024
-     and stacked under it at 1024 and below, then the full-width cover. */
+     Back-link, then the title + standfirst row (byline beside the text above
+     1024, stacked under it at 1024 and below), then the full-width cover. */
   .article-intro {
-    padding-block: var(--space-32) 0;
+    padding-block: var(--space-24) 0;
+  }
+
+  /* Back-link up to the section home (chevron + "Blog"). Sits outside the
+     centred content wrap and hangs at the page gutter (--grid-margin, the same
+     inline offset as the topbar logo), so it floats left like the brand.
+     Preferred over a breadcrumb here: an article is only one level under Blog,
+     so "go up one" reads more honestly than a two-item trail. */
+  .article-back {
+    /* -4 so the chevron glyph (which has whitespace in its box) optically lines
+       up with the logo's left edge rather than sitting 4px right of it. */
+    margin-inline-start: calc(var(--grid-margin, 1rem) - 4px);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--ink-primary);
+    text-decoration: none;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+  }
+
+  .article-back__icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (hover: hover) {
+    .article-back:hover {
+      text-decoration: underline;
+    }
   }
 
   .article-intro__row {
@@ -53,7 +84,7 @@
   }
 
   .article-standfirst {
-    margin: var(--space-24) 0 0;
+    margin: var(--space-16) 0 0;
     max-width: 40rem;
     color: var(--ink-secondary);
     font-size: var(--font-body-large-size);
@@ -93,7 +124,8 @@
   }
 
   .article-cover {
-    margin: var(--space-48) 0 0;
+    /* Author → cover gap: 32 on mobile, 48 from md (see min-width: 768px below). */
+    margin: var(--space-32) 0 0;
   }
 
   .article-cover__img {
@@ -111,7 +143,9 @@
     margin-top: var(--space-64);
     padding-block: var(--space-64) var(--space-96);
     background: var(--background-primary);
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+    /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   /* ── Prose (the CMS block flow) ──────────────────────────────────────────
@@ -149,10 +183,10 @@
   .prose h2 {
     color: var(--ink-primary);
 
-    /* Base (mobile): title-medium 28. Steps to title-large 32 at md. */
-    font-size: var(--font-title-medium-size);
-    line-height: var(--font-title-medium-lh);
-    font-weight: var(--font-title-medium-weight);
+    /* title-large 32 at every width — no mobile step-down. */
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
   }
 
   .prose h3 {
@@ -206,7 +240,7 @@
     width: 100%;
     aspect-ratio: 3 / 2;
     object-fit: cover;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
   }
 
   .prose figcaption {
@@ -232,14 +266,17 @@
   .article-related__title {
     margin: var(--space-64) 0 0;
     color: var(--ink-primary);
-    font-size: var(--font-headline-small-size);
-    line-height: var(--font-headline-small-lh);
-    font-weight: var(--font-headline-small-weight);
+
+    /* title-large 32 on mobile, headline-small 38 from md (see 768px below). */
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
   }
 
-  /* Same column logic as the front page's 3-up: 1 → 2 (≥640) → 3 (≥1024). */
+  /* Same column logic as the front page's 3-up: 1 → 2 (≥640) → 3 (≥1024).
+     Title → grid gap is 32 on mobile, 48 from md (see min-width: 768px below). */
   .article-related__grid {
-    margin-top: var(--space-48);
+    margin-top: var(--space-32);
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--grid-gutter, 1rem);
@@ -253,14 +290,30 @@
       font-weight: var(--font-headline-medium-weight);
     }
 
-    .prose h2 {
-      font-size: var(--font-title-large-size);
-      line-height: var(--font-title-large-lh);
-      font-weight: var(--font-title-large-weight);
+    .article-related__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ≥768 — band's rounded top steps up from 24 to 32, and the related
+     title → grid gap opens from 32 to 48. */
+  @media (min-width: 768px) {
+    .article-band {
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .article-cover {
+      margin-top: var(--space-48);
+    }
+
+    .article-related__title {
+      font-size: var(--font-headline-small-size);
+      line-height: var(--font-headline-small-lh);
+      font-weight: var(--font-headline-small-weight);
     }
 
     .article-related__grid {
-      grid-template-columns: repeat(2, 1fr);
+      margin-top: var(--space-48);
     }
   }
 

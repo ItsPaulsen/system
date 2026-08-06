@@ -1,8 +1,9 @@
 // Shared chrome for the /example mini-site — one source for the topbar, footer,
-// and menu sheet. Each page drops <div data-chrome="topbar|footer|menu"></div>
-// placeholders; this deferred script (loaded before app.js) replaces them, marks
-// the active nav link by path, and wires the menu's theme toggle. app.js then
-// hydrates the injected dialog, select, and footer on DOMContentLoaded.
+// menu sheet, and grid overlay. Each page drops
+// <div data-chrome="topbar|footer|menu|grid-overlay"></div> placeholders; this
+// deferred script (loaded before app.js) replaces them, marks the active nav
+// link by path, and wires the menu's theme toggle. app.js then hydrates the
+// injected dialog, select, footer, and grid overlay on DOMContentLoaded.
 (function () {
   const TOPBAR = `
     <header class="ex-topbar">
@@ -361,6 +362,23 @@
       </div>
     </dialog>
 `;
+  // Grid overlay — toggled with the "g" key (see app.js). Width follows the
+  // page's live grid tokens; blog opts into the wider 2xl tier via
+  // data-width on <html>, and buildGridOverlay() rebuilds columns/margins from
+  // whatever --container-max / --grid-columns / --grid-margin resolve to.
+  const GRID_OVERLAY = `
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <div class="grid-overlay__inner">
+        <span class="grid-overlay__margin grid-overlay__margin--left">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <span class="grid-overlay__margin grid-overlay__margin--right">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <div class="grid-overlay__cols" data-grid-cols></div>
+      </div>
+    </div>
+`;
   function inject(name, html) {
     const ph = document.querySelector('[data-chrome="' + name + '"]');
     if (ph) ph.outerHTML = html;
@@ -368,6 +386,7 @@
   inject("topbar", TOPBAR);
   inject("footer", FOOTER);
   inject("menu", MENU);
+  inject("grid-overlay", GRID_OVERLAY);
 
   // Mark the current page's nav link (topbar + menu) by matching href to path.
   const path = location.pathname;

@@ -568,6 +568,9 @@
 .ex-topbar__brand {
   justify-self: start;
   border-radius: 8px;
+
+  /* Text placeholder for a logo/wordmark SVG — intentionally off the type scale;
+     swap this rule for the real mark. */
   font-size: 26px;
   font-weight: 700;
   color: var(--ink-primary);
@@ -988,6 +991,9 @@
   display: inline-block;
   color: var(--ink-primary);
   text-decoration: none;
+
+  /* Text placeholder for a logo/wordmark SVG — off the type scale on purpose;
+     mirrors the header brand. Swap this rule for the real mark. */
   font-size: 26px;
   line-height: var(--font-title-large-lh);
   font-weight: 700; /* matches the header brand (bold), not the title-large 500 */

@@ -36,9 +36,9 @@
           work.
         </p>
         <div class="ex-hero__actions" data-size="lg">
-          <a class="button button--primary" href="#">Blog</a>
+          <a class="button button--primary" href="/demo/example/blog/">Blog</a>
           <span class="ex-secondary-solid">
-            <a class="button button--secondary" href="#">Article</a>
+            <a class="button button--secondary" href="/demo/example/blog/post/">Article</a>
           </span>
         </div>
       </header>
@@ -201,11 +201,7 @@
           <div class="ex-marquee__item" style="--x: 1172px; --y: 248px">
             <div class="ex-card ex-profile">
               <span class="avatar">
-                <img
-                  class="avatar__img"
-                  src="/assets/illustrations/avatar-1.png"
-                  alt="Courtney Doe"
-                />
+                <img class="avatar__img" src="/assets/illustrations/avatar-1.png" alt="" />
                 <span class="avatar__status" aria-hidden="true"></span>
               </span>
               <div class="ex-profile__text">
@@ -963,19 +959,7 @@
 
     <div data-chrome="menu"></div>
 
-    <!-- Grid overlay — toggled with the "g" key (see app.js). Columns/margins
-         are rebuilt from the live grid tokens by buildGridOverlay(). -->
-    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
-      <div class="grid-overlay__inner">
-        <span class="grid-overlay__margin grid-overlay__margin--left">
-          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
-        </span>
-        <span class="grid-overlay__margin grid-overlay__margin--right">
-          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
-        </span>
-        <div class="grid-overlay__cols" data-grid-cols></div>
-      </div>
-    </div>
+    <div data-chrome="grid-overlay"></div>
 
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>

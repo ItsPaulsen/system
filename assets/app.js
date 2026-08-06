@@ -248,12 +248,13 @@ const PROJECT_PAGES = {
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Breadcrumb", href: "/demo/components/breadcrumb/" },
         { label: "Button", href: "/demo/components/button/" },
+        { label: "Calendar", href: "/demo/components/calendar/", new: true },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
-        { label: "Empty State", href: "/demo/components/empty-state/" },
+        { label: "Empty", href: "/demo/components/empty/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
         { label: "Input Group", href: "/demo/components/input-group/" },
@@ -265,6 +266,7 @@ const PROJECT_PAGES = {
         { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
         { label: "Select", href: "/demo/components/select/" },
+        { label: "Separator", href: "/demo/components/separator/" },
         { label: "Sheet", href: "/demo/components/sheet/" },
         { label: "Skeleton", href: "/demo/components/skeleton/" },
         { label: "Slider", href: "/demo/components/slider/" },
@@ -1162,6 +1164,171 @@ function initComboboxes() {
   });
 }
 
+// Calendar: renders a month grid into [data-cal-days] and drives month nav +
+// keyboard (arrows = ±1/±7 days, Home/End = week ends, PageUp/Dn = ±month,
+// Enter/Space selects). One day carries tabindex 0 (roving), the rest -1. The
+// selected date lives in data-cal-value (ISO); with data-cal-target="#el" a pick
+// writes a formatted date into that element and closes any enclosing popover —
+// that's the date-picker recipe.
+function initCalendars() {
+  const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  document.querySelectorAll("[data-calendar]").forEach((root) => {
+    const daysEl = root.querySelector("[data-cal-days]");
+    const titleEl = root.querySelector("[data-cal-title]");
+    if (!daysEl || !titleEl) return;
+
+    // Weekday header (once).
+    const head = root.querySelector(".calendar__weekdays");
+    if (head && !head.children.length) {
+      WEEKDAYS.forEach((w) => {
+        const s = document.createElement("span");
+        s.className = "calendar__weekday";
+        s.textContent = w;
+        head.appendChild(s);
+      });
+    }
+
+    const iso = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+    const same = (a, b) =>
+      a &&
+      b &&
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let selected = null;
+    const initial = root.getAttribute("data-cal-value");
+    if (initial) {
+      const d = new Date(`${initial}T00:00:00`);
+      if (!Number.isNaN(d.getTime())) selected = d;
+    }
+    let view = new Date(selected || today);
+    view.setDate(1);
+
+    function render() {
+      titleEl.textContent = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
+      const start = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
+      daysEl.replaceChildren();
+      for (let i = 0; i < 42; i += 1) {
+        const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "calendar__day";
+        btn.textContent = String(d.getDate());
+        btn.dataset.date = iso(d);
+        btn.setAttribute(
+          "aria-label",
+          d.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })
+        );
+        if (d.getMonth() !== view.getMonth()) btn.classList.add("is-outside");
+        if (same(d, today)) {
+          btn.classList.add("is-today");
+          btn.setAttribute("aria-current", "date");
+        }
+        const isSel = same(d, selected);
+        btn.classList.toggle("is-selected", isSel);
+        btn.setAttribute("aria-pressed", String(isSel));
+        btn.tabIndex = isSel ? 0 : -1;
+        daysEl.appendChild(btn);
+      }
+      // Guarantee one tabbable cell even with nothing selected.
+      if (!daysEl.querySelector('[tabindex="0"]')) {
+        const cur = [...daysEl.children].find((b) => !b.classList.contains("is-outside"));
+        if (cur) cur.tabIndex = 0;
+      }
+    }
+
+    function focusDate(d) {
+      if (d.getMonth() !== view.getMonth() || d.getFullYear() !== view.getFullYear()) {
+        view = new Date(d.getFullYear(), d.getMonth(), 1);
+        render();
+      }
+      const target = daysEl.querySelector(`[data-date="${iso(d)}"]`);
+      if (!target) return;
+      daysEl.querySelectorAll('[tabindex="0"]').forEach((b) => {
+        b.tabIndex = -1;
+      });
+      target.tabIndex = 0;
+      target.focus();
+    }
+
+    function select(d) {
+      selected = d;
+      root.setAttribute("data-cal-value", iso(d));
+      render();
+      const targetSel = root.getAttribute("data-cal-target");
+      if (targetSel) {
+        const el = document.querySelector(targetSel);
+        if (el) {
+          const label = d.toLocaleDateString(undefined, {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          });
+          if (el.tagName === "INPUT") el.value = label;
+          else el.textContent = label;
+        }
+        const pop = root.closest("[popover]");
+        if (pop && pop.hidePopover) pop.hidePopover();
+      }
+    }
+
+    const step = (months) => {
+      view = new Date(view.getFullYear(), view.getMonth() + months, 1);
+      render();
+    };
+    const prev = root.querySelector("[data-cal-prev]");
+    const next = root.querySelector("[data-cal-next]");
+    if (prev) prev.addEventListener("click", () => step(-1));
+    if (next) next.addEventListener("click", () => step(1));
+
+    daysEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".calendar__day");
+      if (btn) select(new Date(`${btn.dataset.date}T00:00:00`));
+    });
+
+    daysEl.addEventListener("keydown", (e) => {
+      const btn = e.target.closest(".calendar__day");
+      if (!btn) return;
+      const cur = new Date(`${btn.dataset.date}T00:00:00`);
+      const dow = (cur.getDay() + 6) % 7;
+      const dayMoves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      if (e.key in dayMoves) {
+        e.preventDefault();
+        const n = new Date(cur);
+        n.setDate(cur.getDate() + dayMoves[e.key]);
+        focusDate(n);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        const n = new Date(cur);
+        n.setDate(cur.getDate() - dow);
+        focusDate(n);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        const n = new Date(cur);
+        n.setDate(cur.getDate() + (6 - dow));
+        focusDate(n);
+      } else if (e.key === "PageUp" || e.key === "PageDown") {
+        e.preventDefault();
+        focusDate(
+          new Date(cur.getFullYear(), cur.getMonth() + (e.key === "PageUp" ? -1 : 1), cur.getDate())
+        );
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        select(cur);
+      }
+    });
+
+    render();
+  });
+}
+
 // Place a popover under its invoker (flipping up when cramped, clamped to the
 // viewport). The stylesheet does this declaratively via CSS anchor positioning;
 // this is the fallback for engines that lack it (Firefox today).
@@ -1487,6 +1654,7 @@ function init() {
   initGridTabs();
   initSelects();
   initComboboxes();
+  initCalendars();
   initPopovers();
   initMenus();
   initPagination();

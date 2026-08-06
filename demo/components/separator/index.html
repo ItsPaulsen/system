@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Separator — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <style>
+      .sep-stack {
+        width: 260px;
+        color: var(--ink-secondary);
+        font-size: var(--font-body-small-size);
+      }
+      .sep-stack > p {
+        margin: 0.75rem 0;
+      }
+      .sep-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--ink-secondary);
+        font-size: var(--font-body-small-size);
+      }
+    </style>
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Separator</h1>
+          </div>
+          <p class="lede">A hairline rule between content.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Horizontal</h3>
+          <p class="section-note">
+            A semantic <code>&lt;hr&gt;</code> — spacing is set by the surrounding layout, not the
+            rule.
+          </p>
+          <div class="component-preview">
+            <div class="sep-stack">
+              <p>Section one</p>
+              <hr class="separator" />
+              <p>Section two</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Vertical</h3>
+          <p class="section-note">
+            In a flex row. An <code>&lt;hr&gt;</code> can't be vertical, so use a
+            <code>&lt;div&gt;</code> with <code>role="separator"</code> and
+            <code>aria-orientation</code>.
+          </p>
+          <div class="component-preview">
+            <div class="sep-row">
+              <span>Docs</span>
+              <div
+                class="separator separator--vertical"
+                role="separator"
+                aria-orientation="vertical"
+              ></div>
+              <span>Components</span>
+              <div
+                class="separator separator--vertical"
+                role="separator"
+                aria-orientation="vertical"
+              ></div>
+              <span>Tokens</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-com">&lt;!-- Horizontal --&gt;</span>
+<span class="tok-key">&lt;hr</span> <span class="tok-prop">class</span>=<span class="tok-str">"separator"</span> <span class="tok-key">/&gt;</span>
+
+<span class="tok-com">&lt;!-- Vertical (in a flex row) --&gt;</span>
+<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"separator separator--vertical"</span>
+     <span class="tok-prop">role</span>=<span class="tok-str">"separator"</span> <span class="tok-prop">aria-orientation</span>=<span class="tok-str">"vertical"</span><span class="tok-key">&gt;&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

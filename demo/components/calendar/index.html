@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Calendar — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Calendar</h1>
+          </div>
+          <p class="lede">A month grid for choosing a date.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Today is ringed, the chosen day is filled. Navigate with the arrows or, once a day has
+            focus, the keyboard (arrows, Home, End, Page Up, Page Down).
+          </p>
+          <div class="component-preview">
+            <div class="calendar" data-calendar data-cal-value="2026-08-12">
+              <div class="calendar__head">
+                <button
+                  class="calendar__nav"
+                  type="button"
+                  data-cal-prev
+                  aria-label="Previous month"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 6l-6 6l6 6" />
+                  </svg>
+                </button>
+                <span class="calendar__title" data-cal-title aria-live="polite"></span>
+                <button class="calendar__nav" type="button" data-cal-next aria-label="Next month">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </button>
+              </div>
+              <div class="calendar__weekdays" aria-hidden="true"></div>
+              <div class="calendar__days" data-cal-days></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Date picker</h3>
+          <p class="section-note">
+            Put the calendar in a <a href="/demo/components/popover/">Popover</a> and point
+            <code>data-cal-target</code> at the trigger's label. Picking a day fills the label and
+            closes the popover.
+          </p>
+          <div class="component-preview">
+            <button
+              class="button button--secondary button--with-start-icon"
+              type="button"
+              popovertarget="date-popover"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"
+                />
+                <path d="M16 3v4" />
+                <path d="M8 3v4" />
+                <path d="M4 11h16" />
+              </svg>
+              <span data-dp-label>Pick a date</span>
+            </button>
+            <div class="popover popover--calendar" id="date-popover" popover>
+              <div class="calendar" data-calendar data-cal-target="[data-dp-label]">
+                <div class="calendar__head">
+                  <button
+                    class="calendar__nav"
+                    type="button"
+                    data-cal-prev
+                    aria-label="Previous month"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M15 6l-6 6l6 6" />
+                    </svg>
+                  </button>
+                  <span class="calendar__title" data-cal-title aria-live="polite"></span>
+                  <button class="calendar__nav" type="button" data-cal-next aria-label="Next month">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6l-6 6" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="calendar__weekdays" aria-hidden="true"></div>
+                <div class="calendar__days" data-cal-days></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar"</span> <span class="tok-prop">data-calendar</span> <span class="tok-prop">data-cal-value</span>=<span class="tok-str">"2026-08-12"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__head"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav"</span> <span class="tok-prop">data-cal-prev</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__title"</span> <span class="tok-prop">data-cal-title</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav"</span> <span class="tok-prop">data-cal-next</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__weekdays"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__days"</span> <span class="tok-prop">data-cal-days</span><span class="tok-key">&gt;&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span>
+
+<span class="tok-com">&lt;!-- Date picker: same calendar inside a Popover, plus
+     data-cal-target="#label" on the .calendar. --&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

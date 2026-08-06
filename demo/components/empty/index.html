@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Empty State — Demo</title>
+    <title>Empty — Demo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,11 +28,9 @@
       <header class="site-head">
         <div class="site-head__body">
           <div class="site-head__title">
-            <h1>Empty State</h1>
+            <h1>Empty</h1>
           </div>
-          <p class="lede">
-            A placeholder for "no results" or "nothing here yet" — icon, message, action.
-          </p>
+          <p class="lede">A placeholder for when there's nothing to show.</p>
         </div>
       </header>
 
@@ -40,13 +38,12 @@
         <section class="preview-block">
           <h3 class="subhead">Nothing yet</h3>
           <p class="section-note">
-            First-run placeholder — an icon badge (the same primary-soft recipe as the
-            <a href="/demo/components/card/">Card</a> icon), a short message, and a primary
-            <a href="/demo/components/button/">Button</a> as the way forward.
+            Shown on first run. An icon, a short message, and a primary
+            <a href="/demo/components/button/">Button</a> to get started.
           </p>
           <div class="component-preview">
-            <div class="empty-state">
-              <span class="empty-state__icon" aria-hidden="true">
+            <div class="empty">
+              <span class="empty__icon" aria-hidden="true">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -61,11 +58,11 @@
                   <path d="M4 13h3l3 3h4l3 -3h3" />
                 </svg>
               </span>
-              <h3 class="empty-state__title">No items yet</h3>
-              <p class="empty-state__text">
+              <h3 class="empty__title">No items yet</h3>
+              <p class="empty__text">
                 Everything you add will show up here. Start with your first one.
               </p>
-              <div class="empty-state__actions">
+              <div class="empty__actions">
                 <button type="button" class="button button--primary button--with-start-icon">
                   <svg
                     viewBox="0 0 24 24"
@@ -89,13 +86,13 @@
         <section class="preview-block">
           <h3 class="subhead">No results</h3>
           <p class="section-note">
-            The search/filter variant — same layout, a "search off" glyph, and a secondary
-            <a href="/demo/components/button/">Button</a> to clear the query. Pairs well after a
-            <a href="/demo/components/combobox/">Combobox</a> or filter returns nothing.
+            Shown when a search or filter returns nothing, like after a
+            <a href="/demo/components/combobox/">Combobox</a>. A secondary
+            <a href="/demo/components/button/">Button</a> clears the query.
           </p>
           <div class="component-preview">
-            <div class="empty-state">
-              <span class="empty-state__icon" aria-hidden="true">
+            <div class="empty">
+              <span class="empty__icon" aria-hidden="true">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -108,11 +105,11 @@
                   <path d="M3 3l18 18" />
                 </svg>
               </span>
-              <h3 class="empty-state__title">No results</h3>
-              <p class="empty-state__text">
+              <h3 class="empty__title">No results</h3>
+              <p class="empty__text">
                 No matches for your search. Try a different term or clear the filters.
               </p>
-              <div class="empty-state__actions">
+              <div class="empty__actions">
                 <button type="button" class="button button--secondary">Clear filters</button>
               </div>
             </div>
@@ -121,11 +118,11 @@
 
         <section class="preview-block">
           <h3 class="subhead">Markup</h3>
-          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__icon"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
-  <span class="tok-key">&lt;h3</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__title"</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/h3&gt;</span>
-  <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__text"</span><span class="tok-key">&gt;</span>No matches for your search.<span class="tok-key">&lt;/p&gt;</span>
-  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__actions"</span><span class="tok-key">&gt;</span>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__icon"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;h3</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__title"</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/h3&gt;</span>
+  <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__text"</span><span class="tok-key">&gt;</span>No matches for your search.<span class="tok-key">&lt;/p&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__actions"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span><span class="tok-key">&gt;</span>Clear filters<span class="tok-key">&lt;/button&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>

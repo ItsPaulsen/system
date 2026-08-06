@@ -31,13 +31,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-16);
-  margin-bottom: var(--space-24); /* 24 on mobile, 32 from md */
-}
-
-@media (min-width: 768px) {
-  .about-card__head {
-    margin-bottom: var(--space-32);
-  }
+  margin-bottom: var(--space-24);
 }
 
 .about-card__title {

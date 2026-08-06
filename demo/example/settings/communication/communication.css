@@ -25,7 +25,7 @@
 }
 
 .comm-card__title {
-  margin: 0 0 var(--space-16);
+  margin: 0 0 var(--space-24);
 
   /* title-small on mobile, title-medium from md (see min-width block below). */
   font-size: var(--font-title-small-size);
@@ -64,9 +64,9 @@
 }
 
 .comm-row__label {
-  font-size: var(--font-body-small-emphasized-size);
-  line-height: var(--font-body-small-emphasized-lh);
-  font-weight: var(--font-body-small-emphasized-weight);
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  font-weight: var(--font-body-small-weight);
   color: var(--ink-primary);
 }
 
@@ -79,4 +79,15 @@
 
 .comm-row .switch__input-wrapper {
   flex: none;
+}
+
+/* Row padding-block shapes the gap *between* rows (and centres the divider);
+   trim it at the ends so the title margin and card padding define the edges,
+   not a doubled-up gap. Matches the Privacy lists. */
+.comm-row:first-child {
+  padding-top: 0;
+}
+
+.comm-row:last-child {
+  padding-bottom: 0;
 }

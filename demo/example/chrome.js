@@ -11,7 +11,7 @@
         <ul class="nav-menu__list">
           <li><a class="nav-menu__link" href="/demo/example/blog/">Blog</a></li>
           <li><a class="nav-menu__link" href="/demo/example/blog/post/">Article</a></li>
-          <li><a class="nav-menu__link" href="#">Settings</a></li>
+          <li><a class="nav-menu__link" href="/demo/example/settings/">Settings</a></li>
         </ul>
       </nav>
       <button
@@ -271,7 +271,7 @@
             type="button"
             data-dialog-close
           >
-            Lukk
+            Close
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -291,7 +291,7 @@
           <nav class="ex-menu__nav" aria-label="Pages">
             <a href="/demo/example/blog/">Blog</a>
             <a href="/demo/example/blog/post/">Article</a>
-            <a href="#">Settings</a>
+            <a href="/demo/example/settings/">Settings</a>
           </nav>
 
           <hr class="ex-menu__divider" />
@@ -331,7 +331,7 @@
                   d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
                 />
               </svg>
-              <span class="tabs__label">Lyst tema</span>
+              <span class="tabs__label">Light</span>
             </label>
             <input
               type="radio"
@@ -354,7 +354,7 @@
                   d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
                 />
               </svg>
-              <span class="tabs__label">Mørkt tema</span>
+              <span class="tabs__label">Dark</span>
             </label>
           </div>
         </div>

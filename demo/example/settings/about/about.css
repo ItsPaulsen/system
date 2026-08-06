@@ -1,0 +1,92 @@
+/* Settings › About you — one card that flips between a read view (definition
+   list + edit button) and an edit form (inputs + Save/Cancel). Page shell
+   (gray surface, sticky footer, hero, breadcrumb rhythm) comes from
+   settings.css; this file owns the card and its two modes only. Surface,
+   inputs and buttons are the shared components — dark mode is a token swap. */
+
+/* Content column, matching the hero. The card sits left and caps at the
+   Sketch panel width (692); it fills the column below that. */
+.about {
+  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--grid-margin, 1rem);
+}
+
+.about-card {
+  max-width: 43.25rem; /* 692 */
+  padding: var(--space-32);
+}
+
+/* Head — title with the edit button trailing (view only). */
+.about-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.about-card__title {
+  margin: 0;
+  font-size: var(--font-title-medium-size);
+  line-height: var(--font-title-medium-lh);
+  font-weight: var(--font-title-medium-weight);
+  color: var(--ink-primary);
+}
+
+.about-card__edit {
+  flex: none;
+}
+
+/* ── View: definition list ────────────────────────────────────────────────
+   Label over value, 16 between fields. */
+.about-list {
+  display: grid;
+  gap: var(--space-16);
+  margin: 0;
+}
+
+.about-list[hidden] {
+  display: none;
+}
+
+.about-field__label {
+  margin: 0;
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  font-weight: var(--font-body-small-weight);
+  color: var(--ink-secondary);
+}
+
+.about-field__value {
+  margin: 0; /* reset the browser's default <dd> indent */
+  font-size: var(--font-body-medium-size);
+  line-height: var(--font-body-medium-lh);
+  font-weight: var(--font-body-medium-weight);
+  color: var(--ink-primary);
+}
+
+/* ── Edit: form ─────────────────────────────────────────────────────────────
+   Inputs stack with 24 between them; the action row sits 32 below. */
+.about-form {
+  display: grid;
+  gap: var(--space-24);
+}
+
+.about-form[hidden] {
+  display: none;
+}
+
+/* The form is a programmatic focus target on open (see about.js); it's a
+   container, not a control, so it shows no ring — the first Tab moves to the
+   first input, which does. */
+.about-form:focus {
+  outline: none;
+}
+
+.about-form__actions {
+  display: flex;
+  gap: var(--space-8);
+  margin-top: var(--space-8); /* 24 (grid gap) + 8 = 32 down to the buttons */
+}

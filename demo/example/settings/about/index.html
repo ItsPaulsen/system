@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>About you — Settings — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <link rel="stylesheet" href="/demo/example/settings/settings.css" />
+    <link rel="stylesheet" href="/demo/example/settings/about/about.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <div data-chrome="topbar"></div>
+
+    <main class="ex settings-page" id="ex-main" tabindex="-1">
+      <header class="settings-hero">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol class="breadcrumb__list">
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/">Home</a>
+            </li>
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/settings/">Settings</a>
+            </li>
+            <li class="breadcrumb__item">
+              <span class="breadcrumb__current" aria-current="page">About you</span>
+            </li>
+          </ol>
+        </nav>
+        <h1 class="settings-hero__title">About you</h1>
+      </header>
+
+      <!-- One card, two modes. View = a definition list + "Edit"; edit = the
+           same fields as inputs + Save / Cancel. about.js flips [data-editing]
+           and moves focus; nothing here is server-backed, so Save just returns
+           to the view with whatever is typed. -->
+      <section class="about" aria-label="Contact information">
+        <div class="card about-card" data-about-card>
+          <div class="about-card__head">
+            <h2 class="about-card__title">Contact information</h2>
+            <div class="about-card__edit" data-size="sm">
+              <button
+                class="button button--secondary button--with-start-icon"
+                type="button"
+                data-about-edit
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                  <path d="M13.5 6.5l4 4" />
+                </svg>
+                Edit
+              </button>
+            </div>
+          </div>
+
+          <!-- View -->
+          <dl class="about-list" data-about-view>
+            <div class="about-field">
+              <dt class="about-field__label">First name</dt>
+              <dd class="about-field__value">John</dd>
+            </div>
+            <div class="about-field">
+              <dt class="about-field__label">Last name</dt>
+              <dd class="about-field__value">Doe</dd>
+            </div>
+            <div class="about-field">
+              <dt class="about-field__label">Email</dt>
+              <dd class="about-field__value">john.doe@gmail.com</dd>
+            </div>
+            <div class="about-field">
+              <dt class="about-field__label">Phone number</dt>
+              <dd class="about-field__value">99 88 77 66</dd>
+            </div>
+          </dl>
+
+          <!-- Edit -->
+          <form
+            class="about-form"
+            data-about-form
+            hidden
+            tabindex="-1"
+            aria-label="Edit contact information"
+          >
+            <label class="input">
+              <span class="input__label">First name</span>
+              <span class="input__container">
+                <input class="input__element" type="text" name="first-name" value="John" />
+              </span>
+            </label>
+            <label class="input">
+              <span class="input__label">Last name</span>
+              <span class="input__container">
+                <input class="input__element" type="text" name="last-name" value="Doe" />
+              </span>
+            </label>
+            <label class="input">
+              <span class="input__label">Email</span>
+              <span class="input__container">
+                <input
+                  class="input__element"
+                  type="email"
+                  name="email"
+                  value="john.doe@gmail.com"
+                />
+              </span>
+            </label>
+            <label class="input">
+              <span class="input__label">Phone number</span>
+              <span class="input__container">
+                <input class="input__element" type="tel" name="phone" value="99 88 77 66" />
+              </span>
+            </label>
+
+            <div class="about-form__actions">
+              <button class="button button--primary" type="submit">Save changes</button>
+              <button class="button button--secondary" type="button" data-about-cancel>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <div data-chrome="footer"></div>
+
+    <div data-chrome="menu"></div>
+
+    <div class="grid-overlay" data-grid-overlay hidden aria-hidden="true">
+      <div class="grid-overlay__inner">
+        <span class="grid-overlay__margin grid-overlay__margin--left">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <span class="grid-overlay__margin grid-overlay__margin--right">
+          <span class="grid-overlay__margin-label" data-grid-margin-label></span>
+        </span>
+        <div class="grid-overlay__cols" data-grid-cols></div>
+      </div>
+    </div>
+
+    <script src="/demo/example/chrome.js" defer></script>
+    <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/settings/about/about.js" defer></script>
+  </body>
+</html>

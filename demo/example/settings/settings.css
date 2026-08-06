@@ -24,14 +24,14 @@ body {
   padding-top: var(--space-24);
   padding-bottom: 5rem;
 
-  /* 48 from the title down to the cards, at every width (the base .ex opens to
-     96 at md — hold it at 48 here). */
-  gap: var(--space-48);
+  /* Title down to the cards: 32 on mobile, 48 from md. */
+  gap: var(--space-32);
 }
 
 @media (min-width: 768px) {
   .settings-page {
     padding-bottom: 8rem;
+    gap: var(--space-48);
   }
 }
 
@@ -61,6 +61,53 @@ body {
     font-size: var(--font-headline-medium-size);
     line-height: var(--font-headline-medium-lh);
     font-weight: var(--font-headline-medium-weight);
+  }
+}
+
+/* ── Back link (mobile) ─────────────────────────────────────────────────────
+   Sub-pages are one level under Settings, so on mobile they trade the full
+   breadcrumb for a single back link (chevron + parent), mirroring the article.
+   The breadcrumb returns from md up. Same recipe/alignment as .article-back. */
+.settings-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  /* The hero already pads by --grid-margin, so only pull the chevron -4 to line
+     its glyph up with the content's left edge (breadcrumb/title). */
+  margin-inline-start: -4px;
+  color: var(--ink-primary);
+  text-decoration: none;
+  font-size: var(--font-body-small-size);
+  line-height: var(--font-body-small-lh);
+  font-weight: var(--font-body-small-weight);
+}
+
+.settings-back__icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+@media (hover: hover) {
+  .settings-back:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Where a back link is present (sub-pages), hide the breadcrumb on mobile. The
+   landing has no back link, so its breadcrumb is untouched. */
+.settings-hero:has(.settings-back) .breadcrumb {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .settings-back {
+    display: none;
+  }
+
+  .settings-hero:has(.settings-back) .breadcrumb {
+    display: block;
   }
 }
 

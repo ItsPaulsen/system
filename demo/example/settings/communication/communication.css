@@ -15,15 +15,31 @@
 
 .comm-card {
   max-width: 43.25rem; /* 692 */
-  padding: var(--space-32);
+  padding: var(--space-24); /* 24 on mobile, 32 from md */
+}
+
+@media (min-width: 768px) {
+  .comm-card {
+    padding: var(--space-32);
+  }
 }
 
 .comm-card__title {
   margin: 0 0 var(--space-16);
-  font-size: var(--font-title-medium-size);
-  line-height: var(--font-title-medium-lh);
-  font-weight: var(--font-title-medium-weight);
+
+  /* title-small on mobile, title-medium from md (see min-width block below). */
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
   color: var(--ink-primary);
+}
+
+@media (min-width: 768px) {
+  .comm-card__title {
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+  }
 }
 
 /* ── Toggle rows ────────────────────────────────────────────────────────────

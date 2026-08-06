@@ -137,8 +137,8 @@
    gets it once and components override only what differs (offset, radius, or
    outline:none). */
   :where(a, button, summary, [tabindex], input, select, textarea, pre):focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* Accessibility: skip-to-content — hidden until keyboard-focused. */
@@ -162,8 +162,8 @@
 
   .skip-link:focus-visible {
     transform: translate(-50%, 0);
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* Site nav (injected on every page) */
@@ -459,7 +459,7 @@
   /* Bare text in the drawer — push the ring out for breathing room (0 at lg). */
   .sidebar__link:focus-visible > span,
   .sidebar__back:focus-visible > span {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 4px;
     animation: focus-ring-converge var(--motion-default);
   }
@@ -533,8 +533,8 @@
   }
 
   .site-nav__brand:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     border-radius: 4px;
   }
 
@@ -605,7 +605,7 @@
    (e.g. Typography) go straight from lede into content — no floating rule. */
   body:has(.subhead) .site-head {
     padding-bottom: 2rem;
-    border-bottom: 1px solid var(--fill-tertiary);
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
   }
 
   .site-head__body {
@@ -724,7 +724,7 @@
   section + section {
     margin-top: 3.5rem;
     padding-top: 3.5rem;
-    border-top: 1px solid var(--fill-tertiary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
   h2 {
@@ -883,7 +883,7 @@
    horizontal scroll on narrow viewports instead of squeezing swatches. */
   .palette-table {
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 16px;
     overflow: hidden;
     padding-right: 4px;
@@ -920,7 +920,7 @@
     padding: 0 1rem;
     font-size: 0.875rem;
     vertical-align: middle;
-    border-top: 1px solid var(--fill-tertiary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
   .palette-table tbody th[scope="row"] {
@@ -938,7 +938,7 @@
     width: 64px;
     height: 48px;
     padding: 0;
-    border: 1px solid var(--fill-quaternary);
+    border: var(--border-width) solid var(--fill-quaternary);
     border-radius: 8px;
     background: var(--c);
     cursor: pointer;
@@ -966,7 +966,7 @@
     font-size: 0.75rem;
     color: var(--ink-primary);
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 999px;
     padding: 0.25rem 0.7rem;
     margin: 0;
@@ -978,7 +978,7 @@
     padding: 0;
     margin: 0;
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 16px;
     overflow: hidden;
   }
@@ -989,7 +989,7 @@
   }
 
   .type-list > li + li {
-    border-top: 1px solid var(--fill-tertiary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
   .type-row {
@@ -1227,8 +1227,8 @@
   }
 
   .docs-tabs__tab:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     border-radius: 4px;
   }
 
@@ -1276,8 +1276,8 @@
   }
 
   .link-list a:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     border-radius: 8px;
   }
 
@@ -1313,7 +1313,7 @@
    Used on the Layout page for both Grid values and the Spacing scale. */
   .token-list {
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 16px;
     overflow: hidden;
   }
@@ -1327,7 +1327,7 @@
   }
 
   .token-list__row + .token-list__row {
-    border-top: 1px solid var(--fill-tertiary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
   .token-list__name {
@@ -1397,7 +1397,7 @@
   /* Full-width rows: ring sits just inside so it never collides with the
    container edge. No converge — a 6px→-2px sweep would fly in from outside. */
   a.token-list__row:focus-visible {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: -2px;
     animation: none;
   }
@@ -1479,7 +1479,7 @@
   /* These rows are spaced cards, not edge-to-edge, so they take the standard
    outset ring + converge instead of the inset treatment above. */
   .token-list--flush a.token-list__row:focus-visible {
-    outline-offset: 2px;
+    outline-offset: var(--focus-ring-offset);
     animation: focus-ring-converge var(--motion-default);
   }
 
@@ -1519,7 +1519,7 @@
     min-width: 0;
     overflow: hidden;
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 16px;
   }
 
@@ -1543,7 +1543,7 @@
     min-height: calc(200px + 5rem);
     padding: 2.5rem;
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 16px;
   }
 
@@ -1573,7 +1573,7 @@
   .preview-card__meta {
     position: relative;
     padding: 0.875rem 1rem;
-    border-top: 1px solid var(--fill-tertiary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
   .preview-card__meta-text {
@@ -1672,7 +1672,8 @@
 
   .grid-overlay__col {
     background: color-mix(in srgb, var(--grid-overlay-color) 16%, transparent);
-    border-inline: 1px solid color-mix(in srgb, var(--grid-overlay-color) 30%, transparent);
+    border-inline: var(--border-width) solid
+      color-mix(in srgb, var(--grid-overlay-color) 30%, transparent);
   }
 
   /* Outer margin bands, with their measured value */
@@ -1838,7 +1839,7 @@
    so neutral retinting is unaffected. (Component library has its own block.) */
   @media (forced-colors: active) {
     .docs-switch__toggle {
-      border: 1px solid ButtonBorder;
+      border: var(--border-width) solid ButtonBorder;
     }
 
     .docs-switch__toggle[aria-checked="true"] {
@@ -1857,7 +1858,7 @@
     /* Swatches convey meaning via background alone — keep an outline so the grid
      doesn't flatten into blank cells. */
     .palette-swatch {
-      border: 1px solid ButtonBorder;
+      border: var(--border-width) solid ButtonBorder;
     }
   }
 }

@@ -92,6 +92,14 @@
     --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
     --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
+    /* Focus-ring geometry — the ring's colour is --focus; these are its shape.
+     Every focus-visible outline in base.css/components.css reads these, so the
+     ring's thickness and gap are tuned here in one place, not per component.
+     Components with a bespoke offset (a tight inline control, a pill) keep their
+     own outline-offset literal. */
+    --focus-ring-width: 3px;
+    --focus-ring-offset: 2px;
+
     /* Foreground — the color used for text/icons sitting on the -soft
      background. Only exists for primary (brand); tints use their
      solid color as text directly (Ruter's pattern — only accent has
@@ -271,6 +279,11 @@
     --space-96: 6rem;
     --space-112: 7rem;
     --space-128: 8rem;
+
+    /* Border width — the hairline every outlined surface (inputs, cards,
+     dividers) shares. One knob so borders can thicken or retint with the
+     system instead of being frozen at 1px in dozens of rules. */
+    --border-width: 1px;
 
     /* Radii — on the spacing rhythm (8/16/24) */
     --radius-sm: 8px;

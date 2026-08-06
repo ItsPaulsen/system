@@ -50,8 +50,8 @@
   }
 
   .switch__input:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   .switch__input:disabled {
@@ -150,8 +150,8 @@
 
   .checkbox__input:focus-visible,
   .radio__input:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* Checkmark — an inline SVG overlaid on the box via grid, so the tick can
@@ -387,8 +387,8 @@
   }
 
   .tabs__radio:focus-visible + .tabs__tab {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     animation: focus-ring-converge var(--motion-default);
   }
 
@@ -477,7 +477,7 @@
     display: inline-flex;
     align-items: center;
     min-height: 48px;
-    border: 1px solid var(--ink-tertiary);
+    border: var(--border-width) solid var(--ink-tertiary);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink-primary);
@@ -701,7 +701,7 @@
     width: 100%;
     min-height: 48px;
     padding: 0 1rem;
-    border: 1px solid var(--ink-tertiary);
+    border: var(--border-width) solid var(--ink-tertiary);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink-primary);
@@ -917,7 +917,7 @@
     gap: 0.5rem;
     min-height: 48px;
     padding: 0 1rem;
-    border: 1px solid var(--ink-tertiary);
+    border: var(--border-width) solid var(--ink-tertiary);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink-primary);
@@ -1091,8 +1091,8 @@
   }
 
   .button:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* Modifiers — tighten padding on whichever side the icon sits */
@@ -1304,7 +1304,7 @@
   .badge--outline {
     background: transparent;
     color: var(--ink-primary);
-    border: 1px solid var(--fill-secondary);
+    border: var(--border-width) solid var(--fill-secondary);
   }
 
   /* ── Card ──────────────────────────────────────────────────────────────── */
@@ -1374,8 +1374,8 @@
 
   a.card:focus-visible,
   button.card:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   @media (hover: hover) {
@@ -1516,7 +1516,7 @@
     min-height: var(--chip-h);
     padding-block: 0;
     padding-inline: var(--chip-px);
-    border: 1px solid var(--fill-secondary);
+    border: var(--border-width) solid var(--fill-secondary);
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink-primary);
@@ -1625,8 +1625,8 @@
 
   .chip:focus-visible,
   .chip:has(:focus-visible) {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     animation: focus-ring-converge var(--motion-default);
   }
 
@@ -1927,7 +1927,7 @@
     justify-content: space-between;
     gap: 0.5rem;
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--fill-tertiary);
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
   }
 
   .sheet__title {
@@ -1960,8 +1960,8 @@
   }
 
   .sheet__close:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   .sheet__close svg {
@@ -2038,8 +2038,8 @@
   /* Ring the whole item (not just the summary) when focused; converges in like
    the other focus rings. */
   .accordion__item:has(.accordion__summary:focus-visible) {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
     animation: focus-ring-converge var(--motion-default);
   }
 
@@ -2122,7 +2122,7 @@
   .table-wrap {
     overflow-x: auto;
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: 12px;
   }
 
@@ -2136,7 +2136,7 @@
   .table td {
     padding: 0.625rem 0.75rem;
     text-align: start;
-    border-bottom: 1px solid var(--fill-tertiary);
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
   }
 
   .table th {
@@ -2304,7 +2304,7 @@
     .skeleton {
       forced-color-adjust: none;
       background: Canvas;
-      border: 1px solid GrayText;
+      border: var(--border-width) solid GrayText;
     }
   }
 
@@ -2489,7 +2489,7 @@
   @media (forced-colors: active) {
     /* Switch: outline the track, fill it on when checked, keep the knob solid. */
     .switch__input {
-      border: 1px solid ButtonBorder;
+      border: var(--border-width) solid ButtonBorder;
     }
 
     .switch__input:checked {
@@ -2679,7 +2679,7 @@
 
   /* No offset: the ring sits flush so it isn't clipped by the adjacent buttons. */
   .pagination__link:focus-visible {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 0;
   }
 
@@ -2790,13 +2790,13 @@
   }
 
   .slider:focus-visible::-webkit-slider-thumb {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 0;
     animation: focus-ring-converge var(--motion-default);
   }
 
   .slider:focus-visible::-moz-range-thumb {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 0;
     animation: focus-ring-converge var(--motion-default);
   }
@@ -3011,9 +3011,9 @@
    </div> */
   .calendar {
     width: max-content;
-    padding: 0.75rem;
+    padding: var(--space-16);
     background: var(--background-secondary);
-    border: 1px solid var(--fill-tertiary);
+    border: var(--border-width) solid var(--fill-tertiary);
     border-radius: var(--radius-md);
   }
 
@@ -3124,8 +3124,8 @@
   }
 
   .calendar__nav:focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   .calendar__weekdays,
@@ -3167,7 +3167,7 @@
   /* Day cells sit tight in the grid, so the ring hugs them (no offset) and skips
    the global converge animation (no pulse). */
   .calendar__day:focus-visible {
-    outline: 3px solid var(--focus);
+    outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 0;
     animation: none;
   }

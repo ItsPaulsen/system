@@ -516,9 +516,10 @@
     }
   }
 
-  /* Hover pill — desktop rail only (pointer-capable). */
+  /* Hover pill — desktop rail only (pointer-capable). The active link keeps its
+   own surface, so it opts out of the hover pill. */
   @media (min-width: 1024px) and (hover: hover) {
-    .sidebar__link:hover > span {
+    .sidebar__link:not(.is-active):hover > span {
       background: var(--background-secondary);
     }
   }

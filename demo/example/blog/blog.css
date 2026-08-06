@@ -83,7 +83,7 @@
 /* Collapsible groups (native <details>) with a hairline above and a chevron
    that flips when open. Interactive at every width, unlike the footer columns. */
 .blog-filter__group {
-  border-top: 1px solid var(--fill-tertiary);
+  border-top: var(--border-width) solid var(--fill-tertiary);
 }
 
 .blog-filter__head {

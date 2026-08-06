@@ -18,7 +18,7 @@
 }
 
 .comm-row + .comm-row {
-  border-top: 1px solid rgb(from var(--ink-base) r g b / 0.12);
+  border-top: var(--border-width) solid var(--fill-tertiary);
 }
 
 .comm-row__text {

@@ -154,8 +154,8 @@
 }
 
 .login__help:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: var(--focus-ring-offset);
   border-radius: var(--radius-full);
 }
 
@@ -182,5 +182,5 @@
    single-class base rules — keeps stylelint's specificity order happy). */
 .priv-toggle + .priv-toggle,
 .login + .login {
-  border-top: 1px solid rgb(from var(--ink-base) r g b / 0.12);
+  border-top: var(--border-width) solid var(--fill-tertiary);
 }

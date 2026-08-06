@@ -266,7 +266,7 @@
 }
 
 .ex-settings__row + .ex-settings__row {
-  border-top: 1px solid var(--fill-tertiary);
+  border-top: var(--border-width) solid var(--fill-tertiary);
 }
 
 .ex-settings__text {

@@ -193,3 +193,54 @@ body {
   font-weight: var(--font-body-small-weight);
   color: var(--ink-secondary);
 }
+
+/* ── Sub-page column + card ─────────────────────────────────────────────────
+   Detail pages (About, Communication, Privacy) share one scaffolding: the same
+   content column as the hero (cards stack in it 24 apart), and a capped,
+   padded card. Keeping it here means the measure/padding/title live in one
+   place instead of drifting across three page files. */
+.settings-column {
+  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--grid-margin, 1rem);
+  display: grid;
+  gap: var(--space-24);
+}
+
+.settings-subcard {
+  max-width: 42rem; /* 672 — rounded from the 692 Sketch measure onto the 2xl step */
+  padding: var(--space-24); /* 24 on mobile, 32 from md */
+}
+
+@media (min-width: 768px) {
+  .settings-subcard {
+    padding: var(--space-32);
+  }
+}
+
+/* Standalone card title (Privacy, Communication). About's title sits in its own
+   head row with the edit button, so it borrows this type but resets the margin
+   (see about.css). Steps title-small → title-medium from md. */
+.settings-subcard__title {
+  margin: 0 0 var(--space-24);
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+  color: var(--ink-primary);
+}
+
+@media (min-width: 768px) {
+  .settings-subcard__title {
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+  }
+}
+
+/* A card whose title sits over prose (a paragraph), not a divided list, wants a
+   tighter gap beneath the title: the list cards get their 24 from the row's own
+   padding, prose has no such padding to lean on. Opt in per card. */
+.settings-subcard--prose .settings-subcard__title {
+  margin-bottom: var(--space-16);
+}

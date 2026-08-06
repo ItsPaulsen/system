@@ -10,7 +10,7 @@
       <nav class="nav-menu ex-topbar__nav" aria-label="Primary">
         <ul class="nav-menu__list">
           <li><a class="nav-menu__link" href="/demo/example/blog/">Blog</a></li>
-          <li><a class="nav-menu__link" href="#">Article</a></li>
+          <li><a class="nav-menu__link" href="/demo/example/blog/post/">Article</a></li>
           <li><a class="nav-menu__link" href="#">Settings</a></li>
         </ul>
       </nav>

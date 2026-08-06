@@ -1,0 +1,288 @@
+/* Article (blog post) — a CMS-composed reading page. This file owns layout and
+   the prose flow only; every component inside (breadcrumb, avatar, accordion,
+   table, blog cards) reuses components.css / blog.css with its real classes, so
+   dark mode is a pure token swap.
+
+   Surfaces mirror the blog listing: the page sits on --background-secondary
+   (white in light), and the article body sits on a recessed --background-primary
+   band with a rounded top. In dark theme those two swap lift, automatically.
+
+   The reading column is a fixed measure (~590px in the Sketch) centred inside the
+   full content wrap. Full-width blocks (cover, related) use the wrap; text and
+   inline media use the narrow measure. */
+
+@layer components {
+  .ex-article {
+    background: var(--background-secondary);
+  }
+
+  /* Content container — same recipe as .blog__inner and the card grid: content
+     caps at --container-max, gutters = --grid-margin. */
+  .article-wrap {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+  }
+
+  /* ── Intro (on the page surface) ─────────────────────────────────────────
+     Breadcrumb → title → standfirst, with the byline beside the text above 1024
+     and stacked under it at 1024 and below, then the full-width cover. */
+  .article-intro {
+    padding-block: var(--space-32) 0;
+  }
+
+  .article-intro__row {
+    margin-top: var(--space-48);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  .article-intro__lead {
+    max-width: 49rem;
+  }
+
+  .article-title {
+    margin: 0;
+    color: var(--ink-primary);
+
+    /* Base (mobile): headline-small 38. Steps to headline-medium 48 at md. */
+    font-size: var(--font-headline-small-size);
+    line-height: var(--font-headline-small-lh);
+    font-weight: var(--font-headline-small-weight);
+  }
+
+  .article-standfirst {
+    margin: var(--space-24) 0 0;
+    max-width: 40rem;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-large-size);
+    line-height: var(--font-body-large-lh);
+    font-weight: var(--font-body-large-weight);
+  }
+
+  /* Byline: avatar + name/date, with a 2px rule on its left. The rule is always
+     there, in both the stacked and side-by-side layouts. */
+  .article-byline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    padding-inline-start: var(--space-24);
+    border-inline-start: 2px solid var(--fill-tertiary);
+  }
+
+  .article-byline__meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .article-byline__name {
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+
+    /* Tightened to 21px (matching the date's line-height) so name + date sit close. */
+    line-height: 21px;
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .article-byline__date {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-weight);
+  }
+
+  .article-cover {
+    margin: var(--space-48) 0 0;
+  }
+
+  .article-cover__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  /* ── Body band (recessed) ────────────────────────────────────────────────
+     Rounded top, runs flush into the footer at the bottom (same colour), so
+     there's no seam. */
+  .article-band {
+    margin-top: var(--space-64);
+    padding-block: var(--space-64) var(--space-96);
+    background: var(--background-primary);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  /* ── Prose (the CMS block flow) ──────────────────────────────────────────
+     A single rhythm engine drives spacing so a customer can add blocks in any
+     order and still get correct vertical spacing:
+       • 48 between top-level blocks (the default),
+       • 12 from a heading down to the block it introduces,
+       • 12 from a paragraph down to the list it leads into.
+     Everything below is component styling; the three rules above own the gaps. */
+  .prose {
+    max-width: 37rem;
+    margin-inline: auto;
+    color: var(--ink-primary);
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
+  }
+
+  .prose > * {
+    margin-block: 0;
+  }
+
+  .prose > * + * {
+    margin-top: var(--space-48);
+  }
+
+  .prose > :is(h2, h3) + * {
+    margin-top: var(--space-12);
+  }
+
+  .prose > p + :is(ul, ol) {
+    margin-top: var(--space-12);
+  }
+
+  .prose h2 {
+    color: var(--ink-primary);
+
+    /* Base (mobile): title-medium 28. Steps to title-large 32 at md. */
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+  }
+
+  .prose h3 {
+    color: var(--ink-primary);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  /* Lists: markers hang in the gutter; items breathe by 8. The li's inline
+     padding sits between the outside marker and the text, so it adds 4 of gap
+     there without changing the list indent. */
+  .prose ul,
+  .prose ol {
+    padding-inline-start: var(--space-24);
+  }
+
+  .prose li {
+    padding-inline-start: var(--space-4);
+  }
+
+  .prose li + li {
+    margin-top: var(--space-8);
+  }
+
+  .prose li::marker {
+    color: var(--ink-primary);
+  }
+
+  /* Ordered-list numbers stepped up to semibold. */
+  .prose ol li::marker {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Inline links inside running text — matches the .link convention. */
+  .prose a {
+    color: var(--ink-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Inline figure: same measure as the text, 3:2 like the cards. Only the inline
+     margin is reset (the UA default is 40px) — top spacing is left to the flow
+     rules above, which margin-inline doesn't touch. */
+  .prose figure {
+    margin-inline: 0;
+  }
+
+  .prose figure img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  .prose figcaption {
+    margin-top: var(--space-12);
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  /* ── Related ─────────────────────────────────────────────────────────────
+     Full-width divider, heading, then a grid of blog cards. */
+  .article-related {
+    margin-top: var(--space-96);
+  }
+
+  .article-related__divider {
+    height: 1px;
+    margin: 0;
+    border: 0;
+    background: var(--fill-tertiary);
+  }
+
+  .article-related__title {
+    margin: var(--space-64) 0 0;
+    color: var(--ink-primary);
+    font-size: var(--font-headline-small-size);
+    line-height: var(--font-headline-small-lh);
+    font-weight: var(--font-headline-small-weight);
+  }
+
+  /* Same column logic as the front page's 3-up: 1 → 2 (≥640) → 3 (≥1024). */
+  .article-related__grid {
+    margin-top: var(--space-48);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gutter, 1rem);
+  }
+
+  /* Type steps up on tablet (independent of where the byline sits). */
+  @media (min-width: 640px) {
+    .article-title {
+      font-size: var(--font-headline-medium-size);
+      line-height: var(--font-headline-medium-lh);
+      font-weight: var(--font-headline-medium-weight);
+    }
+
+    .prose h2 {
+      font-size: var(--font-title-large-size);
+      line-height: var(--font-title-large-lh);
+      font-weight: var(--font-title-large-weight);
+    }
+
+    .article-related__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ≥1024 — related reaches three columns (front-page 3-up parity). */
+  @media (min-width: 1024px) {
+    .article-related__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* >1024: the byline sits beside the text. At 1024 and below it stacks under
+     the text; the left rule stays either way. */
+  @media (min-width: 1025px) {
+    .article-intro__row {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-32);
+    }
+
+    .article-byline {
+      flex: none;
+    }
+  }
+}

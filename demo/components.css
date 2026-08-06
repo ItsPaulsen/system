@@ -2328,7 +2328,7 @@
   .breadcrumb__link {
     display: inline-flex;
     align-items: center;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     text-decoration: none;
     border-radius: 4px;
     transition: color var(--motion-default);
@@ -2336,12 +2336,12 @@
 
   @media (hover: hover) {
     .breadcrumb__link:hover {
-      color: var(--ink-primary);
+      text-decoration: underline;
     }
   }
 
   .breadcrumb__current {
-    color: var(--ink-primary);
+    color: var(--ink-secondary);
   }
 
   /* ── Navigation Menu ───────────────────────────────────────────────────────

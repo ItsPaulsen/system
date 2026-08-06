@@ -27,3 +27,54 @@
   place();
   desktop.addEventListener("change", place);
 })();
+
+// Category filter — checking one or more Category boxes narrows the grid to
+// posts whose tag matches; with none checked, everything shows. When nothing
+// matches, the grid and pagination give way to the empty state, whose "Clear
+// all filters" button unchecks every box and restores the full grid.
+//
+// Categories are read from the visible label / tag text, so there's no second
+// source of truth to keep in sync with the markup. The one .blog-filter node is
+// relocated between rail and sheet (see above) rather than recreated, so a
+// change listener bound to it survives the move.
+(function () {
+  const filter = document.querySelector(".blog-filter");
+  const grid = document.querySelector(".blog__grid");
+  const empty = document.querySelector(".blog-empty");
+  const pagination = document.querySelector(".blog__pagination");
+  if (!filter || !grid || !empty) return;
+
+  const boxes = [...filter.querySelectorAll('input[type="checkbox"]')];
+  const cards = [...grid.querySelectorAll(".blog-card")];
+
+  const labelOf = (box) =>
+    box.closest(".checkbox")?.querySelector(".checkbox__label")?.textContent.trim().toLowerCase();
+  const categoryOf = (card) =>
+    card.querySelector(".blog-card__tag")?.textContent.trim().toLowerCase();
+
+  const apply = () => {
+    const active = new Set(boxes.filter((b) => b.checked).map(labelOf));
+    let shown = 0;
+    cards.forEach((card) => {
+      const match = active.size === 0 || active.has(categoryOf(card));
+      card.hidden = !match;
+      if (match) shown += 1;
+    });
+
+    const isEmpty = shown === 0;
+    empty.hidden = !isEmpty;
+    grid.hidden = isEmpty;
+    if (pagination) pagination.hidden = isEmpty;
+  };
+
+  filter.addEventListener("change", (e) => {
+    if (e.target.matches('input[type="checkbox"]')) apply();
+  });
+
+  empty.querySelector("[data-blog-clear]")?.addEventListener("click", () => {
+    boxes.forEach((b) => {
+      b.checked = false;
+    });
+    apply();
+  });
+})();

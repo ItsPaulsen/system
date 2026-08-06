@@ -164,6 +164,15 @@
   flex-direction: column;
 }
 
+/* display:flex/grid beat the [hidden] UA rule, so the filter's show/hide is a
+   no-op without these — restore display:none when blog.js hides a card, the
+   whole grid, or the pagination. */
+.blog-card[hidden],
+.blog__grid[hidden],
+.blog__pagination[hidden] {
+  display: none;
+}
+
 .blog-card__content {
   flex: 1;
   display: flex;
@@ -210,6 +219,57 @@
   margin-top: 2.5rem;
   display: flex;
   justify-content: center;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+/* Shown when the active filters match no posts (blog.js toggles [hidden] and
+   hides the grid + pagination). Card-surface panel matching the listing band's
+   primary→secondary tonal step, centred column of icon, title, text, action. */
+.blog-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 4rem 1.5rem;
+  background: var(--background-secondary);
+  border-radius: var(--radius-lg);
+}
+
+/* display:flex beats the [hidden] UA rule — restore display:none so the panel
+   stays out until blog.js reveals it. */
+.blog-empty[hidden] {
+  display: none;
+}
+
+.blog-empty__icon {
+  width: 48px;
+  height: 48px;
+  stroke-width: 1.25;
+  color: var(--ink-secondary);
+}
+
+.blog-empty__title {
+  margin: 0;
+  font-size: var(--font-title-small-size);
+  line-height: var(--font-title-small-lh);
+  font-weight: var(--font-title-small-weight);
+  color: var(--ink-primary);
+}
+
+.blog-empty__text {
+  margin: 0;
+  max-width: 32ch;
+  font-size: var(--font-body-medium-size);
+  line-height: var(--font-body-medium-lh);
+  color: var(--ink-secondary);
+}
+
+/* Sit the action a touch below the copy — a little more breathing room than the
+   1rem column gap gives. */
+.blog-empty .button {
+  margin-top: 0.5rem;
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */

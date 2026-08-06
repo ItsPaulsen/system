@@ -65,7 +65,8 @@ body {
 }
 
 /* ── Section grid ───────────────────────────────────────────────────────────
-   Same content column as the hero. One column on mobile; three across from md. */
+   Same content column as the hero. One column on mobile, two from md, three
+   from lg (1024). */
 .settings-grid {
   max-width: calc(var(--container-max) + 2 * var(--grid-margin));
   width: 100%;
@@ -76,6 +77,12 @@ body {
 }
 
 @media (min-width: 768px) {
+  .settings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
   .settings-grid {
     grid-template-columns: repeat(3, 1fr);
   }

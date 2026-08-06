@@ -102,6 +102,19 @@
   outline: none;
 }
 
+/* Email error message. The shared .input__error is always visible (paired with
+   an explicit --invalid on the component page); here we let the browser drive
+   timing instead — hide it until the field reports :user-invalid, i.e. after
+   the user has left a mistyped address. It reappears/clears live on each edit,
+   and the red border comes from the component's own :user-invalid rule. */
+.about-form .input__error {
+  display: none;
+}
+
+.about-form .input:has(:user-invalid) .input__error {
+  display: inline-flex;
+}
+
 .about-form__actions {
   display: flex;
   gap: var(--space-8);

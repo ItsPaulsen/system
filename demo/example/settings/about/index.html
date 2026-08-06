@@ -119,19 +119,32 @@
             class="about-form"
             data-about-form
             hidden
+            novalidate
             tabindex="-1"
             aria-label="Edit contact information"
           >
             <label class="input">
               <span class="input__label">First name</span>
               <span class="input__container">
-                <input class="input__element" type="text" name="first-name" value="John" />
+                <input
+                  class="input__element"
+                  type="text"
+                  name="first-name"
+                  value="John"
+                  autocomplete="given-name"
+                />
               </span>
             </label>
             <label class="input">
               <span class="input__label">Last name</span>
               <span class="input__container">
-                <input class="input__element" type="text" name="last-name" value="Doe" />
+                <input
+                  class="input__element"
+                  type="text"
+                  name="last-name"
+                  value="Doe"
+                  autocomplete="family-name"
+                />
               </span>
             </label>
             <label class="input">
@@ -142,13 +155,43 @@
                   type="email"
                   name="email"
                   value="john.doe@gmail.com"
+                  autocomplete="email"
+                  required
+                  pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                  aria-describedby="about-email-error"
                 />
+              </span>
+              <!-- Shown only once the browser reports the field invalid after the
+                   user has left it (:user-invalid, driven from about.css) — never
+                   while first typing, and it clears live once the address is fixed. -->
+              <span class="input__error" id="about-email-error">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                  <path d="M12 8v4" />
+                  <path d="M12 16h.01" />
+                </svg>
+                Enter a valid email address.
               </span>
             </label>
             <label class="input">
               <span class="input__label">Phone number</span>
               <span class="input__container">
-                <input class="input__element" type="tel" name="phone" value="99 88 77 66" />
+                <input
+                  class="input__element"
+                  type="tel"
+                  name="phone"
+                  value="99 88 77 66"
+                  autocomplete="tel"
+                  inputmode="tel"
+                />
               </span>
             </label>
 

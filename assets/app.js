@@ -694,20 +694,6 @@ function hydrateType() {
   });
 }
 
-// Show the active viewport width and matching tier (read thresholds from tokens).
-function updateBreakpoint() {
-  const el = document.querySelector("[data-bp-indicator]");
-  if (!el) return;
-  const rootStyle = getComputedStyle(document.documentElement);
-  const width = window.innerWidth;
-  const tablet = parseFloat(rootStyle.getPropertyValue("--bp-tablet"));
-  const desktop = parseFloat(rootStyle.getPropertyValue("--bp-desktop"));
-  let tier = "mobile";
-  if (width >= desktop) tier = "desktop";
-  else if (width >= tablet) tier = "tablet";
-  el.textContent = `${width}px · ${tier}`;
-}
-
 // Rebuild the grid overlay's columns to match --grid-columns at the current breakpoint,
 // and label the outer margin bands with the current --grid-margin.
 function buildGridOverlay() {
@@ -774,7 +760,6 @@ function refreshResponsive() {
   hydratePreviews();
   buildGridOverlay();
   syncFooterColumns();
-  updateBreakpoint();
 }
 
 /* ── Init ──────────────────────────────────────────────────────────────── */

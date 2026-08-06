@@ -32,6 +32,15 @@
   cancelBtn.addEventListener("click", () => setEditing(false));
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+    // Block Save on a bad field, but never show the browser's native bubble
+    // (reportValidity) — it's unstyled and off-brand. Pressing Save already
+    // blurred the field, so it's :user-invalid and our own red border +
+    // message are showing; just focus the offender and keep the form open.
+    const invalid = form.querySelector(":invalid");
+    if (invalid) {
+      invalid.focus();
+      return;
+    }
     setEditing(false);
   });
 })();

@@ -8,10 +8,6 @@
 
 @layer tokens {
   :root {
-    /* Breakpoints — mobile <640, tablet ≥640, desktop ≥1024 */
-    --bp-tablet: 640px;
-    --bp-desktop: 1024px;
-
     /* ── Anchors ─────────────────────────────────────────────────────────
      One channel triple per family. Change --anchor-neutral to retint the
      entire neutral system in one line — grays, ink, fills, overlay, and

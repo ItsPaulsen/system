@@ -4,6 +4,19 @@
    nothing to redraw. All type uses the --font-* tokens; supporting text is
    --ink-secondary (not tertiary). */
 
+/* The example <main> is the "Skip to content" target (tabindex=-1, focused
+   programmatically), not a tabbable control — kill the focus ring so the skip
+   link doesn't outline the whole page surface. Mirrors .wrap in base.css.
+   scroll-margin-top clears the sticky 72px topbar (see .ex-topbar) so skipping
+   lands the content just below the bar instead of scrolling it underneath. */
+#ex-main {
+  scroll-margin-top: 72px;
+}
+
+#ex-main:focus-visible {
+  outline: none;
+}
+
 .ex {
   /* Dot-grid background so white (secondary) cards separate from the near-white
      surface on light theme. Dots derive from --ink-base, so they auto-invert in

@@ -7,6 +7,10 @@
    80 on mobile, 128 at md. */
 .blog-page {
   gap: 5rem;
+
+  /* Flat hero surface — drop the .ex dot grid and its top gradient wash; keep
+     the solid --background-secondary from .ex. (Front page keeps its dots.) */
+  background-image: none;
 }
 
 @media (min-width: 768px) {
@@ -15,11 +19,13 @@
   }
 }
 
-/* Recessed band with a 32px rounded top, sitting flush above the footer — same
-   treatment as the example card band. */
+/* Recessed band with a rounded top (24 on mobile, 32 from md), sitting flush
+   above the footer — same treatment as the example card band. */
 .blog {
   background: var(--background-primary);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+  /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
   /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
      64 bottom gray gap before the footer (→ 128 at md). */
@@ -215,10 +221,12 @@
   }
 }
 
-/* md ≥768 — deeper gray gap above the footer (front-page band parity). */
+/* md ≥768 — deeper gray gap above the footer (front-page band parity), and the
+   rounded top steps up from 24 to 32. */
 @media (min-width: 768px) {
   .blog {
     padding-bottom: 8rem;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
 }
 

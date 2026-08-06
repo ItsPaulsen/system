@@ -786,7 +786,9 @@
 
 .ex-work {
   background: var(--background-primary);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+
+  /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
   /* Top padding is the gray gap down to the first (featured) card; bottom is the
      gray gap between the last cards and the footer. */
@@ -892,6 +894,7 @@
 @media (min-width: 768px) {
   .ex-work {
     padding-bottom: 8rem; /* 128 gray gap above the footer */
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
 
   .ex-work__row--2 {

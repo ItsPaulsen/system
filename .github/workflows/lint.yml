@@ -5,6 +5,12 @@ on:
     branches: [main]
   pull_request:
 
+# A newer push to the same branch/PR supersedes older lint runs — cancel them
+# so rapid pushes don't queue a stack of stale runs (and stale failure emails).
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: ubuntu-latest

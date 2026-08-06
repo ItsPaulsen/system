@@ -131,12 +131,12 @@
   gap: 0.5rem; /* 8 on mobile; 12 at md */
 }
 
-/* Base (mobile): render the lg-marked hero buttons at md scale (mirrors the
-   [data-size="md"] tokens). They go back to lg at md. */
-.ex-hero__actions[data-size="lg"] {
-  --ds-size-root: 0.25rem;
-  --ds-radius-root: 0.25rem;
-  --ds-font-size-addition: 0rem;
+/* Base (mobile): render the lg-marked hero buttons at md scale (48/16). They
+   go back to lg (56/18) at md. Overrides the button size vars directly so it
+   beats the [data-size="lg"] .button rule. */
+.ex-hero__actions[data-size="lg"] .button {
+  --button-size: 48px;
+  --button-font: var(--font-body-small-emphasized-size);
 }
 
 @media (min-width: 768px) {
@@ -144,10 +144,9 @@
     gap: 0.75rem;
   }
 
-  .ex-hero__actions[data-size="lg"] {
-    --ds-size-root: 0.3125rem;
-    --ds-radius-root: 0.3125rem;
-    --ds-font-size-addition: 0.125rem;
+  .ex-hero__actions[data-size="lg"] .button {
+    --button-size: 56px;
+    --button-font: var(--font-body-medium-emphasized-size);
   }
 }
 

@@ -292,12 +292,11 @@
     --radius-xl: 32px;
     --radius-full: 999px;
 
-    /* Density scaling — a global knob. Components multiply these instead
-     of hardcoding pixels; toggling [data-size] on any
-     ancestor rescales everything within. Defaults match `data-size="md"`;
+    /* Density — [data-size="sm|md|lg"] on any ancestor nudges the label size of
+     density-aware components (see .chip) via this addition. Component pixel
+     sizes are set explicitly per size in the component itself (see .button's
+     --button-size ladder). Default matches `data-size="md"`; the sm/lg
      overrides live at the end of the file. */
-    --ds-size-root: 0.25rem;
-    --ds-radius-root: 0.25rem;
     --ds-font-size-addition: 0rem;
 
     /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
@@ -481,24 +480,19 @@
   }
 
   /* ── Density knob ──────────────────────────────────────────────────────────
-   Set `data-size="sm|md|lg"` on any ancestor to rescale everything driven by
-   --ds-* below that node. Root default matches md. */
+   Set `data-size="sm|md|lg"` on any ancestor to shift the label size of
+   density-aware components below that node (component pixel sizes are set
+   explicitly per size in the component). Root default matches md. */
 
   [data-size="sm"] {
-    --ds-size-root: 0.1875rem;
-    --ds-radius-root: 0.1875rem;
     --ds-font-size-addition: -0.125rem;
   }
 
   [data-size="md"] {
-    --ds-size-root: 0.25rem;
-    --ds-radius-root: 0.25rem;
     --ds-font-size-addition: 0rem;
   }
 
   [data-size="lg"] {
-    --ds-size-root: 0.3125rem;
-    --ds-radius-root: 0.3125rem;
     --ds-font-size-addition: 0.125rem;
   }
 

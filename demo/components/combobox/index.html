@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Combobox — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Combobox</h1>
+          </div>
+          <p class="lede">A text field that filters a list — type to narrow, then pick.</p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Default</h3>
+          <p class="section-note">
+            Built from the <a href="/demo/components/input/">Input</a> shell and the
+            <a href="/demo/components/select/">Select</a> popup. Type to filter; Arrow keys walk the
+            matches, Enter picks the highlighted one. Reach for
+            <a href="/demo/components/select/">Select</a> when the list is short enough to scan.
+          </p>
+          <div class="component-preview">
+            <div class="combobox" id="cb-team" data-combobox style="width: 280px">
+              <div class="input__container combobox__control">
+                <input
+                  class="input__element"
+                  type="text"
+                  role="combobox"
+                  aria-label="Team"
+                  aria-expanded="false"
+                  aria-autocomplete="list"
+                  aria-controls="cb-team-list"
+                  placeholder="Search teams…"
+                  autocomplete="off"
+                />
+                <span class="input__trailing combobox__chevron" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
+                </span>
+              </div>
+              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+              <ul class="select__list" id="cb-team-list" role="listbox" tabindex="-1" hidden>
+                <li class="select__option" role="option">Design</li>
+                <li class="select__option" role="option">Engineering</li>
+                <li class="select__option" role="option">Marketing</li>
+                <li class="select__option" role="option">Operations</li>
+                <li class="select__option" role="option">Product</li>
+                <li class="select__option" role="option">Research</li>
+                <li class="select__option" role="option">Sales</li>
+                <li class="select__option" role="option">Support</li>
+                <li class="combobox__empty" role="presentation" hidden>No results</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Filled</h3>
+          <p class="section-note">
+            The <code>--fill</code> skin on the container swaps the outline for a solid surface,
+            same as <a href="/demo/components/input/">Input</a> and
+            <a href="/demo/components/select/">Select</a>.
+          </p>
+          <div class="component-preview">
+            <div class="combobox" id="cb-team-fill" data-combobox style="width: 280px">
+              <div class="input__container input__container--fill combobox__control">
+                <input
+                  class="input__element"
+                  type="text"
+                  role="combobox"
+                  aria-label="Team"
+                  aria-expanded="false"
+                  aria-autocomplete="list"
+                  aria-controls="cb-team-fill-list"
+                  placeholder="Search teams…"
+                  autocomplete="off"
+                />
+                <span class="input__trailing combobox__chevron" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
+                </span>
+              </div>
+              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+              <ul class="select__list" id="cb-team-fill-list" role="listbox" tabindex="-1" hidden>
+                <li class="select__option" role="option">Design</li>
+                <li class="select__option" role="option">Engineering</li>
+                <li class="select__option" role="option">Marketing</li>
+                <li class="select__option" role="option">Operations</li>
+                <li class="select__option" role="option">Product</li>
+                <li class="select__option" role="option">Research</li>
+                <li class="select__option" role="option">Sales</li>
+                <li class="select__option" role="option">Support</li>
+                <li class="combobox__empty" role="presentation" hidden>No results</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"combobox"</span> <span class="tok-prop">data-combobox</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container combobox__control"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">role</span>=<span class="tok-str">"combobox"</span> <span class="tok-prop">aria-expanded</span>=<span class="tok-str">"false"</span>
+           <span class="tok-prop">aria-autocomplete</span>=<span class="tok-str">"list"</span> <span class="tok-prop">aria-controls</span>=<span class="tok-str">"cb-list"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__trailing combobox__chevron"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__list"</span> <span class="tok-prop">id</span>=<span class="tok-str">"cb-list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__option"</span> <span class="tok-prop">role</span>=<span class="tok-str">"option"</span><span class="tok-key">&gt;</span>Design<span class="tok-key">&lt;/li&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"combobox__empty"</span> <span class="tok-prop">role</span>=<span class="tok-str">"presentation"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/li&gt;</span>
+  <span class="tok-key">&lt;/ul&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

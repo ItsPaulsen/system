@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Input Group — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <style>
+      .component-preview .input {
+        width: 320px;
+      }
+    </style>
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Input Group</h1>
+          </div>
+          <p class="lede">
+            An input with addons — an icon, short text, or a button beside the field.
+          </p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Icon</h3>
+          <p class="section-note">
+            An SVG in the <code>input__leading</code> (or <code>input__trailing</code>) slot. The
+            slot shares the field's focus ring, and the icon is decorative
+            (<code>aria-hidden</code>) — the label names the field. <code>--rounded</code> gives the
+            pill search field.
+          </p>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Search</span>
+              <span class="input__container input__container--rounded">
+                <span class="input__leading" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                    <path d="M21 21l-6 -6" />
+                  </svg>
+                </span>
+                <input class="input__element" type="search" placeholder="Search…" />
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Text</h3>
+          <p class="section-note">
+            Short text addons — a unit, prefix, or suffix (e.g. <code>$</code>, <code>USD</code>).
+            Both slots can be used at once.
+          </p>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Amount</span>
+              <span class="input__container">
+                <span class="input__leading" aria-hidden="true">$</span>
+                <input class="input__element" type="text" inputmode="decimal" placeholder="0.00" />
+                <span class="input__trailing" aria-hidden="true">USD</span>
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Button</h3>
+          <p class="section-note">
+            Put a <code>button--flat</code> <a href="/demo/components/button/">Button</a> in a slot
+            (size it with <code>data-size="sm"</code>) for an inline action like copy or clear. It
+            picks up the right padding and sits flush to the field edge automatically.
+          </p>
+          <div class="component-preview">
+            <!-- Explicit label (for/id) rather than a wrapping <label>: the group
+                 holds two controls (the field + the Copy button), so a wrapping
+                 label would bind to both. -->
+            <div class="input">
+              <label class="input__label" for="ig-invite">Invite link</label>
+              <span class="input__container">
+                <input
+                  id="ig-invite"
+                  class="input__element"
+                  type="text"
+                  value="example.com/i/9f3ax"
+                  readonly
+                />
+                <span class="input__trailing" data-size="sm">
+                  <button type="button" class="button button--flat">Copy</button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__leading"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">type</span>=<span class="tok-str">"text"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__trailing"</span> <span class="tok-prop">data-size</span>=<span class="tok-str">"sm"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--flat"</span><span class="tok-key">&gt;</span>Copy<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/span&gt;</span>
+
+<span class="tok-com">&lt;!-- Slots: input__leading (start) · input__trailing (end).
+     Hold an SVG, short text, or a Button. --&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

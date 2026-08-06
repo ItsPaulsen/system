@@ -187,6 +187,34 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Loading</h3>
+          <p class="section-note">
+            Add <code>button--loading</code> and wrap the label in <code>button__label</code>. A
+            spinner replaces the label while the button holds its width and skin colour. Block
+            interaction with <code>aria-disabled="true"</code> + <code>aria-busy="true"</code> (not
+            the <code>disabled</code> attribute, which would gray it out).
+          </p>
+          <div class="component-preview">
+            <button
+              type="button"
+              class="button button--primary button--loading"
+              aria-disabled="true"
+              aria-busy="true"
+            >
+              <span class="button__label">Saving…</span>
+            </button>
+            <button
+              type="button"
+              class="button button--secondary button--loading"
+              aria-disabled="true"
+              aria-busy="true"
+            >
+              <span class="button__label">Saving…</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary"</span><span class="tok-key">&gt;</span>Continue<span class="tok-key">&lt;/button&gt;</span>
 

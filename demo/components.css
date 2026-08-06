@@ -448,6 +448,31 @@
     color: var(--red);
   }
 
+  /* Helper text below the field — wire it to the input with aria-describedby so
+   it's announced. Caption size, secondary ink; the .input column gap spaces it. */
+  .input__hint {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-secondary);
+  }
+
+  /* Error message — the invalid counterpart to the hint (red, with an alert
+   glyph). Pair with .input__container--invalid + aria-describedby on the input. */
+  .input__error {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--red);
+  }
+
+  .input__error svg {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+  }
+
   .input__container {
     display: inline-flex;
     align-items: center;
@@ -518,6 +543,36 @@
     cursor: not-allowed;
   }
 
+  /* File input — the whole field is the click target, so the native picker button
+   (::file-selector-button) is plain text, not a surface; the rest of the field
+   shows the chosen filename in secondary ink. No focus ring either (rule below) —
+   the field isn't a text-entry affordance. */
+  .input__element--file {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0;
+    color: var(--ink-secondary);
+    cursor: pointer;
+  }
+
+  .input__element--file::file-selector-button {
+    margin-inline-end: 0.5rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary-foreground);
+    font: inherit;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    cursor: pointer;
+  }
+
+  /* Keep the resting border on focus — clicking only opens the file picker. */
+  .input__container:has(.input__element--file):focus-within {
+    border-color: var(--ink-tertiary);
+    box-shadow: none;
+  }
+
   .input__leading,
   .input__trailing {
     display: inline-flex;
@@ -533,6 +588,14 @@
 
   .input__element:has(+ .input__trailing) {
     padding-inline-end: 0;
+  }
+
+  /* Input Group: a button in an addon slot hugs the field edge — drop the text
+   padding so the button's own shape defines the inset. See the Input Group
+   component, which composes .input__container with these addon slots. */
+  .input__leading:has(.button),
+  .input__trailing:has(.button) {
+    padding: 4px;
   }
 
   /* ── Textarea ──────────────────────────────────────────────────────────── */
@@ -1122,6 +1185,41 @@
 
   .button.button--flat:disabled {
     background: transparent;
+  }
+
+  /* Loading — a spinner replaces the label while the button holds its width and
+   keeps its skin colour (not the gray :disabled look). Interaction is blocked
+   with aria-disabled + pointer-events rather than the disabled attribute, so the
+   skin (and the spinner's currentcolor) stay intact. Pair with aria-busy="true"
+   and wrap the label in .button__label so it can be hidden.
+
+   <button class="button button--primary button--loading" aria-busy="true"
+           aria-disabled="true"><span class="button__label">Saving…</span></button> */
+  .button--loading {
+    position: relative;
+    pointer-events: none;
+  }
+
+  .button--loading .button__label {
+    visibility: hidden;
+  }
+
+  .button--loading::after {
+    content: "";
+    position: absolute;
+    width: 1.25em;
+    height: 1.25em;
+    border: 2px solid color-mix(in oklab, currentcolor 25%, transparent);
+    border-top-color: currentcolor;
+    border-radius: var(--radius-full);
+    animation: spinner-rotate 0.7s linear infinite;
+  }
+
+  /* Inline-action button (in an Input Group slot) sits a touch tighter than a
+   standalone one so it doesn't crowd the field; icon-only buttons stay square. */
+  .input__leading .button:not(.button--icon),
+  .input__trailing .button:not(.button--icon) {
+    padding-inline: 12px;
   }
 
   /* ── Badge ─────────────────────────────────────────────────────────────── */
@@ -2748,5 +2846,125 @@
   .slider-field:has(.slider:disabled) .slider-field__label,
   .slider-field:has(.slider:disabled) .slider-field__value {
     opacity: 0.5;
+  }
+
+  /* ── Combobox ──────────────────────────────────────────────────────────── */
+
+  /* A text field that filters a listbox — Select with type-to-filter. Reuses the
+   Input shell for the field and the Select popup (.select__list / .select__option)
+   for the menu, so only the wrapper, the chevron, and the "no results" row are
+   new here. JS (initComboboxes) owns filtering + the keyboard model.
+
+   <div class="combobox" data-combobox>
+     <div class="input__container combobox__control">
+       <input class="input__element" type="text" role="combobox"
+              aria-expanded="false" aria-autocomplete="list" aria-controls="cb-list" />
+       <span class="input__trailing combobox__chevron" aria-hidden="true"><svg…></span>
+     </div>
+     <ul class="select__list" id="cb-list" role="listbox" tabindex="-1" hidden>
+       <li class="select__option" role="option">…</li>
+       <li class="combobox__empty" hidden>No results</li>
+     </ul>
+   </div> */
+  .combobox {
+    position: relative;
+  }
+
+  /* Options set display:flex, which beats the [hidden] UA rule — so the JS
+   filter's option.hidden = true wouldn't actually hide the row without this. */
+  .select__option[hidden] {
+    display: none;
+  }
+
+  .combobox__chevron {
+    transition: rotate var(--motion-default);
+  }
+
+  .combobox__chevron svg {
+    width: 1.25em;
+    height: 1.25em;
+    color: var(--ink-secondary);
+  }
+
+  /* Flip the chevron while the listbox is open (aria-expanded lives on the input). */
+  .combobox:has([role="combobox"][aria-expanded="true"]) .combobox__chevron {
+    rotate: 180deg;
+  }
+
+  /* "No results" row — shown by JS when the filter matches nothing. */
+  .combobox__empty {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    font-size: var(--font-body-small-size);
+    color: var(--ink-secondary);
+  }
+
+  .combobox__empty[hidden] {
+    display: none;
+  }
+
+  /* ── Empty state ───────────────────────────────────────────────────────── */
+
+  /* Centred placeholder for "no results" / "nothing here yet". The icon badge
+   reuses the primary-soft recipe (same as the Card / settings icon); actions are
+   ordinary Buttons.
+
+   <div class="empty-state">
+     <span class="empty-state__icon" aria-hidden="true"><svg…></span>
+     <h3 class="empty-state__title">No results</h3>
+     <p class="empty-state__text">…</p>
+     <div class="empty-state__actions"><button class="button …">…</button></div>
+   </div> */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    max-width: 22rem;
+    margin-inline: auto;
+    padding: 2rem 1rem;
+  }
+
+  .empty-state__icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius-full);
+    background: var(--primary-soft);
+    color: var(--primary-foreground);
+  }
+
+  .empty-state__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .empty-state__title {
+    margin: 0;
+    font-size: var(--font-body-large-emphasized-size);
+    line-height: var(--font-body-large-emphasized-lh);
+    font-weight: var(--font-body-large-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  .empty-state__text {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+    color: var(--ink-secondary);
+  }
+
+  .empty-state__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
   }
 }

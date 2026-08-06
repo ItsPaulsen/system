@@ -250,13 +250,16 @@ const PROJECT_PAGES = {
         { label: "Button", href: "/demo/components/button/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
+        { label: "Combobox", href: "/demo/components/combobox/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
+        { label: "Empty State", href: "/demo/components/empty-state/" },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
+        { label: "Input Group", href: "/demo/components/input-group/" },
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
-        { label: "Navigation Menu", href: "/demo/components/navigation-menu/", new: true },
+        { label: "Navigation Menu", href: "/demo/components/navigation-menu/" },
         { label: "Pagination", href: "/demo/components/pagination/" },
         { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },
@@ -1031,6 +1034,134 @@ function initSelects() {
   });
 }
 
+// Combobox: a text field that filters a listbox. Reuses the Select popup markup
+// (.select__list/.select__option) but the keyboard model is input-first — typing
+// filters, Arrow keys walk only the visible rows, Enter picks the active one.
+// aria-activedescendant tracks the active row while focus stays in the input.
+function initComboboxes() {
+  document.querySelectorAll("[data-combobox]").forEach((root) => {
+    const input = root.querySelector('[role="combobox"]');
+    const list = root.querySelector('[role="listbox"]');
+    const options = [...root.querySelectorAll(".select__option")];
+    const empty = root.querySelector(".combobox__empty");
+    if (!input || !list || !options.length) return;
+
+    options.forEach((o, i) => {
+      if (!o.id) o.id = `${root.id || list.id || "combobox"}-opt-${i}`;
+    });
+    // Labels are static — cache them for filtering instead of reading the DOM.
+    const labels = options.map((o) => o.textContent.trim());
+    let activeIndex = -1;
+
+    const visible = () => options.filter((o) => !o.hidden);
+
+    const setActive = (opt) => {
+      activeIndex = opt ? options.indexOf(opt) : -1;
+      options.forEach((o) => o.classList.toggle("is-active", o === opt));
+      if (opt) {
+        opt.scrollIntoView({ block: "nearest" });
+        input.setAttribute("aria-activedescendant", opt.id);
+      } else {
+        input.removeAttribute("aria-activedescendant");
+      }
+    };
+    const open = () => {
+      if (!list.hidden) return;
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+    };
+    const close = () => {
+      if (list.hidden) return;
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      setActive(null);
+    };
+
+    // Substring filter (empty query shows everything); active row resets to the
+    // first match, and the "no results" row shows when nothing matches.
+    const filter = () => {
+      const q = input.value.trim().toLowerCase();
+      options.forEach((o, i) => {
+        o.hidden = q !== "" && !labels[i].toLowerCase().includes(q);
+      });
+      const vis = visible();
+      if (empty) empty.hidden = vis.length > 0;
+      setActive(vis[0] || null);
+    };
+    const choose = (opt) => {
+      if (!opt) return;
+      input.value = opt.textContent.trim();
+      options.forEach((o) => o.setAttribute("aria-selected", String(o === opt)));
+      close();
+    };
+
+    input.addEventListener("input", () => {
+      open();
+      filter();
+    });
+    input.addEventListener("focus", () => {
+      if (input.matches(":focus-visible")) {
+        open();
+        filter();
+      }
+    });
+    input.addEventListener("click", () => {
+      if (list.hidden) {
+        open();
+        filter();
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" || e.key === "Tab") {
+        close();
+        return;
+      }
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (list.hidden) {
+          open();
+          filter();
+          return;
+        }
+        const vis = visible();
+        if (!vis.length) return;
+        const cur = vis.indexOf(options[activeIndex]);
+        const next =
+          e.key === "ArrowDown" ? (cur + 1) % vis.length : (cur - 1 + vis.length) % vis.length;
+        setActive(vis[next]);
+        return;
+      }
+      if (e.key === "Enter") {
+        if (!list.hidden && activeIndex >= 0 && !options[activeIndex].hidden) {
+          e.preventDefault();
+          choose(options[activeIndex]);
+        }
+        return;
+      }
+      if ((e.key === "Home" || e.key === "End") && !list.hidden) {
+        const vis = visible();
+        if (!vis.length) return;
+        e.preventDefault();
+        setActive(e.key === "Home" ? vis[0] : vis[vis.length - 1]);
+      }
+    });
+
+    options.forEach((o) => {
+      // Keep focus in the input when picking with the mouse.
+      o.addEventListener("mousedown", (e) => e.preventDefault());
+      o.addEventListener("click", () => choose(o));
+      o.addEventListener("mousemove", () => setActive(o));
+    });
+    document.addEventListener("click", (e) => {
+      if (!root.contains(e.target)) close();
+    });
+    root.addEventListener("focusout", (e) => {
+      if (!root.contains(e.relatedTarget)) close();
+    });
+  });
+}
+
 // Place a popover under its invoker (flipping up when cramped, clamped to the
 // viewport). The stylesheet does this declaratively via CSS anchor positioning;
 // this is the fallback for engines that lack it (Firefox today).
@@ -1355,6 +1486,7 @@ function init() {
   hydratePreviews();
   initGridTabs();
   initSelects();
+  initComboboxes();
   initPopovers();
   initMenus();
   initPagination();

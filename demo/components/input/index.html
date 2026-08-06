@@ -77,17 +77,18 @@
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">Leading &amp; trailing</h3>
+          <h3 class="subhead">File</h3>
           <p class="section-note">
-            Slots accept an SVG or short text (e.g. <code>$</code>, <code>USD</code>).
+            <code>type="file"</code> — the whole field is the click target, so the native
+            <code>::file-selector-button</code> is plain text (no surface), not a button. For icons,
+            text, or a button beside the field, see
+            <a href="/demo/components/input-group/">Input Group</a>.
           </p>
           <div class="component-preview">
             <label class="input">
-              <span class="input__label">Amount</span>
+              <span class="input__label">Picture</span>
               <span class="input__container">
-                <span class="input__leading" aria-hidden="true">$</span>
-                <input class="input__element" type="text" placeholder="0.00" />
-                <span class="input__trailing" aria-hidden="true">USD</span>
+                <input class="input__element input__element--file" type="file" />
               </span>
             </label>
           </div>
@@ -100,21 +101,6 @@
               <span class="input__label">Email</span>
               <span class="input__container">
                 <input class="input__element" type="email" value="you@example.com" disabled />
-              </span>
-            </label>
-          </div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">Invalid</h3>
-          <p class="section-note">
-            Modifier lands on <code>.input__container</code>, not the <code>&lt;input&gt;</code>.
-          </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Invalid input</span>
-              <span class="input__container input__container--invalid">
-                <input class="input__element" type="text" placeholder="Error" />
               </span>
             </label>
           </div>
@@ -144,17 +130,80 @@
         </section>
 
         <section class="preview-block">
+          <h3 class="subhead">Helper text</h3>
+          <p class="section-note">
+            <code>input__hint</code> below the field; wire it with <code>aria-describedby</code> so
+            it's announced with the input.
+          </p>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Email</span>
+              <span class="input__container">
+                <input
+                  class="input__element"
+                  type="email"
+                  placeholder="you@example.com"
+                  aria-describedby="input-email-hint"
+                />
+              </span>
+              <span class="input__hint" id="input-email-hint">
+                We'll only use this to sign you in.
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Invalid</h3>
+          <p class="section-note">
+            <code>--invalid</code> lands on <code>.input__container</code> (not the
+            <code>&lt;input&gt;</code>), paired with an <code>input__error</code> message and
+            <code>aria-invalid</code> on the field.
+          </p>
+          <div class="component-preview">
+            <label class="input">
+              <span class="input__label">Email</span>
+              <span class="input__container input__container--invalid">
+                <input
+                  class="input__element"
+                  type="email"
+                  value="not-an-email"
+                  aria-invalid="true"
+                  aria-describedby="input-email-error"
+                />
+              </span>
+              <span class="input__error" id="input-email-error">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                  <path d="M12 8v4" />
+                  <path d="M12 16h.01" />
+                </svg>
+                Enter a valid email address.
+              </span>
+            </label>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Email<span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__leading"</span><span class="tok-key">&gt;</span>@<span class="tok-key">&lt;/span&gt;</span>
-    <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">type</span>=<span class="tok-str">"email"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">type</span>=<span class="tok-str">"email"</span> <span class="tok-prop">aria-describedby</span>=<span class="tok-str">"hint"</span> <span class="tok-key">/&gt;</span>
   <span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__hint"</span> <span class="tok-prop">id</span>=<span class="tok-str">"hint"</span><span class="tok-key">&gt;</span>Helper text<span class="tok-key">&lt;/span&gt;</span>
 <span class="tok-key">&lt;/label&gt;</span>
 
-<span class="tok-com">&lt;!-- Modifiers on .input__container:
-     --fill  --rounded  --invalid --&gt;</span></code></pre>
+<span class="tok-com">&lt;!-- Modifiers on .input__container:  --fill  --rounded  --invalid
+     Below the field:  .input__hint (helper)  ·  .input__error (invalid) --&gt;</span></code></pre>
         </section>
       </div>
     </div>

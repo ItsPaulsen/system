@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Empty State — Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Empty State</h1>
+          </div>
+          <p class="lede">
+            A placeholder for "no results" or "nothing here yet" — icon, message, action.
+          </p>
+        </div>
+      </header>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h3 class="subhead">Nothing yet</h3>
+          <p class="section-note">
+            First-run placeholder — an icon badge (the same primary-soft recipe as the
+            <a href="/demo/components/card/">Card</a> icon), a short message, and a primary
+            <a href="/demo/components/button/">Button</a> as the way forward.
+          </p>
+          <div class="component-preview">
+            <div class="empty-state">
+              <span class="empty-state__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"
+                  />
+                  <path d="M4 13h3l3 3h4l3 -3h3" />
+                </svg>
+              </span>
+              <h3 class="empty-state__title">No items yet</h3>
+              <p class="empty-state__text">
+                Everything you add will show up here. Start with your first one.
+              </p>
+              <div class="empty-state__actions">
+                <button type="button" class="button button--primary button--with-start-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                  </svg>
+                  New item
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">No results</h3>
+          <p class="section-note">
+            The search/filter variant — same layout, a "search off" glyph, and a secondary
+            <a href="/demo/components/button/">Button</a> to clear the query. Pairs well after a
+            <a href="/demo/components/combobox/">Combobox</a> or filter returns nothing.
+          </p>
+          <div class="component-preview">
+            <div class="empty-state">
+              <span class="empty-state__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5.039 5.062a7 7 0 0 0 9.91 9.89m1.584 -2.434a7 7 0 0 0 -9.038 -9.057" />
+                  <path d="M3 3l18 18" />
+                </svg>
+              </span>
+              <h3 class="empty-state__title">No results</h3>
+              <p class="empty-state__text">
+                No matches for your search. Try a different term or clear the filters.
+              </p>
+              <div class="empty-state__actions">
+                <button type="button" class="button button--secondary">Clear filters</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Markup</h3>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__icon"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;h3</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__title"</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/h3&gt;</span>
+  <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__text"</span><span class="tok-key">&gt;</span>No matches for your search.<span class="tok-key">&lt;/p&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty-state__actions"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span><span class="tok-key">&gt;</span>Clear filters<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </div>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

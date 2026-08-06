@@ -28,8 +28,8 @@
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
   /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
-     64 bottom gray gap before the footer (→ 128 at md). */
-  padding-block: 2rem 4rem;
+     96 bottom gray gap before the footer (→ 128 at md). */
+  padding-block: 2rem 6rem;
 }
 
 .blog__inner {

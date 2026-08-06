@@ -788,8 +788,8 @@
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
   /* Top padding is the gray gap down to the first (featured) card; bottom is the
-     gray gap between the last cards and the footer. */
-  padding-block: 2rem 4rem;
+     gray gap between the last cards and the footer (96 on mobile, 128 at md). */
+  padding-block: 2rem 6rem;
 }
 
 .ex-work__inner {

@@ -153,7 +153,7 @@
     padding-inline: 1.25rem;
     color: var(--background-primary);
     background: var(--ink-primary);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     font-size: var(--font-body-small-size);
     font-weight: 500;
     text-decoration: none;
@@ -216,7 +216,7 @@
     color: var(--ink-primary);
     background: none;
     border: 0;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
   }
 
@@ -404,7 +404,7 @@
     height: 32px;
     margin: 0;
     padding-inline: 0;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 500;
     color: var(--ink-secondary);
   }
@@ -416,7 +416,7 @@
   }
 
   .sidebar__link {
-    font-size: 1.5rem;
+    font-size: var(--font-title-small-size);
     line-height: 1.4;
     color: var(--ink-primary);
     font-weight: 500;
@@ -434,7 +434,7 @@
 
   .sidebar__back {
     margin-bottom: 1.75rem;
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     color: var(--ink-secondary);
     font-weight: 500;
   }
@@ -448,7 +448,7 @@
     align-items: center;
     gap: 0.375rem;
     padding: 0;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
 
   .sidebar__link:focus-visible,
@@ -487,17 +487,17 @@
 
     .sidebar__group-title {
       padding-inline: 0.5rem;
-      font-size: 0.75rem;
+      font-size: var(--font-caption-small-size);
     }
 
     .sidebar__link {
-      font-size: 0.875rem;
+      font-size: var(--font-caption-medium-size);
       line-height: 20px;
     }
 
     .sidebar__back {
       margin-bottom: 1.25rem;
-      font-size: 0.875rem;
+      font-size: var(--font-caption-medium-size);
     }
 
     /* Pill returns: label-hugging surface, ring sits tight to it. */
@@ -525,7 +525,7 @@
   }
 
   .site-nav__brand {
-    font-size: 1.125rem;
+    font-size: var(--font-body-medium-size);
     font-weight: 600;
     letter-spacing: -0.01em;
     color: var(--ink-primary);
@@ -552,7 +552,7 @@
     color: var(--ink-primary);
     background: none;
     border: 0;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
   }
 
@@ -641,7 +641,7 @@
 
   .lede {
     color: var(--ink-secondary);
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     margin: 0;
   }
 
@@ -667,7 +667,7 @@
     height: 32px;
     padding: 0 0.625rem;
     font: inherit;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 500;
     color: var(--ink-primary);
     text-decoration: none;
@@ -728,7 +728,7 @@
   }
 
   h2 {
-    font-size: 1.25rem;
+    font-size: var(--font-body-large-size);
     font-weight: 600;
     letter-spacing: -0.01em;
     margin: 0 0 0.75rem;
@@ -785,7 +785,7 @@
     padding: 0.875rem 1rem;
     background: var(--background-secondary);
     border: 0;
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -812,7 +812,7 @@
     color: var(--ink-secondary);
     background: var(--background-secondary);
     border: 0;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition:
       color var(--motion-default),
@@ -884,7 +884,7 @@
   .palette-table {
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     padding-right: 4px;
   }
@@ -902,7 +902,7 @@
   .palette-table thead th {
     height: 48px;
     padding: 0 1rem;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 500;
     line-height: 20px;
     text-align: start;
@@ -918,7 +918,7 @@
   .palette-table tbody td {
     height: 72px;
     padding: 0 1rem;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     vertical-align: middle;
     border-top: var(--border-width) solid var(--fill-tertiary);
   }
@@ -939,7 +939,7 @@
     height: 48px;
     padding: 0;
     border: var(--border-width) solid var(--fill-quaternary);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     background: var(--c);
     cursor: pointer;
     vertical-align: middle;
@@ -949,7 +949,7 @@
    what the heading introduces, and rely on the next element's margin-top for
    the gap below (so removing a description doesn't collapse the layout). */
   .subhead {
-    font-size: 1.25rem;
+    font-size: var(--font-body-large-size);
     font-weight: 600;
     margin: 1.75rem 0 0;
   }
@@ -959,19 +959,6 @@
     margin-top: 1rem;
   }
 
-  /* Breakpoint indicator */
-  .bp-indicator {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--ink-primary);
-    background: var(--background-secondary);
-    border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 999px;
-    padding: 0.25rem 0.7rem;
-    margin: 0;
-  }
-
   /* Type role card — one bordered card per tier, rows separated by dividers. */
   .type-list {
     list-style: none;
@@ -979,7 +966,7 @@
     margin: 0;
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
 
@@ -1130,7 +1117,7 @@
     height: 32px;
     padding: 0 0.625rem;
     color: var(--ink-primary);
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 500;
     text-decoration: none;
     background: var(--background-secondary);
@@ -1170,7 +1157,7 @@
     padding: 0;
     background: var(--fill-secondary);
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     cursor: pointer;
     transition: background-color 0.15s ease;
   }
@@ -1196,7 +1183,7 @@
   }
 
   .docs-switch__label {
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     color: var(--ink-primary);
   }
 
@@ -1215,7 +1202,7 @@
     background: none;
     border: 0;
     font: inherit;
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     font-weight: 500;
     cursor: pointer;
   }
@@ -1270,7 +1257,7 @@
     gap: 0.25rem;
     justify-content: flex-start;
     color: var(--ink-primary);
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     font-weight: 500;
     text-decoration: none;
   }
@@ -1278,7 +1265,7 @@
   .link-list a:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
   }
 
   /* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
@@ -1314,7 +1301,7 @@
   .token-list {
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
 
@@ -1331,7 +1318,7 @@
   }
 
   .token-list__name {
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     white-space: nowrap;
   }
 
@@ -1344,7 +1331,7 @@
 
   .token-list__value {
     margin-inline-start: auto;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
   }
 
   /* Linked rows (used on the intro to jump into each section). Chevron appended
@@ -1444,12 +1431,12 @@
     min-height: 0;
     padding: 12px 16px;
     background: var(--background-secondary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
     transition: background var(--motion-default);
   }
 
   .token-list--flush a.token-list__row .token-list__name {
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     font-weight: 500;
   }
 
@@ -1520,7 +1507,7 @@
     overflow: hidden;
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
   }
 
   .preview-card__demo {
@@ -1544,7 +1531,7 @@
     padding: 2.5rem;
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 16px;
+    border-radius: var(--radius-md);
   }
 
   .preview-card__chip {
@@ -1587,13 +1574,13 @@
     position: absolute;
     inset-block-start: 1rem;
     inset-inline-start: 1rem;
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 400;
     white-space: nowrap;
   }
 
   .preview-card__value {
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     min-width: 0;
     overflow-wrap: anywhere;
   }
@@ -1608,7 +1595,7 @@
     max-width: 160px;
     height: 24px;
     background: var(--background-secondary);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
   }
 
   .motion-demo::after {
@@ -1619,7 +1606,7 @@
     left: 4px;
     width: 16px;
     background: var(--ink-primary);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     transition: left var(--motion-demo-transition);
   }
 
@@ -1700,7 +1687,7 @@
 
   .grid-overlay__margin-label {
     font-family: var(--mono);
-    font-size: 0.75rem;
+    font-size: var(--font-caption-small-size);
     white-space: nowrap;
     color: var(--grid-overlay-color);
     transform: rotate(-90deg);
@@ -1722,9 +1709,9 @@
     padding: 0.75rem 1.25rem;
     background: var(--background-secondary);
     color: var(--ink-primary);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     box-shadow: var(--shadow-lg), var(--surface-rim);
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
     font-weight: 500;
     opacity: 0;
     pointer-events: none;
@@ -1824,7 +1811,6 @@
     .token-list,
     .preview-card,
     .component-preview,
-    .bp-indicator,
     .site-head,
     section + section,
     .type-list > li + li,

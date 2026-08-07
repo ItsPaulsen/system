@@ -10,9 +10,24 @@
       <a class="ex-topbar__brand" href="/demo/example/">Demo</a>
       <nav class="nav-menu ex-topbar__nav" aria-label="Primary">
         <ul class="nav-menu__list">
-          <li><a class="nav-menu__link" href="/demo/example/blog/">Blog</a></li>
-          <li><a class="nav-menu__link" href="/demo/example/blog/post/">Article</a></li>
-          <li><a class="nav-menu__link" href="/demo/example/settings/">Settings</a></li>
+          <li class="nav-menu__item">
+            <a class="nav-menu__link" href="/demo/example/blog/">Blog</a>
+          </li>
+          <li class="nav-menu__item">
+            <a class="nav-menu__link" href="/demo/example/blog/post/">Article</a>
+          </li>
+          <li class="nav-menu__item">
+            <a class="nav-menu__link" href="/demo/example/settings/">Settings</a>
+            <div class="nav-menu__menu">
+              <a class="nav-menu__menu-link" href="/demo/example/settings/about/">About you</a>
+              <a class="nav-menu__menu-link" href="/demo/example/settings/communication/">
+                Communication
+              </a>
+              <a class="nav-menu__menu-link" href="/demo/example/settings/privacy/">
+                Privacy and security
+              </a>
+            </div>
+          </li>
         </ul>
       </nav>
       <button

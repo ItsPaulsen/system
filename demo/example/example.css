@@ -590,7 +590,8 @@
 }
 
 /* The three header nav links step down to body-small at ≤1024, back to
-   body-medium above. Scoped to the example topbar, not the shared component. */
+   body-medium above. Scoped to the example topbar, not the shared component.
+   The Settings hover dropdown stays body-small (16) at all widths. */
 .ex-topbar__nav .nav-menu__link {
   font-size: var(--font-body-small-size);
 }
@@ -609,6 +610,15 @@
 .ex-menu__close svg {
   width: 20px;
   height: 20px;
+}
+
+/* Header buttons (topbar Menu + sheet Close) step up to body-medium at ≥1024,
+   matching the nav links. Overrides the button's own --button-font size var. */
+@media (min-width: 1024px) {
+  .ex-topbar__menu,
+  .ex-menu__close {
+    --button-font: var(--font-body-medium-emphasized-size);
+  }
 }
 
 /* ── Menu ───────────────────────────────────────────────────────────────────

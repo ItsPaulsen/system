@@ -30,8 +30,10 @@
 
 // Category filter — checking one or more Category boxes narrows the grid to
 // posts whose tag matches; with none checked, everything shows. When nothing
-// matches, the grid and pagination give way to the empty state, whose "Clear
-// all filters" button unchecks every box and restores the full grid.
+// matches, the grid gives way to the empty state, whose "Clear all filters"
+// button unchecks every box and restores the full grid. Pagination is a
+// full-listing affordance, so it shows only when every post is visible and
+// hides the moment a filter narrows the set (a partial demo set isn't paged).
 //
 // Categories are read from the visible label / tag text, so there's no second
 // source of truth to keep in sync with the markup. The one .blog-filter node is
@@ -64,7 +66,8 @@
     const isEmpty = shown === 0;
     empty.hidden = !isEmpty;
     grid.hidden = isEmpty;
-    if (pagination) pagination.hidden = isEmpty;
+    // Only page the complete listing; any active filter (shown < total) hides it.
+    if (pagination) pagination.hidden = shown < cards.length;
   };
 
   filter.addEventListener("change", (e) => {

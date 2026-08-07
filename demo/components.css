@@ -78,7 +78,7 @@
   }
 
   .switch__label {
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     color: var(--ink-primary);
     cursor: pointer;
   }
@@ -272,7 +272,7 @@
 
   .checkbox__label,
   .radio__label {
-    font-size: 1rem;
+    font-size: var(--font-body-small-size);
     color: var(--ink-primary);
     cursor: pointer;
   }
@@ -1005,7 +1005,7 @@
     margin-inline-start: auto;
     padding-inline-start: 1rem;
     color: var(--ink-tertiary);
-    font-size: 0.8125em;
+    font-size: var(--font-caption-medium-size);
     font-variant-numeric: tabular-nums;
   }
 
@@ -1348,16 +1348,6 @@
     transition: background var(--motion-default);
   }
 
-  .card--horizontal {
-    display: grid;
-    grid-template-columns: 6rem 1fr;
-  }
-
-  .card--stretch-image {
-    display: flex;
-    flex-direction: column;
-  }
-
   .card--alternate {
     background: var(--background-primary);
   }
@@ -1423,27 +1413,10 @@
     object-fit: cover;
   }
 
-  .card--horizontal .card__image {
-    grid-row: 1 / -1;
-    width: 6rem;
-    height: 100%;
-  }
-
-  .card--stretch-image .card__image {
-    flex: 1;
-    min-height: 0;
-  }
-
   /* Illustration wrapper. Pads on three sides so the artwork sits flush with
    card__content on the fourth (bottom in vertical, inline-end in horizontal). */
   .card__illustration {
     padding: 20px 20px 0;
-  }
-
-  .card--horizontal .card__illustration {
-    grid-row: 1 / -1;
-    padding-block: 20px;
-    padding-inline: 20px 0;
   }
 
   .card__illustration > * {
@@ -1452,11 +1425,6 @@
     max-width: 100%;
     height: auto;
     margin-inline: auto;
-  }
-
-  .card--horizontal .card__illustration > * {
-    width: 4.5rem;
-    margin-inline: 0;
   }
 
   .card__content {
@@ -1483,11 +1451,6 @@
   @media (min-width: 640px) {
     .card__illustration {
       padding: 24px 24px 0;
-    }
-
-    .card--horizontal .card__illustration {
-      padding-block: 24px;
-      padding-inline: 24px 0;
     }
 
     .card__content {
@@ -2363,8 +2326,8 @@
     text-underline-offset: 2px;
     text-decoration-thickness: 1px;
 
-    /* 8px so the focus ring reads rounded, matching the nav/link-list rings. */
-    border-radius: 8px;
+    /* radius-sm so the focus ring reads rounded, matching the nav/link-list rings. */
+    border-radius: var(--radius-sm);
     transition: color var(--motion-default);
   }
 
@@ -2481,7 +2444,7 @@
     display: inline-flex;
     align-items: center;
     padding: 0.625rem 1.25rem;
-    font-size: 1.125rem;
+    font-size: var(--font-body-medium-size);
     font-weight: 500;
     line-height: 1.2;
     color: var(--ink-primary);
@@ -2643,7 +2606,7 @@
 
   /* Overflow count ("+3") reads a touch smaller than initials. */
   .avatar--count {
-    font-size: 0.875rem;
+    font-size: var(--font-caption-medium-size);
   }
 
   /* ── Pagination ────────────────────────────────────────────────────────── */

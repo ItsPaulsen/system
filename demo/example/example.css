@@ -554,11 +554,6 @@
   color: var(--green);
 }
 
-.ex-badge--danger {
-  background: rgb(from var(--red) r g b / 0.12);
-  color: var(--red);
-}
-
 /* ── Top bar ──────────────────────────────────────────────────────────────
    80px header: brand left, nav centered, Menu button right. Sticky and opaque
    so it stays above the dotted surface while scrolling. */

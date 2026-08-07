@@ -21,6 +21,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Static upload+deploy takes seconds; fail fast if a running job wedges so
+    # it releases the Pages lock instead of hanging the queue.
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

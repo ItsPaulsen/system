@@ -140,8 +140,8 @@
      Rounded top, runs flush into the footer at the bottom (same colour), so
      there's no seam. */
   .article-band {
-    margin-top: var(--space-48);
-    padding-block: var(--space-32) var(--space-96);
+    margin-top: var(--space-96);
+    padding-block: var(--space-64) var(--space-96);
     background: var(--background-primary);
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */

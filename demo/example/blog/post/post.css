@@ -73,6 +73,26 @@
     max-width: 49rem;
   }
 
+  /* Category kicker above the title — same recipe as the blog card tag (icon +
+     muted caption), so an article's category reads identically to the listing. */
+  .article-kicker {
+    /* 12 to the title on mobile, 16 from md (see min-width below). */
+    margin: 0 0 var(--space-12);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .article-kicker svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.25;
+  }
+
   .article-title {
     margin: 0;
     color: var(--ink-primary);
@@ -92,14 +112,13 @@
     font-weight: var(--font-body-large-weight);
   }
 
-  /* Byline: avatar + name/date, with a 2px rule on its left. The rule is always
-     there, in both the stacked and side-by-side layouts. */
+  /* Byline: avatar + name/date. In the side-by-side layout (>1024) a 2px rule
+     divides it from the lead; stacked (mobile) there's nothing to divide, so the
+     rule is added only at that breakpoint (see min-width below). */
   .article-byline {
     display: flex;
     align-items: center;
     gap: var(--space-12);
-    padding-inline-start: var(--space-24);
-    border-inline-start: 2px solid var(--fill-tertiary);
   }
 
   .article-byline__meta {
@@ -133,7 +152,9 @@
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: var(--radius-lg);
+
+    /* 16 on mobile, 24 from md (see min-width below). */
+    border-radius: var(--radius-md);
   }
 
   /* ── Body band (recessed) ────────────────────────────────────────────────
@@ -250,6 +271,65 @@
     line-height: var(--font-caption-medium-lh);
   }
 
+  /* ── Pull quote ──────────────────────────────────────────────────────────
+     A CMS block like any other, so the flow rules above own its outer spacing.
+     A brand-accent rule sits beside the quote text (only the text, not the
+     citation). From md the rule hangs out into the left margin — outside the
+     reading measure — while the text stays on the measure (see min-width below);
+     below md it tucks inline as a normal indented bar. */
+  .article-quote {
+    margin-inline: 0;
+  }
+
+  .article-quote__text {
+    position: relative;
+    margin: 0;
+
+    /* Room for the accent bar (3) + its gap to the text (16 on mobile, 24 from md). */
+    padding-inline-start: calc(var(--space-16) + 3px);
+    color: var(--ink-primary);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  /* Accent rule as a rounded pill (both ends round evenly, which a single-side
+     border-radius can't do). */
+  .article-quote__text::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--primary-foreground);
+  }
+
+  .article-quote__cite {
+    margin-top: var(--space-16);
+
+    /* Align with the quote text: on mobile the bar is inline, so match the
+       text's indent (bar + gap). From md the bar hangs out and the text is back
+       on the measure, so this resets to 0 (see min-width below). */
+    padding-inline-start: calc(var(--space-16) + 3px);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-style: normal;
+  }
+
+  .article-quote__cite::before {
+    content: "\2013 ";
+  }
+
+  .article-quote__name {
+    color: var(--ink-primary);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .article-quote__role {
+    color: var(--ink-secondary);
+  }
+
   /* ── Related ─────────────────────────────────────────────────────────────
      Full-width divider, heading, then a grid of blog cards. */
   .article-related {
@@ -277,14 +357,8 @@
     gap: var(--grid-gutter, 1rem);
   }
 
-  /* Type steps up on tablet (independent of where the byline sits). */
+  /* Related grid goes 2-up on tablet. */
   @media (min-width: 640px) {
-    .article-title {
-      font-size: var(--font-headline-medium-size);
-      line-height: var(--font-headline-medium-lh);
-      font-weight: var(--font-headline-medium-weight);
-    }
-
     .article-related__grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -297,8 +371,36 @@
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
+    /* Title steps up with the rest of the page's type/spacing (headline-small
+       38 → headline-medium 48). */
+    .article-title {
+      font-size: var(--font-headline-medium-size);
+      line-height: var(--font-headline-medium-lh);
+      font-weight: var(--font-headline-medium-weight);
+    }
+
+    .article-kicker {
+      margin-bottom: var(--space-16);
+    }
+
     .article-cover {
       margin-top: var(--space-48);
+    }
+
+    .article-cover__img {
+      border-radius: var(--radius-lg);
+    }
+
+    /* Gap opens to 24, and the accent rule hangs out into the left margin while
+       the text returns to the reading measure (offset = gap + the rule's width). */
+    .article-quote__text {
+      padding-inline-start: calc(var(--space-24) + 3px);
+      margin-inline-start: calc(-1 * (var(--space-24) + 3px));
+    }
+
+    /* Bar hangs out now, so the citation returns flush to the measure. */
+    .article-quote__cite {
+      padding-inline-start: 0;
     }
 
     .article-related__title {
@@ -319,8 +421,8 @@
     }
   }
 
-  /* >1024: the byline sits beside the text. At 1024 and below it stacks under
-     the text; the left rule stays either way. */
+  /* >1024: the byline sits beside the text, with a 2px rule dividing the two.
+     At 1024 and below it stacks under the text and the rule is dropped. */
   @media (min-width: 1025px) {
     .article-intro__row {
       flex-direction: row;
@@ -331,6 +433,8 @@
 
     .article-byline {
       flex: none;
+      padding-inline-start: var(--space-24);
+      border-inline-start: 2px solid var(--fill-tertiary);
     }
   }
 }

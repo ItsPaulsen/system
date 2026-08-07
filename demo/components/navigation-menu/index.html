@@ -44,10 +44,46 @@
           <div class="component-preview">
             <nav class="nav-menu" aria-label="Main">
               <ul class="nav-menu__list">
-                <li><a class="nav-menu__link" href="#" aria-current="page">Overview</a></li>
-                <li><a class="nav-menu__link" href="#">Projects</a></li>
-                <li><a class="nav-menu__link" href="#">Reports</a></li>
-                <li><a class="nav-menu__link" href="#">Settings</a></li>
+                <li class="nav-menu__item">
+                  <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
+                </li>
+                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Projects</a></li>
+                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
+                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
+              </ul>
+            </nav>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">With dropdown</h3>
+          <p class="section-note">
+            Give an item a <code>.nav-menu__menu</code> panel and it opens on hover or keyboard
+            focus. The top-level link stays clickable (no chevron); items without a panel stay
+            plain.
+          </p>
+          <div class="component-preview">
+            <nav class="nav-menu" aria-label="Sections">
+              <ul class="nav-menu__list">
+                <li class="nav-menu__item">
+                  <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
+                  <div class="nav-menu__menu">
+                    <a class="nav-menu__menu-link" href="#">Dashboard</a>
+                    <a class="nav-menu__menu-link" href="#">Activity</a>
+                    <a class="nav-menu__menu-link" href="#">Notifications</a>
+                  </div>
+                </li>
+                <li class="nav-menu__item">
+                  <a class="nav-menu__link" href="#">Projects</a>
+                  <div class="nav-menu__menu">
+                    <a class="nav-menu__menu-link" href="#">All projects</a>
+                    <a class="nav-menu__menu-link" href="#">Starred</a>
+                    <a class="nav-menu__menu-link" href="#">Archived</a>
+                    <a class="nav-menu__menu-link" href="#">Templates</a>
+                  </div>
+                </li>
+                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
+                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
               </ul>
             </nav>
           </div>
@@ -57,8 +93,14 @@
           <h3 class="subhead">Markup</h3>
           <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Main"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__list"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;li&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span> <span class="tok-prop">aria-current</span>=<span class="tok-str">"page"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
-    <span class="tok-key">&lt;li&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Projects<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__item"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span> <span class="tok-prop">aria-current</span>=<span class="tok-str">"page"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/a&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__menu"</span><span class="tok-key">&gt;</span>
+        <span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__menu-link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Dashboard<span class="tok-key">&lt;/a&gt;</span>
+        <span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__menu-link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Activity<span class="tok-key">&lt;/a&gt;</span>
+      <span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-key">&lt;/li&gt;</span>
+    <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__item"</span><span class="tok-key">&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Reports<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
   <span class="tok-key">&lt;/ul&gt;</span>
 <span class="tok-key">&lt;/nav&gt;</span></code></pre>
         </section>

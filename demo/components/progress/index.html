@@ -50,10 +50,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Progress</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Progress"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A bar showing how far a task has advanced.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -64,28 +93,42 @@
             which reports them to assistive tech. When you can't measure progress, use
             <a href="/demo/components/spinner/">Spinner</a> instead.
           </p>
-          <div class="component-preview">
-            <progress
-              id="demo-progress"
-              class="progress"
-              value="15"
-              max="100"
-              aria-label="Uploading files"
-            ></progress>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <progress
+                id="demo-progress"
+                class="progress"
+                value="15"
+                max="100"
+                aria-label="Uploading files"
+              ></progress>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Progress value={75} max={100} aria-label="Uploading files" />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            A thin wrapper over native <code>&lt;progress&gt;</code>; <code>value</code>,
+            <code>max</code>, and <code>aria-label</code> pass straight through.
+          </p>
+          <div data-source="/react/Progress.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;progress</span> <span class="tok-prop">class</span>=<span class="tok-str">"progress"</span> <span class="tok-prop">value</span>=<span class="tok-str">"70"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span>
           <span class="tok-prop">aria-label</span>=<span class="tok-str">"Upload"</span><span class="tok-key">&gt;&lt;/progress&gt;</span></code></pre>
         </section>
       </div>
     </div>
     <script>
-      // Demo entrance: let the low starting value paint, then bump it so the
-      // bar fills on load (like shadcn's docs). Reduced motion jumps straight
-      // to the target. Progressive enhancement — no JS leaves a static 15%.
+      // Demo entrance: let the low starting value paint, then bump it so the bar
+      // fills on load. Reduced motion jumps straight to the target. Progressive
+      // enhancement: no JS leaves a static 15%.
       (function () {
         var bar = document.getElementById("demo-progress");
         if (!bar) return;

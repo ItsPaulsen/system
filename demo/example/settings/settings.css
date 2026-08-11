@@ -1,10 +1,10 @@
-/* Settings landing — breadcrumb + left-aligned hero, then a row of section
+/* Settings landing, breadcrumb + left-aligned hero, then a row of section
    cards on the .ex dotted band. Layout only; the surface, hover/active and
    focus states come from the shared .card component, and the icon badge reuses
    the secondary button's primary-soft recipe so dark mode is a token swap. */
 
 /* Sticky footer: body is a column, the page grows to fill, so the footer sits
-   at the bottom of the viewport on short pages. (Scoped here — this file only
+   at the bottom of the viewport on short pages. (Scoped here, this file only
    loads on the settings page.) */
 body {
   display: flex;
@@ -20,7 +20,7 @@ body {
   background-color: transparent;
   background-image: none;
 
-  /* 24 under the topbar to the breadcrumb — mirrors the article intro. */
+  /* 24 under the topbar to the breadcrumb, mirrors the article intro. */
   padding-top: var(--space-24);
 
   /* Gray gap above the footer: 96 on mobile, 128 from md (front-page parity). */
@@ -48,7 +48,7 @@ body {
 }
 
 .settings-hero__title {
-  /* 48 down from the breadcrumb — mirrors the article intro row. */
+  /* 48 down from the breadcrumb, mirrors the article intro row. */
   margin: var(--space-48) 0 0;
 
   /* Base (mobile, < md): headline-small 38px. Steps up with the page width. */
@@ -209,7 +209,7 @@ body {
 }
 
 .settings-subcard {
-  max-width: 42rem; /* 672 — rounded from the 692 Sketch measure onto the 2xl step */
+  max-width: 42rem; /* 672, rounded from the 692 Sketch measure onto the 2xl step */
   padding: var(--space-24); /* 24 on mobile, 32 from md */
 }
 

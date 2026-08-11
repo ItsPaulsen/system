@@ -1,4 +1,4 @@
-// Shared chrome for the /example mini-site — one source for the topbar, footer,
+// Shared chrome for the /example mini-site, one source for the topbar, footer,
 // menu sheet, and grid overlay. Each page drops
 // <div data-chrome="topbar|footer|menu|grid-overlay"></div> placeholders; this
 // deferred script (loaded before app.js) replaces them, marks the active nav
@@ -377,7 +377,7 @@
       </div>
     </dialog>
 `;
-  // Grid overlay — toggled with the "g" key (see app.js). Width follows the
+  // Grid overlay, toggled with the "g" key (see app.js). Width follows the
   // page's live grid tokens; blog opts into the wider 2xl tier via
   // data-width on <html>, and buildGridOverlay() rebuilds columns/margins from
   // whatever --container-max / --grid-columns / --grid-margin resolve to.

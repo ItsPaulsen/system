@@ -1,13 +1,13 @@
-/* Settings › About you — one card that flips between a read view (definition
+/* Settings › About you, one card that flips between a read view (definition
    list + edit button) and an edit form (inputs + Save/Cancel). Page shell
    (gray surface, sticky footer, hero, breadcrumb rhythm) comes from
    settings.css; this file owns the card and its two modes only. Surface,
-   inputs and buttons are the shared components — dark mode is a token swap. */
+   inputs and buttons are the shared components, dark mode is a token swap. */
 
 /* Column + card are shared (.settings-column / .settings-subcard in
    settings.css). This file owns the head row and the view/edit modes. */
 
-/* Head — title with the edit button trailing (view only). Top-aligned so the
+/* Head, title with the edit button trailing (view only). Top-aligned so the
    button stays put on the first line when the title wraps to two. */
 .about-card__head {
   display: flex;
@@ -76,7 +76,7 @@
 }
 
 /* The form is a programmatic focus target on open (see about.js); it's a
-   container, not a control, so it shows no ring — the first Tab moves to the
+   container, not a control, so it shows no ring, the first Tab moves to the
    first input, which does. */
 .about-form:focus {
   outline: none;
@@ -84,7 +84,7 @@
 
 /* Email error message. The shared .input__error is always visible (paired with
    an explicit --invalid on the component page); here we let the browser drive
-   timing instead — hide it until the field reports :user-invalid, i.e. after
+   timing instead, hide it until the field reports :user-invalid, i.e. after
    the user has left a mistyped address. It reappears/clears live on each edit,
    and the red border comes from the component's own :user-invalid rule. */
 .about-form .input__error {

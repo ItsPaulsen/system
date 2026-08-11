@@ -1,4 +1,4 @@
-/* Settings › Privacy and security — three cards: Personalization (toggles),
+/* Settings › Privacy and security, three cards: Personalization (toggles),
    Your active logins (session list), Delete account (destructive). Page shell
    (gray surface, sticky footer, hero, breadcrumb) comes from settings.css;
    cards, switch, badge, tooltip and buttons are the shared components. */
@@ -70,7 +70,7 @@
   padding-block: var(--space-24);
 }
 
-/* Same edge trim as the toggle list — ends hug the title / card padding. */
+/* Same edge trim as the toggle list, ends hug the title / card padding. */
 .login:first-child {
   padding-top: 0;
 }
@@ -179,7 +179,7 @@
 }
 
 /* Hairline between stacked list items (declared last so it follows the
-   single-class base rules — keeps stylelint's specificity order happy). */
+   single-class base rules, keeps stylelint's specificity order happy). */
 .priv-toggle + .priv-toggle,
 .login + .login {
   border-top: var(--border-width) solid var(--fill-tertiary);

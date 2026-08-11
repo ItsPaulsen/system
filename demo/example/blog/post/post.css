@@ -1,4 +1,4 @@
-/* Article (blog post) — a CMS-composed reading page. This file owns layout and
+/* Article (blog post), a CMS-composed reading page. This file owns layout and
    the prose flow only; every component inside (breadcrumb, avatar, accordion,
    table, blog cards) reuses components.css / blog.css with its real classes, so
    dark mode is a pure token swap.
@@ -16,7 +16,7 @@
     background: var(--background-secondary);
   }
 
-  /* Content container — same recipe as .blog__inner and the card grid: content
+  /* Content container, same recipe as .blog__inner and the card grid: content
      caps at --container-max, gutters = --grid-margin. */
   .article-wrap {
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
@@ -73,7 +73,7 @@
     max-width: 49rem;
   }
 
-  /* Category kicker above the title — same recipe as the blog card tag (icon +
+  /* Category kicker above the title, same recipe as the blog card tag (icon +
      muted caption), so an article's category reads identically to the listing. */
   .article-kicker {
     /* 12 to the title on mobile, 16 from md (see min-width below). */
@@ -204,7 +204,7 @@
   .prose h2 {
     color: var(--ink-primary);
 
-    /* title-large 32 at every width — no mobile step-down. */
+    /* title-large 32 at every width, no mobile step-down. */
     font-size: var(--font-title-large-size);
     line-height: var(--font-title-large-lh);
     font-weight: var(--font-title-large-weight);
@@ -242,7 +242,7 @@
     font-weight: var(--font-weight-semibold);
   }
 
-  /* Inline links inside running text — matches the .link convention. */
+  /* Inline links inside running text, matches the .link convention. */
   .prose a {
     color: var(--ink-primary);
     text-decoration: underline;
@@ -250,7 +250,7 @@
   }
 
   /* Inline figure: same measure as the text, 3:2 like the cards. Only the inline
-     margin is reset (the UA default is 40px) — top spacing is left to the flow
+     margin is reset (the UA default is 40px), top spacing is left to the flow
      rules above, which margin-inline doesn't touch. */
   .prose figure {
     margin-inline: 0;
@@ -274,8 +274,8 @@
   /* ── Pull quote ──────────────────────────────────────────────────────────
      A CMS block like any other, so the flow rules above own its outer spacing.
      A brand-accent rule sits beside the quote text (only the text, not the
-     citation). From md the rule hangs out into the left margin — outside the
-     reading measure — while the text stays on the measure (see min-width below);
+     citation). From md the rule hangs out into the left margin (outside the
+     reading measure) while the text stays on the measure (see min-width below);
      below md it tucks inline as a normal indented bar. */
   .article-quote {
     margin-inline: 0;
@@ -364,7 +364,7 @@
     }
   }
 
-  /* ≥768 — band's rounded top steps up from 24 to 32, and the related
+  /* ≥768, band's rounded top steps up from 24 to 32, and the related
      title → grid gap opens from 32 to 48. */
   @media (min-width: 768px) {
     .article-band {
@@ -414,7 +414,7 @@
     }
   }
 
-  /* ≥1024 — related reaches three columns (front-page 3-up parity). */
+  /* ≥1024, related reaches three columns (front-page 3-up parity). */
   @media (min-width: 1024px) {
     .article-related__grid {
       grid-template-columns: repeat(3, 1fr);

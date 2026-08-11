@@ -1,4 +1,4 @@
-// Blog filter placement — one source of truth for the filter UI.
+// Blog filter placement, one source of truth for the filter UI.
 //
 // There's a single .blog-filter node. Above 1024 it sits in the listing grid as
 // the left rail; at/below 1024 the rail is replaced by a Filter button and the
@@ -28,7 +28,7 @@
   desktop.addEventListener("change", place);
 })();
 
-// Category filter — checking one or more Category boxes narrows the grid to
+// Category filter, checking one or more Category boxes narrows the grid to
 // posts whose tag matches; with none checked, everything shows. When nothing
 // matches, the grid gives way to the empty state, whose "Clear all filters"
 // button unchecks every box and restores the full grid. Pagination is a

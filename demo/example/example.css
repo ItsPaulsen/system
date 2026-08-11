@@ -1,11 +1,11 @@
-/* Example front page — composed "components in action" screen. This file owns
+/* Example front page, composed "components in action" screen. This file owns
    layout + the marquee only; every component inside reuses base.css /
    components.css and its real classes, so dark mode is a token swap with
    nothing to redraw. All type uses the --font-* tokens; supporting text is
    --ink-secondary (not tertiary). */
 
 /* The example <main> is the "Skip to content" target (tabindex=-1, focused
-   programmatically), not a tabbable control — kill the focus ring so the skip
+   programmatically), not a tabbable control, kill the focus ring so the skip
    link doesn't outline the whole page surface. Mirrors .wrap in base.css.
    scroll-margin-top clears the sticky 72px topbar (see .ex-topbar) so skipping
    lands the content just below the bar instead of scrolling it underneath. */
@@ -38,7 +38,7 @@
   gap: 3rem;
 
   /* No bottom padding: the card band is the last child, so its gray runs flush
-     into the (gray) body behind the footer — no white gap before the footer. */
+     into the (gray) body behind the footer, no white gap before the footer. */
   padding-block: 5rem 0;
   background-color: var(--background-secondary);
 
@@ -66,7 +66,7 @@
 }
 
 /* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
-   plus the top-rim highlight — the dark counterpart to a drop shadow's top edge. */
+   plus the top-rim highlight, the dark counterpart to a drop shadow's top edge. */
 :root[data-theme="dark"] .ex {
   --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
 }
@@ -176,14 +176,14 @@
   position: relative;
 
   /* Height fits the tallest card (illustration at y=32, bottom ≈347) + the full
-     64px shadow reach ≈ 411. Base is the mobile value — the whole slider scales
+     64px shadow reach ≈ 411. Base is the mobile value, the whole slider scales
      to 75% below md (see track), so the height scales with it (420 × 0.75). */
   height: 315px;
   overflow: hidden;
 }
 
 /* Cards are absolutely placed at their Sketch x/y (via inline --x/--y) so a
-   low card can sit horizontally beneath a top card — a flex row can't. The
+   low card can sit horizontally beneath a top card, a flex row can't. The
    sequence is laid out once, then copy 2 repeats it shifted right by one stride;
    translating the track by -stride lands copy 2 where copy 1 was, so the loop
    is seamless. `inert` (in the HTML) keeps it show-only. */
@@ -244,7 +244,7 @@
   padding: 20px;
 }
 
-/* Settings — stacked switch rows with hairline dividers between them. */
+/* Settings, stacked switch rows with hairline dividers between them. */
 .ex-settings {
   width: 460px;
 }
@@ -287,7 +287,7 @@
   color: var(--ink-secondary);
 }
 
-/* Filter-chips card — wide enough to wrap 3 + 2 like the frame. */
+/* Filter-chips card, wide enough to wrap 3 + 2 like the frame. */
 .ex-chips {
   width: 390px;
   display: flex;
@@ -341,7 +341,7 @@
   color: var(--ink-tertiary);
 }
 
-/* Privacy card — icon + title + chevron over a supporting line. No component
+/* Privacy card, icon + title + chevron over a supporting line. No component
    for this composition yet; built from tokens. */
 .ex-privacy {
   width: 387px;
@@ -392,7 +392,7 @@
   color: var(--ink-secondary);
 }
 
-/* Illustration card — the vertical .card with the artwork left-aligned (not
+/* Illustration card, the vertical .card with the artwork left-aligned (not
    centered) and sitting ABOVE the text, plus a text CTA. */
 .ex-illus {
   width: 380px;
@@ -400,7 +400,7 @@
 }
 
 /* The marquee is a fixed desktop element, so pin the card padding to the ≥640
-   (desktop) values — otherwise the component's 640px breakpoint retightens it. */
+   (desktop) values, otherwise the component's 640px breakpoint retightens it. */
 .ex-illus .card__illustration {
   padding: 24px 24px 0;
 }
@@ -483,7 +483,7 @@
   color: var(--ink-primary);
 }
 
-/* Log out — a small (36px) soft-destructive button. No soft-destructive variant
+/* Log out, a small (36px) soft-destructive button. No soft-destructive variant
    in the button component yet, so built from tokens. */
 .ex-logout {
   display: inline-flex;
@@ -520,14 +520,14 @@
   width: 355px;
 }
 
-/* Round icon button (FAB) — its own element in the strip. */
+/* Round icon button (FAB), its own element in the strip. */
 .ex-fab {
   width: 56px;
   height: 56px;
   padding: 0;
 }
 
-/* FAQ — the real .accordion (already a stack of separate rounded boxes). Give
+/* FAQ, the real .accordion (already a stack of separate rounded boxes). Give
    each item the same soft shadow as the other cards so it reads as elevated. */
 .ex-faq {
   width: 387px;
@@ -576,7 +576,7 @@
   justify-self: start;
   border-radius: 8px;
 
-  /* Text placeholder for a logo/wordmark SVG — intentionally off the type scale;
+  /* Text placeholder for a logo/wordmark SVG, intentionally off the type scale;
      swap this rule for the real mark. */
   font-size: 26px;
   font-weight: 700;
@@ -639,15 +639,15 @@
 
 /* Fixed column: head and foot are non-scrolling flex items (genuinely pinned);
    only the middle scrolls. The page is scroll-locked while the menu is open
-   (app.js), so no chaining to worry about — the inner just clips. */
+   (app.js), so no chaining to worry about, the inner just clips. */
 .ex-menu .sheet__inner {
-  /* No padding here — head, scroll and foot each own their gutter, so the scroll
+  /* No padding here, head, scroll and foot each own their gutter, so the scroll
    can pad its own edges (giving the focus ring room without being clipped). */
   padding: 0;
   overflow: hidden;
 }
 
-/* Header row — close button right. Pinned at the top (doesn't scroll). */
+/* Header row, close button right. Pinned at the top (doesn't scroll). */
 .ex-menu__head {
   flex-shrink: 0;
   display: flex;
@@ -666,7 +666,7 @@
   align-items: center;
 }
 
-/* The only scrolling region — nav + links. Scrollbar hidden (the page is
+/* The only scrolling region, nav + links. Scrollbar hidden (the page is
    scroll-locked while open, so no chaining to contain). */
 .ex-menu__scroll {
   flex: 1;
@@ -684,7 +684,7 @@
   display: none;
 }
 
-/* Footer — pinned at the bottom (doesn't scroll), a full-width panel surface;
+/* Footer, pinned at the bottom (doesn't scroll), a full-width panel surface;
    16px padding insets the toggle from the edges. */
 .ex-menu__foot {
   flex-shrink: 0;
@@ -739,7 +739,7 @@
 
 /* ── Responsive (mobile-first: min-width overrides build up from the base) ──── */
 
-/* md ≥768 — nav takes over from the hamburger, the header goes to the 3-col
+/* md ≥768, nav takes over from the hamburger, the header goes to the 3-col
    grid with roomier padding, and the menu panel becomes the floating 400px
    rounded sheet. Below md it's the fullscreen hamburger menu. */
 @media (min-width: 768px) {
@@ -776,7 +776,7 @@
   }
 }
 
-/* lg ≥1024 — taller header with more gutter and the larger brand. */
+/* lg ≥1024, taller header with more gutter and the larger brand. */
 @media (min-width: 1024px) {
   .ex-topbar {
     height: 80px;
@@ -826,7 +826,7 @@
   column-gap: var(--grid-gutter, 1rem); /* tighter gutter when they're side by side */
 }
 
-/* The 2-up/3-up post cards hold title-small at every width — override the base
+/* The 2-up/3-up post cards hold title-small at every width, override the base
    card's <640 body-large-emphasized start and its ≥640 step so nothing changes
    across breakpoints. */
 .ex-work__row .card__title {
@@ -835,7 +835,7 @@
   font-weight: var(--font-title-small-weight);
 }
 
-/* Placeholder image blocks — muted fill mixed against the card surface (not
+/* Placeholder image blocks, muted fill mixed against the card surface (not
    transparent) so it stays opaque like a real <img> and doesn't pick up the
    card's hover/active background. 16/9 is the default (3-up, and the 2-up while
    it's also two-per-row below lg, so the states match); the 2-up widens to 21/9
@@ -861,7 +861,7 @@
   }
 }
 
-/* Featured — stacks on mobile (image over body), splits 1:1 at md. Same recipe
+/* Featured, stacks on mobile (image over body), splits 1:1 at md. Same recipe
    as the "with button" card: the whole card is the <a> (so a.card:hover/active
    drives the surface), and the Read more is a decorative .button span that only
    reacts to a direct hover. The opaque image still doesn't react. */
@@ -897,14 +897,14 @@
   margin-top: 1.5rem;
 }
 
-/* sm ≥640 — the 3-up splits to two columns (40 row-gap, gutter column-gap). */
+/* sm ≥640, the 3-up splits to two columns (40 row-gap, gutter column-gap). */
 @media (min-width: 640px) {
   .ex-work__row--3 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* md ≥768 — 2-up and featured take their side-by-side form. */
+/* md ≥768, 2-up and featured take their side-by-side form. */
 @media (min-width: 768px) {
   .ex-work {
     padding-bottom: 8rem; /* 128 gray gap above the footer */
@@ -932,7 +932,7 @@
   }
 }
 
-/* lg ≥1024 — the 3-up reaches full three columns, and the featured (one-per-row)
+/* lg ≥1024, the 3-up reaches full three columns, and the featured (one-per-row)
    title steps up from title-small to title-large. */
 @media (min-width: 1024px) {
   .ex-work {
@@ -963,7 +963,7 @@
    and the bottom bar spreads copyright / legal / socials across the width. */
 
 /* White panel with a 32px rounded top, sitting on the (gray) body so the gray
-   shows through the corner notches — the card band above runs flush into it. */
+   shows through the corner notches, the card band above runs flush into it. */
 .ex-footer {
   position: relative;
   background: var(--background-secondary);
@@ -1003,7 +1003,7 @@
   color: var(--ink-primary);
   text-decoration: none;
 
-  /* Text placeholder for a logo/wordmark SVG — off the type scale on purpose;
+  /* Text placeholder for a logo/wordmark SVG, off the type scale on purpose;
      mirrors the header brand. Swap this rule for the real mark. */
   font-size: 26px;
   line-height: var(--font-title-large-lh);
@@ -1016,7 +1016,7 @@
   }
 }
 
-/* Language picker — the Select component, sized to the footer (fixed 240 like the
+/* Language picker, the Select component, sized to the footer (fixed 240 like the
    old button) and holding a flag + label in both the trigger value and options. */
 .ex-footer__lang {
   width: 240px;
@@ -1047,7 +1047,7 @@
   margin-inline-start: auto;
 }
 
-/* Nav columns — accordions on mobile: 56px header rows, 8px apart, no dividers. */
+/* Nav columns, accordions on mobile: 56px header rows, 8px apart, no dividers. */
 .ex-footer__nav {
   display: grid;
   gap: 8px;
@@ -1114,10 +1114,10 @@
   padding-inline: 8px;
 }
 
-/* Ease the accordion open/close on mobile — same recipe as .accordion. Gated on
+/* Ease the accordion open/close on mobile, same recipe as .accordion. Gated on
    interpolate-size (animating block-size to auto), which is Chromium-only today:
    browsers without it (e.g. iOS Safari) fall back to the native instant toggle
-   instead of half-running the opacity fade against a snapped height — the jank
+   instead of half-running the opacity fade against a snapped height, the jank
    you'd otherwise see there. The md override below keeps it mobile-only. */
 @media (prefers-reduced-motion: no-preference) {
   @supports (interpolate-size: allow-keywords) {
@@ -1142,7 +1142,7 @@
 }
 
 /* Desktop columns are static, but syncFooterColumns() sets open=true from JS
-   after first paint — with the transition still live, columns that start closed
+   after first paint, with the transition still live, columns that start closed
    in the HTML would slide open on load. Kill the transition at md so they snap. */
 @media (min-width: 768px) {
   .ex-footer__col::details-content {
@@ -1223,7 +1223,7 @@
   }
 }
 
-/* md ≥768 — brand-block left, columns right; accordions become static columns. */
+/* md ≥768, brand-block left, columns right; accordions become static columns. */
 @media (min-width: 768px) {
   .ex-footer__inner {
     padding: 3rem var(--grid-margin) 3rem;
@@ -1284,7 +1284,7 @@
   }
 }
 
-/* lg ≥1024 — fixed 5-column grid. Logo/lang is column 1; the link groups are
+/* lg ≥1024, fixed 5-column grid. Logo/lang is column 1; the link groups are
    pinned to the right (span from the end), so 3 groups leave one empty column
    between. Add a group → bump the span to fill it; remove one → two empties. */
 @media (min-width: 1024px) {

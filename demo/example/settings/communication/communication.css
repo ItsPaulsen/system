@@ -1,4 +1,4 @@
-/* Settings › Communication — one card per channel (E-mail, SMS), each a list of
+/* Settings › Communication, one card per channel (E-mail, SMS), each a list of
    toggle rows. Page shell (gray surface, sticky footer, hero, breadcrumb)
    comes from settings.css; cards reuse the shared .card and switch visuals. */
 

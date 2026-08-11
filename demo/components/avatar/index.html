@@ -29,89 +29,150 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Avatar</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Avatar"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A user's image, with a fallback when none loads.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Fallbacks</h3>
-          <p class="section-note">
-            With no image, show initials, or a glyph when you don't have a name.
-          </p>
-          <div class="component-preview" style="gap: 1rem">
-            <span class="avatar">
-              <img
-                class="avatar__img"
-                src="/assets/illustrations/avatar-sample.svg"
-                alt="Ada Lovelace"
-              />
-            </span>
-            <span class="avatar"><span class="avatar__fallback">AL</span></span>
-            <span class="avatar">
-              <span class="avatar__fallback">
-                <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-                  <path
-                    d="M234.38,210a123.36,123.36,0,0,0-60.78-53.23,76,76,0,1,0-91.2,0A123.36,123.36,0,0,0,21.62,210a12,12,0,1,0,20.77,12c18.12-31.32,50.12-50,85.61-50s67.49,18.69,85.61,50a12,12,0,0,0,20.77-12ZM76,96a52,52,0,1,1,52,52A52.06,52.06,0,0,1,76,96Z"
-                  />
-                </svg>
+          <p class="section-note">Falls back to initials, or a glyph when there's no name.</p>
+          <div class="example" data-example>
+            <div class="component-preview" style="gap: 1rem">
+              <span class="avatar">
+                <img
+                  class="avatar__img"
+                  src="/assets/illustrations/avatar-sample.svg"
+                  alt="Ada Lovelace"
+                />
               </span>
-            </span>
+              <span class="avatar"><span class="avatar__fallback">AL</span></span>
+              <span class="avatar">
+                <span class="avatar__fallback">
+                  <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                    <path
+                      d="M234.38,210a123.36,123.36,0,0,0-60.78-53.23,76,76,0,1,0-91.2,0A123.36,123.36,0,0,0,21.62,210a12,12,0,1,0,20.77,12c18.12-31.32,50.12-50,85.61-50s67.49,18.69,85.61,50a12,12,0,0,0,20.77-12ZM76,96a52,52,0,1,1,52,52A52.06,52.06,0,0,1,76,96Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Avatar src="/avatars/ada.jpg" alt="Ada Lovelace" />
+              <Avatar fallback="AL" />
+              <Avatar fallback={<IconUser />} />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Sizes</h3>
           <p class="section-note"><code>--sm</code> and <code>--lg</code> scale it.</p>
-          <div class="component-preview" style="gap: 1rem">
-            <span class="avatar avatar--sm"><span class="avatar__fallback">AL</span></span>
-            <span class="avatar"><span class="avatar__fallback">AL</span></span>
-            <span class="avatar avatar--lg"><span class="avatar__fallback">AL</span></span>
+          <div class="example" data-example>
+            <div class="component-preview" style="gap: 1rem">
+              <span class="avatar avatar--sm"><span class="avatar__fallback">AL</span></span>
+              <span class="avatar"><span class="avatar__fallback">AL</span></span>
+              <span class="avatar avatar--lg"><span class="avatar__fallback">AL</span></span>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Avatar size="sm" fallback="AL" />
+              <Avatar fallback="AL" />
+              <Avatar size="lg" fallback="AL" />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Status &amp; group</h3>
-          <p class="section-note">A presence dot, and an overlapping stack for a set of people.</p>
-          <div class="component-preview" style="gap: 1.5rem">
-            <span class="avatar">
-              <img
-                class="avatar__img"
-                src="/assets/illustrations/avatar-1.png"
-                alt="Ada Lovelace"
-              />
-              <span class="avatar__status" aria-hidden="true"></span>
-            </span>
-            <span class="avatar-group">
+          <p class="section-note">A presence dot, plus an overlapping stack for a set of people.</p>
+          <div class="example" data-example>
+            <div class="component-preview" style="gap: 1.5rem">
               <span class="avatar">
                 <img
                   class="avatar__img"
-                  src="/assets/illustrations/avatar-2.png"
-                  alt="Grace Hopper"
+                  src="/assets/illustrations/avatar-1.png"
+                  alt="Ada Lovelace"
                 />
+                <span class="avatar__status" aria-hidden="true"></span>
               </span>
-              <span class="avatar">
-                <img
-                  class="avatar__img"
-                  src="/assets/illustrations/avatar-3.png"
-                  alt="Alan Turing"
-                />
+              <span class="avatar-group">
+                <span class="avatar">
+                  <img
+                    class="avatar__img"
+                    src="/assets/illustrations/avatar-2.png"
+                    alt="Grace Hopper"
+                  />
+                </span>
+                <span class="avatar">
+                  <img
+                    class="avatar__img"
+                    src="/assets/illustrations/avatar-3.png"
+                    alt="Alan Turing"
+                  />
+                </span>
+                <span class="avatar">
+                  <img
+                    class="avatar__img"
+                    src="/assets/illustrations/avatar-sample.svg"
+                    alt="Unknown member"
+                  />
+                </span>
+                <span class="avatar avatar--count"><span class="avatar__fallback">+3</span></span>
               </span>
-              <span class="avatar">
-                <img
-                  class="avatar__img"
-                  src="/assets/illustrations/avatar-sample.svg"
-                  alt="Unknown member"
-                />
-              </span>
-              <span class="avatar avatar--count"><span class="avatar__fallback">+3</span></span>
-            </span>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Avatar src="/avatars/ada.jpg" alt="Ada Lovelace" status />
+              <AvatarGroup>
+                <Avatar src="/avatars/grace.jpg" alt="Grace Hopper" />
+                <Avatar src="/avatars/alan.jpg" alt="Alan Turing" />
+                <Avatar src="/avatars/unknown.jpg" alt="Unknown member" />
+                <Avatar className="avatar--count" fallback="+3" />
+              </AvatarGroup>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Pass <code>src</code> for a photo, or <code>fallback</code> (initials or a glyph) when
+            there's no image. <code>size</code> and <code>status</code> are optional.
+          </p>
+          <div data-source="/react/Avatar.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-com">&lt;!-- Image --&gt;</span>
 <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;img</span> <span class="tok-prop">class</span>=<span class="tok-str">"avatar__img"</span> <span class="tok-prop">src</span>=<span class="tok-str">"…"</span> <span class="tok-prop">alt</span>=<span class="tok-str">"Ada Lovelace"</span> <span class="tok-key">/&gt;</span>

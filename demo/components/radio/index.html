@@ -29,35 +29,73 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Radio Group</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Checkbox &amp; Radio"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">
-            A single-select group — options share a <code>name</code>, so exactly one is chosen.
+            A single-select group: options share a <code>name</code>, so exactly one is chosen.
           </p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            Native <code>&lt;input type="radio"&gt;</code> — the shared <code>name</code> handles
+            Native <code>&lt;input type="radio"&gt;</code>: the shared <code>name</code> handles
             mutual exclusion, no JavaScript needed.
           </p>
-          <div class="component-preview">
-            <div class="radio-group" role="radiogroup" aria-label="Density">
-              <label class="radio">
-                <input type="radio" name="density" class="radio__input" />
-                <span class="radio__label">Default</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="density" class="radio__input" checked />
-                <span class="radio__label">Comfortable</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="density" class="radio__input" />
-                <span class="radio__label">Compact</span>
-              </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="radio-group" role="radiogroup" aria-label="Density">
+                <label class="radio">
+                  <input type="radio" name="density" class="radio__input" />
+                  <span class="radio__label">Default</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="density" class="radio__input" checked />
+                  <span class="radio__label">Comfortable</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="density" class="radio__input" />
+                  <span class="radio__label">Compact</span>
+                </label>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <RadioGroup label="Density">
+                <Radio name="density">Default</Radio>
+                <Radio name="density" defaultChecked>Comfortable</Radio>
+                <Radio name="density">Compact</Radio>
+              </RadioGroup>
+            </script>
           </div>
         </section>
 
@@ -66,26 +104,44 @@
           <p class="section-note">
             A single option can be disabled while the rest stay selectable.
           </p>
-          <div class="component-preview">
-            <div class="radio-group" role="radiogroup" aria-label="Options">
-              <label class="radio">
-                <input type="radio" name="options" class="radio__input" disabled />
-                <span class="radio__label">Disabled</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="options" class="radio__input" checked />
-                <span class="radio__label">Option 2</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="options" class="radio__input" />
-                <span class="radio__label">Option 3</span>
-              </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="radio-group" role="radiogroup" aria-label="Options">
+                <label class="radio">
+                  <input type="radio" name="options" class="radio__input" disabled />
+                  <span class="radio__label">Disabled</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="options" class="radio__input" checked />
+                  <span class="radio__label">Option 2</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="options" class="radio__input" />
+                  <span class="radio__label">Option 3</span>
+                </label>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <RadioGroup label="Options">
+                <Radio name="options" disabled>Disabled</Radio>
+                <Radio name="options" defaultChecked>Option 2</Radio>
+                <Radio name="options">Option 3</Radio>
+              </RadioGroup>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>RadioGroup</code> wraps the options; each <code>Radio</code> shares the group's
+            <code>name</code>. Props pass through to the input.
+          </p>
+          <div data-source="/react/Radio.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio-group"</span> <span class="tok-prop">role</span>=<span class="tok-str">"radiogroup"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"density"</span> <span class="tok-prop">class</span>=<span class="tok-str">"radio__input"</span> <span class="tok-key">/&gt;</span>

@@ -236,7 +236,7 @@
   /* Dark theme: the deep-violet --primary reads as a muddy fill on a dark
    surface, so switch to the lifted --primary-foreground (same swap secondary
    buttons/links use). The checkbox tick then flips dark so it reads as cut out
-   of the bright fill — matching the radio, whose transparent centre already
+   of the bright fill, matching the radio, whose transparent centre already
    shows the dark surface as its "dot". */
   :root[data-theme="dark"] .checkbox__input:checked {
     background-color: var(--primary-foreground);
@@ -260,7 +260,7 @@
     }
   }
 
-  /* Radios/checkboxes ship as a group — a vertical stack of options. Radios
+  /* Radios/checkboxes ship as a group: a vertical stack of options. Radios
    share one input name for mutual exclusion; checkboxes toggle independently. */
   .radio-group,
   .checkbox-group {

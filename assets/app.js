@@ -872,9 +872,9 @@ const COPY_ICON =
 const CHECK_ICON =
   '<svg class="code-copy__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>';
 
-// Any code block taller than this collapses to a shadcn-style preview with a
-// "View Code" fade; short snippets are left fully expanded and get no toggle.
-const CODE_COLLAPSE_THRESHOLD = 240;
+// Code blocks longer than this many lines start collapsed behind a "View Code"
+// fade; anything 4 lines or shorter is shown in full with no toggle.
+const CODE_COLLAPSE_MIN_LINES = 4;
 
 // Strip the shared leading indentation from a slice so it reads as standalone
 // source, then trim surrounding blank lines.
@@ -1146,8 +1146,12 @@ function injectCodeCopy() {
     code.innerHTML = wrapLines(code.innerHTML);
     wrapper.classList.add("code-block--numbered");
 
-    // Collapse only tall blocks. Read the pre's natural height before clipping.
-    if (pre.scrollHeight <= CODE_COLLAPSE_THRESHOLD) return;
+    // Collapse only the per-example snippets. Standalone reference blocks (the
+    // bottom Component, CSS, Markup) show in full — no expand.
+    if (!pre.closest(".example__code")) return;
+    // Counting .line works even while the block is hidden (a tab away), unlike
+    // measuring height.
+    if (code.querySelectorAll(".line").length <= CODE_COLLAPSE_MIN_LINES) return;
     wrapper.classList.add("code-block--collapsible", "is-collapsed");
     // Non-interactive fade container; only the pill button inside is clickable.
     const toggle = document.createElement("div");
@@ -1156,9 +1160,10 @@ function injectCodeCopy() {
     btn2.type = "button";
     btn2.className = "code-block__toggle-pill btn btn--outline";
     btn2.textContent = "View Code";
-    // Expand is one-way (shadcn): reveal the code, then drop the toggle entirely.
+    // One-way (shadcn): open into the scroll box and drop the fade + pill. Keep
+    // the collapsible class so the opened max-height + scroll still apply.
     btn2.addEventListener("click", () => {
-      wrapper.classList.remove("code-block--collapsible", "is-collapsed");
+      wrapper.classList.remove("is-collapsed");
       toggle.remove();
     });
     toggle.appendChild(btn2);
@@ -2116,10 +2121,18 @@ function init() {
     if (cssBtn) {
       const src = cssBtn.dataset.copyCss;
       const filter = cssBtn.dataset.copyTokens; // optional: comma-list of prefixes
-      const label = filter ? "Copied tokens" : "Copied all tokens";
+      const section = cssBtn.dataset.copySection; // optional: a components.css section
+      const label = section ? "Copied CSS" : filter ? "Copied tokens" : "Copied all tokens";
       fetch(src)
         .then((r) => r.text())
-        .then((text) => copyText(filter ? filterTokens(text, filter) : text.trim(), label))
+        .then((text) => {
+          const out = section
+            ? extractSection(text, section)
+            : filter
+              ? filterTokens(text, filter)
+              : text.trim();
+          copyText(out, label);
+        })
         .catch(() => toast("Copy failed"));
       return;
     }

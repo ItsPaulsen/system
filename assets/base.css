@@ -850,11 +850,25 @@
     display: block;
   }
 
-  /* Collapsible code (shadcn-style). Tall blocks clip to a preview height and
-   reveal a "View Code" pill on a fade; app.js adds the toggle only when the
-   code overflows, so short snippets stay fully open with no control. */
+  /* Collapsible code (shadcn-style). Over 4 lines starts collapsed to a short
+   peek under a full-surface fade with a "View Code" pill; opening turns it into
+   a taller scroll box so it reads as "there's more". */
+
+  /* Opened: a ~10.5-line scroll box, scrollbar hidden. */
+  .code-block--collapsible:not(.is-collapsed) pre {
+    max-height: 14.5rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .code-block--collapsible:not(.is-collapsed) pre::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Closed peek is exactly the first 3 lines — see the .line:nth-child rule
+   below, which hides the rest so the pre's own 14px bottom padding breathes
+   under line 3 with no clipped sliver of line 4. */
   .code-block--collapsible.is-collapsed pre {
-    max-height: 9rem;
     overflow-y: hidden;
   }
 
@@ -863,33 +877,19 @@
     display: none;
   }
 
-  /* Room for the toggle pill to sit below the code once expanded. */
-  .code-block--collapsible:not(.is-collapsed) {
-    padding-bottom: 3rem;
-  }
-
+  /* Fade covers the whole peek (surface at the bottom → transparent by 60% up),
+   with the pill resting at the bottom. Only present while collapsed. */
   .code-block__toggle {
     position: absolute;
-    inset-inline: 0;
-    bottom: 0;
+    inset: 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    width: 100%;
-    padding: 2.5rem 0 0.625rem;
-    background: transparent;
-
-    /* Match the code card's rounded bottom so the fade doesn't square off its
-     corners. */
-    border-end-start-radius: var(--radius-md);
-    border-end-end-radius: var(--radius-md);
+    background: linear-gradient(to top, var(--background-secondary), transparent);
+    border-radius: var(--radius-md);
 
     /* Only the pill is interactive — the fade area passes clicks through. */
     pointer-events: none;
-  }
-
-  .code-block--collapsible.is-collapsed .code-block__toggle {
-    background: linear-gradient(to bottom, transparent, var(--background-secondary) 65%);
   }
 
   /* The pill reuses .btn.btn--outline (the header Example button) for sizing and
@@ -945,20 +945,29 @@
   }
 
   .code-block--numbered .line {
-    position: relative;
     min-height: 1lh;
-    padding-inline-start: 4rem;
     counter-increment: line;
   }
 
+  /* The number is an in-flow sticky cell (with the surface as its background) so
+   it stays pinned to the left while the code scrolls horizontally under it. */
   .code-block--numbered .line::before {
     content: counter(line);
-    position: absolute;
-    inset-inline-start: 0;
+    position: sticky;
+    left: 0;
+    display: inline-block;
     width: 2.5rem;
+    padding-inline-end: 1.5rem;
+    background: var(--background-secondary);
     color: var(--ink-tertiary);
     text-align: right;
     user-select: none;
+  }
+
+  /* Closed peek: keep only the first 3 lines (hidden, not clipped, so the pre's
+   bottom padding still shows under line 3). Placed here for specificity order. */
+  .code-block--collapsible.is-collapsed .line:nth-child(n + 4) {
+    display: none;
   }
 
   /* Palette table — one card per colour family, rows for base tokens, columns
@@ -1575,6 +1584,12 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
+  }
+
+  /* display:flex above would otherwise beat the [hidden] attribute, so a
+   tab-toggled section (data-lang) wouldn't actually hide. */
+  .preview-block[hidden] {
+    display: none;
   }
 
   .preview-block > .subhead {

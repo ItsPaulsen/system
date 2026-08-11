@@ -29,43 +29,91 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Switch</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Switch"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A binary on/off control.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            Native <code>&lt;input type="checkbox"&gt;</code> — works with forms and screen readers.
+            Native <code>&lt;input type="checkbox"&gt;</code>: works with forms and screen readers.
           </p>
-          <div class="component-preview">
-            <label class="switch">
-              <span class="switch__input-wrapper">
-                <input type="checkbox" class="switch__input" />
-                <span class="switch__knob"></span>
-              </span>
-              <span class="switch__label">Notifications</span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="switch">
+                <span class="switch__input-wrapper">
+                  <input type="checkbox" class="switch__input" />
+                  <span class="switch__knob"></span>
+                </span>
+                <span class="switch__label">Notifications</span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Switch>Notifications</Switch>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <label class="switch">
-              <span class="switch__input-wrapper">
-                <input type="checkbox" class="switch__input" disabled />
-                <span class="switch__knob"></span>
-              </span>
-              <span class="switch__label">Notifications</span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="switch">
+                <span class="switch__input-wrapper">
+                  <input type="checkbox" class="switch__input" disabled />
+                  <span class="switch__knob"></span>
+                </span>
+                <span class="switch__label">Notifications</span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Switch disabled>Notifications</Switch>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            A native checkbox styled as a switch; props pass through to the input and children are
+            the label.
+          </p>
+          <div data-source="/react/Switch.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__input-wrapper"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__input"</span> <span class="tok-key">/&gt;</span>

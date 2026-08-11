@@ -1,9 +1,6 @@
 import { forwardRef } from "react";
 
-// Mirrors the vanilla Button. Skins come from `variant`; `size` sets the
-// data-size density hook on the element itself (omit to inherit an ancestor's).
-// `loading` holds the button's width while a spinner replaces the label. All
-// styling lives in components.css + tokens.css — this only composes classes.
+// Composes the button classes — styling lives in components.css + tokens.css.
 const SKINS = ["primary", "secondary", "flat", "destructive"];
 
 const Button = forwardRef(function Button(

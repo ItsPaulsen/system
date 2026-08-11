@@ -2,7 +2,8 @@ import { useId } from "react";
 import { IconAlertCircle } from "@tabler/icons-react";
 
 // Single-line text field with a label and optional hint or error. Container modifiers map to
-// props: fill, rounded, invalid (invalid is implied when `error` is set).
+// props: fill, rounded, invalid (invalid is implied when `error` is set). `leading`/`trailing`
+// are decorative slots (an icon or short text); interactive add-ons compose in the markup.
 export default function Input({
   label,
   hint,
@@ -11,6 +12,8 @@ export default function Input({
   fill,
   rounded,
   required,
+  leading,
+  trailing,
   type = "text",
   className,
   ...rest
@@ -43,6 +46,11 @@ export default function Input({
         </span>
       )}
       <span className={containerCls}>
+        {leading && (
+          <span className="input__leading" aria-hidden="true">
+            {leading}
+          </span>
+        )}
         <input
           className={elementCls}
           type={type}
@@ -51,6 +59,11 @@ export default function Input({
           aria-describedby={describedBy}
           {...rest}
         />
+        {trailing && (
+          <span className="input__trailing" aria-hidden="true">
+            {trailing}
+          </span>
+        )}
       </span>
       {hint && !error && (
         <span className="input__hint" id={`${id}-hint`}>

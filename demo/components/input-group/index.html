@@ -34,10 +34,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Input Group</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Input"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A field with an icon, text, or button attached.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -45,49 +74,76 @@
           <p class="section-note">
             An SVG in the <code>input__leading</code> (or <code>input__trailing</code>) slot. The
             slot shares the field's focus ring, and the icon is decorative
-            (<code>aria-hidden</code>) — the label names the field. <code>--rounded</code> gives the
-            pill search field.
+            (<code>aria-hidden</code>), so the label names the field. <code>--rounded</code> gives
+            the pill search field.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Search</span>
-              <span class="input__container input__container--rounded">
-                <span class="input__leading" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                    <path d="M21 21l-6 -6" />
-                  </svg>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Search</span>
+                <span class="input__container input__container--rounded">
+                  <span class="input__leading" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                      <path d="M21 21l-6 -6" />
+                    </svg>
+                  </span>
+                  <input class="input__element" type="search" placeholder="Search…" />
                 </span>
-                <input class="input__element" type="search" placeholder="Search…" />
-              </span>
-            </label>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input
+                rounded
+                label="Search"
+                type="search"
+                placeholder="Search…"
+                leading={<IconSearch />}
+              />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Text</h3>
           <p class="section-note">
-            Short text addons — a unit, prefix, or suffix (e.g. <code>$</code>, <code>USD</code>).
+            Short text add-ons: a unit, prefix, or suffix (e.g. <code>$</code>, <code>USD</code>).
             Both slots can be used at once.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Amount</span>
-              <span class="input__container">
-                <span class="input__leading" aria-hidden="true">$</span>
-                <input class="input__element" type="text" inputmode="decimal" placeholder="0.00" />
-                <span class="input__trailing" aria-hidden="true">USD</span>
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Amount</span>
+                <span class="input__container">
+                  <span class="input__leading" aria-hidden="true">$</span>
+                  <input
+                    class="input__element"
+                    type="text"
+                    inputmode="decimal"
+                    placeholder="0.00"
+                  />
+                  <span class="input__trailing" aria-hidden="true">USD</span>
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input
+                label="Amount"
+                inputMode="decimal"
+                placeholder="0.00"
+                leading="$"
+                trailing="USD"
+              />
+            </script>
           </div>
         </section>
 
@@ -96,32 +152,60 @@
           <p class="section-note">
             Put a <code>button--flat</code> <a href="/demo/components/button/">Button</a> in a slot
             (size it with <code>data-size="sm"</code>) for an inline action like copy or clear. It
-            picks up the right padding and sits flush to the field edge automatically.
+            picks up the right padding and sits flush to the field edge automatically. Because the
+            group holds two controls, bind the label with <code>for</code>/<code>id</code> instead
+            of wrapping.
           </p>
-          <div class="component-preview">
-            <!-- Explicit label (for/id) rather than a wrapping <label>: the group
-                 holds two controls (the field + the Copy button), so a wrapping
-                 label would bind to both. -->
-            <div class="input">
-              <label class="input__label" for="ig-invite">Invite link</label>
-              <span class="input__container">
-                <input
-                  id="ig-invite"
-                  class="input__element"
-                  type="text"
-                  value="example.com/i/9f3ax"
-                  readonly
-                />
-                <span class="input__trailing" data-size="sm">
-                  <button type="button" class="button button--flat">Copy</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="input">
+                <label class="input__label" for="ig-invite">Invite link</label>
+                <span class="input__container">
+                  <input
+                    id="ig-invite"
+                    class="input__element"
+                    type="text"
+                    value="example.com/i/9f3ax"
+                    readonly
+                  />
+                  <span class="input__trailing" data-size="sm">
+                    <button type="button" class="button button--flat">Copy</button>
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="input">
+                <label className="input__label" htmlFor="invite">Invite link</label>
+                <span className="input__container">
+                  <input
+                    id="invite"
+                    className="input__element"
+                    type="text"
+                    defaultValue="example.com/i/9f3ax"
+                    readOnly
+                  />
+                  <span className="input__trailing" data-size="sm">
+                    <Button variant="flat">Copy</Button>
+                  </span>
+                </span>
+              </div>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Input Group is the <a href="/demo/components/input/">Input</a> component with
+            <code>leading</code>/<code>trailing</code> slots. Interactive add-ons (a Button) compose
+            in the markup, as above.
+          </p>
+          <div data-source="/react/Input.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__leading"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">type</span>=<span class="tok-str">"text"</span> <span class="tok-key">/&gt;</span>

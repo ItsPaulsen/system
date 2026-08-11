@@ -29,23 +29,104 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Checkbox</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Checkbox"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A multi-select control. Any number of options can be on at once.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            Native <code>&lt;input type="checkbox"&gt;</code> — works with forms and screen readers.
+            Native <code>&lt;input type="checkbox"&gt;</code>: works with forms and screen readers.
             The tick strokes itself on.
           </p>
-          <div class="component-preview">
-            <div class="checkbox-group">
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="checkbox-group">
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Email me updates</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input type="checkbox" class="checkbox__input" checked />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Send me a receipt</span>
+                </label>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <div className="checkbox-group">
+                <Checkbox>Email me updates</Checkbox>
+                <Checkbox defaultChecked>Send me a receipt</Checkbox>
+              </div>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <div class="example" data-example>
+            <div class="component-preview">
               <label class="checkbox">
                 <span class="checkbox__box">
-                  <input type="checkbox" class="checkbox__input" />
+                  <input type="checkbox" class="checkbox__input" disabled />
                   <svg
                     class="checkbox__check"
                     viewBox="0 0 24 24"
@@ -61,54 +142,25 @@
                 </span>
                 <span class="checkbox__label">Email me updates</span>
               </label>
-              <label class="checkbox">
-                <span class="checkbox__box">
-                  <input type="checkbox" class="checkbox__input" checked />
-                  <svg
-                    class="checkbox__check"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12l5 5l10 -10" pathLength="1" />
-                  </svg>
-                </span>
-                <span class="checkbox__label">Send me a receipt</span>
-              </label>
             </div>
+            <script type="text/plain" class="example__react">
+              <Checkbox disabled>Email me updates</Checkbox>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <label class="checkbox">
-              <span class="checkbox__box">
-                <input type="checkbox" class="checkbox__input" disabled />
-                <svg
-                  class="checkbox__check"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12l5 5l10 -10" pathLength="1" />
-                </svg>
-              </span>
-              <span class="checkbox__label">Email me updates</span>
-            </label>
-          </div>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Props pass through to the native input (<code>checked</code>,
+            <code>defaultChecked</code>, <code>disabled</code>, <code>onChange</code>); children are
+            the label.
+          </p>
+          <div data-source="/react/Checkbox.jsx"></div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__box"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">class</span>=<span class="tok-str">"checkbox__input"</span> <span class="tok-key">/&gt;</span>

@@ -95,7 +95,7 @@
    strokes on; radio = circle whose border thickens into a ring. Both share
    sizing, focus, hover, and disabled treatment.
 
-   Structure — the checkbox wraps input + SVG tick in a grid box so the tick
+   Structure: the checkbox wraps input + SVG tick in a grid box so the tick
    can overlay the square and animate:
      <label class="checkbox">
        <span class="checkbox__box">

@@ -46,24 +46,60 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Separator</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Separator"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A hairline rule between content.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Horizontal</h3>
           <p class="section-note">
-            A semantic <code>&lt;hr&gt;</code> — spacing is set by the surrounding layout, not the
+            A semantic <code>&lt;hr&gt;</code>; spacing is set by the surrounding layout, not the
             rule.
           </p>
-          <div class="component-preview">
-            <div class="sep-stack">
-              <p>Section one</p>
-              <hr class="separator" />
-              <p>Section two</p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="sep-stack">
+                <p>Section one</p>
+                <hr class="separator" />
+                <p>Section two</p>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <p>Section one</p>
+              <Separator />
+              <p>Section two</p>
+            </script>
           </div>
         </section>
 
@@ -74,27 +110,47 @@
             <code>&lt;div&gt;</code> with <code>role="separator"</code> and
             <code>aria-orientation</code>.
           </p>
-          <div class="component-preview">
-            <div class="sep-row">
-              <span>Docs</span>
-              <div
-                class="separator separator--vertical"
-                role="separator"
-                aria-orientation="vertical"
-              ></div>
-              <span>Components</span>
-              <div
-                class="separator separator--vertical"
-                role="separator"
-                aria-orientation="vertical"
-              ></div>
-              <span>Tokens</span>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="sep-row">
+                <span>Docs</span>
+                <div
+                  class="separator separator--vertical"
+                  role="separator"
+                  aria-orientation="vertical"
+                ></div>
+                <span>Components</span>
+                <div
+                  class="separator separator--vertical"
+                  role="separator"
+                  aria-orientation="vertical"
+                ></div>
+                <span>Tokens</span>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="sep-row">
+                <span>Docs</span>
+                <Separator orientation="vertical" />
+                <span>Components</span>
+                <Separator orientation="vertical" />
+                <span>Tokens</span>
+              </div>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>orientation="vertical"</code> switches to the div variant with the right ARIA;
+            otherwise it renders an <code>&lt;hr&gt;</code>.
+          </p>
+          <div data-source="/react/Separator.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-com">&lt;!-- Horizontal --&gt;</span>
 <span class="tok-key">&lt;hr</span> <span class="tok-prop">class</span>=<span class="tok-str">"separator"</span> <span class="tok-key">/&gt;</span>
 

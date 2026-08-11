@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Breadcrumb</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Breadcrumb"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A trail showing the current page's place in the hierarchy.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,25 +70,49 @@
             Skip it at the top level. The last crumb is plain text with <code>aria-current</code>,
             not a link.
           </p>
-          <div class="component-preview">
-            <nav class="breadcrumb" aria-label="Breadcrumb">
-              <ol class="breadcrumb__list">
-                <li class="breadcrumb__item">
-                  <a class="breadcrumb__link" href="#">Home</a>
-                </li>
-                <li class="breadcrumb__item">
-                  <a class="breadcrumb__link" href="#">Library</a>
-                </li>
-                <li class="breadcrumb__item">
-                  <span class="breadcrumb__current" aria-current="page">Annual report</span>
-                </li>
-              </ol>
-            </nav>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <nav class="breadcrumb" aria-label="Breadcrumb">
+                <ol class="breadcrumb__list">
+                  <li class="breadcrumb__item">
+                    <a class="breadcrumb__link" href="#">Home</a>
+                  </li>
+                  <li class="breadcrumb__item">
+                    <a class="breadcrumb__link" href="#">Library</a>
+                  </li>
+                  <li class="breadcrumb__item">
+                    <span class="breadcrumb__current" aria-current="page">Annual report</span>
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/library">Library</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Annual report</BreadcrumbPage>
+                </BreadcrumbItem>
+              </Breadcrumb>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>Breadcrumb</code> wraps the <code>nav</code> and <code>ol</code>; close the trail
+            with <code>BreadcrumbPage</code> for the current page.
+          </p>
+          <div data-source="/react/Breadcrumb.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Breadcrumb"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;ol</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__list"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"breadcrumb__item"</span><span class="tok-key">&gt;</span>

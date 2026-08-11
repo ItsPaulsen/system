@@ -1032,6 +1032,27 @@ async function hydrateSource() {
   injectCodeCopy();
 }
 
+// Attribute names React spells differently from HTML. Anything not listed
+// (aria-*, data-*, viewBox, fill, stroke, d, …) is already valid JSX as-is.
+const JSX_ATTRS = {
+  class: "className",
+  for: "htmlFor",
+  tabindex: "tabIndex",
+  "stroke-width": "strokeWidth",
+  "stroke-linecap": "strokeLinecap",
+  "stroke-linejoin": "strokeLinejoin",
+  "fill-rule": "fillRule",
+  "clip-rule": "clipRule"
+};
+
+// Derive a JSX snippet from extracted HTML for passthrough components (no props):
+// rename those attributes. The all-lowercase [a-z-]+ match leaves camelCase
+// attrs (viewBox) and boolean attrs untouched. Icon-heavy examples still want a
+// hand-written script (Tabler components, not raw inline SVG).
+function htmlToJsx(html) {
+  return html.replace(/(\s)([a-z-]+)=/g, (_, sp, name) => sp + (JSX_ATTRS[name] || name) + "=");
+}
+
 // Per-example code (shadcn-style): each [data-example] wraps a live preview and
 // a <script class="example__react"> holding its JSX. The HTML version is read
 // straight from the preview's own markup (no drift). A page-level
@@ -1044,9 +1065,12 @@ function initExamples() {
   examples.forEach((ex) => {
     const preview = ex.querySelector(".component-preview");
     const reactEl = ex.querySelector(".example__react");
+    const html = preview ? dedent(preview.innerHTML).trim() : "";
     ex._code = {
-      html: preview ? dedent(preview.innerHTML).trim() : "",
-      react: reactEl ? dedent(reactEl.textContent).trim() : ""
+      html,
+      // Prop-rich components ship a hand-written <script class="example__react">;
+      // passthrough components (just classes) derive their JSX from the HTML.
+      react: reactEl ? dedent(reactEl.textContent).trim() : htmlToJsx(html)
     };
     reactEl?.remove();
     const holder = document.createElement("div");

@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Popover</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Popover"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A floating surface anchored to a trigger.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -44,35 +73,68 @@
             <code>--panel</code> for content padding and <code>--center</code> to center it on the
             trigger.
           </p>
-          <div class="component-preview">
-            <div data-size="sm">
-              <button
-                class="button button--secondary"
-                type="button"
-                popovertarget="popover-demo"
-                aria-haspopup="dialog"
-              >
-                Open popover
-              </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div data-size="sm">
+                <button
+                  class="button button--secondary"
+                  type="button"
+                  popovertarget="popover-demo"
+                  aria-haspopup="dialog"
+                >
+                  Open popover
+                </button>
+              </div>
+              <div class="popover popover--panel popover--center" id="popover-demo" popover>
+                <p style="margin: 0 0 0.5rem; color: var(--ink-primary); font-weight: 500">
+                  Keyboard shortcuts
+                </p>
+                <p style="margin: 0">
+                  Anchored below the trigger, flipping above when there's no room. Click outside or
+                  press Esc to dismiss.
+                </p>
+              </div>
             </div>
-            <div class="popover popover--panel popover--center" id="popover-demo" popover>
-              <p style="margin: 0 0 0.5rem; color: var(--ink-primary); font-weight: 500">
-                Keyboard shortcuts
-              </p>
-              <p style="margin: 0">
-                Anchored below the trigger, flipping above when there's no room. Click outside or
-                press Esc to dismiss.
-              </p>
-            </div>
+            <script type="text/plain" class="example__react">
+              <Popover>
+                <PopoverTrigger>Open popover</PopoverTrigger>
+                <PopoverContent center>
+                  <p><strong>Keyboard shortcuts</strong></p>
+                  <p>
+                    Anchored below the trigger, flipping above when there's no room. Click outside
+                    or press Esc to dismiss.
+                  </p>
+                </PopoverContent>
+              </Popover>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compound parts over the native popover. <code>PopoverContent</code> takes
+            <code>panel</code> (on by default) and <code>center</code>; the popover owns dismissal.
+          </p>
+          <div data-source="/react/Popover.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"popover-x"</span><span class="tok-key">&gt;</span>Open popover<span class="tok-key">&lt;/button&gt;</span>
 <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--panel popover--center"</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x"</span> <span class="tok-prop">popover</span><span class="tok-key">&gt;</span>
   …
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. Placement is CSS anchor positioning;
+            <code>initPopovers</code> is only the fallback for engines without it, plus a
+            close-on-Tab-away tidy-up.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initPopovers"></div>
         </section>
       </div>
     </div>

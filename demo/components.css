@@ -838,7 +838,7 @@
    gives light-dismiss (outside click), Esc, and focus-return for free. Placed
    with CSS anchor positioning against its invoker (the popovertarget button);
    app.js (positionPopover) covers engines without anchor positioning. Open-only
-   fade + rise, matching Dialog — close is instant. */
+   fade + rise, matching Dialog; close is instant. */
   .popover {
     position: fixed;
     width: max-content;

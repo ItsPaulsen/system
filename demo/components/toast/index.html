@@ -103,18 +103,31 @@
               </button>
             </div>
             <script type="text/plain" class="example__react">
-              <Button variant="secondary" onClick={() => toast("Changes saved")}>Default</Button>
-              <Button variant="secondary" onClick={() => toast.success("Changes saved")}>Success</Button>
-              <Button variant="secondary" onClick={() => toast.info("Heads up")}>Info</Button>
-              <Button variant="secondary" onClick={() => toast.warning("Double-check your input")}>Warning</Button>
-              <Button variant="secondary" onClick={() => toast.error("Couldn't save")}>Error</Button>
+              <Button variant="secondary" onClick={() => toast("Changes saved")}>
+                Default
+              </Button>
+              <Button variant="secondary" onClick={() => toast.success("Changes saved")}>
+                Success
+              </Button>
+              <Button variant="secondary" onClick={() => toast.info("Heads up")}>
+                Info
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => toast.warning("Double-check your input")}
+              >
+                Warning
+              </Button>
+              <Button variant="secondary" onClick={() => toast.error("Couldn't save")}>
+                Error
+              </Button>
               <Button
                 variant="secondary"
                 onClick={() =>
                   toast.promise(save(), {
                     loading: "Saving…",
                     success: "Saved",
-                    error: "Couldn't save"
+                    error: "Couldn't save",
                   })
                 }
               >

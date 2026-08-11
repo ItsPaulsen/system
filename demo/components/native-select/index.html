@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Native Select</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Input"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A single choice from a list.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,18 +70,28 @@
             Native <code>&lt;select&gt;</code> keeps the platform picker and keyboard support; only
             the arrow is restyled.
           </p>
-          <div class="component-preview">
-            <label class="input" style="max-width: 280px">
-              <span class="input__label">Team</span>
-              <span class="input__container input__container--select">
-                <select class="input__element">
-                  <option>Design</option>
-                  <option>Engineering</option>
-                  <option>Product</option>
-                  <option>Marketing</option>
-                </select>
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input" style="max-width: 280px">
+                <span class="input__label">Team</span>
+                <span class="input__container input__container--select">
+                  <select class="input__element">
+                    <option>Design</option>
+                    <option>Engineering</option>
+                    <option>Product</option>
+                    <option>Marketing</option>
+                  </select>
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NativeSelect label="Team">
+                <option>Design</option>
+                <option>Engineering</option>
+                <option>Product</option>
+                <option>Marketing</option>
+              </NativeSelect>
+            </script>
           </div>
         </section>
 
@@ -62,41 +101,72 @@
             Wrap options in a native <code>&lt;optgroup&gt;</code> to sort them into labelled
             categories.
           </p>
-          <div class="component-preview">
-            <label class="input" style="max-width: 280px">
-              <span class="input__label">Assignee</span>
-              <span class="input__container input__container--select">
-                <select class="input__element">
-                  <optgroup label="Design">
-                    <option>Ada</option>
-                    <option>Mert</option>
-                  </optgroup>
-                  <optgroup label="Engineering">
-                    <option>Jonas</option>
-                    <option>Priya</option>
-                  </optgroup>
-                </select>
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input" style="max-width: 280px">
+                <span class="input__label">Assignee</span>
+                <span class="input__container input__container--select">
+                  <select class="input__element">
+                    <optgroup label="Design">
+                      <option>Ada</option>
+                      <option>Mert</option>
+                    </optgroup>
+                    <optgroup label="Engineering">
+                      <option>Jonas</option>
+                      <option>Priya</option>
+                    </optgroup>
+                  </select>
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NativeSelect label="Assignee">
+                <optgroup label="Design">
+                  <option>Ada</option>
+                  <option>Mert</option>
+                </optgroup>
+                <optgroup label="Engineering">
+                  <option>Jonas</option>
+                  <option>Priya</option>
+                </optgroup>
+              </NativeSelect>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <label class="input" style="max-width: 280px">
-              <span class="input__label">Team</span>
-              <span class="input__container input__container--select">
-                <select class="input__element" disabled>
-                  <option>Design</option>
-                </select>
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input" style="max-width: 280px">
+                <span class="input__label">Team</span>
+                <span class="input__container input__container--select">
+                  <select class="input__element" disabled>
+                    <option>Design</option>
+                  </select>
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NativeSelect label="Team" disabled>
+                <option>Design</option>
+              </NativeSelect>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>label</code> renders the field label; children are the
+            <code>&lt;option&gt;</code>/<code>&lt;optgroup&gt;</code> list. Other props pass through
+            to the select.
+          </p>
+          <div data-source="/react/NativeSelect.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Team<span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container input__container--select"</span><span class="tok-key">&gt;</span>

@@ -56,11 +56,12 @@
           <h3 class="subhead">How to use</h3>
           <p class="section-note">
             Drop in one <code>globals.css</code> (reset, focus ring, and all tokens), then reference
-            with <code>var(--…)</code>. Add a component's CSS as you need it.
+            with <code>var(--…)</code>. Add a component's CSS as you need it, in plain HTML or via
+            the typed React version each component ships.
           </p>
           <pre><code><span class="tok-key">@import</span> <span class="tok-fn">url</span>(<span class="tok-str">"globals.css"</span>);
 
-<span class="tok-selector">.card</span> {
+<span class="tok-selector">.panel</span> {
   <span class="tok-prop">background</span>: <span class="tok-fn">var</span>(<span class="tok-var">--background-primary</span>);
   <span class="tok-prop">border-radius</span>: <span class="tok-fn">var</span>(<span class="tok-var">--radius-md</span>);
   <span class="tok-prop">box-shadow</span>: <span class="tok-fn">var</span>(<span class="tok-var">--shadow-sm</span>);

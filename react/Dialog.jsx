@@ -1,9 +1,6 @@
 import { createContext, useContext, useEffect, useId, useRef } from "react";
 
-// Compound Dialog over the native <dialog> — the same shape shadcn devs know
-// (Dialog / DialogTrigger / DialogContent / DialogClose), but backed by
-// showModal(), so the focus trap, Esc-to-close, and inert backdrop come for
-// free. Styling is the vanilla .dialog classes from components.css.
+// Compound dialog backed by showModal(), so focus trap, Esc, and inert backdrop come free.
 const DialogContext = createContext(null);
 
 export function Dialog({ children }) {

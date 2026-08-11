@@ -1,4 +1,4 @@
-/* Demo project components — copy these into your project.
+/* Demo project components, copy these into your project.
    Everything below references demo tokens (`--primary`, `--ink-*`, `--motion-*`
    …). Restyle by swapping tokens in `tokens.css`. */
 
@@ -426,9 +426,9 @@
    </label>
 
    Modifiers on .input__container:
-     --fill      — filled surface instead of outline
-     --rounded   — pill-shaped
-     --invalid   — danger border (red on focus too) */
+     --fill     , filled surface instead of outline
+     --rounded  , pill-shaped
+     --invalid  , danger border (red on focus too) */
 
   .input {
     display: flex;
@@ -448,7 +448,7 @@
     color: var(--red);
   }
 
-  /* Helper text below the field — wire it to the input with aria-describedby so
+  /* Helper text below the field, wire it to the input with aria-describedby so
    it's announced. Caption size, secondary ink; the .input column gap spaces it. */
   .input__hint {
     font-size: var(--font-caption-medium-size);
@@ -456,7 +456,7 @@
     color: var(--ink-secondary);
   }
 
-  /* Error message — the invalid counterpart to the hint (red, with an alert
+  /* Error message, the invalid counterpart to the hint (red, with an alert
    glyph). Pair with .input__container--invalid + aria-describedby on the input. */
   .input__error {
     display: inline-flex;
@@ -484,7 +484,7 @@
   }
 
   /* Active state is the border itself (MD3 outlined field): it turns the focus
-   colour and a 1px outset shadow doubles it to ~2px on the outside — no
+   colour and a 1px outset shadow doubles it to ~2px on the outside, no
    separate ring, no layout shift. Uses --focus (not raw primary) since this is
    a focus affordance, so it matches every other focus ring. */
   .input__container:focus-within {
@@ -501,7 +501,7 @@
     border-radius: var(--radius-full);
   }
 
-  /* Invalid — either an explicit --invalid modifier, or a field the browser
+  /* Invalid, either an explicit --invalid modifier, or a field the browser
    itself reports as invalid after the user has interacted (:user-invalid), so
    live constraint validation needs no JS class-toggling. */
   .input__container--invalid,
@@ -543,9 +543,9 @@
     cursor: not-allowed;
   }
 
-  /* File input — the whole field is the click target, so the native picker button
+  /* File input, the whole field is the click target, so the native picker button
    (::file-selector-button) is plain text, not a surface; the rest of the field
-   shows the chosen filename in secondary ink. No focus ring either (rule below) —
+   shows the chosen filename in secondary ink. No focus ring either (rule below),
    the field isn't a text-entry affordance. */
   .input__element--file {
     display: inline-flex;
@@ -567,7 +567,7 @@
     cursor: pointer;
   }
 
-  /* Keep the resting border on focus — clicking only opens the file picker. */
+  /* Keep the resting border on focus, clicking only opens the file picker. */
   .input__container:has(.input__element--file):focus-within {
     border-color: var(--ink-tertiary);
     box-shadow: none;
@@ -590,7 +590,7 @@
     padding-inline-end: 0;
   }
 
-  /* Input Group: a button in an addon slot hugs the field edge — drop the text
+  /* Input Group: a button in an addon slot hugs the field edge, drop the text
    padding so the button's own shape defines the inset. See the Input Group
    component, which composes .input__container with these addon slots. */
   .input__leading:has(.button),
@@ -1048,12 +1048,12 @@
      [<svg>…</svg>] Label [<svg>…</svg>]
    </button>
 
-   Density is a global knob — set `data-size="sm|md|lg"` on any ancestor
+   Density is a global knob, set `data-size="sm|md|lg"` on any ancestor
    (root for site-wide, a wrapper for per-section) and the button
    (along with any density-driven component inside) rescales. */
 
   .button {
-    /* Size ladder — sm 40 / md 48 / lg 56, set per data-size below. One var so
+    /* Size ladder, sm 40 / md 48 / lg 56, set per data-size below. One var so
      the height and the icon-only square width stay in lockstep; --button-font
      is a var too so a wrapper can re-scale a button group (see the example
      hero, which renders its lg buttons at md scale on mobile). */
@@ -1079,7 +1079,7 @@
     user-select: none;
 
     /* Opt out of the iOS double-tap-zoom gesture (and its ~300ms tap delay) so
-     buttons register taps instantly — e.g. the menu button no longer zooms on a
+     buttons register taps instantly, e.g. the menu button no longer zooms on a
      quick double-tap. */
     touch-action: manipulation;
     font-size: var(--button-font);
@@ -1115,7 +1115,7 @@
     outline-offset: var(--focus-ring-offset);
   }
 
-  /* Modifiers — tighten padding on whichever side the icon sits */
+  /* Modifiers, tighten padding on whichever side the icon sits */
 
   .button--with-start-icon {
     padding-inline-start: calc(var(--button-px) - 4px);
@@ -1125,14 +1125,14 @@
     padding-inline-end: calc(var(--button-px) - 4px);
   }
 
-  /* Icon-only — square, no inline padding */
+  /* Icon-only, square, no inline padding */
 
   .button--icon {
     width: var(--button-size);
     padding-inline: 0;
   }
 
-  /* Skins — hover/active guarded with :not(:disabled) so disabled state wins. */
+  /* Skins, hover/active guarded with :not(:disabled) so disabled state wins. */
 
   .button--primary {
     background: var(--primary);
@@ -1194,7 +1194,7 @@
     background: var(--red-soft-active);
   }
 
-  /* Disabled — fill-quaternary bg for filled skins, transparent for flat.
+  /* Disabled, fill-quaternary bg for filled skins, transparent for flat.
    Text/icon drop to fill-secondary. Higher specificity via double class. */
 
   .button:disabled {
@@ -1207,7 +1207,7 @@
     background: transparent;
   }
 
-  /* Loading — a spinner replaces the label while the button holds its width and
+  /* Loading, a spinner replaces the label while the button holds its width and
    keeps its skin colour (not the gray :disabled look). Interaction is blocked
    with aria-disabled + pointer-events rather than the disabled attribute, so the
    skin (and the spinner's currentcolor) stay intact. Pair with aria-busy="true"
@@ -1250,7 +1250,7 @@
      [<svg>…</svg>] Label [<svg>…</svg>]
    </span>
 
-   Fixed size — badges don't scale with data-size. */
+   Fixed size, badges don't scale with data-size. */
 
   .badge {
     display: inline-flex;
@@ -1455,7 +1455,7 @@
     color: var(--ink-secondary);
   }
 
-  /* Tablet ≥640 — pad up and use title-small for the heading. */
+  /* Tablet ≥640, pad up and use title-small for the heading. */
   @media (min-width: 640px) {
     .card__illustration {
       padding: 24px 24px 0;
@@ -1582,14 +1582,14 @@
     clip-path: inset(50%);
   }
 
-  /* Interactive types — cursor pointer when enabled */
+  /* Interactive types, cursor pointer when enabled */
 
   .chip--as-checkbox:not(:has(input:disabled)),
   .chip--as-radio:not(:has(input:disabled)) {
     cursor: pointer;
   }
 
-  /* Hover / active — unchecked, non-disabled */
+  /* Hover / active, unchecked, non-disabled */
 
   @media (hover: hover) {
     .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
@@ -1603,7 +1603,7 @@
     border-color: var(--fill-primary-active);
   }
 
-  /* Focus — 3px ring set 1px outside the chip, either on the chip itself or via
+  /* Focus, 3px ring set 1px outside the chip, either on the chip itself or via
    the hidden input */
 
   .chip:focus-visible,
@@ -1620,7 +1620,7 @@
     opacity: 0.5;
   }
 
-  /* Checked state — soft primary tint bg, primary text, no border */
+  /* Checked state, soft primary tint bg, primary text, no border */
 
   .chip:has(input:checked) {
     background: var(--primary-soft);
@@ -1628,7 +1628,7 @@
     color: var(--primary-foreground);
   }
 
-  /* Hover / active — checked, non-disabled */
+  /* Hover / active, checked, non-disabled */
 
   @media (hover: hover) {
     .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
@@ -1640,7 +1640,7 @@
     background: var(--primary-soft-active);
   }
 
-  /* A checked single-select chip is the current choice — it can't be un-picked,
+  /* A checked single-select chip is the current choice, it can't be un-picked,
    so it isn't interactive: no pointer (and no hover/active feedback above). */
   .chip--as-radio:has(input:checked):not(:has(input:disabled)) {
     cursor: default;
@@ -1730,7 +1730,7 @@
 
   /* ── Dialog ────────────────────────────────────────────────────────────── */
 
-  /* Native <dialog> — focus trap, Esc-to-close, and an inert background come for
+  /* Native <dialog>, focus trap, Esc-to-close, and an inert background come for
    free. Open with dialog.showModal(); app.js wires [data-dialog-open="id"] and
    [data-dialog-close], and a click on the backdrop closes it.
 
@@ -1754,9 +1754,9 @@
     color: var(--ink-primary);
     box-shadow: var(--shadow-lg);
 
-    /* Animate on open only — the transition lives on [open], so removing it
+    /* Animate on open only, the transition lives on [open], so removing it
      (close) is instant. @starting-style gives the entry state (fade + rise).
-     Progressive enhancement — browsers without @starting-style just pop in. */
+     Progressive enhancement, browsers without @starting-style just pop in. */
     opacity: 0;
     transform: translateY(10px);
   }
@@ -2788,7 +2788,7 @@
 
   /* ── Slider ────────────────────────────────────────────────────────────── */
 
-  /* Native <input type="range"> with appearance:none — keyboard, step, and
+  /* Native <input type="range"> with appearance:none, keyboard, step, and
    min/max come for free. Track + thumb are themed for both engines
    (::-webkit-slider-* and ::-moz-range-*).
 

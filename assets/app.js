@@ -298,7 +298,7 @@ function isExamplePath() {
   return location.pathname.startsWith(EXAMPLE_HREF);
 }
 
-// Tabler arrow-left at 16px with stroke 2, matches shadcn pagination weight.
+// Tabler arrow-left at 16px with stroke 2, the usual pagination weight.
 const ARROW_LEFT_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
 
@@ -309,7 +309,7 @@ function isCurrentPage(href) {
 }
 
 // Build the sidebar for the current project. Wrap the content in a shell so the
-// sidebar can sit beside it as a sticky left column (shadcn-style layout).
+// sidebar can sit beside it as a sticky left column.
 function injectSidebar() {
   // No project pages (site root, or an unknown project) → leave it chrome-free.
   // The example path matches a project but is a standalone mock, no sidebar.
@@ -334,7 +334,7 @@ function injectSidebar() {
   // Focus holder: opening the drawer moves focus here (not the first link, which
   // would show a stray focus ring) so keyboard/Esc work with nothing highlighted.
   aside.tabIndex = -1;
-  // Inner spans give us shadcn-style pill hover: the anchor stays full width
+  // Inner spans give us a pill hover: the anchor stays full width
   // for a wide click target, but the visual bg wraps only the label.
   const backLink = `<a class="sidebar__back" href="/"><span>${ARROW_LEFT_ICON}All projects</span></a>`;
   aside.innerHTML =
@@ -365,7 +365,7 @@ function injectSidebar() {
   persistSidebarScroll(aside);
 }
 
-// Keep the sidebar where you left it across page loads (shadcn-style persistent
+// Keep the sidebar where you left it across page loads (a persistent
 // sidebar). Each page is a fresh document, so cross-document view transitions
 // otherwise render the new sidebar at the top and scroll the active item out of
 // view. sessionStorage keeps the offset per tab, keyed by project so separate
@@ -837,7 +837,7 @@ function initGridTabs() {
 const ARROW_RIGHT_16 =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
 
-// Inject a shadcn-style prev/next pair at the bottom of each doc page.
+// Inject a prev/next pair at the bottom of each doc page.
 function injectPagination() {
   const wrap = document.querySelector(".wrap");
   if (!wrap || document.querySelector(".pager")) return;
@@ -1053,7 +1053,7 @@ function htmlToJsx(html) {
   return html.replace(/(\s)([a-z-]+)=/g, (_, sp, name) => sp + (JSX_ATTRS[name] || name) + "=");
 }
 
-// Per-example code (shadcn-style): each [data-example] wraps a live preview and
+// Per-example code: each [data-example] wraps a live preview and
 // a <script class="example__react"> holding its JSX. The HTML version is read
 // straight from the preview's own markup (no drift). A page-level
 // [data-code-tabs] toggles which language every example shows.
@@ -1184,7 +1184,7 @@ function injectCodeCopy() {
     btn2.type = "button";
     btn2.className = "code-block__toggle-pill btn btn--outline";
     btn2.textContent = "View Code";
-    // One-way (shadcn): open into the scroll box and drop the fade + pill. Keep
+    // One-way: open into the scroll box and drop the fade + pill. Keep
     // the collapsible class so the opened max-height + scroll still apply.
     btn2.addEventListener("click", () => {
       wrapper.classList.remove("is-collapsed");
@@ -1749,7 +1749,7 @@ function initMenus() {
 
     // The native popover owns show/hide; react to its toggle to sync the
     // trigger state and move focus in. (Fallback positioning is in initPopovers.)
-    // While open, match shadcn's scroll behaviour: lock the page on desktop
+    // While open, lock the page on desktop
     // (pointer stays over the menu), dismiss on scroll on touch.
     const desktop = window.matchMedia("(hover: hover) and (pointer: fine)");
     let onScroll = null;
@@ -2005,7 +2005,7 @@ function initTooltips() {
 }
 
 // Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
-// standard modal behaviour (matches Radix/shadcn), one scroll context, no
+// standard modal behaviour, one scroll context, no
 // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
 // page doesn't shift as it disappears.
 function lockBodyScroll() {

@@ -1,12 +1,12 @@
-/* system.kristianpaulsen.com — the docs SITE's chrome only (nav, sidebar, code
+/* system.kristianpaulsen.com, the docs SITE's chrome only (nav, sidebar, code
    blocks, tabs, palette tables). The consumer-facing baseline (reset, focus
    ring, colour-scheme) and the tokens live in the project's globals.css, which
    every page also loads (the root landing @imports it). A project handoff is
-   globals.css + a component's CSS — never this file. The chrome references the
+   globals.css + a component's CSS, never this file. The chrome references the
    project tokens directly, so every page IS a live demo of its project.
 
    Fonts are loaded via <link> tags in each page's <head> (with preconnect), not
-   an @import here — @import would make the browser fetch this file first and
+   an @import here, @import would make the browser fetch this file first and
    only then discover the font stylesheet, serialising two round-trips. */
 
 /* Cascade layers. Declared once here (idempotently re-declared in tokens.css and
@@ -16,8 +16,8 @@
 @layer base, tokens, components;
 
 @layer base {
-  /* Chrome layout tokens. The consumer baseline — reset, colour-scheme,
-   --flip — lives in globals.css, loaded on every page. */
+  /* Chrome layout tokens. The consumer baseline (reset, colour-scheme,
+   --flip) lives in globals.css, loaded on every page. */
   :root {
     --radius: 10px;
     --nav-h: 56px;
@@ -30,7 +30,7 @@
 
   /* Cross-document view transitions: a soft cross-fade between pages as you
    navigate the docs. Both pages opt in (base.css is on every page) and same-
-   origin nav is required. Progressive enhancement — unsupported browsers just
+   origin nav is required. Progressive enhancement, unsupported browsers just
    navigate normally. Disabled at mobile widths: there the nav is a hamburger
    drawer, and transitioning an open drawer into the next page reads as a jump. */
   @media (min-width: 640px) {
@@ -56,7 +56,7 @@
      the browser paints on tap). Our own :active states are the press feedback. */
     -webkit-tap-highlight-color: transparent;
 
-    /* Sticky nav overlaps the top — reserve its height when jumping to any
+    /* Sticky nav overlaps the top, reserve its height when jumping to any
      in-page anchor (Skip-to-content, hash links). */
     scroll-padding-top: var(--nav-h);
   }
@@ -79,7 +79,7 @@
     transition: none !important;
   }
 
-  /* Accessibility: skip-to-content — hidden until keyboard-focused. */
+  /* Accessibility: skip-to-content, hidden until keyboard-focused. */
   .skip-link {
     position: fixed;
     top: 1rem;
@@ -112,7 +112,7 @@
     background: var(--background-primary);
   }
 
-  /* Root landing: transparent, brandless — just the theme toggle. */
+  /* Root landing: transparent, brandless, just the theme toggle. */
   .site-nav--bare {
     background: transparent;
   }
@@ -162,7 +162,7 @@
    crossover perfectly symmetrical, we normalise each line to y=12 first
    (translate) then rotate ±45° around the same origin. */
   .site-nav__menu .ham-line {
-    /* Custom mark — pin its own weight so the shared icon stroke can be Tabler's 2. */
+    /* Custom mark, pin its own weight so the shared icon stroke can be Tabler's 2. */
     stroke-width: 1.75;
     transform-origin: center;
     transform-box: fill-box;
@@ -191,20 +191,20 @@
     z-index: 15; /* Below nav (z-index: 20) so header contents stay clickable. */
     opacity: 0;
 
-    /* Drawer scrolls internally but hides its own scrollbar — the outer page
-     scrollbar stays visible for continuity (matches shadcn). Overscroll is
+    /* Drawer scrolls internally but hides its own scrollbar, the outer page
+     scrollbar stays visible for continuity. Overscroll is
      contained so reaching the end doesn't bleed to the page. */
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: none;
 
-    /* visibility: hidden stops the browser painting the drawer at all — prevents
+    /* visibility: hidden stops the browser painting the drawer at all, prevents
      a flash of the open state when the viewport crosses the breakpoint. */
     visibility: hidden;
     pointer-events: none;
   }
 
-  /* Container is only a programmatic focus holder on drawer open — never show a
+  /* Container is only a programmatic focus holder on drawer open, never show a
    ring on it (the links have their own focus styles). */
   .sidebar:focus-visible {
     outline: none;
@@ -214,7 +214,7 @@
     display: none;
   }
 
-  /* Animate the drawer only when the user actually toggles it — not on the
+  /* Animate the drawer only when the user actually toggles it, not on the
    media-query flip when the viewport crosses the breakpoint. JS adds .is-anim
    on first interaction so pure resize snaps instead of slides. */
   .sidebar.is-anim {
@@ -235,7 +235,7 @@
 
   /* Scroll fade: when the sticky sidebar overflows, its top/bottom edges fade to
    hint more content. Scroll-driven, so the top fades only once scrolled down and
-   the bottom only while there's more below — and neither fades when the list
+   the bottom only while there's more below, and neither fades when the list
    fits (an inactive scroll timeline leaves the fade sizes at 0). Chrome/Edge;
    other browsers just show no fade. @property makes the fade sizes animatable. */
   @property --sidebar-fade-top {
@@ -251,7 +251,7 @@
   }
 
   @media (min-width: 1024px) {
-    /* Rail: undo the drawer — sticky left column, opaque, no blur, always shown.
+    /* Rail: undo the drawer, sticky left column, opaque, no blur, always shown.
      Inline-start padding = page-gutter minus the link's inline padding, so link
      text lands at 24px and its hover/active pill extends 8px before the text. */
     .sidebar {
@@ -278,7 +278,7 @@
       .sidebar {
         --sidebar-fade: 2.5rem;
 
-        /* Clear strip of page surface below the bottom fade — the fade finishes
+        /* Clear strip of page surface below the bottom fade, the fade finishes
          this far above the edge instead of running to it. */
         --sidebar-fade-gap: 2rem;
 
@@ -360,7 +360,7 @@
     font-weight: 500;
   }
 
-  /* "New" dot — primary marker next to recently-added pages. Sits inside the
+  /* "New" dot, primary marker next to recently-added pages. Sits inside the
    link's inner span, so the flex gap spaces it off the label. */
   .sidebar__new {
     flex-shrink: 0;
@@ -394,7 +394,7 @@
     outline: none;
   }
 
-  /* Bare text in the drawer — push the ring out for breathing room (0 at lg). */
+  /* Bare text in the drawer, push the ring out for breathing room (0 at lg). */
   .sidebar__link:focus-visible > span,
   .sidebar__back:focus-visible > span {
     outline: var(--focus-ring-width) solid var(--focus);
@@ -454,7 +454,7 @@
     }
   }
 
-  /* Hover pill — desktop rail only (pointer-capable). The active link keeps its
+  /* Hover pill, desktop rail only (pointer-capable). The active link keeps its
    own surface, so it opts out of the hover pill. */
   @media (min-width: 1024px) and (hover: hover) {
     .sidebar__link:not(.is-active):hover > span {
@@ -484,7 +484,7 @@
     width: 32px;
     height: 32px;
 
-    /* Sit 16px from the viewport edge (rather than 24) — tighter to the corner. */
+    /* Sit 16px from the viewport edge (rather than 24), tighter to the corner. */
     margin-inline-end: -0.5rem;
     padding: 0;
     color: var(--ink-primary);
@@ -512,7 +512,7 @@
     padding: 3rem var(--grid-margin, 1.5rem) 6rem;
   }
 
-  /* Wrap gets focused (tabindex=-1) via the skip link — kill the default focus ring. */
+  /* Wrap gets focused (tabindex=-1) via the skip link, kill the default focus ring. */
   .wrap:focus-visible {
     outline: none;
   }
@@ -540,7 +540,7 @@
   }
 
   /* Divider only when the page has a subhead below. Pages without subheads
-   (e.g. Typography) go straight from lede into content — no floating rule. */
+   (e.g. Typography) go straight from lede into content, no floating rule. */
   body:has(.subhead) .site-head {
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
@@ -702,7 +702,7 @@
     }
   }
 
-  /* Inline + block code samples — uses --fill-quaternary alpha tint so the chip
+  /* Inline + block code samples, uses --fill-quaternary alpha tint so the chip
    contrasts against any surface it's placed on (whether that's the tinted page
    or an elevated card). */
   code {
@@ -788,7 +788,7 @@
     display: block;
   }
 
-  /* Collapsible code (shadcn-style). Over 4 lines starts collapsed to a short
+  /* Collapsible code. Over 4 lines starts collapsed to a short
    peek under a full-surface fade with a "View Code" pill; opening turns it into
    a taller scroll box so it reads as "there's more". */
 
@@ -803,14 +803,14 @@
     display: none;
   }
 
-  /* Closed peek is exactly the first 3 lines — see the .line:nth-child rule
+  /* Closed peek is exactly the first 3 lines, see the .line:nth-child rule
    below, which hides the rest so the pre's own 14px bottom padding breathes
    under line 3 with no clipped sliver of line 4. */
   .code-block--collapsible.is-collapsed pre {
     overflow-y: hidden;
   }
 
-  /* Copy affordance appears only once the code is revealed (shadcn behaviour). */
+  /* Copy affordance appears only once the code is revealed. */
   .code-block--collapsible.is-collapsed .code-copy {
     display: none;
   }
@@ -826,7 +826,7 @@
     background: linear-gradient(to top, var(--background-secondary), transparent);
     border-radius: var(--radius-md);
 
-    /* Only the pill is interactive — the fade area passes clicks through. */
+    /* Only the pill is interactive, the fade area passes clicks through. */
     pointer-events: none;
   }
 
@@ -847,7 +847,7 @@
   }
 
   /* GitHub-flavoured syntax tokens for the intro code sample. Manual spans in
-   HTML — no highlighter dependency for a single snippet. light-dark() picks the
+   HTML, no highlighter dependency for a single snippet. light-dark() picks the
    theme via color-scheme (set per theme on :root), so each token is one rule. */
   pre .tok-key {
     color: light-dark(#cf222e, #ff7b72);
@@ -908,7 +908,7 @@
     display: none;
   }
 
-  /* Palette table — one card per colour family, rows for base tokens, columns
+  /* Palette table, one card per colour family, rows for base tokens, columns
    for states (default / hover / active). Content-driven min-width triggers
    horizontal scroll on narrow viewports instead of squeezing swatches. */
   .palette-table {
@@ -975,7 +975,7 @@
     vertical-align: middle;
   }
 
-  /* Section subhead — vertical rhythm builds upward: only push down against
+  /* Section subhead, vertical rhythm builds upward: only push down against
    what the heading introduces, and rely on the next element's margin-top for
    the gap below (so removing a description doesn't collapse the layout). */
   .subhead {
@@ -989,7 +989,7 @@
     margin-top: 1rem;
   }
 
-  /* Type role card — one bordered card per tier, rows separated by dividers. */
+  /* Type role card, one bordered card per tier, rows separated by dividers. */
   .type-list {
     list-style: none;
     padding: 0;
@@ -1040,7 +1040,7 @@
     display: none;
   }
 
-  /* Role classes — reference the type tokens directly */
+  /* Role classes, reference the type tokens directly */
   .t-headline-large {
     font-size: var(--font-headline-large-size);
     line-height: var(--font-headline-large-lh);
@@ -1130,7 +1130,7 @@
     font-weight: var(--font-caption-small-emphasized-weight);
   }
 
-  /* Prev/next docs pager — shadcn-style 64px row with 24px gap above. Distinct
+  /* Prev/next docs pager: a 64px row with 24px gap above. Distinct
    from the Pagination component (.pagination); this is the between-pages nav. */
   .pager {
     display: flex;
@@ -1172,7 +1172,7 @@
     margin-inline-start: auto;
   }
 
-  /* Switch — pill track + circle thumb. Uses role="switch" + aria-checked. */
+  /* Switch, pill track + circle thumb. Uses role="switch" + aria-checked. */
   .docs-switch {
     display: inline-flex;
     align-items: center;
@@ -1269,7 +1269,7 @@
     background: var(--ink-primary);
   }
 
-  /* Shadcn-style link list — 3-column grid on desktop, 2 on mobile. Each <a>
+  /* Shadcn-style link list, 3-column grid on desktop, 2 on mobile. Each <a>
    fills its column width so the click target spans the cell horizontally;
    vertical rhythm comes from the grid row-gap, not per-link padding. */
   .link-list {
@@ -1332,7 +1332,7 @@
     }
   }
 
-  /* Single-card token list — one bordered box, rows separated by dividers.
+  /* Single-card token list, one bordered box, rows separated by dividers.
    Used on the Layout page for both Grid values and the Spacing scale. */
   .token-list {
     background: var(--background-secondary);
@@ -1418,7 +1418,7 @@
   }
 
   /* Full-width rows: ring sits just inside so it never collides with the
-   container edge. No converge — a 6px→-2px sweep would fly in from outside. */
+   container edge. No converge, a 6px→-2px sweep would fly in from outside. */
   a.token-list__row:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: -2px;
@@ -1446,7 +1446,7 @@
     }
   }
 
-  /* Flush variant — drops the box so each linked row is its own action-row-style
+  /* Flush variant, drops the box so each linked row is its own action-row-style
    surface: resting on --background-secondary with card hover/active. Used on
    the project landing. */
   .token-list--flush {
@@ -1492,7 +1492,7 @@
     background: var(--background-secondary-active);
   }
 
-  /* Only the surface reacts to hover — keep the chevron steady. */
+  /* Only the surface reacts to hover, keep the chevron steady. */
   @media (hover: hover) {
     .token-list--flush a.token-list__row:hover::after {
       color: var(--ink-tertiary);
@@ -1506,14 +1506,14 @@
     animation: focus-ring-converge var(--motion-default);
   }
 
-  /* Preview blocks — heading + description above, boxed demo + token below. */
+  /* Preview blocks, heading + description above, boxed demo + token below. */
   .preview-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
   }
 
-  /* Tighter rhythm — used on the intro where sections are short link lists. */
+  /* Tighter rhythm, used on the intro where sections are short link lists. */
   .preview-grid--tight {
     gap: 2rem;
   }
@@ -1561,7 +1561,7 @@
     background: var(--background-primary);
   }
 
-  /* Component demo container — a "stage" that isolates the live example on the
+  /* Component demo container, a "stage" that isolates the live example on the
    project's elevated surface (--background-secondary). Components that need
    to match this surface (Tabs' active pill, Switch's knob) reference it too. */
   .component-preview {
@@ -1583,7 +1583,7 @@
     max-width: 100%;
   }
 
-  /* shadcn-style example card: the live preview on top, its code panel below,
+  /* Example card: the live preview on top, its code panel below,
    both inside one border. Language switches via the page's HTML/React tabs. */
   .example {
     overflow: hidden;
@@ -1622,9 +1622,9 @@
     background: var(--background-secondary);
   }
 
-  /* Radius demo — subtle surface + alpha ring (matches shadcn's card look).
+  /* Radius demo, subtle surface + alpha ring.
    Uses --fill-tertiary for the ring so the alpha overlay reads correctly on
-   the demo's own surface across both themes — no per-theme override needed. */
+   the demo's own surface across both themes, no per-theme override needed. */
   .preview-card__chip[data-radius-demo] {
     background: var(--background-secondary);
     border: 0;
@@ -1659,7 +1659,7 @@
     overflow-wrap: anywhere;
   }
 
-  /* Motion demo — small horizontal track with a dot that slides across on card
+  /* Motion demo, small horizontal track with a dot that slides across on card
    hover, using the token duration + easing so you can see each token in action. */
   .motion-demo {
     --motion-demo-transition: var(--motion-default);
@@ -1697,7 +1697,7 @@
     --motion-demo-transition: 400ms var(--motion-ease-out);
   }
 
-  /* Grid overlay — pinned over the content column so its columns line up with the page.
+  /* Grid overlay, pinned over the content column so its columns line up with the page.
    The overlay box spans the content region; the inner mirrors .wrap (capped + centered). */
   .grid-overlay {
     --grid-overlay-color: #ef4444;
@@ -1713,7 +1713,7 @@
     height: 100%;
 
     /* content + the outer margins (32px each), so columns fill the 1200 content
-     and the margin bands sit OUTSIDE it — matching "1200 content, 1264 w/ margins". */
+     and the margin bands sit OUTSIDE it, matching "1200 content, 1264 w/ margins". */
     max-width: calc(var(--container-max, 1200px) + 2 * var(--grid-margin, 1.5rem));
     margin-inline: auto;
   }
@@ -1800,7 +1800,7 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* Leading icon carries its own optical space — tighten the left, like badge. */
+  /* Leading icon carries its own optical space, tighten the left, like badge. */
   .toast:has(.toast__icon svg) {
     padding-left: 16px;
   }
@@ -1844,7 +1844,7 @@
   }
 
   /* Ring spinner matching the Spinner component (which lives in components.css,
-   not loaded site-wide — so the toast keeps its own copy here). */
+   not loaded site-wide, so the toast keeps its own copy here). */
   .toast__spinner {
     /* ~75% of the icon slot so it optically matches the other glyphs' inset
      circles (their paths sit inside a 24 viewBox), not the full box. */
@@ -1915,7 +1915,7 @@
       background: HighlightText;
     }
 
-    /* Swatches convey meaning via background alone — keep an outline so the grid
+    /* Swatches convey meaning via background alone, keep an outline so the grid
      doesn't flatten into blank cells. */
     .palette-swatch {
       border: var(--border-width) solid ButtonBorder;

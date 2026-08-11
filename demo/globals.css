@@ -1,7 +1,7 @@
 /* ── Per-project tokens (Demo brand). Two-tier: anchors → semantic. ────────
    Anchors are channel triples (`R G B`, not `rgb(R G B)`) so we can compose
    them with alpha (`rgb(var(--anchor) / 0.5)`) or opaque (`rgb(var(--anchor))`).
-   Every downstream token is derived from an anchor — change the anchor, the
+   Every downstream token is derived from an anchor, change the anchor, the
    whole family retints. */
 
 @layer base, tokens, components;
@@ -78,16 +78,16 @@
   :root {
     /* ── Anchors ─────────────────────────────────────────────────────────
      One channel triple per family. Change --anchor-neutral to retint the
-     entire neutral system in one line — grays, ink, fills, overlay, and
+     entire neutral system in one line, grays, ink, fills, overlay, and
      shadows all derive from it. Semantic anchors (brand + status) stay
      independent so retinting neutrals doesn't touch the brand palette. */
     --anchor-neutral: 40 40 40; /* drives grays, ink, fills, overlay, shadows */
-    --anchor-primary: 108 43 245; /* brand — electric punch */
+    --anchor-primary: 108 43 245; /* brand, electric punch */
 
-    /* Tints — tuned so text-on-own-soft-surface clears 4.5:1 without any family
+    /* Tints, tuned so text-on-own-soft-surface clears 4.5:1 without any family
      reading weaker than the others. Green and amber sit at rotated hues (144
      and 52) where sRGB offers more chroma than the "obvious" angles. Amber
-     stays a warm rust rather than gold — 4.5:1 on white caps a text color at
+     stays a warm rust rather than gold, 4.5:1 on white caps a text color at
      L≈0.55, and warm at that lightness is always brown. */
     --anchor-red: 191 0 0;
     --anchor-amber: 170 81 0;
@@ -160,7 +160,7 @@
     --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
     --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
-    /* Focus-ring geometry — the ring's colour is --focus; these are its shape.
+    /* Focus-ring geometry, the ring's colour is --focus; these are its shape.
      Every focus-visible outline in base.css/components.css reads these, so the
      ring's thickness and gap are tuned here in one place, not per component.
      Components with a bespoke offset (a tight inline control, a pill) keep their
@@ -177,7 +177,7 @@
     --primary-foreground-hover: var(--primary-hover);
     --primary-foreground-active: var(--primary-active);
 
-    /* Soft alpha variants — for chip/badge backgrounds where the tint sits
+    /* Soft alpha variants, for chip/badge backgrounds where the tint sits
      behind foreground-color text. Hover/active ramp deeper.
        Each derives from a *lightened* base (`--<color>-tint`), not the raw
      accent: a dark, saturated accent at low alpha jumps hard as the alpha
@@ -212,7 +212,7 @@
     --fuchsia-soft-hover: rgb(from var(--fuchsia-tint) r g b / 0.23);
     --fuchsia-soft-active: rgb(from var(--fuchsia-tint) r g b / 0.27);
 
-    /* Overlay — alpha of --overlay-base; ramps deeper for hover/active. */
+    /* Overlay, alpha of --overlay-base; ramps deeper for hover/active. */
     --overlay: rgb(from var(--overlay-base) r g b / 0.45);
     --overlay-hover: rgb(from var(--overlay-base) r g b / 0.56);
     --overlay-active: rgb(from var(--overlay-base) r g b / 0.6);
@@ -241,7 +241,7 @@
     --neutral-white-active: color-mix(in oklab, white 87%, var(--neutral-black));
 
     /* ── Fills ───────────────────────────────────────────────────────────
-     Alpha tints of --fill-base — sit over any surface (hover overlays,
+     Alpha tints of --fill-base, sit over any surface (hover overlays,
      selected rows). Each tier has its own hover/active alphas so
      fill-backed controls move through interactive states without
      swapping tokens. */
@@ -258,9 +258,9 @@
     --fill-quaternary-hover: rgb(from var(--fill-base) r g b / 0.17);
     --fill-quaternary-active: rgb(from var(--fill-base) r g b / 0.21);
 
-    /* Type — roles in three tiers: Headline / Body / Caption. Line-heights are
+    /* Type, roles in three tiers: Headline / Body / Caption. Line-heights are
      unitless multipliers so they scale with the font-size. Fixed at every
-     breakpoint — sizes don't step up on desktop. */
+     breakpoint, sizes don't step up on desktop. */
     --font-weight-regular: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -325,13 +325,13 @@
     --breakpoint-xl: 1280px;
     --breakpoint-2xl: 1536px;
 
-    /* Grid (mobile-first) — content max 1280 (aligns with the xl breakpoint) */
+    /* Grid (mobile-first), content max 1280 (aligns with the xl breakpoint) */
     --container-max: 1280px;
     --grid-columns: 4;
     --grid-gutter: 16px;
     --grid-margin: 16px;
 
-    /* Spacing scale — named by px value (4dp base); rem so it scales with root font */
+    /* Spacing scale, named by px value (4dp base); rem so it scales with root font */
     --space-0: 0;
     --space-2: 0.125rem;
     --space-4: 0.25rem;
@@ -348,28 +348,28 @@
     --space-112: 7rem;
     --space-128: 8rem;
 
-    /* Border width — the hairline every outlined surface (inputs, cards,
+    /* Border width, the hairline every outlined surface (inputs, cards,
      dividers) shares. One knob so borders can thicken or retint with the
      system instead of being frozen at 1px in dozens of rules. */
     --border-width: 1px;
 
-    /* Radii — on the spacing rhythm (8/16/24) */
+    /* Radii, on the spacing rhythm (8/16/24) */
     --radius-sm: 8px;
     --radius-md: 16px;
     --radius-lg: 24px;
     --radius-xl: 32px;
     --radius-full: 999px;
 
-    /* Density — [data-size="sm|md|lg"] on any ancestor nudges the label size of
+    /* Density, [data-size="sm|md|lg"] on any ancestor nudges the label size of
      density-aware components (see .chip) via this addition. Component pixel
      sizes are set explicitly per size in the component itself (see .button's
      --button-size ladder). Default matches `data-size="md"`; the sm/lg
      overrides live at the end of the file. */
     --ds-font-size-addition: 0rem;
 
-    /* Shadows (Tailwind/shadcn scale — layered for realistic depth). Colour is
+    /* Shadows (Tailwind scale, layered for realistic depth). Colour is
      mixed from --neutral-black so shadows follow any future tint of the
-     neutrals (and stay dark in both themes — --ink flips, --neutral-black
+     neutrals (and stay dark in both themes, --ink flips, --neutral-black
      doesn't unless --anchor-neutral itself is changed). Each ends with a soft,
      zero-offset ambient layer so the glow wraps all edges (incl. the top),
      keeping an elevated surface visible even when what's behind it matches. */
@@ -391,13 +391,13 @@
      one cue that reads on a dark surface). Append after the shadow token. */
     --surface-rim: inset 0 0 0 transparent;
 
-    /* Motion — one composed default for hovers/state changes; raw easings for
+    /* Motion, one composed default for hovers/state changes; raw easings for
      entrances (ease-out) and exits (ease-in) that need a different curve. */
     --motion-default: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
     --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
 
-    /* Z-index — stacking ladder. Reach for the semantic name, not the number;
+    /* Z-index, stacking ladder. Reach for the semantic name, not the number;
      gaps of 10 leave room to slot custom values between. */
     --z-base: 0;
     --z-sticky: 10;
@@ -407,7 +407,7 @@
     --z-toast: 50;
   }
 
-  /* Tablet ≥768 (md) — grid jumps to 12 columns (px literals: media can't read vars) */
+  /* Tablet ≥768 (md), grid jumps to 12 columns (px literals: media can't read vars) */
   @media (min-width: 768px) {
     :root {
       --grid-columns: 12;
@@ -416,7 +416,7 @@
     }
   }
 
-  /* Desktop ≥1024 — wider grid margins (type stays fixed across breakpoints). */
+  /* Desktop ≥1024, wider grid margins (type stays fixed across breakpoints). */
   @media (min-width: 1024px) {
     :root {
       --grid-margin: 32px;
@@ -429,7 +429,7 @@
    dark. Everything else derives automatically. */
 
   :root[data-theme="dark"] {
-    /* Ink/fill flip to a light-tinted version of the neutral anchor —
+    /* Ink/fill flip to a light-tinted version of the neutral anchor,
      if you retint the anchor to blue, dark-theme text becomes hint-of-blue
      near-white, not pure white. */
     --ink-base: color-mix(in oklab, rgb(var(--anchor-neutral)) 6%, white);
@@ -442,7 +442,7 @@
 
     --anchor-primary: 118 55 255;
 
-    /* Tints — matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
+    /* Tints, matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
     --anchor-red: 255 150 150;
     --anchor-amber: 234 170 80;
     --anchor-green: 84 203 153;
@@ -464,7 +464,7 @@
       from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h
     );
 
-    /* Soft variants — higher alpha for visibility against dark surfaces.
+    /* Soft variants, higher alpha for visibility against dark surfaces.
      No color-mix lightening needed because the dark tint solids are
      already lifted (red/green/blue chosen to work as text on soft bg,
      so alpha of them reads fine as bg too).
@@ -477,7 +477,7 @@
     --primary-soft-hover: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.39);
     --primary-soft-active: rgb(from color-mix(in oklab, var(--primary), white 30%) r g b / 0.43);
 
-    /* Red drops 2 alpha points — it's the lightest solid, so its surface has
+    /* Red drops 2 alpha points, it's the lightest solid, so its surface has
      to run paler to hold 4.5:1. */
     --red-soft: rgb(from var(--red) r g b / 0.18);
     --red-soft-hover: rgb(from var(--red) r g b / 0.29);
@@ -509,7 +509,7 @@
     --overlay-hover: rgb(from var(--overlay-base) r g b / 0.75);
     --overlay-active: rgb(from var(--overlay-base) r g b / 0.79);
 
-    /* Grays lifted higher against a dark surface — anchor mixed further toward
+    /* Grays lifted higher against a dark surface, anchor mixed further toward
      white than in light theme. --neutral-black stays anchor-defined (dark)
      so shadows keep their weight. */
     --neutral-gray-1: color-mix(in oklab, var(--neutral-black) 62%, white);
@@ -525,7 +525,7 @@
     --neutral-gray-4-hover: color-mix(in oklab, var(--neutral-black) 74%, white);
     --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
 
-    /* Same shape as light — offsets, alphas, and the ambient edge layer all
+    /* Same shape as light, offsets, alphas, and the ambient edge layer all
      match. The only difference is colour: pure black instead of the neutral
      tint, so the shadow still reads on a dark surface (a one-off: dark shadows
      don't follow the neutral tint). */
@@ -538,7 +538,7 @@
       0 0 16px 0 rgb(0 0 0 / 0.08);
 
     /* A dark shadow can't define a top edge on a dark page, so catch the top rim
-     with a faint light highlight instead — the dark-theme counterpart to the
+     with a faint light highlight instead, the dark-theme counterpart to the
      drop shadow (see --surface-rim in :root). */
     --surface-rim:
       inset 0 1px 0 rgb(255 255 255 / 0.04), inset 1px 0 0 rgb(255 255 255 / 0.02),
@@ -565,7 +565,7 @@
   /* ── Container width tier ───────────────────────────────────────────────────
    The default content cap is xl (--container-max, 1280). A page opts into the
    wider 2xl tier with `data-width="2xl"` on <html> (like data-theme). Anything
-   reading --container-max — page content, the card grid, the footer — follows,
+   reading --container-max (page content, the card grid, the footer) follows,
    so their edges stay aligned. Only the cap changes; columns/gutters/margins,
    radii, and type are identical across tiers. */
   [data-width="2xl"] {

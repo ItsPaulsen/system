@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Pagination</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Pagination"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">Numbered navigation across pages of content.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -40,24 +69,47 @@
           <p class="section-note">
             Shows the first and last page, the current page ±1, and ellipses across the gaps.
           </p>
-          <div class="component-preview">
-            <nav
-              class="pagination"
-              data-pagination
-              data-total="12"
-              data-page="1"
-              aria-label="Pagination"
-            ></nav>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <nav
+                class="pagination"
+                data-pagination
+                data-total="12"
+                data-page="1"
+                aria-label="Pagination"
+              ></nav>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Pagination total={12} defaultPage={1} />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>total</code> sets the page count; uncontrolled via <code>defaultPage</code>, or
+            pass <code>page</code> + <code>onPageChange</code> to control it.
+          </p>
+          <div data-source="/react/Pagination.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <p class="section-note">
             Seed with <code>data-total</code> and <code>data-page</code>; app.js
             (<code>initPagination</code>) renders and wires the rest.
           </p>
           <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"pagination"</span> <span class="tok-prop">data-pagination</span> <span class="tok-prop">data-total</span>=<span class="tok-str">"12"</span> <span class="tok-prop">data-page</span>=<span class="tok-str">"1"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Pagination"</span><span class="tok-key">&gt;&lt;/nav&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. Renders the windowed page list and re-renders in place on
+            click, keeping focus on the pressed control.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initPagination"></div>
         </section>
       </div>
     </div>

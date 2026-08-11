@@ -2706,8 +2706,8 @@
 
   /* ── Pagination ────────────────────────────────────────────────────────── */
 
-  /* Numbered page navigation. app.js (initPagination) renders a bounded window —
-   first + last always shown, the current page ±1, ellipses bridging the gaps —
+  /* Numbered page navigation. app.js (initPagination) renders a bounded window
+   (first + last always shown, the current page ±1, ellipses bridging the gaps)
    from a data-total / data-page seed, and keeps it interactive. The current
    page carries aria-current="page"; the icon-only prev/next carry an aria-label.
 

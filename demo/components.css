@@ -2920,7 +2920,7 @@
 
   /* ── Combobox ──────────────────────────────────────────────────────────── */
 
-  /* A text field that filters a listbox — Select with type-to-filter. Reuses the
+  /* A text field that filters a listbox: Select with type-to-filter. Reuses the
    Input shell for the field and the Select popup (.select__list / .select__option)
    for the menu, so only the wrapper, the chevron, and the "no results" row are
    new here. JS (initComboboxes) owns filtering + the keyboard model.
@@ -2946,7 +2946,7 @@
     width: 100%;
   }
 
-  /* Options set display:flex, which beats the [hidden] UA rule — so the JS
+  /* Options set display:flex, which beats the [hidden] UA rule, so the JS
    filter's option.hidden = true wouldn't actually hide the row without this. */
   .select__option[hidden] {
     display: none;
@@ -2967,7 +2967,7 @@
     rotate: 180deg;
   }
 
-  /* "No results" row — shown by JS when the filter matches nothing. */
+  /* "No results" row, shown by JS when the filter matches nothing. */
   .combobox__empty {
     min-height: 40px;
     display: flex;

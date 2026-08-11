@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Combobox</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Combobox"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A text field that filters a list as you type.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -43,46 +72,64 @@
             matches, Enter picks the highlighted one. Reach for
             <a href="/demo/components/select/">Select</a> when the list is short enough to scan.
           </p>
-          <div class="component-preview">
-            <div class="combobox" id="cb-team" data-combobox style="width: 280px">
-              <div class="input__container combobox__control">
-                <input
-                  class="input__element"
-                  type="text"
-                  role="combobox"
-                  aria-label="Team"
-                  aria-expanded="false"
-                  aria-autocomplete="list"
-                  aria-controls="cb-team-list"
-                  placeholder="Search teams…"
-                  autocomplete="off"
-                />
-                <span class="input__trailing combobox__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
-                </span>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="combobox" id="cb-team" data-combobox style="width: 280px">
+                <div class="input__container combobox__control">
+                  <input
+                    class="input__element"
+                    type="text"
+                    role="combobox"
+                    aria-label="Team"
+                    aria-expanded="false"
+                    aria-autocomplete="list"
+                    aria-controls="cb-team-list"
+                    placeholder="Search teams…"
+                    autocomplete="off"
+                  />
+                  <span class="input__trailing combobox__chevron" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                <ul class="select__list" id="cb-team-list" role="listbox" tabindex="-1" hidden>
+                  <li class="select__option" role="option">Design</li>
+                  <li class="select__option" role="option">Engineering</li>
+                  <li class="select__option" role="option">Marketing</li>
+                  <li class="select__option" role="option">Operations</li>
+                  <li class="select__option" role="option">Product</li>
+                  <li class="select__option" role="option">Research</li>
+                  <li class="select__option" role="option">Sales</li>
+                  <li class="select__option" role="option">Support</li>
+                  <li class="combobox__empty" role="presentation" hidden>No results</li>
+                </ul>
               </div>
-              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-              <ul class="select__list" id="cb-team-list" role="listbox" tabindex="-1" hidden>
-                <li class="select__option" role="option">Design</li>
-                <li class="select__option" role="option">Engineering</li>
-                <li class="select__option" role="option">Marketing</li>
-                <li class="select__option" role="option">Operations</li>
-                <li class="select__option" role="option">Product</li>
-                <li class="select__option" role="option">Research</li>
-                <li class="select__option" role="option">Sales</li>
-                <li class="select__option" role="option">Support</li>
-                <li class="combobox__empty" role="presentation" hidden>No results</li>
-              </ul>
             </div>
+            <script type="text/plain" class="example__react">
+              <Combobox
+                aria-label="Team"
+                placeholder="Search teams…"
+                options={[
+                  "Design",
+                  "Engineering",
+                  "Marketing",
+                  "Operations",
+                  "Product",
+                  "Research",
+                  "Sales",
+                  "Support"
+                ]}
+              />
+            </script>
           </div>
         </section>
 
@@ -93,51 +140,65 @@
             same as <a href="/demo/components/input/">Input</a> and
             <a href="/demo/components/select/">Select</a>.
           </p>
-          <div class="component-preview">
-            <div class="combobox" id="cb-team-fill" data-combobox style="width: 280px">
-              <div class="input__container input__container--fill combobox__control">
-                <input
-                  class="input__element"
-                  type="text"
-                  role="combobox"
-                  aria-label="Team"
-                  aria-expanded="false"
-                  aria-autocomplete="list"
-                  aria-controls="cb-team-fill-list"
-                  placeholder="Search teams…"
-                  autocomplete="off"
-                />
-                <span class="input__trailing combobox__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
-                </span>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="combobox" id="cb-team-fill" data-combobox style="width: 280px">
+                <div class="input__container input__container--fill combobox__control">
+                  <input
+                    class="input__element"
+                    type="text"
+                    role="combobox"
+                    aria-label="Team"
+                    aria-expanded="false"
+                    aria-autocomplete="list"
+                    aria-controls="cb-team-fill-list"
+                    placeholder="Search teams…"
+                    autocomplete="off"
+                  />
+                  <span class="input__trailing combobox__chevron" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                <ul class="select__list" id="cb-team-fill-list" role="listbox" tabindex="-1" hidden>
+                  <li class="select__option" role="option">Design</li>
+                  <li class="select__option" role="option">Engineering</li>
+                  <li class="select__option" role="option">Marketing</li>
+                  <li class="select__option" role="option">Operations</li>
+                  <li class="select__option" role="option">Product</li>
+                  <li class="select__option" role="option">Research</li>
+                  <li class="select__option" role="option">Sales</li>
+                  <li class="select__option" role="option">Support</li>
+                  <li class="combobox__empty" role="presentation" hidden>No results</li>
+                </ul>
               </div>
-              <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-              <ul class="select__list" id="cb-team-fill-list" role="listbox" tabindex="-1" hidden>
-                <li class="select__option" role="option">Design</li>
-                <li class="select__option" role="option">Engineering</li>
-                <li class="select__option" role="option">Marketing</li>
-                <li class="select__option" role="option">Operations</li>
-                <li class="select__option" role="option">Product</li>
-                <li class="select__option" role="option">Research</li>
-                <li class="select__option" role="option">Sales</li>
-                <li class="select__option" role="option">Support</li>
-                <li class="combobox__empty" role="presentation" hidden>No results</li>
-              </ul>
             </div>
+            <script type="text/plain" class="example__react">
+              <Combobox fill aria-label="Team" placeholder="Search teams…" options={teams} />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>options</code> is an array of strings; <code>onChange</code> fires on pick. State
+            and the keyboard model live in the component.
+          </p>
+          <div data-source="/react/Combobox.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"combobox"</span> <span class="tok-prop">data-combobox</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container combobox__control"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element"</span> <span class="tok-prop">role</span>=<span class="tok-str">"combobox"</span> <span class="tok-prop">aria-expanded</span>=<span class="tok-str">"false"</span>
@@ -149,6 +210,15 @@
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"combobox__empty"</span> <span class="tok-prop">role</span>=<span class="tok-str">"presentation"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/li&gt;</span>
   <span class="tok-key">&lt;/ul&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. Owns the substring filter, the active-row keyboard model, and
+            open/close on focus, click, and outside-click.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initComboboxes"></div>
         </section>
       </div>
     </div>

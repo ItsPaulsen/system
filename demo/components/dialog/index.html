@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Dialog</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Dialog"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A focused overlay that interrupts the page.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,38 +70,60 @@
             Native <code>&lt;dialog&gt;</code> handles the focus trap, Esc-to-close, and an inert
             background. Click the backdrop or a button to dismiss.
           </p>
-          <div class="component-preview">
-            <button class="button button--secondary" type="button" data-dialog-open="demo-dialog">
-              Open dialog
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button class="button button--secondary" type="button" data-dialog-open="demo-dialog">
+                Open dialog
+              </button>
 
-            <dialog class="dialog" id="demo-dialog">
-              <div class="dialog__inner">
-                <h2 class="dialog__title">Delete project?</h2>
-                <p class="dialog__text">
-                  This permanently deletes the project and everything in it. You can't undo this.
-                </p>
-                <div class="dialog__actions">
-                  <button class="button button--secondary" type="button" data-dialog-close>
-                    Cancel
-                  </button>
-                  <button class="button button--destructive" type="button" data-dialog-close>
-                    Delete
-                  </button>
+              <dialog class="dialog" id="demo-dialog">
+                <div class="dialog__inner">
+                  <h2 class="dialog__title">Delete project?</h2>
+                  <p class="dialog__text">
+                    This permanently deletes the project and everything in it. You can't undo this.
+                  </p>
+                  <div class="dialog__actions">
+                    <button class="button button--secondary" type="button" data-dialog-close>
+                      Cancel
+                    </button>
+                    <button class="button button--destructive" type="button" data-dialog-close>
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </dialog>
+              </dialog>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Dialog>
+                <DialogTrigger className="button button--secondary">Open dialog</DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>Delete project?</DialogTitle>
+                  <DialogDescription>
+                    This permanently deletes the project and everything in it. You can't undo this.
+                  </DialogDescription>
+                  <DialogActions>
+                    <DialogClose className="button button--secondary">Cancel</DialogClose>
+                    <DialogClose className="button button--destructive">Delete</DialogClose>
+                  </DialogActions>
+                </DialogContent>
+              </Dialog>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Usage</h3>
-          <p class="section-note">React: how you compose it in a page.</p>
-          <div data-source="/react/Dialog.usage.jsx"></div>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compound components over the native <code>&lt;dialog&gt;</code> — the shadcn shape, no
+            Radix dependency. <code>showModal()</code> gives the focus trap and inert backdrop for
+            free; styling is the same <code>.dialog</code> classes.
+          </p>
+          <div data-source="/react/Dialog.jsx"></div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">The full markup and the classes it takes.</p>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-dialog-open</span>=<span class="tok-str">"demo-dialog"</span><span class="tok-key">&gt;</span>Open dialog<span class="tok-key">&lt;/button&gt;</span>
 
 <span class="tok-key">&lt;dialog</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog"</span> <span class="tok-prop">id</span>=<span class="tok-str">"demo-dialog"</span><span class="tok-key">&gt;</span>
@@ -86,16 +137,7 @@
 <span class="tok-key">&lt;/dialog&gt;</span></code></pre>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">CSS</h3>
-          <p class="section-note">
-            From <code>components.css</code>. Also load <code>globals.css</code> (tokens +
-            baseline).
-          </p>
-          <div data-source="/demo/components.css" data-section="Dialog"></div>
-        </section>
-
-        <section class="preview-block">
+        <section class="preview-block" data-lang="html">
           <h3 class="subhead">JavaScript</h3>
           <p class="section-note">
             From <code>app.js</code>. One delegated listener opens <code>[data-dialog-open]</code>,
@@ -103,15 +145,6 @@
             Shared with <a href="/demo/components/sheet/">Sheet</a>.
           </p>
           <div data-source="/assets/app.js" data-fn="initDialogs"></div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">React component</h3>
-          <p class="section-note">
-            Compound components over the native <code>&lt;dialog&gt;</code> — the shadcn shape, no
-            Radix dependency. Styling is the same <code>.dialog</code> classes.
-          </p>
-          <div data-source="/react/Dialog.jsx"></div>
         </section>
       </div>
     </div>

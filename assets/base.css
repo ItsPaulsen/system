@@ -1217,7 +1217,7 @@
     color: var(--ink-primary);
   }
 
-  /* Shadcn-style underlined tabs. Active tab has a text-coloured bottom line
+  /* Underlined tabs. Active tab has a text-coloured bottom line
    that sits over the tablist's bottom border. */
   .docs-tabs {
     display: flex;
@@ -1269,7 +1269,7 @@
     background: var(--ink-primary);
   }
 
-  /* Shadcn-style link list, 3-column grid on desktop, 2 on mobile. Each <a>
+  /* Link list: 3-column grid on desktop, 2 on mobile. Each <a>
    fills its column width so the click target spans the cell horizontally;
    vertical rhythm comes from the grid row-gap, not per-link padding. */
   .link-list {

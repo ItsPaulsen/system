@@ -43,7 +43,7 @@
         width: 100%;
       }
 
-      /* List — repeated avatar + two-line rows (feeds, menus, results). */
+      /* List: repeated avatar + two-line rows (feeds, menus, results). */
       .skeleton-list {
         display: flex;
         flex-direction: column;
@@ -63,7 +63,7 @@
         width: auto;
       }
 
-      /* Table — a header row over a few body rows. */
+      /* Table: a header row over a few body rows. */
       .skeleton-table {
         width: 100%;
         max-width: 440px;
@@ -88,10 +88,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Skeleton</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Skeleton"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A placeholder that holds a content's shape while it loads.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -102,14 +131,25 @@
             <code>width</code>/<code>height</code> to match the real content so the layout doesn't
             shift on swap.
           </p>
-          <div class="component-preview" style="gap: 2.5rem; flex-wrap: wrap">
-            <div class="skeleton" style="width: 8rem; height: 5rem"></div>
-            <div class="skeleton skeleton--circle" style="width: 3.5rem"></div>
-            <div class="skeleton-lines">
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 70%"></div>
-              <div class="skeleton skeleton--text" style="width: 85%"></div>
+          <div class="example" data-example>
+            <div class="component-preview" style="gap: 2.5rem; flex-wrap: wrap">
+              <div class="skeleton" style="width: 8rem; height: 5rem"></div>
+              <div class="skeleton skeleton--circle" style="width: 3.5rem"></div>
+              <div class="skeleton-lines">
+                <div class="skeleton skeleton--text"></div>
+                <div class="skeleton skeleton--text" style="width: 70%"></div>
+                <div class="skeleton skeleton--text" style="width: 85%"></div>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Skeleton style={{ width: "8rem", height: "5rem" }} />
+              <Skeleton variant="circle" style={{ width: "3.5rem" }} />
+              <div className="skeleton-lines">
+                <Skeleton variant="text" />
+                <Skeleton variant="text" style={{ width: "70%" }} />
+                <Skeleton variant="text" style={{ width: "85%" }} />
+              </div>
+            </script>
           </div>
         </section>
 
@@ -121,95 +161,152 @@
             <code>aria-busy="true"</code> so assistive tech announces the wait; repeat that on any
             skeleton group.
           </p>
-          <div class="component-preview">
-            <div
-              class="skeleton-lines"
-              style="width: 100%; max-width: 22rem"
-              role="status"
-              aria-busy="true"
-              aria-label="Loading text"
-            >
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 60%"></div>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="skeleton-lines"
+                style="width: 100%; max-width: 22rem"
+                role="status"
+                aria-busy="true"
+                aria-label="Loading text"
+              >
+                <div class="skeleton skeleton--text"></div>
+                <div class="skeleton skeleton--text"></div>
+                <div class="skeleton skeleton--text"></div>
+                <div class="skeleton skeleton--text" style="width: 60%"></div>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="skeleton-lines" role="status" aria-busy="true" aria-label="Loading text">
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" style={{ width: "60%" }} />
+              </div>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Card</h3>
-          <div class="component-preview">
-            <div class="skeleton-card" role="status" aria-busy="true" aria-label="Loading card">
-              <div class="skeleton" style="width: 100%; aspect-ratio: 16 / 9"></div>
-              <div class="skeleton-lines">
-                <div class="skeleton skeleton--text" style="width: 70%"></div>
-                <div class="skeleton skeleton--text"></div>
-                <div class="skeleton skeleton--text" style="width: 85%"></div>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="skeleton-card" role="status" aria-busy="true" aria-label="Loading card">
+                <div class="skeleton" style="width: 100%; aspect-ratio: 16 / 9"></div>
+                <div class="skeleton-lines">
+                  <div class="skeleton skeleton--text" style="width: 70%"></div>
+                  <div class="skeleton skeleton--text"></div>
+                  <div class="skeleton skeleton--text" style="width: 85%"></div>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="skeleton-card" role="status" aria-busy="true" aria-label="Loading card">
+                <Skeleton style={{ width: "100%", aspectRatio: "16 / 9" }} />
+                <div className="skeleton-lines">
+                  <Skeleton variant="text" style={{ width: "70%" }} />
+                  <Skeleton variant="text" />
+                  <Skeleton variant="text" style={{ width: "85%" }} />
+                </div>
+              </div>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">List</h3>
-          <div class="component-preview">
-            <div class="skeleton-list" role="status" aria-busy="true" aria-label="Loading list">
-              <div class="skeleton-list__row">
-                <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
-                <div class="skeleton-lines">
-                  <div class="skeleton skeleton--text" style="width: 45%"></div>
-                  <div class="skeleton skeleton--text"></div>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="skeleton-list" role="status" aria-busy="true" aria-label="Loading list">
+                <div class="skeleton-list__row">
+                  <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton--text" style="width: 45%"></div>
+                    <div class="skeleton skeleton--text"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="skeleton-list__row">
-                <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
-                <div class="skeleton-lines">
-                  <div class="skeleton skeleton--text" style="width: 55%"></div>
-                  <div class="skeleton skeleton--text"></div>
+                <div class="skeleton-list__row">
+                  <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton--text" style="width: 55%"></div>
+                    <div class="skeleton skeleton--text"></div>
+                  </div>
                 </div>
-              </div>
-              <div class="skeleton-list__row">
-                <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
-                <div class="skeleton-lines">
-                  <div class="skeleton skeleton--text" style="width: 40%"></div>
-                  <div class="skeleton skeleton--text"></div>
+                <div class="skeleton-list__row">
+                  <div class="skeleton skeleton--circle" style="width: 2.5rem"></div>
+                  <div class="skeleton-lines">
+                    <div class="skeleton skeleton--text" style="width: 40%"></div>
+                    <div class="skeleton skeleton--text"></div>
+                  </div>
                 </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="skeleton-list" role="status" aria-busy="true" aria-label="Loading list">
+                <div className="skeleton-list__row">
+                  <Skeleton variant="circle" style={{ width: "2.5rem" }} />
+                  <div className="skeleton-lines">
+                    <Skeleton variant="text" style={{ width: "45%" }} />
+                    <Skeleton variant="text" />
+                  </div>
+                </div>
+                {/* …repeat the row per item */}
+              </div>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Table</h3>
-          <div class="component-preview">
-            <div class="skeleton-table" role="status" aria-busy="true" aria-label="Loading table">
-              <div class="skeleton-table__row">
-                <div class="skeleton skeleton--text" style="width: 50%"></div>
-                <div class="skeleton skeleton--text" style="width: 60%"></div>
-                <div class="skeleton skeleton--text" style="width: 60%"></div>
-              </div>
-              <div class="skeleton-table__row">
-                <div class="skeleton skeleton--text" style="width: 80%"></div>
-                <div class="skeleton skeleton--text"></div>
-                <div class="skeleton skeleton--text"></div>
-              </div>
-              <div class="skeleton-table__row">
-                <div class="skeleton skeleton--text" style="width: 70%"></div>
-                <div class="skeleton skeleton--text"></div>
-                <div class="skeleton skeleton--text"></div>
-              </div>
-              <div class="skeleton-table__row">
-                <div class="skeleton skeleton--text" style="width: 85%"></div>
-                <div class="skeleton skeleton--text"></div>
-                <div class="skeleton skeleton--text"></div>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="skeleton-table" role="status" aria-busy="true" aria-label="Loading table">
+                <div class="skeleton-table__row">
+                  <div class="skeleton skeleton--text" style="width: 50%"></div>
+                  <div class="skeleton skeleton--text" style="width: 60%"></div>
+                  <div class="skeleton skeleton--text" style="width: 60%"></div>
+                </div>
+                <div class="skeleton-table__row">
+                  <div class="skeleton skeleton--text" style="width: 80%"></div>
+                  <div class="skeleton skeleton--text"></div>
+                  <div class="skeleton skeleton--text"></div>
+                </div>
+                <div class="skeleton-table__row">
+                  <div class="skeleton skeleton--text" style="width: 70%"></div>
+                  <div class="skeleton skeleton--text"></div>
+                  <div class="skeleton skeleton--text"></div>
+                </div>
+                <div class="skeleton-table__row">
+                  <div class="skeleton skeleton--text" style="width: 85%"></div>
+                  <div class="skeleton skeleton--text"></div>
+                  <div class="skeleton skeleton--text"></div>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <div className="skeleton-table" role="status" aria-busy="true" aria-label="Loading table">
+                <div className="skeleton-table__row">
+                  <Skeleton variant="text" style={{ width: "50%" }} />
+                  <Skeleton variant="text" style={{ width: "60%" }} />
+                  <Skeleton variant="text" style={{ width: "60%" }} />
+                </div>
+                {/* …repeat the row per body line */}
+              </div>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            One <code>Skeleton</code> with a <code>variant</code>; compose several for cards, lists,
+            and tables. Size each with <code>style</code>. Mark the region, not each shape.
+          </p>
+          <div data-source="/react/Skeleton.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-com">&lt;!-- Shapes: default block · --circle · --text --&gt;</span>
 <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"skeleton"</span> <span class="tok-prop">style</span>=<span class="tok-str">"width: 8rem; height: 5rem"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
 <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"skeleton skeleton--circle"</span> <span class="tok-prop">style</span>=<span class="tok-str">"width: 3rem"</span><span class="tok-key">&gt;&lt;/div&gt;</span>

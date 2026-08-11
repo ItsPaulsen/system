@@ -2246,8 +2246,8 @@
   /* ── Skeleton ────────────────────────────────────────────────────────────────
    Purely presentational placeholder for content that hasn't loaded. Size it to
    match the real content (explicit width/height, or let it fill its container)
-   so the layout doesn't shift on swap. Calm opacity pulse — not a sweeping
-   shimmer — so a screenful of them doesn't distract; the global reduced-motion
+   so the layout doesn't shift on swap. Calm opacity pulse, not a sweeping
+   shimmer, so a screenful of them doesn't distract; the global reduced-motion
    guard settles it to a static block.
 
    A11y: a skeleton conveys nothing to assistive tech. Mark the loading region
@@ -2262,14 +2262,14 @@
     animation: skeleton-pulse 1.5s ease-in-out infinite;
   }
 
-  /* Text line — rounded like a run of text, sized to the current font by default
+  /* Text line: rounded like a run of text, sized to the current font by default
      so it drops into prose without a width. Use width to trim the last line. */
   .skeleton--text {
     height: 0.7em;
     border-radius: var(--radius-full);
   }
 
-  /* Circle — width sets the diameter; aspect-ratio keeps it round (avatars). */
+  /* Circle: width sets the diameter; aspect-ratio keeps it round (avatars). */
   .skeleton--circle {
     aspect-ratio: 1;
     border-radius: var(--radius-full);
@@ -2281,7 +2281,7 @@
     }
   }
 
-  /* Forced colors strips the alpha fill — keep a visible bordered box so the
+  /* Forced colors strips the alpha fill; keep a visible bordered box so the
      placeholder doesn't vanish into the background. */
   @media (forced-colors: active) {
     .skeleton {

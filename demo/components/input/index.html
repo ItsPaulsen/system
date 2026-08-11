@@ -34,98 +34,157 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Input</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Input"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A single-line text field.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container">
-                <input class="input__element" type="email" placeholder="you@example.com" />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container">
+                  <input class="input__element" type="email" placeholder="you@example.com" />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input label="Email" type="email" placeholder="you@example.com" />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Rounded</h3>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container input__container--rounded">
-                <input class="input__element" type="email" placeholder="you@example.com" />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container input__container--rounded">
+                  <input class="input__element" type="email" placeholder="you@example.com" />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input rounded label="Email" type="email" placeholder="you@example.com" />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Filled</h3>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Search</span>
-              <span class="input__container input__container--fill">
-                <input class="input__element" type="search" placeholder="Search..." />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Search</span>
+                <span class="input__container input__container--fill">
+                  <input class="input__element" type="search" placeholder="Search..." />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input fill label="Search" type="search" placeholder="Search..." />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">File</h3>
           <p class="section-note">
-            <code>type="file"</code> — the whole field is the click target, so the native
+            <code>type="file"</code>: the whole field is the click target, so the native
             <code>::file-selector-button</code> is plain text (no surface), not a button. For icons,
             text, or a button beside the field, see
             <a href="/demo/components/input-group/">Input Group</a>.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Picture</span>
-              <span class="input__container">
-                <input class="input__element input__element--file" type="file" />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Picture</span>
+                <span class="input__container">
+                  <input class="input__element input__element--file" type="file" />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input label="Picture" type="file" />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container">
-                <input class="input__element" type="email" value="you@example.com" disabled />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container">
+                  <input class="input__element" type="email" value="you@example.com" disabled />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input label="Email" type="email" defaultValue="you@example.com" disabled />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Required</h3>
           <p class="section-note">
-            The <code>*</code> is decorative — the <code>required</code> attribute does the
+            The <code>*</code> is decorative: the <code>required</code> attribute does the
             validation.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label"
-                >Required<span class="input__label-required" aria-hidden="true">*</span></span
-              >
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="text"
-                  placeholder="This field is required"
-                  required
-                />
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label"
+                  >Required<span class="input__label-required" aria-hidden="true">*</span></span
+                >
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="text"
+                    placeholder="This field is required"
+                    required
+                  />
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input required label="Required" type="text" placeholder="This field is required" />
+            </script>
           </div>
         </section>
 
@@ -135,21 +194,31 @@
             <code>input__hint</code> below the field; wire it with <code>aria-describedby</code> so
             it's announced with the input.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="email"
-                  placeholder="you@example.com"
-                  aria-describedby="input-email-hint"
-                />
-              </span>
-              <span class="input__hint" id="input-email-hint">
-                We'll only use this to sign you in.
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="email"
+                    placeholder="you@example.com"
+                    aria-describedby="input-email-hint"
+                  />
+                </span>
+                <span class="input__hint" id="input-email-hint">
+                  We'll only use this to sign you in.
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input
+                label="Email"
+                type="email"
+                placeholder="you@example.com"
+                hint="We'll only use this to sign you in."
+              />
+            </script>
           </div>
         </section>
 
@@ -160,40 +229,60 @@
             <code>&lt;input&gt;</code>), paired with an <code>input__error</code> message and
             <code>aria-invalid</code> on the field.
           </p>
-          <div class="component-preview">
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container input__container--invalid">
-                <input
-                  class="input__element"
-                  type="email"
-                  value="not-an-email"
-                  aria-invalid="true"
-                  aria-describedby="input-email-error"
-                />
-              </span>
-              <span class="input__error" id="input-email-error">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                  <path d="M12 8v4" />
-                  <path d="M12 16h.01" />
-                </svg>
-                Enter a valid email address.
-              </span>
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container input__container--invalid">
+                  <input
+                    class="input__element"
+                    type="email"
+                    value="not-an-email"
+                    aria-invalid="true"
+                    aria-describedby="input-email-error"
+                  />
+                </span>
+                <span class="input__error" id="input-email-error">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                  Enter a valid email address.
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Input
+                label="Email"
+                type="email"
+                defaultValue="not-an-email"
+                error="Enter a valid email address."
+              />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>label</code>, <code>hint</code>, and <code>error</code> render their slots;
+            <code>fill</code>, <code>rounded</code>, and <code>invalid</code> are the container
+            modifiers. Other props pass through to the input.
+          </p>
+          <div data-source="/react/Input.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span><span class="tok-key">&gt;</span>Email<span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container"</span><span class="tok-key">&gt;</span>

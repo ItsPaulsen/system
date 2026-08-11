@@ -35,16 +35,50 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Link</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Link"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A styled text link.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
-          <div class="component-preview">
-            <a class="link" href="#">Default link</a>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="link" href="#">Default link</a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Link href="/">Default link</Link>
+            </script>
           </div>
         </section>
 
@@ -54,34 +88,48 @@
             <code>link--cta</code> is a standalone next-step link; on hover the stem fades in and
             the chevron slides, so the arrow grows out of the text.
           </p>
-          <div class="component-preview">
-            <a class="link link--cta" href="#">
-              See all components
-              <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path
-                  class="link-arrow__line"
-                  d="M1.5 6h8"
-                  stroke="currentColor"
-                  stroke-width="1.75"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <g class="link-arrow__chevron">
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="link link--cta" href="#">
+                See all components
+                <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                   <path
-                    d="M3.5 2l4 4-4 4"
+                    class="link-arrow__line"
+                    d="M1.5 6h8"
                     stroke="currentColor"
                     stroke-width="1.75"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
-                </g>
-              </svg>
-            </a>
+                  <g class="link-arrow__chevron">
+                    <path
+                      d="M3.5 2l4 4-4 4"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                </svg>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Link cta href="/components">See all components</Link>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>cta</code> switches to the call-to-action variant and renders the animated arrow.
+            Other props pass through to the anchor.
+          </p>
+          <div data-source="/react/Link.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Default link<span class="tok-key">&lt;/a&gt;</span>
 
 <span class="tok-com">&lt;!-- Variant: --cta --&gt;</span>

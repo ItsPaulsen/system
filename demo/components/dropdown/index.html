@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Dropdown Menu</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Dropdown Menu"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A button that opens a floating list of actions.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,57 +70,74 @@
             A menu of <em>actions</em>, not a value picker. Reach for
             <a href="/demo/components/select/">Select</a> when you need a single choice back.
           </p>
-          <div class="component-preview">
-            <div class="menu">
-              <button
-                class="menu__trigger"
-                type="button"
-                popovertarget="menu-actions"
-                aria-haspopup="menu"
-                aria-expanded="false"
-              >
-                Options
-                <svg
-                  class="menu__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </button>
-              <div class="menu__list popover" id="menu-actions" popover role="menu">
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Edit<span class="menu__shortcut" aria-hidden="true">⌘E</span>
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Duplicate<span class="menu__shortcut" aria-hidden="true">⌘D</span>
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Rename
-                </button>
-                <hr class="menu__separator" />
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button" disabled>
-                  Move to project
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Archive
-                </button>
-                <hr class="menu__separator" />
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="menu">
                 <button
-                  class="menu__item menu__item--danger"
-                  role="menuitem"
-                  tabindex="-1"
+                  class="menu__trigger"
                   type="button"
+                  popovertarget="menu-actions"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
                 >
-                  Delete
+                  Options
+                  <svg
+                    class="menu__chevron"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
                 </button>
+                <div class="menu__list popover" id="menu-actions" popover role="menu">
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Edit<span class="menu__shortcut" aria-hidden="true">⌘E</span>
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Duplicate<span class="menu__shortcut" aria-hidden="true">⌘D</span>
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Rename
+                  </button>
+                  <hr class="menu__separator" />
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button" disabled>
+                    Move to project
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Archive
+                  </button>
+                  <hr class="menu__separator" />
+                  <button
+                    class="menu__item menu__item--danger"
+                    role="menuitem"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Menu>
+                <MenuTrigger>Options</MenuTrigger>
+                <MenuList>
+                  <MenuItem>Edit<MenuShortcut>⌘E</MenuShortcut></MenuItem>
+                  <MenuItem>Duplicate<MenuShortcut>⌘D</MenuShortcut></MenuItem>
+                  <MenuItem>Rename</MenuItem>
+                  <MenuSeparator />
+                  <MenuItem disabled>Move to project</MenuItem>
+                  <MenuItem>Archive</MenuItem>
+                  <MenuSeparator />
+                  <MenuItem danger>Delete</MenuItem>
+                </MenuList>
+              </Menu>
+            </script>
           </div>
         </section>
 
@@ -102,41 +148,53 @@
             as <a href="/demo/components/input/">Input</a> and
             <a href="/demo/components/select/">Select</a>. Focus and open still light the border.
           </p>
-          <div class="component-preview">
-            <div class="menu menu--fill">
-              <button
-                class="menu__trigger"
-                type="button"
-                popovertarget="menu-filled"
-                aria-haspopup="menu"
-                aria-expanded="false"
-              >
-                Options
-                <svg
-                  class="menu__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="menu menu--fill">
+                <button
+                  class="menu__trigger"
+                  type="button"
+                  popovertarget="menu-filled"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
                 >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </button>
-              <div class="menu__list popover" id="menu-filled" popover role="menu">
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Edit<span class="menu__shortcut" aria-hidden="true">⌘E</span>
+                  Options
+                  <svg
+                    class="menu__chevron"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
                 </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Duplicate<span class="menu__shortcut" aria-hidden="true">⌘D</span>
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  Rename
-                </button>
+                <div class="menu__list popover" id="menu-filled" popover role="menu">
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Edit<span class="menu__shortcut" aria-hidden="true">⌘E</span>
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Duplicate<span class="menu__shortcut" aria-hidden="true">⌘D</span>
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    Rename
+                  </button>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Menu className="menu--fill">
+                <MenuTrigger>Options</MenuTrigger>
+                <MenuList>
+                  <MenuItem>Edit<MenuShortcut>⌘E</MenuShortcut></MenuItem>
+                  <MenuItem>Duplicate<MenuShortcut>⌘D</MenuShortcut></MenuItem>
+                  <MenuItem>Rename</MenuItem>
+                </MenuList>
+              </Menu>
+            </script>
           </div>
         </section>
 
@@ -145,97 +203,19 @@
           <p class="section-note">
             A leading <code>menu__item-icon</code> gives each action a glyph.
           </p>
-          <div class="component-preview">
-            <div class="menu">
-              <button
-                class="menu__trigger"
-                type="button"
-                popovertarget="menu-icons"
-                aria-haspopup="menu"
-                aria-expanded="false"
-              >
-                Options
-                <svg
-                  class="menu__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </button>
-              <div class="menu__list popover" id="menu-icons" popover role="menu">
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  <svg
-                    class="menu__item-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                    <path
-                      d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415"
-                    />
-                    <path d="M16 5l3 3" />
-                  </svg>
-                  Edit
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  <svg
-                    class="menu__item-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"
-                    />
-                    <path
-                      d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
-                    />
-                  </svg>
-                  Duplicate
-                </button>
-                <button class="menu__item" role="menuitem" tabindex="-1" type="button">
-                  <svg
-                    class="menu__item-icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2"
-                    />
-                    <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
-                    <path d="M10 12l4 0" />
-                  </svg>
-                  Archive
-                </button>
-                <hr class="menu__separator" />
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="menu">
                 <button
-                  class="menu__item menu__item--danger"
-                  role="menuitem"
-                  tabindex="-1"
+                  class="menu__trigger"
                   type="button"
+                  popovertarget="menu-icons"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
                 >
+                  Options
                   <svg
-                    class="menu__item-icon"
+                    class="menu__chevron"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -244,21 +224,122 @@
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M4 7l16 0" />
-                    <path d="M10 11l0 6" />
-                    <path d="M14 11l0 6" />
-                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                    <path d="M6 9l6 6l6 -6" />
                   </svg>
-                  Delete
                 </button>
+                <div class="menu__list popover" id="menu-icons" popover role="menu">
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    <svg
+                      class="menu__item-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                      <path
+                        d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415"
+                      />
+                      <path d="M16 5l3 3" />
+                    </svg>
+                    Edit
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    <svg
+                      class="menu__item-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"
+                      />
+                      <path
+                        d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
+                      />
+                    </svg>
+                    Duplicate
+                  </button>
+                  <button class="menu__item" role="menuitem" tabindex="-1" type="button">
+                    <svg
+                      class="menu__item-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2"
+                      />
+                      <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+                      <path d="M10 12l4 0" />
+                    </svg>
+                    Archive
+                  </button>
+                  <hr class="menu__separator" />
+                  <button
+                    class="menu__item menu__item--danger"
+                    role="menuitem"
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <svg
+                      class="menu__item-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 7l16 0" />
+                      <path d="M10 11l0 6" />
+                      <path d="M14 11l0 6" />
+                      <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                      <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Menu>
+                <MenuTrigger>Options</MenuTrigger>
+                <MenuList>
+                  <MenuItem><IconPencil className="menu__item-icon" />Edit</MenuItem>
+                  <MenuItem><IconCopy className="menu__item-icon" />Duplicate</MenuItem>
+                  <MenuItem><IconArchive className="menu__item-icon" />Archive</MenuItem>
+                  <MenuSeparator />
+                  <MenuItem danger><IconTrash className="menu__item-icon" />Delete</MenuItem>
+                </MenuList>
+              </Menu>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compound parts over the native popover. <code>MenuList</code> owns the keyboard model;
+            the popover owns show/hide and dismissal.
+          </p>
+          <div data-source="/react/Menu.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"menu"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"menu__trigger"</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"menu-x"</span> <span class="tok-prop">aria-haspopup</span>=<span class="tok-str">"menu"</span> <span class="tok-prop">aria-expanded</span>=<span class="tok-str">"false"</span><span class="tok-key">&gt;</span>
     Options <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"menu__chevron"</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
@@ -271,6 +352,15 @@
     <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"menu__item menu__item--danger"</span> <span class="tok-prop">role</span>=<span class="tok-str">"menuitem"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span><span class="tok-key">&gt;</span>Delete<span class="tok-key">&lt;/button&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. Adds the keyboard model on top of the native popover: arrows
+            open and rove, Home/End jump, and type-ahead matches item labels.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initMenus"></div>
         </section>
       </div>
     </div>

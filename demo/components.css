@@ -901,7 +901,7 @@
   /* ── Dropdown Menu ─────────────────────────────────────────────────────── */
 
   /* Menu-button pattern: a trigger opens a floating list of actions (role="menu"
-   / menuitem) built on the Popover primitive above — as opposed to Select's
+   / menuitem) built on the Popover primitive above, as opposed to Select's
    single-value listbox. The native popover owns show/hide/dismiss; app.js
    (initMenus) adds the menu keyboard model (roving arrow focus + type-ahead).
 
@@ -934,7 +934,7 @@
     cursor: pointer;
   }
 
-  /* Filled skin — same logic as the input and select fills. :where() keeps it at
+  /* Filled skin: same logic as the input and select fills. :where() keeps it at
    0,1,0 so the focus/open border rule below always wins on open. */
   :where(.menu--fill) .menu__trigger {
     border-color: transparent;

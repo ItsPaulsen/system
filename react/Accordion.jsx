@@ -1,24 +1,24 @@
 // Native <details> accordion; give items a shared `name` to make one-open-at-a-time exclusive.
 
-export function Accordion({ children, ...rest }) {
+export function Accordion({ children, className, ...rest }) {
   return (
-    <div className="accordion" {...rest}>
+    <div className={["accordion", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </div>
   );
 }
 
-export function AccordionItem({ children, ...rest }) {
+export function AccordionItem({ children, className, ...rest }) {
   return (
-    <details className="accordion__item" {...rest}>
+    <details className={["accordion__item", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </details>
   );
 }
 
-export function AccordionTrigger({ children, ...rest }) {
+export function AccordionTrigger({ children, className, ...rest }) {
   return (
-    <summary className="accordion__summary" {...rest}>
+    <summary className={["accordion__summary", className].filter(Boolean).join(" ")} {...rest}>
       {children}
       <span className="accordion__toggle" aria-hidden="true">
         <svg
@@ -38,9 +38,9 @@ export function AccordionTrigger({ children, ...rest }) {
   );
 }
 
-export function AccordionContent({ children, ...rest }) {
+export function AccordionContent({ children, className, ...rest }) {
   return (
-    <div className="accordion__body" {...rest}>
+    <div className={["accordion__body", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </div>
   );

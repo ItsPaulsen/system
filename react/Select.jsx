@@ -70,7 +70,7 @@ export default function Select({
 
   return (
     <div
-      className={`select${fill ? " select--fill" : ""}`}
+      className={["select", fill && "select--fill"].filter(Boolean).join(" ")}
       ref={rootRef}
       onBlur={(e) => {
         if (!rootRef.current.contains(e.relatedTarget)) setOpen(false);
@@ -94,7 +94,7 @@ export default function Select({
           <li
             key={opt}
             id={`${id}-${i}`}
-            className={`select__option${i === active ? " is-active" : ""}`}
+            className={["select__option", i === active && "is-active"].filter(Boolean).join(" ")}
             role="option"
             aria-selected={opt === selected}
             onMouseDown={(e) => e.preventDefault()}

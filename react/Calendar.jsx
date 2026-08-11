@@ -10,6 +10,8 @@ const parse = (s) => {
   const d = s && new Date(`${s}T00:00:00`);
   return d && !Number.isNaN(d.getTime()) ? d : null;
 };
+// Weekday index with Monday as 0 (JS getDay() has Sunday as 0).
+const mondayIndex = (d) => (d.getDay() + 6) % 7;
 
 // Month grid for choosing a date, capped at 31 Dec of the current year. Uncontrolled via
 // defaultValue; pass value + onSelect (both ISO "yyyy-mm-dd") to control it. Keyboard nav:
@@ -26,8 +28,10 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   const [uncontrolled, setUncontrolled] = useState(() => parse(defaultValue));
   const selected = value !== undefined ? parse(value) : uncontrolled;
 
-  const base = selected || today;
-  const [view, setView] = useState(() => new Date(base.getFullYear(), base.getMonth(), 1));
+  const [view, setView] = useState(() => {
+    const base = selected || today;
+    return new Date(base.getFullYear(), base.getMonth(), 1);
+  });
 
   // Roving focus: after a keyboard move re-renders the grid, focus the new day.
   const [pendingFocus, setPendingFocus] = useState(null);
@@ -63,7 +67,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     const btn = e.target.closest(".calendar__day");
     if (!btn) return;
     const cur = parse(btn.dataset.date);
-    const dow = (cur.getDay() + 6) % 7;
+    const dow = mondayIndex(cur);
     const moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
     const shift = (days) => {
       const n = new Date(cur);
@@ -83,7 +87,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   };
 
   // 42-cell grid from the Monday before the 1st; trim any spill past the cap.
-  const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
+  const startDow = mondayIndex(new Date(view.getFullYear(), view.getMonth(), 1));
   const gridStart = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
   const days = [];
   for (let i = 0; i < 42; i += 1) {
@@ -97,6 +101,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     days.find((d) => d.getMonth() === view.getMonth());
 
   const setMonth = (m) => setView(new Date(view.getFullYear(), m, 1));
+  const setYear = (y) => setView(new Date(y, view.getMonth(), 1));
 
   return (
     <div className="calendar">
@@ -127,7 +132,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
             <select
               aria-label="Year"
               value={view.getFullYear()}
-              onChange={(e) => setView(new Date(Number(e.target.value), view.getMonth(), 1))}
+              onChange={(e) => setYear(Number(e.target.value))}
             >
               {years.map((y) => (
                 <option key={y} value={y}>

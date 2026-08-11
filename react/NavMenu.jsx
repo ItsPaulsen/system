@@ -8,8 +8,12 @@ export function NavMenu({ children, "aria-label": ariaLabel }) {
   );
 }
 
-export function NavMenuItem({ children }) {
-  return <li className="nav-menu__item">{children}</li>;
+export function NavMenuItem({ children, ...rest }) {
+  return (
+    <li className="nav-menu__item" {...rest}>
+      {children}
+    </li>
+  );
 }
 
 export function NavMenuLink({ current, children, ...rest }) {
@@ -20,8 +24,12 @@ export function NavMenuLink({ current, children, ...rest }) {
   );
 }
 
-export function NavMenuPanel({ children }) {
-  return <div className="nav-menu__menu">{children}</div>;
+export function NavMenuPanel({ children, ...rest }) {
+  return (
+    <div className="nav-menu__menu" {...rest}>
+      {children}
+    </div>
+  );
 }
 
 export function NavMenuPanelLink({ children, ...rest }) {

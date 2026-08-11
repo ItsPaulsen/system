@@ -57,7 +57,11 @@ export default function Combobox({
         if (!rootRef.current.contains(e.relatedTarget)) setOpen(false);
       }}
     >
-      <div className={`input__container combobox__control${fill ? " input__container--fill" : ""}`}>
+      <div
+        className={["input__container", "combobox__control", fill && "input__container--fill"]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <input
           className="input__element"
           type="text"
@@ -87,7 +91,7 @@ export default function Combobox({
           <li
             key={opt}
             id={`${listId}-${i}`}
-            className={`select__option${i === active ? " is-active" : ""}`}
+            className={["select__option", i === active && "is-active"].filter(Boolean).join(" ")}
             role="option"
             aria-selected={selected === opt}
             onMouseDown={(e) => e.preventDefault()}

@@ -75,7 +75,7 @@ export default function Tooltip({ label, side = "top", children }) {
     >
       {cloneElement(children, { "aria-describedby": id })}
       <span
-        className={`tooltip__bubble${visible ? " is-visible" : ""}`}
+        className={["tooltip__bubble", visible && "is-visible"].filter(Boolean).join(" ")}
         role="tooltip"
         id={id}
         ref={bubbleRef}

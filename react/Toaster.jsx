@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  IconCircleCheck,
   IconInfoCircle,
+  IconCircleCheck,
   IconAlertTriangle,
   IconAlertCircle
 } from "@tabler/icons-react";
@@ -10,8 +10,8 @@ import {
 // anywhere. Typed helpers (toast.success/info/warning/error) add a matching icon; toast.promise
 // shows a loading toast that resolves to success or error. One reused pill, like the vanilla.
 const ICON = {
-  success: IconCircleCheck,
   info: IconInfoCircle,
+  success: IconCircleCheck,
   warning: IconAlertTriangle,
   error: IconAlertCircle
 };
@@ -51,6 +51,7 @@ export function Toaster() {
       }
     };
     return () => {
+      clearTimeout(timer.current);
       emit = undefined;
     };
   }, []);
@@ -61,7 +62,7 @@ export function Toaster() {
 
   return (
     <div
-      className={`toast${visible ? " is-visible" : ""}`}
+      className={["toast", visible && "is-visible"].filter(Boolean).join(" ")}
       role={assertive ? "alert" : "status"}
       aria-live={assertive ? "assertive" : "polite"}
       data-type={type}

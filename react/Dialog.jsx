@@ -73,26 +73,26 @@ export function DialogContent({ children, ...rest }) {
   );
 }
 
-export function DialogTitle({ children, ...rest }) {
+export function DialogTitle({ children, className, ...rest }) {
   const { titleId } = useContext(DialogContext);
   return (
-    <h2 id={titleId} className="dialog__title" {...rest}>
+    <h2 id={titleId} className={["dialog__title", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </h2>
   );
 }
 
-export function DialogDescription({ children, ...rest }) {
+export function DialogDescription({ children, className, ...rest }) {
   return (
-    <p className="dialog__text" {...rest}>
+    <p className={["dialog__text", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </p>
   );
 }
 
-export function DialogActions({ children, ...rest }) {
+export function DialogActions({ children, className, ...rest }) {
   return (
-    <div className="dialog__actions" {...rest}>
+    <div className={["dialog__actions", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </div>
   );

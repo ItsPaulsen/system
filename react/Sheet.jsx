@@ -74,14 +74,26 @@ export function SheetContent({ side, className, children, ...rest }) {
   );
 }
 
-export function SheetHeader({ children }) {
-  return <header className="sheet__header">{children}</header>;
+export function SheetHeader({ children, ...rest }) {
+  return (
+    <header className="sheet__header" {...rest}>
+      {children}
+    </header>
+  );
 }
 
-export function SheetTitle({ children }) {
-  return <h2 className="sheet__title">{children}</h2>;
+export function SheetTitle({ children, ...rest }) {
+  return (
+    <h2 className="sheet__title" {...rest}>
+      {children}
+    </h2>
+  );
 }
 
-export function SheetBody({ children }) {
-  return <div className="sheet__body">{children}</div>;
+export function SheetBody({ children, ...rest }) {
+  return (
+    <div className="sheet__body" {...rest}>
+      {children}
+    </div>
+  );
 }

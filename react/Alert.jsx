@@ -13,11 +13,11 @@ const ICON = {
   error: IconAlertCircle
 };
 
-export default function Alert({ variant = "info", title, children, ...rest }) {
+export default function Alert({ variant = "info", title, children, className, ...rest }) {
   const Icon = ICON[variant];
   return (
     <div
-      className={`alert alert--${variant}`}
+      className={["alert", `alert--${variant}`, className].filter(Boolean).join(" ")}
       role={variant === "error" ? "alert" : "status"}
       {...rest}
     >

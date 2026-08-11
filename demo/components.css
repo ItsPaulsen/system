@@ -1542,7 +1542,7 @@
    Always rendered so it can animate: collapsed to zero width and faded out
    until checked, with a negative margin cancelling the flex gap so there's no
    phantom space. On check it expands to full width and the label slides right
-   to make room — the MD3 filter-chip select motion, CSS-only. */
+   to make room: the MD3 filter-chip select motion, CSS-only. */
   .chip--as-checkbox::before {
     content: "";
     width: 0;

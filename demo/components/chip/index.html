@@ -35,6 +35,14 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Filter Chips</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Chip"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">
             Selects an option from a group of choices. Density scales via
@@ -43,67 +51,117 @@
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">As radio (single-select)</h3>
           <p class="section-note">
-            Radios share a <code>name</code> — only one in the group can be checked.
+            Radios share a <code>name</code>: only one in the group can be checked.
           </p>
-          <div class="component-preview">
-            <label class="chip chip--as-radio">
-              <input type="radio" name="chip-when" class="chip__input" checked />
-              Today
-            </label>
-            <label class="chip chip--as-radio">
-              <input type="radio" name="chip-when" class="chip__input" />
-              This week
-            </label>
-            <label class="chip chip--as-radio">
-              <input type="radio" name="chip-when" class="chip__input" />
-              This month
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="chip chip--as-radio">
+                <input type="radio" name="chip-when" class="chip__input" checked />
+                Today
+              </label>
+              <label class="chip chip--as-radio">
+                <input type="radio" name="chip-when" class="chip__input" />
+                This week
+              </label>
+              <label class="chip chip--as-radio">
+                <input type="radio" name="chip-when" class="chip__input" />
+                This month
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Chip as="radio" name="when" defaultChecked>Today</Chip>
+              <Chip as="radio" name="when">This week</Chip>
+              <Chip as="radio" name="when">This month</Chip>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">As checkbox (multi-select)</h3>
           <p class="section-note">Leading checkmark appears on checked.</p>
-          <div class="component-preview">
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" checked />
-              Design
-            </label>
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" checked />
-              Engineering
-            </label>
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" />
-              Product
-            </label>
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" />
-              Marketing
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Design
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked />
+                Engineering
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Product
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" />
+                Marketing
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Chip defaultChecked>Design</Chip>
+              <Chip defaultChecked>Engineering</Chip>
+              <Chip>Product</Chip>
+              <Chip>Marketing</Chip>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" disabled />
-              Unchecked
-            </label>
-            <label class="chip chip--as-checkbox">
-              <input type="checkbox" class="chip__input" checked disabled />
-              Checked
-            </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" disabled />
+                Unchecked
+              </label>
+              <label class="chip chip--as-checkbox">
+                <input type="checkbox" class="chip__input" checked disabled />
+                Checked
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Chip disabled>Unchecked</Chip>
+              <Chip defaultChecked disabled>Checked</Chip>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>as</code> picks radio or checkbox; other props pass through to the native input.
+          </p>
+          <div data-source="/react/Chip.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-com">&lt;!-- Single-select group --&gt;</span>
 <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip chip--as-radio"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"when"</span> <span class="tok-prop">class</span>=<span class="tok-str">"chip__input"</span> <span class="tok-key">/&gt;</span> Today

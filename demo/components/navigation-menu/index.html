@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Navigation Menu</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Navigation Menu"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A row of links for moving between top-level destinations.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,17 +70,27 @@
             Each item is a link to another page; the current one carries
             <code>aria-current="page"</code>.
           </p>
-          <div class="component-preview">
-            <nav class="nav-menu" aria-label="Main">
-              <ul class="nav-menu__list">
-                <li class="nav-menu__item">
-                  <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
-                </li>
-                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Projects</a></li>
-                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
-                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
-              </ul>
-            </nav>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <nav class="nav-menu" aria-label="Main">
+                <ul class="nav-menu__list">
+                  <li class="nav-menu__item">
+                    <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
+                  </li>
+                  <li class="nav-menu__item"><a class="nav-menu__link" href="#">Projects</a></li>
+                  <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
+                  <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
+                </ul>
+              </nav>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NavMenu aria-label="Main">
+                <NavMenuItem><NavMenuLink current href="/">Overview</NavMenuLink></NavMenuItem>
+                <NavMenuItem><NavMenuLink href="/projects">Projects</NavMenuLink></NavMenuItem>
+                <NavMenuItem><NavMenuLink href="/reports">Reports</NavMenuLink></NavMenuItem>
+                <NavMenuItem><NavMenuLink href="/settings">Settings</NavMenuLink></NavMenuItem>
+              </NavMenu>
+            </script>
           </div>
         </section>
 
@@ -62,35 +101,69 @@
             focus. The top-level link stays clickable (no chevron); items without a panel stay
             plain.
           </p>
-          <div class="component-preview">
-            <nav class="nav-menu" aria-label="Sections">
-              <ul class="nav-menu__list">
-                <li class="nav-menu__item">
-                  <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
-                  <div class="nav-menu__menu">
-                    <a class="nav-menu__menu-link" href="#">Dashboard</a>
-                    <a class="nav-menu__menu-link" href="#">Activity</a>
-                    <a class="nav-menu__menu-link" href="#">Notifications</a>
-                  </div>
-                </li>
-                <li class="nav-menu__item">
-                  <a class="nav-menu__link" href="#">Projects</a>
-                  <div class="nav-menu__menu">
-                    <a class="nav-menu__menu-link" href="#">All projects</a>
-                    <a class="nav-menu__menu-link" href="#">Starred</a>
-                    <a class="nav-menu__menu-link" href="#">Archived</a>
-                    <a class="nav-menu__menu-link" href="#">Templates</a>
-                  </div>
-                </li>
-                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
-                <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
-              </ul>
-            </nav>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <nav class="nav-menu" aria-label="Sections">
+                <ul class="nav-menu__list">
+                  <li class="nav-menu__item">
+                    <a class="nav-menu__link" href="#" aria-current="page">Overview</a>
+                    <div class="nav-menu__menu">
+                      <a class="nav-menu__menu-link" href="#">Dashboard</a>
+                      <a class="nav-menu__menu-link" href="#">Activity</a>
+                      <a class="nav-menu__menu-link" href="#">Notifications</a>
+                    </div>
+                  </li>
+                  <li class="nav-menu__item">
+                    <a class="nav-menu__link" href="#">Projects</a>
+                    <div class="nav-menu__menu">
+                      <a class="nav-menu__menu-link" href="#">All projects</a>
+                      <a class="nav-menu__menu-link" href="#">Starred</a>
+                      <a class="nav-menu__menu-link" href="#">Archived</a>
+                      <a class="nav-menu__menu-link" href="#">Templates</a>
+                    </div>
+                  </li>
+                  <li class="nav-menu__item"><a class="nav-menu__link" href="#">Reports</a></li>
+                  <li class="nav-menu__item"><a class="nav-menu__link" href="#">Settings</a></li>
+                </ul>
+              </nav>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NavMenu aria-label="Sections">
+                <NavMenuItem>
+                  <NavMenuLink current href="/">Overview</NavMenuLink>
+                  <NavMenuPanel>
+                    <NavMenuPanelLink href="/dashboard">Dashboard</NavMenuPanelLink>
+                    <NavMenuPanelLink href="/activity">Activity</NavMenuPanelLink>
+                    <NavMenuPanelLink href="/notifications">Notifications</NavMenuPanelLink>
+                  </NavMenuPanel>
+                </NavMenuItem>
+                <NavMenuItem>
+                  <NavMenuLink href="/projects">Projects</NavMenuLink>
+                  <NavMenuPanel>
+                    <NavMenuPanelLink href="/projects/all">All projects</NavMenuPanelLink>
+                    <NavMenuPanelLink href="/projects/starred">Starred</NavMenuPanelLink>
+                    <NavMenuPanelLink href="/projects/archived">Archived</NavMenuPanelLink>
+                    <NavMenuPanelLink href="/projects/templates">Templates</NavMenuPanelLink>
+                  </NavMenuPanel>
+                </NavMenuItem>
+                <NavMenuItem><NavMenuLink href="/reports">Reports</NavMenuLink></NavMenuItem>
+                <NavMenuItem><NavMenuLink href="/settings">Settings</NavMenuLink></NavMenuItem>
+              </NavMenu>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compound parts. Add a <code>NavMenuPanel</code> inside an item for a dropdown;
+            <code>current</code> marks the active link. Opening is CSS-only.
+          </p>
+          <div data-source="/react/NavMenu.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;nav</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Main"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__list"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__item"</span><span class="tok-key">&gt;</span>

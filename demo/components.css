@@ -2427,13 +2427,13 @@
 
   /* ── Navigation Menu ───────────────────────────────────────────────────────
    Primary navigation between destinations, e.g. in a header. Unlike Tabs (which
-   swap panels within one page), each item is a link to another page — mark the
-   current destination with aria-current="page". Plain links — no hover, active,
-   or pressed states; only the keyboard focus ring remains.
+   swap panels within one page), each item is a link to another page, marked
+   with aria-current="page". Plain links, no hover, active, or pressed states;
+   only the keyboard focus ring remains.
 
    Optional dropdown: give an item a .nav-menu__menu panel and it reveals on
    hover or keyboard focus. The item's own link stays clickable (link-first, no
-   chevron) — the panel is an extra affordance, not a gate. Items without a panel
+   chevron); the panel is an extra affordance, not a gate. Items without a panel
    stay plain links. CSS-only; no JS.
 
    Structure:
@@ -2469,7 +2469,7 @@
     color: var(--ink-primary);
     text-decoration: none;
 
-    /* Rounds the keyboard focus ring only — no hover/active fill. */
+    /* Rounds the keyboard focus ring only, no hover/active fill. */
     border-radius: var(--radius-sm);
   }
 
@@ -2551,7 +2551,7 @@
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    These controls paint their state with background / mask / box-shadow, all of
-   which the forced-colors palette strips — leaving toggles and focus rings
+   which the forced-colors palette strips, leaving toggles and focus rings
    invisible. Restore visibility with system colors and real borders/outlines.
    `forced-color-adjust: none` is used only where we must keep a painted fill
    (the checked checkbox/switch), and paired with system colors so it still
@@ -2587,8 +2587,8 @@
       color: HighlightText;
     }
 
-    /* Focus affordances built from box-shadow (input, custom select) disappear —
-     substitute a real outline, which forced-colors always renders. */
+    /* Focus affordances built from box-shadow (input, custom select) disappear,
+     so substitute a real outline, which forced-colors always renders. */
     .input__container:focus-within,
     .select__trigger:focus-visible,
     .select__trigger[aria-expanded="true"] {
@@ -2596,7 +2596,7 @@
       outline-offset: 1px;
     }
 
-    /* The active option is shown only by a background tint — make it a system
+    /* The active option is shown only by a background tint, so make it a system
      selection instead. */
     .select__option:hover,
     .select__option.is-active {

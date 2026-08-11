@@ -25,7 +25,7 @@ const toast = (() => {
   let textEl;
   let timer;
   // Mount the live region up front (idempotent) so its first announcement isn't
-  // injected and populated in the same tick — some screen readers miss that.
+  // injected and populated in the same tick, some screen readers miss that.
   const ensure = () => {
     if (el) return;
     el = document.createElement("div");
@@ -41,7 +41,7 @@ const toast = (() => {
   };
   const render = (message, type = "default") => {
     ensure();
-    // error/warning are interruptive — assertive/alert so they aren't queued
+    // error/warning are interruptive, assertive/alert so they aren't queued
     // behind whatever a polite region is already reading.
     const assertive = type === "error" || type === "warning";
     el.setAttribute("role", assertive ? "alert" : "status");
@@ -125,7 +125,7 @@ function currentTheme() {
 }
 
 function setTheme(theme) {
-  // Suppress transitions across the swap — otherwise every element with a
+  // Suppress transitions across the swap, otherwise every element with a
   // colour transition (buttons, pagination, cards) animates its background
   // change and reads as a flash.
   const root = document.documentElement;
@@ -158,15 +158,15 @@ function injectSkipLink() {
 
 function injectNav() {
   if (document.querySelector(".site-nav")) return;
-  // The example is a standalone product mock with its own nav — no docs chrome.
+  // The example is a standalone product mock with its own nav, no docs chrome.
   if (isExamplePath()) return;
   const nav = document.createElement("header");
   nav.className = "site-nav";
   const isRoot = location.pathname === "/" || location.pathname === "/index.html";
   // Root landing: no project to label and nothing to scroll under, so the nav
-  // drops its brand and its surface — just the theme toggle floating on the page.
+  // drops its brand and its surface, just the theme toggle floating on the page.
   if (isRoot) nav.classList.add("site-nav--bare");
-  // Icons are Tabler (tabler.io, MIT) — inlined so the shell stays
+  // Icons are Tabler (tabler.io, MIT), inlined so the shell stays
   // dependency-free. `menu` is a custom two-line mark that morphs into a close
   // (X) via CSS; the rest are Tabler paths. The hamburger keeps its own
   // stroke-width in CSS (.ham-line) so the shared stroke-width below is free to
@@ -188,7 +188,7 @@ function injectNav() {
   const projectHref = projectSlug ? `/${projectSlug}/` : "/";
 
   // The menu button only toggles the per-project sidebar, so show it only where
-  // a sidebar exists — not the root landing, not an unknown project.
+  // a sidebar exists, not the root landing, not an unknown project.
   const menuBtn = currentProjectPages()
     ? `<button class="site-nav__menu" type="button" aria-label="Toggle menu" aria-expanded="false">${icon("menu", 24)}</button>`
     : "";
@@ -224,7 +224,7 @@ function injectNav() {
 // Per-project sidebar nav, keyed by the URL's first path segment (/demo/… →
 // "demo"). Each entry is one page; the current one is highlighted, and one
 // topic per page reads cleaner than one giant scrolling doc. Add a project by
-// dropping a new key here — the sidebar, back link, and pagination all follow.
+// dropping a new key here, the sidebar, back link, and pagination all follow.
 const PROJECT_PAGES = {
   demo: [
     {
@@ -289,7 +289,7 @@ function currentProjectPages() {
   return (slug && PROJECT_PAGES[slug]) || null;
 }
 
-// The composed "components in a real UI" example — one mini-product (Home →
+// The composed "components in a real UI" example, one mini-product (Home →
 // Blog → Article → Settings) that navigates itself. It's reached from the
 // Example button in the docs nav and opens in its own tab. These screens bring
 // their own chrome, so the docs nav + sidebar opt out on this path (below).
@@ -298,7 +298,7 @@ function isExamplePath() {
   return location.pathname.startsWith(EXAMPLE_HREF);
 }
 
-// Tabler arrow-left at 16px with stroke 2 — matches shadcn pagination weight.
+// Tabler arrow-left at 16px with stroke 2, matches shadcn pagination weight.
 const ARROW_LEFT_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>';
 
@@ -312,7 +312,7 @@ function isCurrentPage(href) {
 // sidebar can sit beside it as a sticky left column (shadcn-style layout).
 function injectSidebar() {
   // No project pages (site root, or an unknown project) → leave it chrome-free.
-  // The example path matches a project but is a standalone mock — no sidebar.
+  // The example path matches a project but is a standalone mock, no sidebar.
   if (isExamplePath()) return;
   const pages = currentProjectPages();
   if (!pages) return;
@@ -369,8 +369,8 @@ function injectSidebar() {
 // sidebar). Each page is a fresh document, so cross-document view transitions
 // otherwise render the new sidebar at the top and scroll the active item out of
 // view. sessionStorage keeps the offset per tab, keyed by project so separate
-// sidebars don't clobber each other. Restore runs synchronously here — app.js is
-// deferred and the sidebar was just appended — so it applies before first paint,
+// sidebars don't clobber each other. Restore runs synchronously here, app.js is
+// deferred and the sidebar was just appended, so it applies before first paint,
 // no flash. Save on pagehide, which also covers the bfcache case.
 function persistSidebarScroll(aside) {
   const key = `sidebar-scroll:${location.pathname.split("/")[1] || ""}`;
@@ -413,7 +413,7 @@ function wireSidebar(aside, backdrop) {
     backdrop.classList.add("is-open");
     if (menuBtn) menuBtn.setAttribute("aria-expanded", "true");
     // Modal-style: the rest of the page is inert (not focusable/clickable)
-    // while the drawer is open, and focus moves into it. No scroll-lock —
+    // while the drawer is open, and focus moves into it. No scroll-lock,
     // the page keeps its single, always-hidden scrollbar.
     if (region) region.inert = true;
     document.addEventListener("keydown", onKeydown);
@@ -441,7 +441,7 @@ function wireSidebar(aside, backdrop) {
     // A link click navigates away; close without stealing focus back.
     if (e.target.closest(".sidebar__link")) close(false);
   });
-  // Crossing to desktop turns the drawer into a static column — force it closed
+  // Crossing to desktop turns the drawer into a static column, force it closed
   // so `inert` can't strand the (now visible) main content.
   window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
     if (e.matches) close(false);
@@ -551,8 +551,8 @@ function renderPalette() {
   host.innerHTML = PALETTE_FAMILIES.map(renderPaletteFamily).join("");
 }
 
-// A hidden probe lets the browser resolve any token — color-mix, relative
-// rgb(from …), var() chains — down to a concrete sRGB value we can serialise.
+// A hidden probe lets the browser resolve any token, color-mix, relative
+// rgb(from …), var() chains, down to a concrete sRGB value we can serialise.
 // So swatches copy a clean, paste-ready hex (#6C2BF5) instead of the authored
 // expression, always in sync with the tokens because it's read live, never
 // stored. See-through tokens copy as 8-digit hex (#404040B3).
@@ -561,7 +561,7 @@ function renderPalette() {
 // chains) to a computed color, which we then rasterise on a 1×1 canvas to get
 // concrete 8-bit sRGB channels. The canvas step matters: browsers serialise a
 // resolved color-mix as oklab()/color(srgb …), not rgb(), so string-parsing
-// alone would miss every mixed hover/active token — rasterising normalises them
+// alone would miss every mixed hover/active token, rasterising normalises them
 // all to bytes.
 let colorProbe, colorCtx;
 function tokenToHex(token) {
@@ -598,7 +598,7 @@ function tokenToHex(token) {
   colorCtx.clearRect(0, 0, 1, 1);
   colorCtx.fillStyle = opaque;
   colorCtx.fillRect(0, 0, 1, 1);
-  const [r, g, b] = colorCtx.getImageData(0, 0, 1, 1).data; // exact — pixel is opaque
+  const [r, g, b] = colorCtx.getImageData(0, 0, 1, 1).data; // exact, pixel is opaque
   const h = (n) => n.toString(16).padStart(2, "0");
   let hex = `#${h(r)}${h(g)}${h(b)}`;
   if (alpha < 1) hex += h(Math.round(alpha * 255)); // 8-digit only when transparent
@@ -744,7 +744,7 @@ function syncFooterColumns() {
     if (wide) col.removeAttribute("name");
     else col.setAttribute("name", "ex-footer-nav");
     col.open = wide ? true : i === 0;
-    // Desktop columns are static labels, not controls — drop the summary from
+    // Desktop columns are static labels, not controls, drop the summary from
     // the tab order (it's already pointer-events:none in CSS).
     const head = col.querySelector("summary");
     if (head) {
@@ -764,7 +764,7 @@ function refreshResponsive() {
 
 /* ── Init ──────────────────────────────────────────────────────────────── */
 
-// Token-driven demos — space bars, radius/shadow chips. Grouped so a theme
+// Token-driven demos, space bars, radius/shadow chips. Grouped so a theme
 // switch or viewport change can re-run them (shadow values are theme-dependent).
 function hydratePreviews() {
   hydratePreview(".token-list__row", ".token-list__value", (el, value) => {
@@ -774,7 +774,7 @@ function hydratePreviews() {
   });
   hydratePreview(".preview-card", ".preview-card__value", (el, value) => {
     const shadow = el.querySelector("[data-shadow-demo]");
-    // Append --surface-rim so the chip matches a real elevated surface — a
+    // Append --surface-rim so the chip matches a real elevated surface, a
     // no-op in light, the top-edge highlight in dark.
     if (shadow) shadow.style.boxShadow = `${value}, var(--surface-rim)`;
     const radius = el.querySelector("[data-radius-demo]");
@@ -783,7 +783,7 @@ function hydratePreviews() {
   });
 }
 
-// Grid breakpoint tabs — swap the values shown without needing a viewport
+// Grid breakpoint tabs, swap the values shown without needing a viewport
 // resize. Values mirror the media queries in demo/tokens.css.
 const GRID_BREAKPOINTS = {
   mobile: {
@@ -833,7 +833,7 @@ function initGridTabs() {
   if (first) setActive(first);
 }
 
-// Tabler arrow-right at 16px, stroke 2 — matches ARROW_LEFT_ICON.
+// Tabler arrow-right at 16px, stroke 2, matches ARROW_LEFT_ICON.
 const ARROW_RIGHT_16 =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>';
 
@@ -889,7 +889,7 @@ function dedent(text) {
 }
 
 // A component's CSS is the run between its "── Name ──" banner in components.css
-// and the next banner — no per-component markers needed.
+// and the next banner, no per-component markers needed.
 function extractSection(text, name) {
   const lines = text.split("\n");
   const isBanner = (l) => l.includes("── ") && l.includes(" ─");
@@ -1025,7 +1025,7 @@ async function hydrateSource() {
         pre.appendChild(code);
         holder.appendChild(pre);
       } catch {
-        /* offline / file moved — leave the holder empty */
+        /* offline / file moved, leave the holder empty */
       }
     })
   );
@@ -1171,7 +1171,7 @@ function injectCodeCopy() {
     wrapper.classList.add("code-block--numbered");
 
     // Collapse only the per-example snippets. Standalone reference blocks (the
-    // bottom Component, CSS, Markup) show in full — no expand.
+    // bottom Component, CSS, Markup) show in full, no expand.
     if (!pre.closest(".example__code")) return;
     // Counting .line works even while the block is hidden (a tab away), unlike
     // measuring height.
@@ -1208,12 +1208,12 @@ function initSelects() {
 
     let activeIndex = options.findIndex((o) => o.getAttribute("aria-selected") === "true");
     // Focus stays on the trigger the whole time (the list is never focused), so
-    // Tab/Shift+Tab move through the page normally — no focus trap. The active
+    // Tab/Shift+Tab move through the page normally, no focus trap. The active
     // option is tracked with .is-active + aria-activedescendant.
     options.forEach((o, i) => {
       if (!o.id) o.id = `${root.id || "select"}-opt-${i}`;
     });
-    // Labels are static — lowercase them once for type-ahead instead of per key.
+    // Labels are static, lowercase them once for type-ahead instead of per key.
     const optionLabels = options.map((o) => o.textContent.trim().toLowerCase());
 
     const setActive = (i) => {
@@ -1327,7 +1327,7 @@ function initSelects() {
 }
 
 // Combobox: a text field that filters a listbox. Reuses the Select popup markup
-// (.select__list/.select__option) but the keyboard model is input-first — typing
+// (.select__list/.select__option) but the keyboard model is input-first, typing
 // filters, Arrow keys walk only the visible rows, Enter picks the active one.
 // aria-activedescendant tracks the active row while focus stays in the input.
 function initComboboxes() {
@@ -1341,7 +1341,7 @@ function initComboboxes() {
     options.forEach((o, i) => {
       if (!o.id) o.id = `${root.id || list.id || "combobox"}-opt-${i}`;
     });
-    // Labels are static — cache them for filtering instead of reading the DOM.
+    // Labels are static, cache them for filtering instead of reading the DOM.
     const labels = options.map((o) => o.textContent.trim());
     let activeIndex = -1;
 
@@ -1458,7 +1458,7 @@ function initComboboxes() {
 // keyboard (arrows = ±1/±7 days, Home/End = week ends, PageUp/Dn = ±month,
 // Enter/Space selects). One day carries tabindex 0 (roving), the rest -1. The
 // selected date lives in data-cal-value (ISO); with data-cal-target="#el" a pick
-// writes a formatted date into that element and closes any enclosing popover —
+// writes a formatted date into that element and closes any enclosing popover,
 // that's the date-picker recipe.
 function initCalendars() {
   const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
@@ -1552,7 +1552,7 @@ function initCalendars() {
       daysEl.replaceChildren();
       for (let i = 0; i < 42; i += 1) {
         const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-        // Don't render trailing days past the cap — there's no month to reach them
+        // Don't render trailing days past the cap, there's no month to reach them
         // in (the cap is always end of December, so this only trims the spill-over).
         if (d > maxDate) break;
         const btn = document.createElement("button");
@@ -1700,7 +1700,7 @@ function positionPopover(trigger, pop) {
 }
 
 // Position every invoker-driven .popover on open, but only where CSS anchor
-// positioning is unsupported — otherwise the stylesheet owns placement. Covers
+// positioning is unsupported, otherwise the stylesheet owns placement. Covers
 // both the dropdown surface and standalone popovers; initMenus handles only the
 // menu keyboard model on top.
 function initPopovers() {
@@ -1732,8 +1732,8 @@ function initPopovers() {
 
 // Dropdown menu (menu-button pattern) on the native Popover API: the trigger's
 // popovertarget gives top-layer rendering, light-dismiss, Esc, and focus-return
-// for free. app.js adds the menu keyboard model — focus moves INTO the menu and
-// roves across items (arrow keys), items carry tabindex="-1" so Tab leaves —
+// for free. app.js adds the menu keyboard model, focus moves INTO the menu and
+// roves across items (arrow keys), items carry tabindex="-1" so Tab leaves,
 // plus type-ahead. Fallback positioning lives in initPopovers.
 function initMenus() {
   document.querySelectorAll(".menu").forEach((root) => {
@@ -1831,7 +1831,7 @@ function initMenus() {
     });
 
     // Activating an item would run its action; the demo items are placeholders,
-    // so just dismiss — the popover hands focus back to the trigger.
+    // so just dismiss, the popover hands focus back to the trigger.
     list.addEventListener("click", (e) => {
       if (e.target.closest(".menu__item")) list.hidePopover();
     });
@@ -1840,7 +1840,7 @@ function initMenus() {
 
 // Pagination: renders a bounded page window and keeps it interactive. The
 // window always shows the first and last page, the current page ±1, and an
-// ellipsis wherever there's a gap — the standard pattern. Seed with data-total
+// ellipsis wherever there's a gap, the standard pattern. Seed with data-total
 // and data-page; clicking a number or prev/next re-renders in place.
 function initPagination() {
   const chevron = (d) =>
@@ -1848,7 +1848,7 @@ function initPagination() {
   const CHEVRON_LEFT = chevron("M15 6l-6 6l6 6");
   const CHEVRON_RIGHT = chevron("M9 6l6 6l-6 6");
 
-  // Pages to show: 1, current-1..current+1, total — with "ellipsis" markers
+  // Pages to show: 1, current-1..current+1, total, with "ellipsis" markers
   // where the sequence skips. Clamped so the ends never duplicate a neighbour.
   const windowed = (current, total) => {
     const out = [1];
@@ -1936,7 +1936,7 @@ function initTooltips() {
   let uid = 0;
   document.querySelectorAll(".tooltip").forEach((root) => {
     const bubble = root.querySelector(".tooltip__bubble");
-    // The trigger is whichever child isn't the bubble — don't assume position.
+    // The trigger is whichever child isn't the bubble, don't assume position.
     const trigger = root.querySelector(":scope > :not(.tooltip__bubble)");
     if (!bubble || !trigger) return;
     // Associate the bubble with the trigger so assistive tech announces it.
@@ -1991,7 +1991,7 @@ function initTooltips() {
     const show = () => {
       place();
       bubble.classList.add("is-visible");
-      // Fixed-position bubble would float away from the trigger on scroll —
+      // Fixed-position bubble would float away from the trigger on scroll,
       // just dismiss it instead.
       window.addEventListener("scroll", onScroll, { capture: true, passive: true });
       document.addEventListener("keydown", onKeydown, true);
@@ -2005,7 +2005,7 @@ function initTooltips() {
 }
 
 // Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
-// standard modal behaviour (matches Radix/shadcn) — one scroll context, no
+// standard modal behaviour (matches Radix/shadcn), one scroll context, no
 // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
 // page doesn't shift as it disappears.
 function lockBodyScroll() {
@@ -2032,12 +2032,12 @@ function initDialogs() {
       if (dlg && typeof dlg.showModal === "function") {
         lockBodyScroll();
         dlg.showModal();
-        // Unlock on ANY close path — the close button, a backdrop click, or Esc
+        // Unlock on ANY close path, the close button, a backdrop click, or Esc
         // (Esc closes natively without a click, so hook the dialog's own event).
         dlg.addEventListener("close", unlockBodyScroll, { once: true });
         // showModal() auto-focuses the first focusable child (e.g. the close
         // button), which paints a stray focus ring on open. Move focus to a
-        // non-visible holder — the panel inner — so keyboard/Esc still work with
+        // non-visible holder, the panel inner, so keyboard/Esc still work with
         // nothing highlighted (matches the sidebar drawer).
         const holder = dlg.querySelector(".sheet__inner, .dialog__inner");
         if (holder) {
@@ -2054,7 +2054,7 @@ function initDialogs() {
     }
     // Backdrop click: the target is the <dialog> itself, not its inner content.
     // Hit-test against the dialog's box so a click on the element's own padding
-    // doesn't count. Covers Dialog and Sheet — both are native <dialog>s.
+    // doesn't count. Covers Dialog and Sheet, both are native <dialog>s.
     const openDialog = event.target.closest("dialog.dialog, dialog.sheet");
     if (openDialog && event.target === openDialog) {
       const r = openDialog.getBoundingClientRect();

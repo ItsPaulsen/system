@@ -872,6 +872,147 @@ const COPY_ICON =
 const CHECK_ICON =
   '<svg class="code-copy__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>';
 
+// Any code block taller than this collapses to a shadcn-style preview with a
+// "View Code" fade; short snippets are left fully expanded and get no toggle.
+const CODE_COLLAPSE_THRESHOLD = 240;
+
+// Strip the shared leading indentation from a slice so it reads as standalone
+// source, then trim surrounding blank lines.
+function dedent(text) {
+  const lines = text.split("\n");
+  const indents = lines.filter((l) => l.trim()).map((l) => l.match(/^ */)[0].length);
+  const min = indents.length ? Math.min(...indents) : 0;
+  return lines
+    .map((l) => l.slice(min))
+    .join("\n")
+    .replace(/^\n+|\n+$/g, "");
+}
+
+// A component's CSS is the run between its "── Name ──" banner in components.css
+// and the next banner — no per-component markers needed.
+function extractSection(text, name) {
+  const lines = text.split("\n");
+  const isBanner = (l) => l.includes("── ") && l.includes(" ─");
+  const start = lines.findIndex((l) => isBanner(l) && l.includes(`── ${name} ─`));
+  if (start === -1) return "";
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (isBanner(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  return dedent(lines.slice(start + 1, end).join("\n"));
+}
+
+// A component's behaviour is a top-level init function in app.js: from its
+// declaration to the closing brace sitting in column 0.
+function extractFunction(text, name) {
+  const lines = text.split("\n");
+  const start = lines.findIndex((l) => l.startsWith(`function ${name}(`));
+  if (start === -1) return "";
+  let end = start;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (lines[i] === "}") {
+      end = i;
+      break;
+    }
+  }
+  return dedent(lines.slice(start, end + 1).join("\n"));
+}
+
+// Minimal syntax highlighter for the auto-extracted slices. Walks the source
+// with sticky regexes and wraps matches in the same tok-* spans the hand-written
+// Markup blocks use. Input is our own source, and every matched slice is escaped
+// before it becomes markup, so innerHTML is safe here.
+const HL_ESCAPE = (s) =>
+  s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+
+const HL_RULES = {
+  js: [
+    ["tok-com", /\/\/[^\n]*|\/\*[\s\S]*?\*\//y],
+    ["tok-str", /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`/y],
+    [
+      "tok-key",
+      /\b(?:async|await|break|case|catch|class|const|continue|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|switch|this|throw|true|try|typeof|undefined|var|void|while|yield)\b/y
+    ],
+    ["tok-var", /\b\d+(?:\.\d+)?\b/y],
+    ["tok-fn", /[A-Za-z_$][\w$]*(?=\s*\()/y]
+  ],
+  css: [
+    ["tok-com", /\/\*[\s\S]*?\*\//y],
+    ["tok-str", /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/y],
+    ["tok-key", /@[\w-]+/y],
+    ["tok-selector", /[.#][\w-]+|&|::?[A-Za-z-][\w-]*|\[[^\]]*\]/y],
+    ["tok-var", /--[\w-]+/y],
+    ["tok-fn", /[A-Za-z-]+(?=\()/y],
+    ["tok-prop", /[A-Za-z-]+(?=\s*:)/y]
+  ]
+};
+
+function highlight(code, lang) {
+  const rules = HL_RULES[lang] || [];
+  let out = "";
+  let i = 0;
+  while (i < code.length) {
+    let hit = false;
+    for (const [cls, re] of rules) {
+      re.lastIndex = i;
+      const m = re.exec(code);
+      if (m && m[0]) {
+        out += `<span class="${cls}">${HL_ESCAPE(m[0])}</span>`;
+        i += m[0].length;
+        hit = true;
+        break;
+      }
+    }
+    if (!hit) {
+      out += HL_ESCAPE(code[i]);
+      i++;
+    }
+  }
+  return out;
+}
+
+// Fill every [data-source] holder with a live slice of the real source file, so
+// each component page shows the exact CSS / JS it needs with zero drift. Slices
+// reuse the collapsible code panel via injectCodeCopy().
+async function hydrateSource() {
+  const holders = document.querySelectorAll("[data-source]");
+  if (!holders.length) return;
+  const cache = new Map();
+  const load = (src) => {
+    if (!cache.has(src))
+      cache.set(
+        src,
+        fetch(src).then((r) => r.text())
+      );
+    return cache.get(src);
+  };
+  await Promise.all(
+    [...holders].map(async (holder) => {
+      try {
+        const text = await load(holder.dataset.source);
+        const slice = holder.dataset.section
+          ? extractSection(text, holder.dataset.section)
+          : holder.dataset.fn
+            ? extractFunction(text, holder.dataset.fn)
+            : dedent(text); // whole file (e.g. a React component)
+        if (!slice) return;
+        const lang = holder.dataset.source.endsWith(".css") ? "css" : "js";
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+        code.innerHTML = highlight(slice, lang);
+        pre.appendChild(code);
+        holder.appendChild(pre);
+      } catch {
+        /* offline / file moved — leave the holder empty */
+      }
+    })
+  );
+  injectCodeCopy();
+}
+
 function injectCodeCopy() {
   document.querySelectorAll("pre").forEach((pre) => {
     if (pre.parentElement?.classList.contains("code-block")) return;
@@ -887,6 +1028,24 @@ function injectCodeCopy() {
     btn.setAttribute("aria-label", "Copy code");
     btn.innerHTML = COPY_ICON + CHECK_ICON;
     wrapper.appendChild(btn);
+
+    // Collapse only tall blocks. Read the pre's natural height before clipping.
+    if (pre.scrollHeight <= CODE_COLLAPSE_THRESHOLD) return;
+    wrapper.classList.add("code-block--collapsible", "is-collapsed");
+    // Non-interactive fade container; only the pill button inside is clickable.
+    const toggle = document.createElement("div");
+    toggle.className = "code-block__toggle";
+    const btn2 = document.createElement("button");
+    btn2.type = "button";
+    btn2.className = "code-block__toggle-pill btn btn--outline";
+    btn2.textContent = "View Code";
+    // Expand is one-way (shadcn): reveal the code, then drop the toggle entirely.
+    btn2.addEventListener("click", () => {
+      wrapper.classList.remove("code-block--collapsible", "is-collapsed");
+      toggle.remove();
+    });
+    toggle.appendChild(btn2);
+    wrapper.appendChild(toggle);
   });
 }
 
@@ -1677,6 +1836,70 @@ function initTooltips() {
   });
 }
 
+// Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
+// standard modal behaviour (matches Radix/shadcn) — one scroll context, no
+// double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
+// page doesn't shift as it disappears.
+function lockBodyScroll() {
+  const root = document.documentElement;
+  if (root.classList.contains("is-scroll-locked")) return;
+  const comp = window.innerWidth - root.clientWidth;
+  root.style.setProperty("--scrollbar-comp", comp + "px");
+  root.classList.add("is-scroll-locked");
+}
+function unlockBodyScroll() {
+  const root = document.documentElement;
+  root.classList.remove("is-scroll-locked");
+  root.style.removeProperty("--scrollbar-comp");
+}
+
+// Dialog + Sheet (both native <dialog>): open via [data-dialog-open], close via
+// [data-dialog-close] or a click on the backdrop. One delegated listener so
+// dynamically-added dialogs work too. Body scroll locks while a modal is open.
+function initDialogs() {
+  document.addEventListener("click", (event) => {
+    const opener = event.target.closest("[data-dialog-open]");
+    if (opener) {
+      const dlg = document.getElementById(opener.dataset.dialogOpen);
+      if (dlg && typeof dlg.showModal === "function") {
+        lockBodyScroll();
+        dlg.showModal();
+        // Unlock on ANY close path — the close button, a backdrop click, or Esc
+        // (Esc closes natively without a click, so hook the dialog's own event).
+        dlg.addEventListener("close", unlockBodyScroll, { once: true });
+        // showModal() auto-focuses the first focusable child (e.g. the close
+        // button), which paints a stray focus ring on open. Move focus to a
+        // non-visible holder — the panel inner — so keyboard/Esc still work with
+        // nothing highlighted (matches the sidebar drawer).
+        const holder = dlg.querySelector(".sheet__inner, .dialog__inner");
+        if (holder) {
+          holder.tabIndex = -1;
+          holder.focus({ preventScroll: true });
+        }
+      }
+      return;
+    }
+    const closer = event.target.closest("[data-dialog-close]");
+    if (closer) {
+      closer.closest("dialog")?.close();
+      return;
+    }
+    // Backdrop click: the target is the <dialog> itself, not its inner content.
+    // Hit-test against the dialog's box so a click on the element's own padding
+    // doesn't count. Covers Dialog and Sheet — both are native <dialog>s.
+    const openDialog = event.target.closest("dialog.dialog, dialog.sheet");
+    if (openDialog && event.target === openDialog) {
+      const r = openDialog.getBoundingClientRect();
+      const inBox =
+        event.clientX >= r.left &&
+        event.clientX <= r.right &&
+        event.clientY >= r.top &&
+        event.clientY <= r.bottom;
+      if (!inBox) openDialog.close();
+    }
+  });
+}
+
 function init() {
   // iOS Safari only fires :active on tap when a touch listener exists somewhere
   // in the document. A no-op on the document enables every component's pressed
@@ -1690,6 +1913,7 @@ function init() {
   injectSidebar();
   injectPagination();
   injectCodeCopy();
+  hydrateSource();
   hydrateProjectLinks();
   hydrateLinkListArrows();
   renderPalette();
@@ -1704,6 +1928,7 @@ function init() {
   initPagination();
   initSliders();
   initTooltips();
+  initDialogs();
   refreshResponsive();
 
   let frame;
@@ -1724,23 +1949,6 @@ function init() {
     event.preventDefault();
     setGridOverlay();
   });
-
-  // Body scroll-lock for open modals (Dialog + Sheet). Locking the page is the
-  // standard modal behaviour (matches Radix/shadcn) — one scroll context, no
-  // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
-  // page doesn't shift as it disappears.
-  function lockBodyScroll() {
-    const root = document.documentElement;
-    if (root.classList.contains("is-scroll-locked")) return;
-    const comp = window.innerWidth - root.clientWidth;
-    root.style.setProperty("--scrollbar-comp", comp + "px");
-    root.classList.add("is-scroll-locked");
-  }
-  function unlockBodyScroll() {
-    const root = document.documentElement;
-    root.classList.remove("is-scroll-locked");
-    root.style.removeProperty("--scrollbar-comp");
-  }
 
   document.addEventListener("click", (event) => {
     // Placeholder demo links (href="#") shouldn't scroll to top or add a hash.
@@ -1787,47 +1995,6 @@ function init() {
           codeCopy._copyTimer = setTimeout(() => codeCopy.classList.remove("is-copied"), 2000);
         })
         .catch(() => toast("Copy failed"));
-      return;
-    }
-    const dialogOpen = event.target.closest("[data-dialog-open]");
-    if (dialogOpen) {
-      const dlg = document.getElementById(dialogOpen.dataset.dialogOpen);
-      if (dlg && typeof dlg.showModal === "function") {
-        lockBodyScroll();
-        dlg.showModal();
-        // Unlock on ANY close path — the close button, a backdrop click, or Esc
-        // (Esc closes natively without a click, so hook the dialog's own event).
-        dlg.addEventListener("close", unlockBodyScroll, { once: true });
-        // showModal() auto-focuses the first focusable child (e.g. the close
-        // button), which paints a stray focus ring on open. Move focus to a
-        // non-visible holder — the panel inner — so keyboard/Esc still work with
-        // nothing highlighted (matches the sidebar drawer).
-        const holder = dlg.querySelector(".sheet__inner, .dialog__inner");
-        if (holder) {
-          holder.tabIndex = -1;
-          holder.focus({ preventScroll: true });
-        }
-      }
-      return;
-    }
-    const dialogClose = event.target.closest("[data-dialog-close]");
-    if (dialogClose) {
-      dialogClose.closest("dialog")?.close();
-      return;
-    }
-    // Click on the backdrop (target is the <dialog> itself, not its inner
-    // content). Hit-test against the dialog's box so a click on the element's
-    // own padding doesn't count as a backdrop click. Covers Dialog and Sheet —
-    // both are native <dialog>s sharing the data-dialog-open/close wiring.
-    const openDialog = event.target.closest("dialog.dialog, dialog.sheet");
-    if (openDialog && event.target === openDialog) {
-      const r = openDialog.getBoundingClientRect();
-      const inBox =
-        event.clientX >= r.left &&
-        event.clientX <= r.right &&
-        event.clientY >= r.top &&
-        event.clientY <= r.bottom;
-      if (!inBox) openDialog.close();
       return;
     }
     const toastBtn = event.target.closest("[data-toast]");

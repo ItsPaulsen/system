@@ -843,6 +843,56 @@
     display: block;
   }
 
+  /* Collapsible code (shadcn-style). Tall blocks clip to a preview height and
+   reveal a "View Code" pill on a fade; app.js adds the toggle only when the
+   code overflows, so short snippets stay fully open with no control. */
+  .code-block--collapsible.is-collapsed pre {
+    max-height: 9rem;
+    overflow-y: hidden;
+  }
+
+  /* Copy affordance appears only once the code is revealed (shadcn behaviour). */
+  .code-block--collapsible.is-collapsed .code-copy {
+    display: none;
+  }
+
+  /* Room for the toggle pill to sit below the code once expanded. */
+  .code-block--collapsible:not(.is-collapsed) {
+    padding-bottom: 3rem;
+  }
+
+  .code-block__toggle {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    padding: 2.5rem 0 0.625rem;
+    background: transparent;
+
+    /* Match the code card's rounded bottom so the fade doesn't square off its
+     corners. */
+    border-end-start-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
+
+    /* Only the pill is interactive — the fade area passes clicks through. */
+    pointer-events: none;
+  }
+
+  .code-block--collapsible.is-collapsed .code-block__toggle {
+    background: linear-gradient(to bottom, transparent, var(--background-secondary) 65%);
+  }
+
+  /* The pill reuses .btn.btn--outline (the header Example button) for sizing and
+   the hairline stroke, but takes a solid surface by default so code never shows
+   through it against the fade. */
+  .code-block__toggle-pill {
+    background: var(--background-primary);
+    pointer-events: auto;
+  }
+
   pre code {
     padding: 0;
     background: none;

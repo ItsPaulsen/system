@@ -79,6 +79,40 @@
   <span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/dialog&gt;</span></code></pre>
         </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">CSS</h3>
+          <p class="section-note">
+            From <code>components.css</code>. Also load <code>tokens.css</code> (palette + type) and
+            <code>base.css</code> (reset + focus ring).
+          </p>
+          <div data-source="/demo/components.css" data-section="Dialog"></div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. One delegated listener opens <code>[data-dialog-open]</code>,
+            closes <code>[data-dialog-close]</code> and backdrop clicks, and locks body scroll.
+            Shared with <a href="/demo/components/sheet/">Sheet</a>.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initDialogs"></div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">React — usage</h3>
+          <p class="section-note">How you compose it in a page.</p>
+          <div data-source="/react/Dialog.usage.jsx"></div>
+        </section>
+
+        <section class="preview-block">
+          <h3 class="subhead">React — component</h3>
+          <p class="section-note">
+            Compound components over the native <code>&lt;dialog&gt;</code> — the shadcn shape, no
+            Radix dependency. Styling is the same <code>.dialog</code> classes.
+          </p>
+          <div data-source="/react/Dialog.jsx"></div>
+        </section>
       </div>
     </div>
     <script src="/assets/app.js" defer></script>

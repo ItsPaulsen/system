@@ -1029,6 +1029,16 @@ function injectCodeCopy() {
     btn.innerHTML = COPY_ICON + CHECK_ICON;
     wrapper.appendChild(btn);
 
+    // Line-number gutter (shadcn-style). It lives outside <code>, is aria-hidden
+    // and non-selectable, so it never enters the copy or a text selection.
+    const lineCount = code.textContent.replace(/\n$/, "").split("\n").length;
+    const gutter = document.createElement("span");
+    gutter.className = "code-gutter";
+    gutter.setAttribute("aria-hidden", "true");
+    gutter.textContent = Array.from({ length: lineCount }, (_, i) => i + 1).join("\n");
+    pre.insertBefore(gutter, code);
+    wrapper.classList.add("code-block--numbered");
+
     // Collapse only tall blocks. Read the pre's natural height before clipping.
     if (pre.scrollHeight <= CODE_COLLAPSE_THRESHOLD) return;
     wrapper.classList.add("code-block--collapsible", "is-collapsed");

@@ -780,6 +780,12 @@
     margin: 0 0 1rem;
   }
 
+  /* In a component section the grid gap handles rhythm, so the code card's own
+   bottom margin would just be dead space below the surface. */
+  .preview-block .code-block {
+    margin-bottom: 0;
+  }
+
   pre {
     margin: 0;
     padding: 0.875rem 1rem;
@@ -841,6 +847,27 @@
 
   .code-copy.is-copied .code-copy__check {
     display: block;
+  }
+
+  /* Line-number gutter. Sticky so numbers stay put during horizontal scroll;
+   user-select:none + aria-hidden (set in JS) keep it out of copy/selection. */
+  .code-block--numbered pre {
+    display: flex;
+  }
+
+  .code-gutter {
+    position: sticky;
+    left: 0;
+    flex: 0 0 auto;
+    padding-inline-end: 1rem;
+    background: var(--background-secondary);
+    color: var(--ink-tertiary);
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    text-align: right;
+    white-space: pre;
+    user-select: none;
   }
 
   /* Collapsible code (shadcn-style). Tall blocks clip to a preview height and

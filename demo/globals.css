@@ -153,9 +153,9 @@
 
     /* Focus is derived from the brand so it retints with --anchor-primary, but
      it's not primary verbatim: same hue (stays our purple), just lighter
-     (+0.09 L) and a touch softer (−0.1 C) for a distinct focus tone. Ruter's
-     focus looks blue only because their primary is blue — the transform is the
-     relationship, not the hue. */
+     (+0.09 L) and a touch softer (−0.1 C) for a distinct focus tone. What
+     defines it is the transform (its relationship to primary), not the hue, so
+     swapping the brand colour retints the focus with it. */
     --focus: oklch(from var(--primary) calc(l + 0.09) calc(c - 0.1) h);
     --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
     --focus-active: color-mix(in oklab, var(--focus) 82%, white);
@@ -168,10 +168,10 @@
     --focus-ring-width: 3px;
     --focus-ring-offset: 2px;
 
-    /* Foreground — the color used for text/icons sitting on the -soft
+    /* Foreground: the color used for text/icons sitting on the -soft
      background. Only exists for primary (brand); tints use their
-     solid color as text directly (Ruter's pattern — only accent has
-     a foreground). In light theme foreground ≈ primary; in dark
+     solid color as text directly (only the brand accent has a
+     foreground). In light theme foreground ≈ primary; in dark
      theme it's lightened for legibility on dark tinted surfaces. */
     --primary-foreground: var(--primary);
     --primary-foreground-hover: var(--primary-hover);
@@ -181,9 +181,9 @@
      behind foreground-color text. Hover/active ramp deeper.
        Each derives from a *lightened* base (`--<color>-tint`), not the raw
      accent: a dark, saturated accent at low alpha jumps hard as the alpha
-     climbs, so the resting tint and its hover step feel heavy (this is why our
-     purple felt off vs Ruter's lighter blue tint). Lifting the base toward
-     white first — one knob, `--soft-lift`, for every accent — keeps the tint
+     climbs, so the resting tint and its hover step feel heavy (this is why a
+     dark, saturated purple felt off at low alpha). Lifting the base toward
+     white first (one knob, `--soft-lift`, for every accent) keeps the tint
      gentle and the ramp even. Alpha ladder stays 0.12 / 0.23 / 0.27. */
     --soft-lift: 20%;
     --primary-tint: color-mix(in oklab, var(--primary), white var(--soft-lift));
@@ -317,8 +317,8 @@
     --font-caption-small-emphasized-lh: 1.5;
     --font-caption-small-emphasized-weight: 500;
 
-    /* Breakpoints — standard scale (matches Tailwind/Ruter). Reach for the
-     name; the px is the min-width the layout switches at. */
+    /* Breakpoints: standard scale (matches Tailwind). Reach for the name; the
+     px is the min-width the layout switches at. */
     --breakpoint-sm: 640px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
@@ -449,13 +449,11 @@
     --anchor-blue: 140 190 255;
     --anchor-fuchsia: 235 157 239;
 
-    /* Foreground — only primary has one. Lightened for dark-theme
-     legibility on soft bg. Mirrors Ruter's tint-accent-foreground.
-     Mixed 60% (vs Ruter's ~50%) because our violet primary sits darker
-     than their blue, so it needs more white to read as bright text.
-     Then re-saturated: oklch holds L (so contrast is unchanged) and
-     hue, but pushes chroma 1.5× so the light text reads violet, not
-     washed-out lilac. */
+    /* Foreground: only primary has one. Lightened for dark-theme
+     legibility on soft bg. Mixed 60% because a violet primary sits dark,
+     so it needs more white to read as bright text. Then re-saturated:
+     oklch holds L (so contrast is unchanged) and hue, but pushes chroma
+     1.5× so the light text reads violet, not washed-out lilac. */
     --primary-foreground: oklch(
       from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h
     );

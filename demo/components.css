@@ -154,8 +154,8 @@
     outline-offset: var(--focus-ring-offset);
   }
 
-  /* Checkmark — an inline SVG overlaid on the box via grid, so the tick can
-   stroke itself on (Ruter's draw animation) instead of just appearing. The
+  /* Checkmark: an inline SVG overlaid on the box via grid, so the tick can
+   stroke itself on (a draw-on animation) instead of just appearing. The
    input and the icon share one grid cell. Declared before the hover/checked
    rules so its lower-specificity input selector stays in ascending order. */
   .checkbox__box {
@@ -168,11 +168,11 @@
     grid-area: 1 / 1;
   }
 
-  /* Ruter's icon logic with our Tabler check path: the svg fills the box (grid
+  /* Icon sizing with our Tabler check path: the svg fills the box (grid
    cell, stretched) so the box size drives everything and the svg keeps its
-   native stroke-width 2 (≈1.67px at this size). No padding — the Tabler path's
-   own 5→20 bounds give the inset; Ruter needs padding because its path runs
-   edge-to-edge, ours doesn't. Presentation lives on the <svg> like the other
+   native stroke-width 2 (≈1.67px at this size). No padding: the Tabler path's
+   own 5→20 bounds give the inset (a path that ran edge-to-edge would need
+   padding, ours doesn't). Presentation lives on the <svg> like the other
    inline icons; stroke="currentColor" reads this colour. */
   .checkbox__check {
     color: var(--neutral-white);
@@ -220,9 +220,9 @@
     opacity: 0.5;
   }
 
-  /* Checked — checkbox fills with primary; radio grows its border into a solid
-   ring (Ruter draws the dot with border-width, no inner element — box-sizing
-   keeps the 20px footprint fixed). */
+  /* Checked: checkbox fills with primary; radio grows its border into a solid
+   ring (the dot is drawn with border-width, no inner element; box-sizing keeps
+   the 20px footprint fixed). */
   .checkbox__input:checked {
     background-color: var(--primary);
     border-color: var(--primary);
@@ -251,7 +251,7 @@
     color: var(--background-primary);
   }
 
-  /* Subtle fill on hover while still unchecked (Ruter's quaternary tint).
+  /* Subtle fill on hover while still unchecked (quaternary tint).
    Declared last: higher specificity than the :disabled/:checked rules. */
   @media (hover: hover) {
     .checkbox__input:not(:disabled, :checked):hover,
@@ -356,9 +356,9 @@
     clip-path: inset(50%);
   }
 
-  /* State is driven off the radio via the adjacent-sibling combinator (Ruter's
-   pattern) — cheaper and more broadly supported than :has(). Base states first,
-   then the higher-specificity interaction states. */
+  /* State is driven off the radio via the adjacent-sibling combinator: cheaper
+   and more broadly supported than :has(). Base states first, then the
+   higher-specificity interaction states. */
 
   .tabs--pill .tabs__tab {
     border-radius: var(--radius-full);

@@ -1269,8 +1269,8 @@ function initSelects() {
       }
     };
 
-    // Open on keyboard focus (matches Ruter); mouse focus isn't :focus-visible,
-    // so a click toggles instead of double-firing here.
+    // Open on keyboard focus; mouse focus isn't :focus-visible, so a click
+    // toggles instead of double-firing here.
     trigger.addEventListener("focus", () => {
       if (trigger.matches(":focus-visible")) open();
     });
@@ -2071,8 +2071,8 @@ function initDialogs() {
 function init() {
   // iOS Safari only fires :active on tap when a touch listener exists somewhere
   // in the document. A no-op on the document enables every component's pressed
-  // state on touch (full JS apps like Ruter get this for free from their own
-  // listeners; a static site has to opt in).
+  // state on touch (full JS apps get this for free from their own listeners;
+  // a static site has to opt in).
   document.addEventListener("touchstart", () => {}, { passive: true });
 
   toast.mount();

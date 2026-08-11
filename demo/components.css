@@ -1821,10 +1821,10 @@
 
   /* ── Sheet ─────────────────────────────────────────────────────────────── */
 
-  /* Edge-anchored panel on native <dialog> — same focus-trap, Esc, and inert
+  /* Edge-anchored panel on native <dialog>: same focus-trap, Esc, and inert
    backdrop as Dialog, and the same data-dialog-open / data-dialog-close wiring
    (app.js). Anchored to the inline-end edge; --left flips it to inline-start.
-   Same open-only fade + nudge as Dialog (here on the X axis, toward its edge) —
+   Same open-only fade + nudge as Dialog (here on the X axis, toward its edge);
    close is instant.
 
    Structure:
@@ -1898,7 +1898,7 @@
   }
 
   /* On open, focus is parked here (JS sets tabindex -1) so no button shows a
-   stray focus ring. It's only a programmatic focus holder — never ring it. */
+   stray focus ring. It's only a programmatic focus holder, never ring it. */
   .sheet__inner:focus-visible,
   .dialog__inner:focus-visible {
     outline: none;
@@ -2011,7 +2011,7 @@
     outline: none;
   }
 
-  /* Hover surface only while collapsed — an open panel's summary shouldn't tint. */
+  /* Hover surface only while collapsed, an open panel's summary shouldn't tint. */
   @media (hover: hover) {
     .accordion__item:not([open]) .accordion__summary:hover {
       background: var(--background-secondary-hover);

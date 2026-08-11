@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Sheet</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Sheet"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A panel that slides in from a screen edge.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -42,73 +71,114 @@
             background come for free. <code>--left</code> slides it from the opposite edge. Click
             the backdrop, Esc, or the close button to dismiss.
           </p>
-          <div class="component-preview" style="gap: 0.75rem">
-            <button class="button button--secondary" type="button" data-dialog-open="sheet-left">
-              Left
-            </button>
-            <button class="button button--secondary" type="button" data-dialog-open="sheet-right">
-              Right
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview" style="gap: 0.75rem">
+              <button class="button button--secondary" type="button" data-dialog-open="sheet-left">
+                Left
+              </button>
+              <button class="button button--secondary" type="button" data-dialog-open="sheet-right">
+                Right
+              </button>
 
-            <dialog class="sheet" id="sheet-right">
-              <div class="sheet__inner">
-                <header class="sheet__header">
-                  <h2 class="sheet__title">Filters</h2>
-                  <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M18 6l-12 12" />
-                      <path d="M6 6l12 12" />
-                    </svg>
-                  </button>
-                </header>
-                <div class="sheet__body">
-                  <p style="margin: 0">
-                    A sheet holds a focused, secondary task beside the page — filters, details, a
-                    quick form — without a full navigation.
-                  </p>
+              <dialog class="sheet" id="sheet-right">
+                <div class="sheet__inner">
+                  <header class="sheet__header">
+                    <h2 class="sheet__title">Filters</h2>
+                    <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </header>
+                  <div class="sheet__body">
+                    <p style="margin: 0">
+                      A sheet holds a focused, secondary task beside the page (filters, details, a
+                      quick form) without a full navigation.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </dialog>
+              </dialog>
 
-            <dialog class="sheet sheet--left" id="sheet-left">
-              <div class="sheet__inner">
-                <header class="sheet__header">
-                  <h2 class="sheet__title">Navigation</h2>
-                  <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M18 6l-12 12" />
-                      <path d="M6 6l12 12" />
-                    </svg>
-                  </button>
-                </header>
-                <div class="sheet__body">
-                  <p style="margin: 0">
-                    Slides from the inline-start edge — handy for a menu drawer.
-                  </p>
+              <dialog class="sheet sheet--left" id="sheet-left">
+                <div class="sheet__inner">
+                  <header class="sheet__header">
+                    <h2 class="sheet__title">Navigation</h2>
+                    <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </header>
+                  <div class="sheet__body">
+                    <p style="margin: 0">
+                      Slides from the inline-start edge, handy for a menu drawer.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </dialog>
+              </dialog>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Sheet>
+                <SheetTrigger className="button button--secondary">Right</SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                    <SheetClose className="sheet__close" aria-label="Close"><IconX /></SheetClose>
+                  </SheetHeader>
+                  <SheetBody>
+                    <p>
+                      A sheet holds a focused, secondary task beside the page (filters, details, a
+                      quick form) without a full navigation.
+                    </p>
+                  </SheetBody>
+                </SheetContent>
+              </Sheet>
+
+              <Sheet>
+                <SheetTrigger className="button button--secondary">Left</SheetTrigger>
+                <SheetContent side="left">
+                  <SheetHeader>
+                    <SheetTitle>Navigation</SheetTitle>
+                    <SheetClose className="sheet__close" aria-label="Close"><IconX /></SheetClose>
+                  </SheetHeader>
+                  <SheetBody>
+                    <p>Slides from the inline-start edge, handy for a menu drawer.</p>
+                  </SheetBody>
+                </SheetContent>
+              </Sheet>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compound parts over native <code>&lt;dialog&gt;</code>. <code>side="left"</code> flips
+            the edge; the dialog owns the focus trap and dismissal.
+          </p>
+          <div data-source="/react/Sheet.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-dialog-open</span>=<span class="tok-str">"demo-sheet"</span><span class="tok-key">&gt;</span>Open<span class="tok-key">&lt;/button&gt;</span>
 
 <span class="tok-key">&lt;dialog</span> <span class="tok-prop">class</span>=<span class="tok-str">"sheet"</span> <span class="tok-prop">id</span>=<span class="tok-str">"demo-sheet"</span><span class="tok-key">&gt;</span>
@@ -122,6 +192,16 @@
 <span class="tok-key">&lt;/dialog&gt;</span>
 
 <span class="tok-com">&lt;!-- Variant: --left --&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">JavaScript</h3>
+          <p class="section-note">
+            From <code>app.js</code>. Shared with <a href="/demo/components/dialog/">Dialog</a>: one
+            delegated listener opens <code>[data-dialog-open]</code>, closes on the button,
+            backdrop, and Esc, and locks body scroll.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initDialogs"></div>
         </section>
       </div>
     </div>

@@ -1611,6 +1611,13 @@
     border-radius: var(--radius-md);
   }
 
+  /* Cap any single fixed-width demo (e.g. the 280px combobox/select) to the
+   stage so it shrinks to fit on narrow screens instead of overflowing and
+   reading as left-aligned. */
+  .component-preview > * {
+    max-width: 100%;
+  }
+
   .preview-card__chip {
     display: block;
     width: 100%;

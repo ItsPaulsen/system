@@ -750,6 +750,10 @@
     margin: 0;
     padding: 4px;
     overflow-y: auto;
+
+    /* Hide the scrollbar (still scrollable) — matches shadcn's clean dropdowns
+     and the code blocks' own hidden bar. */
+    scrollbar-width: none;
     list-style: none;
     background: var(--background-secondary);
 
@@ -766,6 +770,10 @@
     /* Open-only fade + rise, matching the Dropdown Menu popover. */
     opacity: 0;
     transform: translateY(-4px);
+  }
+
+  .select__list::-webkit-scrollbar {
+    display: none;
   }
 
   .select__list[hidden] {
@@ -2932,6 +2940,12 @@
     position: relative;
   }
 
+  /* The control is a shared .input__container (inline-flex, shrinks to content).
+   Stretch it to the combobox width so it lines up with the full-width dropdown. */
+  .combobox__control {
+    width: 100%;
+  }
+
   /* Options set display:flex, which beats the [hidden] UA rule — so the JS
    filter's option.hidden = true wouldn't actually hide the row without this. */
   .select__option[hidden] {
@@ -3216,7 +3230,7 @@
     background: transparent;
     color: var(--ink-primary);
     font: inherit;
-    font-size: var(--font-body-small-size);
+    font-size: var(--font-caption-medium-size);
     cursor: pointer;
   }
 
@@ -3248,6 +3262,7 @@
   .calendar__day.is-selected {
     background: var(--primary-foreground);
     color: var(--background-secondary);
+    font-weight: 500;
   }
 
   /* Calendar in a Popover = date picker. The popover is just the surface (shadow

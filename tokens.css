@@ -1,5 +1,0 @@
-/* Root landing tokens. The site root is its own "project"; per base.css it
-   loads /tokens.css. It reuses the reference system's tokens so the landing
-   stays a live demo of the system and never drifts from it. Give the landing
-   its own anchors here later if it should look distinct. */
-@import url("/demo/tokens.css");

@@ -1,11 +1,9 @@
-/* system.kristianpaulsen.com — the demo SITE's chrome (nav, sidebar, code
-   blocks, tabs, palette tables). Every visual token comes from the loaded
-   project's foundation file (/demo/globals.css, or /tokens.css at the root),
-   which also carries the consumer-facing baseline (reset, focus ring, colour-
-   scheme) — that baseline is duplicated here so pages loading only base.css
-   still get it. A project handoff is globals.css + a component's CSS, no chrome.
-   The chrome references the project tokens directly, so every page IS a live
-   demo of whichever project it belongs to.
+/* system.kristianpaulsen.com — the docs SITE's chrome only (nav, sidebar, code
+   blocks, tabs, palette tables). The consumer-facing baseline (reset, focus
+   ring, colour-scheme) and the tokens live in the project's globals.css, which
+   every page also loads (the root landing @imports it). A project handoff is
+   globals.css + a component's CSS — never this file. The chrome references the
+   project tokens directly, so every page IS a live demo of its project.
 
    Fonts are loaded via <link> tags in each page's <head> (with preconnect), not
    an @import here — @import would make the browser fetch this file first and
@@ -18,12 +16,9 @@
 @layer base, tokens, components;
 
 @layer base {
+  /* Chrome layout tokens. The consumer baseline — reset, colour-scheme,
+   --flip — lives in globals.css, loaded on every page. */
   :root {
-    color-scheme: light dark;
-
-    /* Direction sign for transforms that can't use logical properties (e.g. a
-     translateX knob slide): multiply the offset by --flip so RTL mirrors it. */
-    --flip: 1;
     --radius: 10px;
     --nav-h: 56px;
     --sidebar-w: 15rem;
@@ -31,18 +26,6 @@
     --measure: 65ch; /* reading line length in characters (the actual measure rule; ~45–75 ideal) */
     --font: "Geist", -apple-system, blinkmacsystemfont, "Helvetica Neue", arial, sans-serif;
     --mono: "Geist Mono", ui-monospace, sfmono-regular, "SF Mono", menlo, monospace;
-  }
-
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-  }
-
-  :root[data-theme="light"] {
-    color-scheme: light;
-  }
-
-  [dir="rtl"] {
-    --flip: -1;
   }
 
   /* Cross-document view transitions: a soft cross-fade between pages as you
@@ -56,18 +39,14 @@
     }
   }
 
-  /* The `*` reduced-motion guard above can't reach view-transition pseudos, so
-   silence the page-transition animation explicitly under reduced motion. */
+  /* The global reduced-motion guard (in globals.css) can't reach view-transition
+   pseudos, so silence the page-transition animation explicitly here. */
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-group(*),
     ::view-transition-old(*),
     ::view-transition-new(*) {
       animation: none !important;
     }
-  }
-
-  * {
-    box-sizing: border-box;
   }
 
   html {
@@ -92,57 +71,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Body scroll-lock while a modal (Dialog/Sheet) is open. padding-inline-end
-   reserves the removed scrollbar's width (JS sets --scrollbar-comp) so the page
-   never shifts — the scrollbar track stays, only its handle goes. */
-  html.is-scroll-locked {
-    overflow: hidden;
-    padding-inline-end: var(--scrollbar-comp, 0);
-  }
-
   /* Applied briefly during a theme swap so no element animates its colour change. */
   .no-transitions,
   .no-transitions *,
   .no-transitions *::before,
   .no-transitions *::after {
     transition: none !important;
-  }
-
-  /* MD3-style focus ring: every time an element gains a visible focus ring, the
-   ring converges from a wider offset down to its resting one. Each component
-   sets its own outline + resting offset (3px / 2px by convention); this only
-   animates the settle, so moving focus between elements feels like the ring
-   snaps in. */
-  @keyframes focus-ring-converge {
-    from {
-      outline-offset: 6px;
-    }
-  }
-
-  :focus-visible {
-    animation: focus-ring-converge var(--motion-default);
-  }
-
-  /* One global guard replaces every per-component reduced-motion override: near-
-   instant animations/transitions (0.01ms, not 0, so animationend still fires),
-   single iteration (kills infinite spinners), and instant anchor scrolling. */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
-  /* Shared keyboard focus ring at zero specificity, so every interactive element
-   gets it once and components override only what differs (offset, radius, or
-   outline:none). */
-  :where(a, button, summary, [tabindex], input, select, textarea, pre):focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
   }
 
   /* Accessibility: skip-to-content — hidden until keyboard-focused. */

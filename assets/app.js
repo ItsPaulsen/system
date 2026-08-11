@@ -2122,7 +2122,11 @@ function init() {
       const src = cssBtn.dataset.copyCss;
       const filter = cssBtn.dataset.copyTokens; // optional: comma-list of prefixes
       const section = cssBtn.dataset.copySection; // optional: a components.css section
-      const label = section ? "Copied CSS" : filter ? "Copied tokens" : "Copied all tokens";
+      const label = section
+        ? "Copied CSS"
+        : filter
+          ? "Copied variables"
+          : `Copied ${src.split("/").pop()}`;
       fetch(src)
         .then((r) => r.text())
         .then((text) => {

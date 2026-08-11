@@ -1,0 +1,5 @@
+/* Root landing foundation. The site root is its own "project"; it reuses the
+   reference system's globals (baseline + tokens) so the landing stays a live
+   demo and never drifts. Give the landing its own anchors here later if it
+   should look distinct. */
+@import url("/demo/globals.css");

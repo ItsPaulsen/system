@@ -1613,11 +1613,33 @@ function initMenus() {
 
     // The native popover owns show/hide; react to its toggle to sync the
     // trigger state and move focus in. (Fallback positioning is in initPopovers.)
+    // While open, match shadcn's scroll behaviour: lock the page on desktop
+    // (pointer stays over the menu), dismiss on scroll on touch.
+    const desktop = window.matchMedia("(hover: hover) and (pointer: fine)");
+    let onScroll = null;
+    const clearScroll = () => {
+      if (!onScroll) return;
+      window.removeEventListener("scroll", onScroll, true);
+      onScroll = null;
+    };
     let openEdge = "first";
     list.addEventListener("toggle", (e) => {
       const open = e.newState === "open";
       trigger.setAttribute("aria-expanded", String(open));
-      if (!open) return;
+      if (!open) {
+        unlockBodyScroll();
+        clearScroll();
+        return;
+      }
+      if (desktop.matches) {
+        lockBodyScroll();
+      } else {
+        // Ignore scrolls originating inside the menu itself (long lists).
+        onScroll = (ev) => {
+          if (!list.contains(ev.target)) list.hidePopover();
+        };
+        window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+      }
       focusItem(openEdge === "last" ? -1 : 0);
       openEdge = "first";
     });

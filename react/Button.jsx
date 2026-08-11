@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 
-// Composes the button classes — styling lives in components.css + tokens.css.
+// Composes the button classes; styling lives in components.css + globals.css.
 const SKINS = ["primary", "secondary", "flat", "destructive"];
 
 const Button = forwardRef(function Button(

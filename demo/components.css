@@ -625,7 +625,7 @@
     field-sizing: content;
   }
 
-  /* ── Select ────────────────────────────────────────────────────────────── */
+  /* ── Native Select ─────────────────────────────────────────────────────── */
 
   /* Native <select> in the input shell; the UA arrow is removed and our chevron
    is drawn with ::after, so no extra markup.
@@ -661,7 +661,7 @@
     pointer-events: none;
   }
 
-  /* Kill the browser autofill surface tint — keep our own (often transparent)
+  /* Kill the browser autofill surface tint, keep our own (often transparent)
    background. The absurd transition duration defers the UA's autofill
    background-color paint indefinitely; text-fill-color keeps our ink. */
   .input__element:-webkit-autofill,
@@ -673,7 +673,7 @@
 
   /* ── Select ────────────────────────────────────────────────────────────── */
 
-  /* Custom listbox — a styled trigger + a floating option list, for when the
+  /* Custom listbox: a styled trigger + a floating option list, for when the
    native picker's look isn't enough (custom option rendering, a checkmark on
    the selected row). Prefer Native Select when you don't need that. app.js
    (initSelects) wires open/close, selection, and keyboard nav.
@@ -711,7 +711,7 @@
     cursor: pointer;
   }
 
-  /* Filled skin — solid surface instead of the outline, mirroring
+  /* Filled skin: solid surface instead of the outline, mirroring
    .input__container--fill. :where() keeps this at the same low specificity the
    input fill has (0,1,0) so the focus/open border rule below always wins on open,
    just like :focus-within beats --fill on the input. */
@@ -721,7 +721,7 @@
   }
 
   /* Active border on keyboard focus and while open (focus moves to the list on
-   open, so key off aria-expanded to keep the border lit) — mirrors the input. */
+   open, so key off aria-expanded to keep the border lit); mirrors the input. */
   .select__trigger:focus-visible,
   .select__trigger[aria-expanded="true"] {
     outline: none;
@@ -751,8 +751,8 @@
     padding: 4px;
     overflow-y: auto;
 
-    /* Hide the scrollbar (still scrollable) — matches shadcn's clean dropdowns
-     and the code blocks' own hidden bar. */
+    /* Hide the scrollbar (still scrollable); matches the code blocks' own
+     hidden bar. */
     scrollbar-width: none;
     list-style: none;
     background: var(--background-secondary);
@@ -760,11 +760,11 @@
     /* Concentric with 8px options: surface = option radius + 4px padding. */
     border-radius: calc(var(--radius-sm) + 4px);
 
-    /* Matches Dropdown Menu — both are a trigger opening a floating list. */
+    /* Matches Dropdown Menu: both are a trigger opening a floating list. */
     box-shadow: var(--shadow-md), var(--surface-rim);
 
     /* The list takes programmatic focus for key handling, but the active option
-     (.is-active) is the visible indicator — so no ring on the surface itself. */
+     (.is-active) is the visible indicator, so no ring on the surface itself. */
     outline: none;
 
     /* Open-only fade + rise, matching the Dropdown Menu popover. */
@@ -818,7 +818,7 @@
     }
   }
 
-  /* Selected row is marked by the check mark + surface alone — no weight bump. */
+  /* Selected row is marked by the check mark + surface alone, no weight bump. */
 
   /* Tabler check on the selected row, tinted to match the row's text. */
   .select__option[aria-selected="true"]::after {

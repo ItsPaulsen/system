@@ -1962,15 +1962,15 @@
 
   /* ── Accordion ─────────────────────────────────────────────────────────── */
 
-  /* Native <details>/<summary> — no JS. Ruter's logic: a summary row with a
-   chevron that rotates on open, on an elevated surface.
+  /* Native <details>/<summary>, no JS. A summary row with a +/- toggle that
+   flips to a minus on open, on an elevated surface.
 
    Structure:
    <div class="accordion">
      <details class="accordion__item">
        <summary class="accordion__summary">
          Question
-         <svg class="accordion__chevron" …>…</svg>
+         <span class="accordion__toggle">…</span>
        </summary>
        <div class="accordion__body"><p>Answer.</p></div>
      </details>
@@ -2066,9 +2066,9 @@
     margin-bottom: 0;
   }
 
-  /* Animate open/close (Ruter's recipe): interpolate-size lets block-size go
-   to/from auto; ::details-content fades + expands. Progressive enhancement —
-   browsers without ::details-content just toggle instantly. */
+  /* Animate open/close: interpolate-size lets block-size go to/from auto;
+   ::details-content fades + expands. Progressive enhancement: browsers without
+   ::details-content just toggle instantly. */
   @media (prefers-reduced-motion: no-preference) {
     .accordion__item {
       interpolate-size: allow-keywords;

@@ -1649,7 +1649,7 @@
   /* ── Alert ─────────────────────────────────────────────────────────────── */
 
   /* Inline status message. The variant sets a soft surface + matching icon
-   colour; text stays ink for legibility. Title is optional — icon + text alone
+   colour; text stays ink for legibility. Title is optional: icon + text alone
    reads fine for a one-liner.
 
    Structure:

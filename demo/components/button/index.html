@@ -40,100 +40,155 @@
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Size</h3>
           <p class="section-note">Set <code>data-size</code> on any ancestor.</p>
-          <div class="component-preview">
-            <div data-size="sm">
-              <button type="button" class="button button--primary">Small</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div data-size="sm">
+                <button type="button" class="button button--primary">Small</button>
+              </div>
+              <div data-size="md">
+                <button type="button" class="button button--primary">Medium</button>
+              </div>
+              <div data-size="lg">
+                <button type="button" class="button button--primary">Large</button>
+              </div>
             </div>
-            <div data-size="md">
-              <button type="button" class="button button--primary">Medium</button>
-            </div>
-            <div data-size="lg">
-              <button type="button" class="button button--primary">Large</button>
-            </div>
+            <script type="text/plain" class="example__react">
+              <Button size="sm">Small</Button>
+              <Button size="md">Medium</Button>
+              <Button size="lg">Large</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Primary</h3>
-          <div class="component-preview">
-            <button type="button" class="button button--primary">Continue</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--primary">Continue</button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="primary">Continue</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Secondary</h3>
-          <div class="component-preview">
-            <button type="button" class="button button--secondary">Continue</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--secondary">Continue</button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="secondary">Continue</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Flat</h3>
-          <div class="component-preview">
-            <button type="button" class="button button--flat">Continue</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--flat">Continue</button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="flat">Continue</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Destructive</h3>
-          <div class="component-preview">
-            <button type="button" class="button button--destructive">Delete account</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--destructive">Delete account</button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="destructive">Delete account</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Icon-only</h3>
           <p class="section-note">Always pair with <code>aria-label</code>.</p>
-          <div class="component-preview">
-            <button type="button" class="button button--primary button--icon" aria-label="Open">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0" />
-                <path d="M17 7l0 9" />
-              </svg>
-            </button>
-            <button type="button" class="button button--secondary button--icon" aria-label="Open">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0" />
-                <path d="M17 7l0 9" />
-              </svg>
-            </button>
-            <button type="button" class="button button--flat button--icon" aria-label="Open">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0" />
-                <path d="M17 7l0 9" />
-              </svg>
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--primary button--icon" aria-label="Open">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M17 7l-10 10" />
+                  <path d="M8 7l9 0" />
+                  <path d="M17 7l0 9" />
+                </svg>
+              </button>
+              <button type="button" class="button button--secondary button--icon" aria-label="Open">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M17 7l-10 10" />
+                  <path d="M8 7l9 0" />
+                  <path d="M17 7l0 9" />
+                </svg>
+              </button>
+              <button type="button" class="button button--flat button--icon" aria-label="Open">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M17 7l-10 10" />
+                  <path d="M8 7l9 0" />
+                  <path d="M17 7l0 9" />
+                </svg>
+              </button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="primary" iconOnly aria-label="Open"><ArrowUpRightIcon /></Button>
+              <Button variant="secondary" iconOnly aria-label="Open"><ArrowUpRightIcon /></Button>
+              <Button variant="flat" iconOnly aria-label="Open"><ArrowUpRightIcon /></Button>
+            </script>
           </div>
         </section>
 
@@ -143,46 +198,58 @@
             Add <code>button--with-start-icon</code> or <code>button--with-end-icon</code> to
             tighten padding on the icon side.
           </p>
-          <div class="component-preview">
-            <button type="button" class="button button--secondary button--with-start-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 5l0 14" />
-                <path d="M5 12l14 0" />
-              </svg>
-              Add item
-            </button>
-            <button type="button" class="button button--secondary button--with-end-icon">
-              Open link
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0" />
-                <path d="M17 7l0 9" />
-              </svg>
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--secondary button--with-start-icon">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5l0 14" />
+                  <path d="M5 12l14 0" />
+                </svg>
+                Add item
+              </button>
+              <button type="button" class="button button--secondary button--with-end-icon">
+                Open link
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M17 7l-10 10" />
+                  <path d="M8 7l9 0" />
+                  <path d="M17 7l0 9" />
+                </svg>
+              </button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="secondary" startIcon={<PlusIcon />}>Add item</Button>
+              <Button variant="secondary" endIcon={<ArrowUpRightIcon />}>Open link</Button>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <button type="button" class="button button--primary" disabled>Continue</button>
-            <button type="button" class="button button--flat" disabled>Continue</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button type="button" class="button button--primary" disabled>Continue</button>
+              <button type="button" class="button button--flat" disabled>Continue</button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="primary" disabled>Continue</Button>
+              <Button variant="flat" disabled>Continue</Button>
+            </script>
           </div>
         </section>
 
@@ -194,44 +261,30 @@
             interaction with <code>aria-disabled="true"</code> + <code>aria-busy="true"</code> (not
             the <code>disabled</code> attribute, which would gray it out).
           </p>
-          <div class="component-preview">
-            <button
-              type="button"
-              class="button button--primary button--loading"
-              aria-disabled="true"
-              aria-busy="true"
-            >
-              <span class="button__label">Saving…</span>
-            </button>
-            <button
-              type="button"
-              class="button button--secondary button--loading"
-              aria-disabled="true"
-              aria-busy="true"
-            >
-              <span class="button__label">Saving…</span>
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button
+                type="button"
+                class="button button--primary button--loading"
+                aria-disabled="true"
+                aria-busy="true"
+              >
+                <span class="button__label">Saving…</span>
+              </button>
+              <button
+                type="button"
+                class="button button--secondary button--loading"
+                aria-disabled="true"
+                aria-busy="true"
+              >
+                <span class="button__label">Saving…</span>
+              </button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="primary" loading>Saving…</Button>
+              <Button variant="secondary" loading>Saving…</Button>
+            </script>
           </div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
-          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary"</span><span class="tok-key">&gt;</span>Continue<span class="tok-key">&lt;/button&gt;</span>
-
-<span class="tok-com">&lt;!-- Skins:   --primary --secondary --flat --destructive --&gt;</span>
-<span class="tok-com">&lt;!-- Layout:  --icon  --with-start-icon  --with-end-icon --&gt;</span>
-<span class="tok-com">&lt;!-- Density: data-size="sm|md|lg" on any ancestor --&gt;</span>
-
-<span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span>
-        <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary button--with-start-icon"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>Add item
-<span class="tok-key">&lt;/button&gt;</span>
-
-<span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span>
-        <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary button--icon"</span>
-        <span class="tok-prop">aria-label</span>=<span class="tok-str">"Open"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
-<span class="tok-key">&lt;/button&gt;</span></code></pre>
         </section>
 
         <section class="preview-block">
@@ -244,11 +297,10 @@
         </section>
 
         <section class="preview-block">
-          <h3 class="subhead">React</h3>
+          <h3 class="subhead">React — component</h3>
           <p class="section-note">
-            A typed <code>&lt;Button&gt;</code> that emits the same classes. Import
-            <code>components.css</code> + <code>tokens.css</code> once in your app; no other styling
-            needed.
+            The typed <code>&lt;Button&gt;</code> the snippets above use. Emits the same classes;
+            import <code>components.css</code> + <code>tokens.css</code> once in your app.
           </p>
           <div data-source="/react/Button.jsx"></div>
         </section>

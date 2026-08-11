@@ -248,7 +248,7 @@ const PROJECT_PAGES = {
         { label: "Badge", href: "/demo/components/badge/" },
         { label: "Breadcrumb", href: "/demo/components/breadcrumb/" },
         { label: "Button", href: "/demo/components/button/" },
-        { label: "Calendar", href: "/demo/components/calendar/", new: true },
+        { label: "Calendar", href: "/demo/components/calendar/" },
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
@@ -947,6 +947,24 @@ const HL_RULES = {
     ["tok-var", /--[\w-]+/y],
     ["tok-fn", /[A-Za-z-]+(?=\()/y],
     ["tok-prop", /[A-Za-z-]+(?=\s*:)/y]
+  ],
+  html: [
+    ["tok-com", /<!--[\s\S]*?-->/y],
+    ["tok-str", /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/y],
+    ["tok-key", /<\/?[a-zA-Z][\w-]*|\/?>/y],
+    ["tok-prop", /[a-zA-Z-]+(?==)/y]
+  ],
+  jsx: [
+    ["tok-com", /\/\/[^\n]*|\/\*[\s\S]*?\*\//y],
+    ["tok-str", /"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`/y],
+    [
+      "tok-key",
+      /\b(?:async|await|break|case|catch|class|const|continue|default|delete|do|else|export|extends|false|finally|for|from|function|if|import|in|instanceof|let|new|null|of|return|switch|this|throw|true|try|typeof|undefined|var|void|while|yield)\b/y
+    ],
+    ["tok-key", /<\/?[A-Za-z][\w.]*|\/?>/y],
+    ["tok-prop", /[A-Za-z-]+(?==)/y],
+    ["tok-var", /\b\d+(?:\.\d+)?\b/y],
+    ["tok-fn", /[A-Za-z_$][\w$]*(?=\s*\()/y]
   ]
 };
 
@@ -999,7 +1017,8 @@ async function hydrateSource() {
             ? extractFunction(text, holder.dataset.fn)
             : dedent(text); // whole file (e.g. a React component)
         if (!slice) return;
-        const lang = holder.dataset.source.endsWith(".css") ? "css" : "js";
+        const src = holder.dataset.source;
+        const lang = src.endsWith(".css") ? "css" : src.endsWith(".jsx") ? "jsx" : "js";
         const pre = document.createElement("pre");
         const code = document.createElement("code");
         code.innerHTML = highlight(slice, lang);
@@ -1011,6 +1030,58 @@ async function hydrateSource() {
     })
   );
   injectCodeCopy();
+}
+
+// Per-example code (shadcn-style): each [data-example] wraps a live preview and
+// a <script class="example__react"> holding its JSX. The HTML version is read
+// straight from the preview's own markup (no drift). A page-level
+// [data-code-tabs] toggles which language every example shows.
+function initExamples() {
+  const tablist = document.querySelector("[data-code-tabs]");
+  const examples = [...document.querySelectorAll("[data-example]")];
+  if (!tablist || !examples.length) return;
+
+  examples.forEach((ex) => {
+    const preview = ex.querySelector(".component-preview");
+    const reactEl = ex.querySelector(".example__react");
+    ex._code = {
+      html: preview ? dedent(preview.innerHTML).trim() : "",
+      react: reactEl ? dedent(reactEl.textContent).trim() : ""
+    };
+    reactEl?.remove();
+    const holder = document.createElement("div");
+    holder.className = "example__code";
+    ex.appendChild(holder);
+  });
+
+  const render = (lang) => {
+    examples.forEach((ex) => {
+      const holder = ex.querySelector(".example__code");
+      holder.textContent = "";
+      const code = ex._code[lang];
+      if (!code) {
+        holder.hidden = true;
+        return;
+      }
+      holder.hidden = false;
+      const pre = document.createElement("pre");
+      const codeEl = document.createElement("code");
+      codeEl.innerHTML = highlight(code, lang === "html" ? "html" : "jsx");
+      pre.appendChild(codeEl);
+      holder.appendChild(pre);
+    });
+    injectCodeCopy();
+  };
+
+  const tabs = [...tablist.querySelectorAll("[data-code-lang]")];
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+      render(tab.dataset.codeLang);
+    });
+  });
+  const active = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
+  render(active.dataset.codeLang);
 }
 
 function injectCodeCopy() {
@@ -1946,6 +2017,7 @@ function init() {
   injectPagination();
   injectCodeCopy();
   hydrateSource();
+  initExamples();
   hydrateProjectLinks();
   hydrateLinkListArrows();
   renderPalette();

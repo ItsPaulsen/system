@@ -3087,7 +3087,7 @@
    </div> */
   .calendar {
     width: max-content;
-    padding: var(--space-16);
+    padding: var(--space-8);
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
     border-radius: var(--radius-md);

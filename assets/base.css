@@ -604,7 +604,8 @@
   /* Divider only when the page has a subhead below. Pages without subheads
    (e.g. Typography) go straight from lede into content — no floating rule. */
   body:has(.subhead) .site-head {
-    padding-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
     border-bottom: var(--border-width) solid var(--fill-tertiary);
   }
 
@@ -1272,6 +1273,12 @@
     margin-bottom: 1rem;
   }
 
+  /* Code-tab row sits directly under the intro, so it needs more breathing room
+   down to the first example than the inline grid tabs do. */
+  .docs-tabs[data-code-tabs] {
+    margin-bottom: 2rem;
+  }
+
   .docs-tabs__tab {
     position: relative;
     padding: 0.375rem 0;
@@ -1616,6 +1623,31 @@
    reading as left-aligned. */
   .component-preview > * {
     max-width: 100%;
+  }
+
+  /* shadcn-style example card: the live preview on top, its code panel below,
+   both inside one border. Language switches via the page's HTML/React tabs. */
+  .example {
+    overflow: hidden;
+    border: var(--border-width) solid var(--fill-tertiary);
+    border-radius: var(--radius-md);
+  }
+
+  .example .component-preview {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .example__code {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .example__code .code-block {
+    margin: 0;
+  }
+
+  .example .example__code pre {
+    border-radius: 0;
   }
 
   .preview-card__chip {

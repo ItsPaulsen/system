@@ -29,38 +29,80 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Tabs</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Tabs"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">Layered sections of content; only one visible at a time.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            Radios share a <code>name</code> — that's what makes them mutually exclusive. No JS.
+            Radios share a <code>name</code>, which makes them mutually exclusive. No JS.
           </p>
-          <div class="component-preview">
-            <div class="tabs" role="tablist">
-              <input
-                type="radio"
-                name="tabs-default"
-                id="tab-default-1"
-                class="tabs__radio"
-                checked
-              />
-              <label class="tabs__tab" for="tab-default-1"
-                ><span class="tabs__label">Overview</span></label
-              >
-              <input type="radio" name="tabs-default" id="tab-default-2" class="tabs__radio" />
-              <label class="tabs__tab" for="tab-default-2"
-                ><span class="tabs__label">Details</span></label
-              >
-              <input type="radio" name="tabs-default" id="tab-default-3" class="tabs__radio" />
-              <label class="tabs__tab" for="tab-default-3"
-                ><span class="tabs__label">Settings</span></label
-              >
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="tabs" role="tablist">
+                <input
+                  type="radio"
+                  name="tabs-default"
+                  id="tab-default-1"
+                  class="tabs__radio"
+                  checked
+                />
+                <label class="tabs__tab" for="tab-default-1"
+                  ><span class="tabs__label">Overview</span></label
+                >
+                <input type="radio" name="tabs-default" id="tab-default-2" class="tabs__radio" />
+                <label class="tabs__tab" for="tab-default-2"
+                  ><span class="tabs__label">Details</span></label
+                >
+                <input type="radio" name="tabs-default" id="tab-default-3" class="tabs__radio" />
+                <label class="tabs__tab" for="tab-default-3"
+                  ><span class="tabs__label">Settings</span></label
+                >
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Tabs
+                name="view"
+                defaultValue="overview"
+                items={[
+                  { value: "overview", label: "Overview" },
+                  { value: "details", label: "Details" },
+                  { value: "settings", label: "Settings" }
+                ]}
+              />
+            </script>
           </div>
         </section>
 
@@ -70,63 +112,99 @@
             Put an icon before <code>tabs__label</code>. <code>tabs--pill</code> fully rounds the
             track.
           </p>
-          <div class="component-preview">
-            <div class="tabs tabs--pill" role="tablist" style="width: 260px">
-              <input type="radio" name="tabs-icon" id="tab-icon-1" class="tabs__radio" checked />
-              <label class="tabs__tab" for="tab-icon-1">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                  <path
-                    d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
-                  />
-                </svg>
-                <span class="tabs__label">Light</span>
-              </label>
-              <input type="radio" name="tabs-icon" id="tab-icon-2" class="tabs__radio" />
-              <label class="tabs__tab" for="tab-icon-2">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
-                  />
-                </svg>
-                <span class="tabs__label">Dark</span>
-              </label>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="tabs tabs--pill" role="tablist" style="width: 260px">
+                <input type="radio" name="tabs-icon" id="tab-icon-1" class="tabs__radio" checked />
+                <label class="tabs__tab" for="tab-icon-1">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                    <path
+                      d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+                    />
+                  </svg>
+                  <span class="tabs__label">Light</span>
+                </label>
+                <input type="radio" name="tabs-icon" id="tab-icon-2" class="tabs__radio" />
+                <label class="tabs__tab" for="tab-icon-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+                    />
+                  </svg>
+                  <span class="tabs__label">Dark</span>
+                </label>
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Tabs
+                pill
+                name="theme"
+                defaultValue="light"
+                items={[
+                  { value: "light", label: "Light", icon: <IconSun /> },
+                  { value: "dark", label: "Dark", icon: <IconMoon /> }
+                ]}
+              />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <div class="tabs" role="tablist" style="width: 200px">
-              <input type="radio" name="tabs-two" id="tab-two-1" class="tabs__radio" checked />
-              <label class="tabs__tab" for="tab-two-1"><span class="tabs__label">Home</span></label>
-              <input type="radio" name="tabs-two" id="tab-two-2" class="tabs__radio" disabled />
-              <label class="tabs__tab" for="tab-two-2"
-                ><span class="tabs__label">Disabled</span></label
-              >
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="tabs" role="tablist" style="width: 200px">
+                <input type="radio" name="tabs-two" id="tab-two-1" class="tabs__radio" checked />
+                <label class="tabs__tab" for="tab-two-1"
+                  ><span class="tabs__label">Home</span></label
+                >
+                <input type="radio" name="tabs-two" id="tab-two-2" class="tabs__radio" disabled />
+                <label class="tabs__tab" for="tab-two-2"
+                  ><span class="tabs__label">Disabled</span></label
+                >
+              </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Tabs
+                name="section"
+                defaultValue="home"
+                items={[
+                  { value: "home", label: "Home" },
+                  { value: "disabled", label: "Disabled", disabled: true }
+                ]}
+              />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>items</code> drive the tabs; <code>pill</code> rounds the track. Uncontrolled via
+            <code>defaultValue</code>, or pass <code>value</code> + <code>onChange</code>.
+          </p>
+          <div data-source="/react/Tabs.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
   <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t1"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>

@@ -285,7 +285,7 @@
 
   /* ── Tabs ──────────────────────────────────────────────────────────────── */
 
-  /* Segmented control — track is a fill tint over whatever surface the tabs
+  /* Segmented control: track is a fill tint over whatever surface the tabs
    sit on. Active pill uses --background-secondary so it matches the elevated
    surface (white in light, lighter-dark in dark), giving the "punched through"
    effect. Uses native radio inputs so no JavaScript is needed for mutual
@@ -295,7 +295,7 @@
    to read correctly.
 
    Each radio sits just before its label so state flows through the adjacent
-   sibling (.tabs__radio:checked + .tabs__tab) — cheaper and more compatible
+   sibling (.tabs__radio:checked + .tabs__tab), cheaper and more compatible
    than :has(). The radios are visually hidden and out of flow, so the flex
    track lays out only the labels.
 
@@ -314,7 +314,7 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Pill variant — fully rounded track (the tabs match, below). */
+  /* Pill variant: fully rounded track (the tabs match, below). */
   .tabs--pill {
     border-radius: var(--radius-full);
   }
@@ -371,7 +371,7 @@
     flex: none;
   }
 
-  /* Selected — radio-driven (default) or state-driven via aria-selected, so a
+  /* Selected: radio-driven (default) or state-driven via aria-selected, so a
    tab set can also reflect external state (e.g. the current theme) without a
    form control. */
   .tabs__radio:checked + .tabs__tab,

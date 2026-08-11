@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
     />
     <link rel="stylesheet" href="/assets/base.css" />
-    <link rel="stylesheet" href="/demo/tokens.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
     <script>
       (function () {
         var t = localStorage.getItem("theme");
@@ -28,8 +28,8 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Demo project</h1>
-            <button class="btn" type="button" data-copy-css="/demo/tokens.css">
-              Copy All Tokens
+            <button class="btn" type="button" data-copy-css="/demo/globals.css">
+              Copy globals.css
             </button>
           </div>
           <p class="lede">
@@ -55,10 +55,10 @@
         <section class="preview-block">
           <h3 class="subhead">How to use</h3>
           <p class="section-note">
-            Everything ships in one <code>tokens.css</code>. Import it, reference with
-            <code>var(--…)</code>.
+            Drop in one <code>globals.css</code> (reset, focus ring, and all tokens), then reference
+            with <code>var(--…)</code>. Add a component's CSS as you need it.
           </p>
-          <pre><code><span class="tok-key">@import</span> <span class="tok-fn">url</span>(<span class="tok-str">"tokens.css"</span>);
+          <pre><code><span class="tok-key">@import</span> <span class="tok-fn">url</span>(<span class="tok-str">"globals.css"</span>);
 
 <span class="tok-selector">.card</span> {
   <span class="tok-prop">background</span>: <span class="tok-fn">var</span>(<span class="tok-var">--background-primary</span>);

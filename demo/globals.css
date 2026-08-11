@@ -6,6 +6,74 @@
 
 @layer base, tokens, components;
 
+/* ── Foundation. The baseline a project needs alongside the tokens: reset,
+   colour-scheme (dark mode), the focus ring, the reduced-motion guard, and the
+   modal scroll-lock hook. Drop this file + a component's CSS into any project.
+   (Also present in base.css, which the demo site loads for its own chrome.) */
+@layer base {
+  :root {
+    color-scheme: light dark;
+
+    /* Direction sign for transforms that can't use logical properties, so RTL
+     mirrors them: multiply the offset by --flip. */
+    --flip: 1;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  [dir="rtl"] {
+    --flip: -1;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Body scroll-lock while a modal (Dialog/Sheet) is open. --scrollbar-comp
+   (set in JS) reserves the removed scrollbar's width so the page never shifts. */
+  html.is-scroll-locked {
+    overflow: hidden;
+    padding-inline-end: var(--scrollbar-comp, 0);
+  }
+
+  /* MD3-style focus ring: converges from a wider offset to its resting one. */
+  @keyframes focus-ring-converge {
+    from {
+      outline-offset: 6px;
+    }
+  }
+
+  :focus-visible {
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  /* One global reduced-motion guard: near-instant (0.01ms so animationend still
+   fires), single iteration, instant anchor scrolling. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Shared keyboard focus ring at zero specificity; components override only
+   what differs (offset, radius, or outline:none). */
+  :where(a, button, summary, [tabindex], input, select, textarea, pre):focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
 @layer tokens {
   :root {
     /* ── Anchors ─────────────────────────────────────────────────────────

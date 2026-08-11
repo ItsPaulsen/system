@@ -1,7 +1,11 @@
-/* system.kristianpaulsen.com — shared chrome mechanics only. Every visual
-   token comes from the loaded project's tokens.css (e.g. /demo/tokens.css or
-   /tokens.css at the root). The chrome references those tokens directly, so
-   every page IS a live demo of whichever project it belongs to.
+/* system.kristianpaulsen.com — the demo SITE's chrome (nav, sidebar, code
+   blocks, tabs, palette tables). Every visual token comes from the loaded
+   project's foundation file (/demo/globals.css, or /tokens.css at the root),
+   which also carries the consumer-facing baseline (reset, focus ring, colour-
+   scheme) — that baseline is duplicated here so pages loading only base.css
+   still get it. A project handoff is globals.css + a component's CSS, no chrome.
+   The chrome references the project tokens directly, so every page IS a live
+   demo of whichever project it belongs to.
 
    Fonts are loaded via <link> tags in each page's <head> (with preconnect), not
    an @import here — @import would make the browser fetch this file first and

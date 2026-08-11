@@ -3145,12 +3145,12 @@
 
   /* Surface stays pointer-driven (hover only). Native selects match
    :focus-visible on click too, so a ring would flash on open and a focus fill
-   would linger after the dropdown closes — so focus carries neither here. */
+   would linger after the dropdown closes, so focus carries neither here. */
   .calendar__select select:focus-visible {
     outline: none;
   }
 
-  /* Chevron — ink-secondary; dims further when disabled. */
+  /* Chevron: ink-secondary; dims further when disabled. */
   .calendar__select::after {
     content: "";
     position: absolute;

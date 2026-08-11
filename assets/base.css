@@ -1767,7 +1767,7 @@
     transform: rotate(-90deg);
   }
 
-  /* Toast — light surface (like Alert/cards) so semantic type icons read. */
+  /* Toast: light surface (like Alert/cards) so semantic type icons read. */
   .toast {
     position: fixed;
     left: 50%;

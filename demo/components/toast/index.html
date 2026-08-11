@@ -34,59 +34,111 @@
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Types</h3>
           <p class="section-note">
-            A default message, the semantic types, and a promise that resolves loading → done.
+            A default message, the semantic types, and a promise that resolves loading to done.
           </p>
-          <div class="component-preview" style="flex-wrap: wrap; gap: 0.5rem">
-            <button class="button button--secondary" type="button" data-toast="Changes saved">
-              Default
-            </button>
-            <button
-              class="button button--secondary"
-              type="button"
-              data-toast="Changes saved"
-              data-toast-type="success"
-            >
-              Success
-            </button>
-            <button
-              class="button button--secondary"
-              type="button"
-              data-toast="Heads up"
-              data-toast-type="info"
-            >
-              Info
-            </button>
-            <button
-              class="button button--secondary"
-              type="button"
-              data-toast="Double-check your input"
-              data-toast-type="warning"
-            >
-              Warning
-            </button>
-            <button
-              class="button button--secondary"
-              type="button"
-              data-toast="Couldn't save"
-              data-toast-type="error"
-            >
-              Error
-            </button>
-            <button class="button button--secondary" type="button" data-toast-promise>
-              Promise
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview" style="flex-wrap: wrap; gap: 0.5rem">
+              <button class="button button--secondary" type="button" data-toast="Changes saved">
+                Default
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-toast="Changes saved"
+                data-toast-type="success"
+              >
+                Success
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-toast="Heads up"
+                data-toast-type="info"
+              >
+                Info
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-toast="Double-check your input"
+                data-toast-type="warning"
+              >
+                Warning
+              </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-toast="Couldn't save"
+                data-toast-type="error"
+              >
+                Error
+              </button>
+              <button class="button button--secondary" type="button" data-toast-promise>
+                Promise
+              </button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="secondary" onClick={() => toast("Changes saved")}>Default</Button>
+              <Button variant="secondary" onClick={() => toast.success("Changes saved")}>Success</Button>
+              <Button variant="secondary" onClick={() => toast.info("Heads up")}>Info</Button>
+              <Button variant="secondary" onClick={() => toast.warning("Double-check your input")}>Warning</Button>
+              <Button variant="secondary" onClick={() => toast.error("Couldn't save")}>Error</Button>
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  toast.promise(save(), {
+                    loading: "Saving…",
+                    success: "Saved",
+                    error: "Couldn't save"
+                  })
+                }
+              >
+                Promise
+              </Button>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Mount <code>&lt;Toaster /&gt;</code> once near the root, then call
+            <code>toast()</code> (or
+            <code>toast.success</code>/<code>error</code>/<code>promise</code>) from anywhere.
+          </p>
+          <div data-source="/react/Toaster.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
           <h3 class="subhead">Usage</h3>
           <p class="section-note">
             The shell exposes it via a <code>data-toast</code> trigger; in your own code call the
-            toast helper with a message.
+            <code>toast</code> helper with a message.
           </p>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-toast</span>=<span class="tok-str">"Changes saved"</span><span class="tok-key">&gt;</span>Show toast<span class="tok-key">&lt;/button&gt;</span>
 

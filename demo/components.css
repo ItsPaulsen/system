@@ -1329,7 +1329,7 @@
 
   /* ── Card ──────────────────────────────────────────────────────────────── */
 
-  /* Surface container. Render as `<div>`, `<a>`, or `<button>` — the anchor
+  /* Surface container. Render as `<div>`, `<a>`, or `<button>`: the anchor
    and button variants get hover/active/focus states automatically.
 
    Structure:
@@ -1360,7 +1360,7 @@
     background: var(--background-primary);
   }
 
-  /* Interactive — `<a>` and `<button>` get pointer + hover/active/focus.
+  /* Interactive: `<a>` and `<button>` get pointer + hover/active/focus.
    Disabled and focus-visible declared first so lower-specificity hover/active
    rules can follow without tripping stylelint's descending-specificity check. */
 

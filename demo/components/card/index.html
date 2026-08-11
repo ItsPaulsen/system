@@ -40,7 +40,7 @@
         width: 380px;
       }
 
-      /* Action row — composition, not a card modifier. Icon + label + chevron
+      /* Action row: composition, not a card modifier. Icon + label + chevron
          inside card__content for a "go somewhere" row. */
       .action-row {
         display: flex;
@@ -80,6 +80,14 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Card</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Card"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">
             An interactive surface, always paired with an icon, illustration, or image.
@@ -87,31 +95,75 @@
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
-          <div class="component-preview">
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <img class="card__image" src="https://picsum.photos/seed/card-a/560/315" alt="" />
-              <div class="card__content">
-                <h2 class="card__title">Vertical media</h2>
-                <p>Rounded to the card's top corners.</p>
-              </div>
-            </a>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <img class="card__image" src="https://picsum.photos/seed/card-a/560/315" alt="" />
+                <div class="card__content">
+                  <h2 class="card__title">Vertical media</h2>
+                  <p>Rounded to the card's top corners.</p>
+                </div>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Card href="/media">
+                <CardImage src="/media.jpg" />
+                <CardContent>
+                  <CardTitle>Vertical media</CardTitle>
+                  <p>Rounded to the card's top corners.</p>
+                </CardContent>
+              </Card>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">With button</h3>
-          <div class="component-preview">
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <img class="card__image" src="https://picsum.photos/seed/card-c/560/315" alt="" />
-              <div class="card__content">
-                <h2 class="card__title">Featured piece</h2>
-                <p>Body text sets up the action that follows.</p>
-                <span class="button button--secondary">Learn more</span>
-              </div>
-            </a>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <img class="card__image" src="https://picsum.photos/seed/card-c/560/315" alt="" />
+                <div class="card__content">
+                  <h2 class="card__title">Featured piece</h2>
+                  <p>Body text sets up the action that follows.</p>
+                  <span class="button button--secondary">Learn more</span>
+                </div>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Card href="/featured">
+                <CardImage src="/featured.jpg" />
+                <CardContent>
+                  <CardTitle>Featured piece</CardTitle>
+                  <p>Body text sets up the action that follows.</p>
+                  <span className="button button--secondary">Learn more</span>
+                </CardContent>
+              </Card>
+            </script>
           </div>
         </section>
 
@@ -120,32 +172,68 @@
           <p class="section-note">
             <code>card__illustration</code> pads artwork. Centered, up to 11rem wide.
           </p>
-          <div class="component-preview">
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <div class="card__illustration">
-                <img src="/assets/illustrations/wfh.svg" alt="" />
-              </div>
-              <div class="card__content">
-                <h2 class="card__title">Working from home</h2>
-                <p>Pair the card with a scene illustration.</p>
-              </div>
-            </a>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <div class="card__illustration">
+                  <img src="/assets/illustrations/wfh.svg" alt="" />
+                </div>
+                <div class="card__content">
+                  <h2 class="card__title">Working from home</h2>
+                  <p>Pair the card with a scene illustration.</p>
+                </div>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Card href="/wfh">
+                <CardIllustration>
+                  <img src="/illustrations/wfh.svg" alt="" />
+                </CardIllustration>
+                <CardContent>
+                  <CardTitle>Working from home</CardTitle>
+                  <p>Pair the card with a scene illustration.</p>
+                </CardContent>
+              </Card>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Action row</h3>
           <p class="section-note">
-            Composition, not a modifier — icon + label + chevron inside <code>card__content</code>.
+            Composition, not a modifier: icon + label + chevron inside <code>card__content</code>.
           </p>
-          <div class="component-preview">
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <div class="card__content action-row">
-                <span
-                  class="action-row__icon"
-                  style="background: var(--green-soft); color: var(--green)"
-                >
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <div class="card__content action-row">
+                  <span
+                    class="action-row__icon"
+                    style="background: var(--green-soft); color: var(--green)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2z"
+                      />
+                      <path
+                        d="M18 6a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2z"
+                      />
+                      <path
+                        d="M9 18a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z"
+                      />
+                    </svg>
+                  </span>
+                  <span class="action-row__label">Getting started</span>
                   <svg
+                    class="action-row__chevron"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -154,34 +242,38 @@
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M16 18a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2z" />
-                    <path d="M18 6a2 2 0 0 1 2 2a2 2 0 0 1 2 -2a2 2 0 0 1 -2 -2a2 2 0 0 1 -2 2z" />
-                    <path d="M9 18a6 6 0 0 1 6 -6a6 6 0 0 1 -6 -6a6 6 0 0 1 -6 6a6 6 0 0 1 6 6z" />
+                    <path d="M9 6l6 6l-6 6" />
                   </svg>
-                </span>
-                <span class="action-row__label">Getting started</span>
-                <svg
-                  class="action-row__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M9 6l6 6l-6 6" />
-                </svg>
-              </div>
-            </a>
+                </div>
+              </a>
 
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <div class="card__content action-row">
-                <span
-                  class="action-row__icon"
-                  style="background: var(--blue-soft); color: var(--blue)"
-                >
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <div class="card__content action-row">
+                  <span
+                    class="action-row__icon"
+                    style="background: var(--blue-soft); color: var(--blue)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                      <path
+                        d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"
+                      />
+                      <path d="M9 9l1 0" />
+                      <path d="M9 13l6 0" />
+                      <path d="M9 17l6 0" />
+                    </svg>
+                  </span>
+                  <span class="action-row__label">Documentation</span>
                   <svg
+                    class="action-row__chevron"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -190,38 +282,35 @@
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                    <path
-                      d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"
-                    />
-                    <path d="M9 9l1 0" />
-                    <path d="M9 13l6 0" />
-                    <path d="M9 17l6 0" />
+                    <path d="M9 6l6 6l-6 6" />
                   </svg>
-                </span>
-                <span class="action-row__label">Documentation</span>
-                <svg
-                  class="action-row__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M9 6l6 6l-6 6" />
-                </svg>
-              </div>
-            </a>
+                </div>
+              </a>
 
-            <a class="card" href="#" onclick="event.preventDefault()">
-              <div class="card__content action-row">
-                <span
-                  class="action-row__icon"
-                  style="background: var(--fuchsia-soft); color: var(--fuchsia)"
-                >
+              <a class="card" href="#" onclick="event.preventDefault()">
+                <div class="card__content action-row">
+                  <span
+                    class="action-row__icon"
+                    style="background: var(--fuchsia-soft); color: var(--fuchsia)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                      <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                    </svg>
+                  </span>
+                  <span class="action-row__label">Community</span>
                   <svg
+                    class="action-row__chevron"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -230,41 +319,82 @@
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                    <path d="M9 6l6 6l-6 6" />
                   </svg>
-                </span>
-                <span class="action-row__label">Community</span>
-                <svg
-                  class="action-row__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M9 6l6 6l-6 6" />
-                </svg>
-              </div>
-            </a>
+                </div>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Card href="/getting-started">
+                <CardContent className="action-row">
+                  <span
+                    className="action-row__icon"
+                    style={{ background: "var(--green-soft)", color: "var(--green)" }}
+                  >
+                    <IconAffiliate />
+                  </span>
+                  <span className="action-row__label">Getting started</span>
+                  <IconChevronRight className="action-row__chevron" />
+                </CardContent>
+              </Card>
+
+              <Card href="/documentation">
+                <CardContent className="action-row">
+                  <span
+                    className="action-row__icon"
+                    style={{ background: "var(--blue-soft)", color: "var(--blue)" }}
+                  >
+                    <IconFileText />
+                  </span>
+                  <span className="action-row__label">Documentation</span>
+                  <IconChevronRight className="action-row__chevron" />
+                </CardContent>
+              </Card>
+
+              <Card href="/community">
+                <CardContent className="action-row">
+                  <span
+                    className="action-row__icon"
+                    style={{ background: "var(--fuchsia-soft)", color: "var(--fuchsia)" }}
+                  >
+                    <IconUsers />
+                  </span>
+                  <span className="action-row__label">Community</span>
+                  <IconChevronRight className="action-row__chevron" />
+                </CardContent>
+              </Card>
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Alternate skin</h3>
           <p class="section-note">Recessed surface, for cards sitting on an elevated one.</p>
-          <div class="component-preview component-preview--elevated">
-            <a class="card card--alternate" href="#" onclick="event.preventDefault()">
-              <div class="card__content action-row">
-                <span
-                  class="action-row__icon"
-                  style="background: var(--blue-soft); color: var(--blue)"
-                >
+          <div class="example" data-example>
+            <div class="component-preview component-preview--elevated">
+              <a class="card card--alternate" href="#" onclick="event.preventDefault()">
+                <div class="card__content action-row">
+                  <span
+                    class="action-row__icon"
+                    style="background: var(--blue-soft); color: var(--blue)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                      <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    </svg>
+                  </span>
+                  <span class="action-row__label">Home</span>
                   <svg
+                    class="action-row__chevron"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -273,31 +403,39 @@
                     stroke-linejoin="round"
                     aria-hidden="true"
                   >
-                    <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                    <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                    <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                    <path d="M9 6l6 6l-6 6" />
                   </svg>
-                </span>
-                <span class="action-row__label">Home</span>
-                <svg
-                  class="action-row__chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M9 6l6 6l-6 6" />
-                </svg>
-              </div>
-            </a>
+                </div>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Card href="/home" className="card--alternate">
+                <CardContent className="action-row">
+                  <span
+                    className="action-row__icon"
+                    style={{ background: "var(--blue-soft)", color: "var(--blue)" }}
+                  >
+                    <IconHome />
+                  </span>
+                  <span className="action-row__label">Home</span>
+                  <IconChevronRight className="action-row__chevron" />
+                </CardContent>
+              </Card>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Slots as compound parts; the action row is plain composition inside
+            <code>CardContent</code>.
+          </p>
+          <div data-source="/react/Card.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-com">&lt;!-- Always &lt;a&gt; (navigates) or &lt;button&gt; (triggers action). --&gt;</span>
 <span class="tok-com">&lt;!-- Always pair with an image, illustration, or icon. --&gt;</span>
 

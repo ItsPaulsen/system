@@ -29,10 +29,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Empty</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Empty"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A placeholder for when there's nothing to show.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -41,29 +70,10 @@
             Shown on first run. An icon, a short message, and a primary
             <a href="/demo/components/button/">Button</a> to get started.
           </p>
-          <div class="component-preview">
-            <div class="empty">
-              <span class="empty__icon" aria-hidden="true">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"
-                  />
-                  <path d="M4 13h3l3 3h4l3 -3h3" />
-                </svg>
-              </span>
-              <h3 class="empty__title">No items yet</h3>
-              <p class="empty__text">
-                Everything you add will show up here. Start with your first one.
-              </p>
-              <div class="empty__actions">
-                <button type="button" class="button button--primary button--with-start-icon">
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="empty">
+                <span class="empty__icon" aria-hidden="true">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -71,15 +81,46 @@
                     stroke-width="2"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    aria-hidden="true"
                   >
-                    <path d="M12 5l0 14" />
-                    <path d="M5 12l14 0" />
+                    <path
+                      d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"
+                    />
+                    <path d="M4 13h3l3 3h4l3 -3h3" />
                   </svg>
-                  New item
-                </button>
+                </span>
+                <h3 class="empty__title">No items yet</h3>
+                <p class="empty__text">
+                  Everything you add will show up here. Start with your first one.
+                </p>
+                <div class="empty__actions">
+                  <button type="button" class="button button--primary button--with-start-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                    New item
+                  </button>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Empty>
+                <EmptyIcon><IconInbox /></EmptyIcon>
+                <EmptyTitle>No items yet</EmptyTitle>
+                <EmptyText>Everything you add will show up here. Start with your first one.</EmptyText>
+                <EmptyActions>
+                  <Button variant="primary" startIcon={<IconPlus />}>New item</Button>
+                </EmptyActions>
+              </Empty>
+            </script>
           </div>
         </section>
 
@@ -90,34 +131,57 @@
             <a href="/demo/components/combobox/">Combobox</a>. A secondary
             <a href="/demo/components/button/">Button</a> clears the query.
           </p>
-          <div class="component-preview">
-            <div class="empty">
-              <span class="empty__icon" aria-hidden="true">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M5.039 5.062a7 7 0 0 0 9.91 9.89m1.584 -2.434a7 7 0 0 0 -9.038 -9.057" />
-                  <path d="M3 3l18 18" />
-                </svg>
-              </span>
-              <h3 class="empty__title">No results</h3>
-              <p class="empty__text">
-                No matches for your search. Try a different term or clear the filters.
-              </p>
-              <div class="empty__actions">
-                <button type="button" class="button button--secondary">Clear filters</button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="empty">
+                <span class="empty__icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M5.039 5.062a7 7 0 0 0 9.91 9.89m1.584 -2.434a7 7 0 0 0 -9.038 -9.057"
+                    />
+                    <path d="M3 3l18 18" />
+                  </svg>
+                </span>
+                <h3 class="empty__title">No results</h3>
+                <p class="empty__text">
+                  No matches for your search. Try a different term or clear the filters.
+                </p>
+                <div class="empty__actions">
+                  <button type="button" class="button button--secondary">Clear filters</button>
+                </div>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Empty>
+                <EmptyIcon><IconCircleOff /></EmptyIcon>
+                <EmptyTitle>No results</EmptyTitle>
+                <EmptyText>No matches for your search. Try a different term or clear the filters.</EmptyText>
+                <EmptyActions>
+                  <Button variant="secondary">Clear filters</Button>
+                </EmptyActions>
+              </Empty>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Compose the parts: <code>EmptyIcon</code>, <code>EmptyTitle</code>,
+            <code>EmptyText</code>, and an <code>EmptyActions</code> row of buttons.
+          </p>
+          <div data-source="/react/Empty.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__icon"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;h3</span> <span class="tok-prop">class</span>=<span class="tok-str">"empty__title"</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/h3&gt;</span>

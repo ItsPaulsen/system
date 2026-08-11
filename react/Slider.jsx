@@ -1,9 +1,6 @@
 import { useState } from "react";
 
-// Mirrors the vanilla Slider: a native range input whose fill width tracks the
-// value via the --slider-fill custom property. Uncontrolled by default; pass
-// `value` + `onChange` to control it. Styling is the .slider / .slider-field
-// classes from components.css.
+// Native range input; fill width tracks the value via --slider-fill. Uncontrolled unless you pass value + onChange.
 export default function Slider({
   label,
   value: controlled,

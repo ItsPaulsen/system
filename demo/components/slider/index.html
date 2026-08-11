@@ -29,81 +29,135 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Slider</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Slider"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">Pick a value from a range by dragging.</p>
         </div>
       </header>
 
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
       <div class="preview-grid">
         <section class="preview-block">
           <h3 class="subhead">Default</h3>
           <p class="section-note">
-            A native <code>&lt;input type="range"&gt;</code>. Keyboard (arrows, Home, End), steps,
-            and min/max are all built in. The <code>slider-field</code> wrapper adds a label and a
-            live value.
+            A native <code>&lt;input type="range"&gt;</code>. Keyboard, steps, and min/max come
+            built in. The <code>slider-field</code> wrapper adds the label and live value.
           </p>
-          <div class="component-preview">
-            <div class="slider-field">
-              <div class="slider-field__header">
-                <label class="slider-field__label" for="slider-volume">Volume</label>
-                <output class="slider-field__value" for="slider-volume">50</output>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="slider-volume">Volume</label>
+                  <output class="slider-field__value" for="slider-volume">50</output>
+                </div>
+                <input
+                  class="slider"
+                  type="range"
+                  id="slider-volume"
+                  min="0"
+                  max="100"
+                  value="50"
+                />
               </div>
-              <input class="slider" type="range" id="slider-volume" min="0" max="100" value="50" />
             </div>
+            <script type="text/plain" class="example__react">
+              <Slider label="Volume" defaultValue={50} />
+            </script>
           </div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">Usage</h3>
-          <p class="section-note">React: how you drop it into a page.</p>
-          <div data-source="/react/Slider.usage.jsx"></div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Stepped</h3>
           <p class="section-note"><code>step</code> snaps the thumb to fixed increments.</p>
-          <div class="component-preview">
-            <div class="slider-field">
-              <div class="slider-field__header">
-                <label class="slider-field__label" for="slider-quality">Quality</label>
-                <output class="slider-field__value" for="slider-quality">25</output>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="slider-quality">Quality</label>
+                  <output class="slider-field__value" for="slider-quality">25</output>
+                </div>
+                <input
+                  class="slider"
+                  type="range"
+                  id="slider-quality"
+                  min="0"
+                  max="100"
+                  step="25"
+                  value="25"
+                />
               </div>
-              <input
-                class="slider"
-                type="range"
-                id="slider-quality"
-                min="0"
-                max="100"
-                step="25"
-                value="25"
-              />
             </div>
+            <script type="text/plain" class="example__react">
+              <Slider label="Quality" min={0} max={100} step={25} defaultValue={25} />
+            </script>
           </div>
         </section>
 
         <section class="preview-block">
           <h3 class="subhead">Disabled</h3>
-          <div class="component-preview">
-            <div class="slider-field">
-              <div class="slider-field__header">
-                <label class="slider-field__label" for="slider-opacity">Opacity</label>
-                <output class="slider-field__value" for="slider-opacity">40</output>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="slider-opacity">Opacity</label>
+                  <output class="slider-field__value" for="slider-opacity">40</output>
+                </div>
+                <input
+                  class="slider"
+                  type="range"
+                  id="slider-opacity"
+                  min="0"
+                  max="100"
+                  value="40"
+                  disabled
+                />
               </div>
-              <input
-                class="slider"
-                type="range"
-                id="slider-opacity"
-                min="0"
-                max="100"
-                value="40"
-                disabled
-              />
             </div>
+            <script type="text/plain" class="example__react">
+              <Slider label="Opacity" defaultValue={40} disabled />
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            Tracks the fill with React state, controlled or uncontrolled. Same
+            <code>.slider</code> classes, no extra styling.
+          </p>
+          <div data-source="/react/Slider.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">The full markup and the classes it takes.</p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field__header"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-field__label"</span> <span class="tok-prop">for</span>=<span class="tok-str">"volume"</span><span class="tok-key">&gt;</span>Volume<span class="tok-key">&lt;/label&gt;</span>
@@ -113,31 +167,13 @@
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">CSS</h3>
-          <p class="section-note">
-            From <code>components.css</code>. Also load <code>globals.css</code> (tokens +
-            baseline).
-          </p>
-          <div data-source="/demo/components.css" data-section="Slider"></div>
-        </section>
-
-        <section class="preview-block">
+        <section class="preview-block" data-lang="html">
           <h3 class="subhead">JavaScript</h3>
           <p class="section-note">
             From <code>app.js</code>. Sets the fill width from the value and updates the
             <code>&lt;output&gt;</code>. Call once on load; re-run after adding sliders dynamically.
           </p>
           <div data-source="/assets/app.js" data-fn="initSliders"></div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">React</h3>
-          <p class="section-note">
-            A <code>&lt;Slider&gt;</code> that tracks the fill with React state (controlled or
-            uncontrolled). Same <code>.slider</code> classes; no extra styling.
-          </p>
-          <div data-source="/react/Slider.jsx"></div>
         </section>
       </div>
     </div>

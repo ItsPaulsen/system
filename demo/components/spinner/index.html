@@ -35,10 +35,39 @@
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Spinner</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Spinner"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">An indeterminate loading indicator.</p>
         </div>
       </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
 
       <div class="preview-grid">
         <section class="preview-block">
@@ -47,10 +76,17 @@
             Use when work is in progress but has no measurable completion; reach for
             <a href="/demo/components/progress/">Progress</a> when it does.
           </p>
-          <div class="component-preview">
-            <span class="spinner spinner--sm" role="status" aria-label="Loading"></span>
-            <span class="spinner" role="status" aria-label="Loading"></span>
-            <span class="spinner spinner--lg" role="status" aria-label="Loading"></span>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <span class="spinner spinner--sm" role="status" aria-label="Loading"></span>
+              <span class="spinner" role="status" aria-label="Loading"></span>
+              <span class="spinner spinner--lg" role="status" aria-label="Loading"></span>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Spinner size="sm" />
+              <Spinner />
+              <Spinner size="lg" />
+            </script>
           </div>
         </section>
 
@@ -60,16 +96,32 @@
             The arc is <code>currentColor</code>, so it inherits the surrounding text color. Inside
             a button or on a tint it needs no extra styling.
           </p>
-          <div class="component-preview">
-            <button class="button button--primary" type="button" disabled>
-              <span class="spinner spinner--sm" role="status" aria-label="Saving"></span>
-              Saving
-            </button>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button class="button button--primary" type="button" disabled>
+                <span class="spinner spinner--sm" role="status" aria-label="Saving"></span>
+                Saving
+              </button>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Button variant="primary" disabled>
+                <Spinner size="sm" label="Saving" /> Saving
+              </Button>
+            </script>
           </div>
         </section>
 
-        <section class="preview-block">
-          <h3 class="subhead">Markup</h3>
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            <code>size</code> is <code>sm</code> or <code>lg</code>; <code>label</code> names it for
+            assistive tech.
+          </p>
+          <div data-source="/react/Spinner.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
           <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner"</span> <span class="tok-prop">role</span>=<span class="tok-str">"status"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Loading"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
 
 <span class="tok-com">&lt;!-- Sizes: --sm --lg --&gt;</span></code></pre>

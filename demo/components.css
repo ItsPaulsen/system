@@ -2684,7 +2684,7 @@
     box-shadow: 0 0 0 2px var(--background-secondary);
   }
 
-  /* Overlapping stack — a ring separates neighbours; later avatars sit on top.
+  /* Overlapping stack: a ring separates neighbours; later avatars sit on top.
    The ring matches the surface behind (elevated --background-secondary), so it
    reads as a seamless gap rather than a visible border. */
   .avatar-group {

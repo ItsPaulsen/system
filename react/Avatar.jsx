@@ -1,7 +1,7 @@
 import { IconUser } from "@tabler/icons-react";
 
-// Image with a graceful fallback: pass `src` for a photo, or `fallback` (initials or a glyph)
-// for when there's no image. `size` is "sm" | "lg"; `status` adds a presence dot.
+// Image with a fallback: pass `src` for a photo, or `fallback` (initials or a glyph)
+// when there's no image. `size` is "sm" | "lg"; `status` adds a presence dot.
 export function Avatar({ src, alt, fallback, size, status, className, ...rest }) {
   const cls = ["avatar", size && `avatar--${size}`, className].filter(Boolean).join(" ");
   return (

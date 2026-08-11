@@ -789,7 +789,7 @@
 
   pre {
     margin: 0;
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 0;
     background: var(--background-secondary);
     border: 0;
     border-radius: var(--radius-md);
@@ -848,27 +848,6 @@
 
   .code-copy.is-copied .code-copy__check {
     display: block;
-  }
-
-  /* Line-number gutter. Sticky so numbers stay put during horizontal scroll;
-   user-select:none + aria-hidden (set in JS) keep it out of copy/selection. */
-  .code-block--numbered pre {
-    display: flex;
-  }
-
-  .code-gutter {
-    position: sticky;
-    left: 0;
-    flex: 0 0 auto;
-    padding-inline-end: 1rem;
-    background: var(--background-secondary);
-    color: var(--ink-tertiary);
-    font-family: var(--mono);
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    text-align: right;
-    white-space: pre;
-    user-select: none;
   }
 
   /* Collapsible code (shadcn-style). Tall blocks clip to a preview height and
@@ -954,6 +933,32 @@
 
   pre .tok-var {
     color: light-dark(#0550ae, #79c0ff);
+  }
+
+  /* Line numbers. <code> is a grid so each .line is its own row; the "\n"s kept
+   between lines (for clean copy) are whitespace-only and dropped by grid, so no
+   blank rows. The number is a counter-generated ::before in a fixed column, and
+   a per-line background (future highlight) can span the whole row behind it. */
+  .code-block--numbered code {
+    display: grid;
+    counter-reset: line;
+  }
+
+  .code-block--numbered .line {
+    position: relative;
+    min-height: 1lh;
+    padding-inline-start: 4rem;
+    counter-increment: line;
+  }
+
+  .code-block--numbered .line::before {
+    content: counter(line);
+    position: absolute;
+    inset-inline-start: 0;
+    width: 2.5rem;
+    color: var(--ink-tertiary);
+    text-align: right;
+    user-select: none;
   }
 
   /* Palette table — one card per colour family, rows for base tokens, columns

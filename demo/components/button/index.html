@@ -287,6 +287,30 @@
           </div>
         </section>
 
+        <section class="preview-block" data-lang="react">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">
+            The typed <code>&lt;Button&gt;</code> the snippets above use. Emits the same classes;
+            import <code>components.css</code> + <code>tokens.css</code> once in your app.
+          </p>
+          <div data-source="/react/Button.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h3 class="subhead">Component</h3>
+          <p class="section-note">The full markup and the modifier classes it takes.</p>
+          <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary"</span><span class="tok-key">&gt;</span>Continue<span class="tok-key">&lt;/button&gt;</span>
+
+<span class="tok-com">&lt;!-- Skins:   --primary --secondary --flat --destructive --&gt;</span>
+<span class="tok-com">&lt;!-- Layout:  --icon  --with-start-icon  --with-end-icon --&gt;</span>
+<span class="tok-com">&lt;!-- Density: data-size="sm|md|lg" on any ancestor --&gt;</span>
+
+<span class="tok-key">&lt;button</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span>
+        <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary button--with-start-icon"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;svg&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>Add item
+<span class="tok-key">&lt;/button&gt;</span></code></pre>
+        </section>
+
         <section class="preview-block">
           <h3 class="subhead">CSS</h3>
           <p class="section-note">
@@ -294,15 +318,6 @@
             <code>base.css</code> (reset + focus ring).
           </p>
           <div data-source="/demo/components.css" data-section="Button"></div>
-        </section>
-
-        <section class="preview-block">
-          <h3 class="subhead">React — component</h3>
-          <p class="section-note">
-            The typed <code>&lt;Button&gt;</code> the snippets above use. Emits the same classes;
-            import <code>components.css</code> + <code>tokens.css</code> once in your app.
-          </p>
-          <div data-source="/react/Button.jsx"></div>
         </section>
       </div>
     </div>

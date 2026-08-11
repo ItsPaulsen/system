@@ -1070,6 +1070,11 @@ function initExamples() {
       pre.appendChild(codeEl);
       holder.appendChild(pre);
     });
+    // Whole sections tagged [data-lang] (e.g. the bottom Component reference)
+    // follow the same tab.
+    document.querySelectorAll("[data-lang]").forEach((el) => {
+      el.hidden = el.dataset.lang !== lang;
+    });
     injectCodeCopy();
   };
 
@@ -1082,6 +1087,40 @@ function initExamples() {
   });
   const active = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
   render(active.dataset.codeLang);
+}
+
+// Split already-highlighted code HTML into per-line <span class="line"> wrappers,
+// re-balancing any highlight span that crosses a line break (e.g. a multi-line
+// comment). Lines are rejoined with "\n" so the copied text is unchanged; the
+// numbers come from a CSS counter, so they're never part of the DOM text.
+function wrapLines(html) {
+  const open = [];
+  const lines = [[]];
+  const cur = () => lines[lines.length - 1];
+  let i = 0;
+  while (i < html.length) {
+    if (html[i] === "<") {
+      const end = html.indexOf(">", i);
+      const tag = html.slice(i, end + 1);
+      if (tag.startsWith("</")) open.pop();
+      else open.push(tag);
+      cur().push(tag);
+      i = end + 1;
+    } else {
+      let j = i;
+      while (j < html.length && html[j] !== "<" && html[j] !== "\n") j += 1;
+      if (j > i) cur().push(html.slice(i, j));
+      if (html[j] === "\n") {
+        open.forEach(() => cur().push("</span>"));
+        lines.push([]);
+        open.forEach((t) => cur().push(t));
+        i = j + 1;
+      } else {
+        i = j;
+      }
+    }
+  }
+  return lines.map((f) => `<span class="line">${f.join("")}</span>`).join("\n");
 }
 
 function injectCodeCopy() {
@@ -1100,14 +1139,11 @@ function injectCodeCopy() {
     btn.innerHTML = COPY_ICON + CHECK_ICON;
     wrapper.appendChild(btn);
 
-    // Line-number gutter (shadcn-style). It lives outside <code>, is aria-hidden
-    // and non-selectable, so it never enters the copy or a text selection.
-    const lineCount = code.textContent.replace(/\n$/, "").split("\n").length;
-    const gutter = document.createElement("span");
-    gutter.className = "code-gutter";
-    gutter.setAttribute("aria-hidden", "true");
-    gutter.textContent = Array.from({ length: lineCount }, (_, i) => i + 1).join("\n");
-    pre.insertBefore(gutter, code);
+    // Line numbers via a per-line ::before counter (Shiki-style): wrap each line
+    // in <span class="line"> so a future line-highlight background can bleed
+    // full-width behind the number. Lines stay joined by newlines, so copy is
+    // unchanged and the numbers (CSS-generated) never enter the selection.
+    code.innerHTML = wrapLines(code.innerHTML);
     wrapper.classList.add("code-block--numbered");
 
     // Collapse only tall blocks. Read the pre's natural height before clipping.

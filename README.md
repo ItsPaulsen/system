@@ -2,7 +2,31 @@
 
 Design-system reference for system.kristianpaulsen.com.
 
-## Cascade layers (for anyone building on this)
+Internal reference for building projects with my team. It's not published for outside reuse, so there's intentionally no open-source license.
+
+The live site is the reference: browse the foundations and components there. This repo is the source, and a finished project is delivered as plain CSS (below).
+
+## Using a project
+
+A finished project is just CSS, no build step, so it drops into any stack (plain HTML, React, anything) and a dev works their own way:
+
+1. Take `globals.css` (the foundation plus every token). This is the baseline everything builds on.
+2. Take the CSS for each component you need. Every component page has a **Copy CSS** button, or grab `components.css` wholesale.
+3. Use the markup: plain HTML classes, or the React snippet shown alongside each component.
+4. Load the fonts (Geist, via the `<link>` in any page's `<head>`) and any assets you reference (icons, illustrations).
+
+That's the whole handoff. The CSS stands alone, it has no dependency on this repo. Retint or override anything with plain unlayered CSS (see below).
+
+## Run locally
+
+Static site, no build. Serve the folder and open it in a browser:
+
+```bash
+python3 -m http.server 8000
+# or: npx serve
+```
+
+## Cascade layers (for the team building on this)
 
 The CSS ships inside [cascade layers](https://developer.mozilla.org/en-US/docs/Web/CSS/@layer), declared in this order (lowest to highest priority):
 

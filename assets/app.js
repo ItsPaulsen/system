@@ -222,6 +222,15 @@ function injectNav() {
     ? `<a class="btn btn--outline" href="${EXAMPLE_HREF}" target="_blank" rel="noopener">Example</a>`
     : "";
 
+  // Typeahead over this project's pages. Only where a sidebar exists; the
+  // results list is populated + wired in wireSearch() once the DOM is ready.
+  const searchInput = currentProjectPages()
+    ? `<div class="site-nav__search-wrap">
+          <input class="site-nav__search" type="search" placeholder="Search…" aria-label="Search this project" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="nav-search-results" aria-autocomplete="list" />
+          <ul class="site-nav__results" id="nav-search-results" role="listbox" hidden></ul>
+        </div>`
+    : "";
+
   nav.innerHTML = `
     <div class="site-nav__inner">
       <div class="site-nav__left">
@@ -229,9 +238,11 @@ function injectNav() {
         ${isRoot ? "" : `<a class="site-nav__brand" href="${projectHref}"></a>`}
       </div>
       <div class="site-nav__right">
+        ${searchInput}
+        ${searchInput ? '<span class="site-nav__divider" aria-hidden="true"></span>' : ""}
         ${exampleBtn}
         ${exampleBtn ? '<span class="site-nav__divider" aria-hidden="true"></span>' : ""}
-        <a class="site-nav__source" href="https://github.com/ItsPaulsen/system" target="_blank" rel="noopener" aria-label="View source on GitHub">${icon("brand-github", 20)}</a>
+        <a class="site-nav__source" href="https://github.com/ItsPaulsen/system" target="_blank" rel="noopener" aria-label="View source on GitHub">${icon("brand-github", 18)}</a>
         <button class="theme-toggle" type="button" aria-label="Switch theme">
           ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
         </button>
@@ -2092,6 +2103,99 @@ function initDialogs() {
   });
 }
 
+// Typeahead over this project's pages: type to see matching results, Enter
+// goes to the highlighted one (first by default), click/arrow-keys to pick.
+// The page list is read from the sidebar the search sits alongside.
+function wireSearch() {
+  const input = document.querySelector(".site-nav__search");
+  const results = document.querySelector(".site-nav__results");
+  if (!input || !results) return;
+  const pages = [...document.querySelectorAll(".sidebar__link")].map((a) => ({
+    href: a.getAttribute("href"),
+    label: a.textContent.trim()
+  }));
+  let matches = [];
+  let active = -1;
+
+  const close = () => {
+    results.hidden = true;
+    results.innerHTML = "";
+    input.setAttribute("aria-expanded", "false");
+    active = -1;
+  };
+
+  const paint = () =>
+    results.querySelectorAll(".site-nav__result").forEach((li, i) => {
+      li.classList.toggle("is-active", i === active);
+    });
+
+  const move = (delta) => {
+    if (!matches.length) return;
+    active = (active + delta + matches.length) % matches.length;
+    paint();
+  };
+
+  const go = () => {
+    if (matches[active]) location.href = matches[active].href;
+  };
+
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) return close();
+    matches = pages.filter((p) => p.label.toLowerCase().includes(q)).slice(0, 8);
+    input.setAttribute("aria-expanded", "true");
+    results.hidden = false;
+    if (!matches.length) {
+      active = -1;
+      results.innerHTML =
+        '<li class="site-nav__result site-nav__result--empty" role="presentation">No matches</li>';
+      return;
+    }
+    active = 0;
+    results.innerHTML = matches
+      .map(
+        (p) => `<li class="site-nav__result" role="option" data-href="${p.href}">${p.label}</li>`
+      )
+      .join("");
+    paint();
+  });
+
+  input.addEventListener("keydown", (event) => {
+    if (results.hidden) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      move(1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      move(-1);
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      go();
+    } else if (event.key === "Escape") {
+      close();
+    }
+  });
+
+  // Hover moves the selection so there's only ever one highlight and Enter
+  // follows the cursor.
+  results.addEventListener("mouseover", (event) => {
+    const li = event.target.closest(".site-nav__result[data-href]");
+    if (!li) return;
+    active = [...results.querySelectorAll(".site-nav__result")].indexOf(li);
+    paint();
+  });
+
+  // pointerdown (not click) fires before the input's blur closes the list.
+  results.addEventListener("pointerdown", (event) => {
+    const li = event.target.closest(".site-nav__result[data-href]");
+    if (!li) return;
+    event.preventDefault();
+    location.href = li.dataset.href;
+  });
+
+  input.addEventListener("blur", () => setTimeout(close, 120));
+}
+
 function init() {
   // iOS Safari only fires :active on tap when a touch listener exists somewhere
   // in the document. A no-op on the document enables every component's pressed
@@ -2103,6 +2207,7 @@ function init() {
   injectNav();
   injectSkipLink();
   injectSidebar();
+  wireSearch();
   injectPagination();
   injectCodeCopy();
   hydrateSource();

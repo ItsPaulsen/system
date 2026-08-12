@@ -1274,7 +1274,11 @@ function positionFloating(anchor, list) {
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
   const roomAbove = rect.top - viewTop - GAP - PAD;
-  if (natural <= roomBelow || roomBelow >= roomAbove) {
+  // Strongly prefer below and CLIP the height to the space there (scrollable),
+  // rather than flipping. Only flip above when there's barely any room below
+  // (less than a couple of rows) and above genuinely has more.
+  const MIN = 96;
+  if (roomBelow >= Math.min(natural, MIN) || roomBelow >= roomAbove) {
     list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
     if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
   } else {

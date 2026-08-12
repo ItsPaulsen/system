@@ -1210,6 +1210,35 @@ function injectCodeCopy() {
   });
 }
 
+// Shared overlay scroll behavior for trigger-anchored surfaces (menu, select,
+// combobox). Desktop: lock the page while open, the pointer stays over the
+// surface so page-scroll isn't the intent. Touch: dismiss on a scroll that
+// starts outside the surface, which is exactly how a touch scroll begins.
+// Call onOpen()/onClose() from the component's own open/close.
+const overlayIsDesktop = window.matchMedia("(hover: hover) and (pointer: fine)");
+function overlayScroll(surface, close) {
+  let onScroll = null;
+  return {
+    onOpen() {
+      if (overlayIsDesktop.matches) {
+        lockBodyScroll();
+        return;
+      }
+      // Ignore scrolls originating inside the surface itself (long lists).
+      onScroll = (ev) => {
+        if (!surface.contains(ev.target)) close();
+      };
+      window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    },
+    onClose() {
+      unlockBodyScroll();
+      if (!onScroll) return;
+      window.removeEventListener("scroll", onScroll, true);
+      onScroll = null;
+    }
+  };
+}
+
 // Custom select: a styled trigger + a floating listbox. Native <select> is the
 // default; this is for when option rendering needs to be custom. Handles
 // open/close, click + keyboard selection (arrows/Enter/Esc), and click-away.
@@ -1242,6 +1271,7 @@ function initSelects() {
       if (!list.hidden) return;
       list.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
+      scroll.onOpen();
       setActive(activeIndex < 0 ? 0 : activeIndex);
     };
     const close = () => {
@@ -1249,7 +1279,9 @@ function initSelects() {
       list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
       trigger.removeAttribute("aria-activedescendant");
+      scroll.onClose();
     };
+    const scroll = overlayScroll(list, close);
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
       // Rich options (e.g. a flag + label) mirror their markup into the trigger;
@@ -1762,35 +1794,18 @@ function initMenus() {
       if (els.length) els[(i + els.length) % els.length].focus();
     };
 
-    // The native popover owns show/hide; react to its toggle to sync the
-    // trigger state and move focus in. (Fallback positioning is in initPopovers.)
-    // While open, lock the page on desktop
-    // (pointer stays over the menu), dismiss on scroll on touch.
-    const desktop = window.matchMedia("(hover: hover) and (pointer: fine)");
-    let onScroll = null;
-    const clearScroll = () => {
-      if (!onScroll) return;
-      window.removeEventListener("scroll", onScroll, true);
-      onScroll = null;
-    };
+    // The native popover owns show/hide; react to its toggle to sync the trigger
+    // state and move focus in. (Fallback positioning is in initPopovers.)
+    const scroll = overlayScroll(list, () => list.hidePopover());
     let openEdge = "first";
     list.addEventListener("toggle", (e) => {
       const open = e.newState === "open";
       trigger.setAttribute("aria-expanded", String(open));
       if (!open) {
-        unlockBodyScroll();
-        clearScroll();
+        scroll.onClose();
         return;
       }
-      if (desktop.matches) {
-        lockBodyScroll();
-      } else {
-        // Ignore scrolls originating inside the menu itself (long lists).
-        onScroll = (ev) => {
-          if (!list.contains(ev.target)) list.hidePopover();
-        };
-        window.addEventListener("scroll", onScroll, { passive: true, capture: true });
-      }
+      scroll.onOpen();
       focusItem(openEdge === "last" ? -1 : 0);
       openEdge = "first";
     });

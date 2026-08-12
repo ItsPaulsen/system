@@ -2937,6 +2937,10 @@
    </div> */
   .combobox {
     position: relative;
+
+    /* When focus scrolls the field toward the top (mobile), leave room for the
+     sticky nav so it isn't tucked behind it. */
+    scroll-margin-top: calc(var(--nav-h, 56px) + 0.75rem);
   }
 
   /* The control is a shared .input__container (inline-flex, shrinks to content).

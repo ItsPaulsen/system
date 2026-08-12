@@ -1498,6 +1498,11 @@ function initComboboxes() {
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
       floating.open();
+      // On touch, lift the field toward the top so the list has room to open
+      // below it above the keyboard (the reflow listeners keep it glued).
+      if (!overlayIsDesktop.matches) {
+        requestAnimationFrame(() => root.scrollIntoView({ block: "start", behavior: "smooth" }));
+      }
     };
     const close = () => {
       if (list.hidden) return;

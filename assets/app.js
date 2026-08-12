@@ -1261,9 +1261,10 @@ function rafThrottle(fn) {
 // trigger. Measures against the visual viewport (keyboard-aware): opens below,
 // flips above only when below can't fit and above has more room, and caps the
 // height to the space available so it clips instead of hiding behind the keyboard.
-function positionFloating(anchor, list) {
+function positionFloating(anchor, list, wasAbove) {
   const GAP = 4;
   const PAD = 8;
+  const MIN = 88; // clip a side down to this before flipping to the other
   // getBoundingClientRect is relative to the visual viewport, so cap against the
   // visual viewport height directly (the area above the keyboard) — no offset.
   const vv = window.visualViewport;
@@ -1275,31 +1276,40 @@ function positionFloating(anchor, list) {
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
   const roomAbove = rect.top - GAP - PAD;
-  // Strongly prefer below and CLIP the height to the space there (scrollable),
-  // clipping down to a sliver before ever flipping. Only flip above when there's
-  // essentially no room below and above genuinely has more.
-  const MIN = 24;
-  if (roomBelow >= Math.min(natural, MIN) || roomBelow >= roomAbove) {
-    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
-    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
-  } else {
+  // Hysteresis so it behaves the same both ways: prefer below on open, then stay
+  // on the current side and clip it down to MIN before flipping — never flip back
+  // just because the other side grew.
+  let above;
+  if (wasAbove === undefined) above = roomBelow < Math.min(natural, MIN) && roomAbove > roomBelow;
+  else if (wasAbove) above = !(roomAbove < MIN && roomBelow > roomAbove);
+  else above = roomBelow < MIN && roomAbove > roomBelow;
+  if (above) {
     const h = Math.min(natural, Math.max(0, roomAbove));
     list.style.top = `${rect.top + window.scrollY - h - GAP}px`;
     if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
+  } else {
+    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
+    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
   }
+  return above;
 }
 
 // Portal a list to <body> while open and keep it placed on scroll/resize and on
 // visual-viewport changes (mobile keyboard). Never closes on those, just
 // re-places, so it stays open like shadcn.
 function floatingList(anchor, list) {
-  const reflow = rafThrottle(() => positionFloating(anchor, list));
+  let above;
+  const place = () => {
+    above = positionFloating(anchor, list, above);
+  };
+  const reflow = rafThrottle(place);
   const vv = window.visualViewport;
   return {
     reflow,
     open() {
+      above = undefined;
       document.body.appendChild(list);
-      positionFloating(anchor, list);
+      place();
       window.addEventListener("scroll", reflow, true);
       window.addEventListener("resize", reflow);
       vv?.addEventListener("resize", reflow);

@@ -752,6 +752,9 @@
     padding: 4px;
     overflow-y: auto;
 
+    /* Keep wheel/touch scroll inside the list, don't chain it to the page. */
+    overscroll-behavior: contain;
+
     /* Hide the scrollbar (still scrollable); matches the code blocks' own
      hidden bar. */
     scrollbar-width: none;

@@ -1239,6 +1239,18 @@ function overlayScroll(surface, close) {
   };
 }
 
+// Flip a select/combobox list above its trigger when it won't fit below and
+// there's more room above. The CSS-native version is anchor positioning, but
+// that lacks Safari support today, so this mirrors positionPopover's JS flip.
+// Call on open, once the list is visible so its height can be measured.
+function placeList(anchor, list) {
+  const GAP = 4;
+  const rect = anchor.getBoundingClientRect();
+  const below = window.innerHeight - rect.bottom;
+  const flip = below < list.offsetHeight + GAP && rect.top > below;
+  list.classList.toggle("select__list--above", flip);
+}
+
 // Custom select: a styled trigger + a floating listbox. Native <select> is the
 // default; this is for when option rendering needs to be custom. Handles
 // open/close, click + keyboard selection (arrows/Enter/Esc), and click-away.
@@ -1271,6 +1283,7 @@ function initSelects() {
       if (!list.hidden) return;
       list.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
+      placeList(trigger, list);
       scroll.onOpen();
       setActive(activeIndex < 0 ? 0 : activeIndex);
     };
@@ -1408,6 +1421,7 @@ function initComboboxes() {
       if (!list.hidden) return;
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
+      placeList(input, list);
     };
     const close = () => {
       if (list.hidden) return;

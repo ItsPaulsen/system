@@ -3209,7 +3209,7 @@
   .calendar__weekdays,
   .calendar__days {
     display: grid;
-    grid-template-columns: repeat(7, 2.25rem);
+    grid-template-columns: repeat(7, 2rem);
     gap: 2px;
   }
 
@@ -3225,8 +3225,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2rem;
+    height: 2rem;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;

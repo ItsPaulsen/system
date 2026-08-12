@@ -684,7 +684,7 @@
        <span class="select__value">Design</span>
        <svg class="select__chevron" …>…</svg>
      </button>
-     <ul class="select__list" role="listbox" tabindex="-1" hidden>
+     <ul class="select__list" role="listbox" tabindex="-1" popover="manual">
        <li class="select__option" role="option" aria-selected="true">Design</li>
        …
      </ul>
@@ -741,11 +741,13 @@
   }
 
   .select__list {
-    position: absolute;
-    top: calc(100% + 4px);
-    inset-inline-start: 0;
+    /* Native popover (top layer) so the list escapes any clipping/overflow
+     ancestor, the same mechanism as Dropdown Menu and Popover. The UA gives it
+     position: fixed; positionListbox() in app.js sets its width + coordinates
+     against the component root and flips it above when it won't fit below. */
+    position: fixed;
+    inset: auto;
     z-index: 30;
-    width: 100%;
     max-height: 260px;
     margin: 0;
     padding: 4px;
@@ -756,6 +758,7 @@
     scrollbar-width: none;
     list-style: none;
     background: var(--background-secondary);
+    border: 0;
 
     /* Concentric with 8px options: surface = option radius + 4px padding. */
     border-radius: calc(var(--radius-sm) + 4px);
@@ -772,21 +775,11 @@
     transform: translateY(-4px);
   }
 
-  /* Flipped above the trigger when there's no room below (toggled by JS). */
-  .select__list--above {
-    top: auto;
-    bottom: calc(100% + 4px);
-  }
-
   .select__list::-webkit-scrollbar {
     display: none;
   }
 
-  .select__list[hidden] {
-    display: none;
-  }
-
-  .select__list:not([hidden]) {
+  .select__list:popover-open {
     opacity: 1;
     transform: translateY(0);
     transition:
@@ -795,7 +788,7 @@
   }
 
   @starting-style {
-    .select__list:not([hidden]) {
+    .select__list:popover-open {
       opacity: 0;
       transform: translateY(-4px);
     }
@@ -2937,7 +2930,7 @@
               aria-expanded="false" aria-autocomplete="list" aria-controls="cb-list" />
        <span class="input__trailing combobox__chevron" aria-hidden="true"><svg…></span>
      </div>
-     <ul class="select__list" id="cb-list" role="listbox" tabindex="-1" hidden>
+     <ul class="select__list" id="cb-list" role="listbox" tabindex="-1" popover="manual">
        <li class="select__option" role="option">…</li>
        <li class="combobox__empty" hidden>No results</li>
      </ul>

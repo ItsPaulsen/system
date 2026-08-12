@@ -1,5 +1,16 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
+
+// Position the popover list against the root; flip above when it won't fit below.
+function placeListbox(root, list) {
+  const r = root.getBoundingClientRect();
+  list.style.width = `${r.width}px`;
+  list.style.left = `${r.left}px`;
+  const h = list.offsetHeight;
+  const below = window.innerHeight - r.bottom;
+  list.style.top =
+    below < h + 4 && r.top > below ? `${Math.max(4, r.top - h - 4)}px` : `${r.bottom + 4}px`;
+}
 
 // Text field that filters a listbox as you type; Select with type-to-filter. `options` is an
 // array of strings, `onChange(value)` fires on pick, `fill` swaps the outline for a solid skin.
@@ -16,6 +27,7 @@ export default function Combobox({
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const rootRef = useRef(null);
+  const listRef = useRef(null);
   const listId = useId();
 
   const q = query.trim().toLowerCase();
@@ -48,6 +60,27 @@ export default function Combobox({
       setActive(matches.length - 1);
     }
   };
+
+  // Top-layer popover (matches the CSS) so the list escapes clipping ancestors.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || !open) return;
+    const reposition = () => placeListbox(rootRef.current, list);
+    list.showPopover();
+    reposition();
+    window.addEventListener("scroll", reposition, true);
+    window.addEventListener("resize", reposition);
+    return () => {
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+      if (list.matches(":popover-open")) list.hidePopover();
+    };
+  }, [open]);
+
+  // Filtering changes the list height, so re-place it while open.
+  useEffect(() => {
+    if (listRef.current && open) placeListbox(rootRef.current, listRef.current);
+  }, [query, open]);
 
   return (
     <div
@@ -86,7 +119,14 @@ export default function Combobox({
           <IconChevronDown />
         </span>
       </div>
-      <ul className="select__list" id={listId} role="listbox" tabIndex={-1} hidden={!open}>
+      <ul
+        className="select__list"
+        id={listId}
+        role="listbox"
+        tabIndex={-1}
+        ref={listRef}
+        popover="manual"
+      >
         {matches.map((opt, i) => (
           <li
             key={opt}

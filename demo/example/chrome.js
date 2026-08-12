@@ -90,7 +90,7 @@
                 </svg>
               </button>
               <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-              <ul class="select__list" role="listbox" tabindex="-1" hidden>
+              <ul class="select__list" role="listbox" tabindex="-1" popover="manual">
                 <li class="select__option" role="option" aria-selected="true">
                   <img
                     class="ex-lang-flag"

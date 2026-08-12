@@ -1806,15 +1806,6 @@ function initPopovers() {
       };
       trigger.addEventListener("focusout", onFocusOut);
       pop.addEventListener("focusout", onFocusOut);
-
-      // Same overlay scroll behavior as menu/select: desktop locks the page
-      // while open, touch dismisses on a scroll that starts outside it. (The
-      // menu runs this in initMenus off its own toggle.)
-      const scroll = overlayScroll(pop, () => pop.hidePopover());
-      pop.addEventListener("toggle", (e) => {
-        if (e.newState === "open") scroll.onOpen();
-        else scroll.onClose();
-      });
     }
   });
 }

@@ -1,5 +1,50 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { IconChevronDown } from "@tabler/icons-react";
+
+// Coalesce scroll/resize repositioning to one update per frame.
+function rafThrottle(fn) {
+  let raf = 0;
+  return () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      fn();
+    });
+  };
+}
+
+// Position a portaled list in PAGE coordinates (scrolls with the document, glued
+// to the trigger), measured against the visual viewport so the keyboard is
+// accounted for. Prefers below; hysteresis keeps it on its side, clipping down to
+// MIN before flipping, so it behaves the same both ways. Returns the new side.
+function positionFloating(anchor, list, wasAbove) {
+  const GAP = 4;
+  const PAD = 8;
+  const MIN = 88;
+  const vv = window.visualViewport;
+  const viewBottom = vv ? vv.height : window.innerHeight;
+  const rect = anchor.getBoundingClientRect();
+  list.style.width = `${rect.width}px`;
+  list.style.left = `${rect.left + window.scrollX}px`;
+  list.style.maxHeight = "";
+  const natural = list.offsetHeight;
+  const roomBelow = viewBottom - rect.bottom - GAP - PAD;
+  const roomAbove = rect.top - GAP - PAD;
+  let above;
+  if (wasAbove === undefined) above = roomBelow < Math.min(natural, MIN) && roomAbove > roomBelow;
+  else if (wasAbove) above = !(roomAbove < MIN && roomBelow > roomAbove);
+  else above = roomBelow < MIN && roomAbove > roomBelow;
+  if (above) {
+    const h = Math.min(natural, Math.max(0, roomAbove));
+    list.style.top = `${rect.top + window.scrollY - h - GAP}px`;
+    if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
+  } else {
+    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
+    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
+  }
+  return above;
+}
 
 // Custom single-select: a styled trigger + a floating listbox. Reach for Native Select unless
 // you need custom option rendering. Focus stays on the trigger; the active option is tracked
@@ -16,10 +61,38 @@ export default function Select({
   const selected = value ?? uncontrolled;
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(() => Math.max(0, options.indexOf(selected)));
+  const [mounted, setMounted] = useState(false);
   const rootRef = useRef(null);
+  const listRef = useRef(null);
+  const aboveRef = useRef();
   const id = useId();
   const buf = useRef("");
   const bufTimer = useRef(0);
+
+  useEffect(() => setMounted(true), []);
+
+  // The list is portaled to <body> so it escapes clipping ancestors, positioned
+  // in page coordinates (glued to the trigger); keep it placed while open.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || !open) return;
+    aboveRef.current = undefined;
+    const place = () => {
+      aboveRef.current = positionFloating(rootRef.current, list, aboveRef.current);
+    };
+    const reflow = rafThrottle(place);
+    place();
+    window.addEventListener("scroll", reflow, true);
+    window.addEventListener("resize", reflow);
+    window.visualViewport?.addEventListener("resize", reflow);
+    window.visualViewport?.addEventListener("scroll", reflow);
+    return () => {
+      window.removeEventListener("scroll", reflow, true);
+      window.removeEventListener("resize", reflow);
+      window.visualViewport?.removeEventListener("resize", reflow);
+      window.visualViewport?.removeEventListener("scroll", reflow);
+    };
+  }, [open]);
 
   const choose = (i) => {
     if (value === undefined) setUncontrolled(options[i]);
@@ -73,7 +146,8 @@ export default function Select({
       className={["select", fill && "select--fill"].filter(Boolean).join(" ")}
       ref={rootRef}
       onBlur={(e) => {
-        if (!rootRef.current.contains(e.relatedTarget)) setOpen(false);
+        const to = e.relatedTarget;
+        if (to && !rootRef.current.contains(to) && !listRef.current?.contains(to)) setOpen(false);
       }}
     >
       <button
@@ -89,22 +163,28 @@ export default function Select({
         <span className="select__value">{selected}</span>
         <IconChevronDown className="select__chevron" aria-hidden="true" />
       </button>
-      <ul className="select__list" role="listbox" tabIndex={-1} hidden={!open}>
-        {options.map((opt, i) => (
-          <li
-            key={opt}
-            id={`${id}-${i}`}
-            className={["select__option", i === active && "is-active"].filter(Boolean).join(" ")}
-            role="option"
-            aria-selected={opt === selected}
-            onMouseDown={(e) => e.preventDefault()}
-            onMouseMove={() => setActive(i)}
-            onClick={() => choose(i)}
-          >
-            {opt}
-          </li>
-        ))}
-      </ul>
+      {mounted &&
+        createPortal(
+          <ul className="select__list" role="listbox" tabIndex={-1} ref={listRef} hidden={!open}>
+            {options.map((opt, i) => (
+              <li
+                key={opt}
+                id={`${id}-${i}`}
+                className={["select__option", i === active && "is-active"]
+                  .filter(Boolean)
+                  .join(" ")}
+                role="option"
+                aria-selected={opt === selected}
+                onMouseDown={(e) => e.preventDefault()}
+                onMouseMove={() => setActive(i)}
+                onClick={() => choose(i)}
+              >
+                {opt}
+              </li>
+            ))}
+          </ul>,
+          document.body
+        )}
     </div>
   );
 }

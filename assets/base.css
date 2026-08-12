@@ -500,6 +500,33 @@
     }
   }
 
+  /* "View source" link: same 32px icon-button footprint as the theme toggle. */
+  .site-nav__source {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--ink-primary);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+  }
+
+  @media (hover: hover) {
+    .site-nav__source:hover {
+      background: var(--background-secondary);
+    }
+  }
+
+  /* Hairline between the Example button and the icon cluster. The flex gap on
+   .site-nav__right gives it symmetric breathing room on both sides. */
+  .site-nav__divider {
+    width: var(--border-width);
+    height: 20px;
+    background: var(--fill-tertiary);
+  }
+
   /* Show the icon for the theme you'd switch TO: sun in dark, moon in light. */
   :root[data-theme="light"] .icon-sun,
   :root[data-theme="dark"] .icon-moon {

@@ -5,6 +5,26 @@
 //   • tracks the active breakpoint on resize
 // Tokens are declared with data-token (the CSS custom-property name, sans "--").
 
+// Inject favicon + touch-icon links from one place so all pages share a single
+// source instead of repeating <link> tags across every head. Not render-blocking,
+// so running from this deferred script is fine. The SVG adapts to the OS theme;
+// the PNG is a fallback and apple-touch-icon covers iOS "add to home screen".
+(function injectFavicons() {
+  if (document.querySelector('link[rel="icon"]')) return;
+  const links = [
+    { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+    { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    { rel: "apple-touch-icon", href: "/apple-touch-icon.png" }
+  ];
+  const frag = document.createDocumentFragment();
+  for (const attrs of links) {
+    const link = document.createElement("link");
+    for (const [key, value] of Object.entries(attrs)) link.setAttribute(key, value);
+    frag.appendChild(link);
+  }
+  document.head.appendChild(frag);
+})();
+
 // toast(msg) / toast.success|info|warning|error(msg) / toast.promise(p, msgs).
 // One reused pill; typed toasts get a Tabler icon in the matching semantic
 // colour (same icons as the Alert component).
@@ -175,7 +195,9 @@ function injectNav() {
     menu: '<line class="ham-line ham-line--top" x1="4" x2="20" y1="9" y2="9"/><line class="ham-line ham-line--bot" x1="4" x2="20" y1="15" y2="15"/>',
     sun: '<path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z"/><path d="M6.343 17.657l-1.414 1.414"/><path d="M6.343 6.343l-1.414 -1.414"/><path d="M17.657 6.343l1.414 -1.414"/><path d="M17.657 17.657l1.414 1.414"/><path d="M4 12l-2 0"/><path d="M12 4l0 -2"/><path d="M20 12l2 0"/><path d="M12 20l0 2"/>',
     moon: '<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>',
-    "arrow-left": '<path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>'
+    "arrow-left": '<path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/>',
+    "brand-github":
+      '<path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/>'
   };
   const icon = (name, size = 18, cls = "") =>
     `<svg class="icon${cls ? ` ${cls}` : ""}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${tabler[name]}</svg>`;
@@ -208,6 +230,8 @@ function injectNav() {
       </div>
       <div class="site-nav__right">
         ${exampleBtn}
+        ${exampleBtn ? '<span class="site-nav__divider" aria-hidden="true"></span>' : ""}
+        <a class="site-nav__source" href="https://github.com/ItsPaulsen/system" target="_blank" rel="noopener" aria-label="View source on GitHub">${icon("brand-github", 20)}</a>
         <button class="theme-toggle" type="button" aria-label="Switch theme">
           ${icon("sun", 18, "icon-sun")}${icon("moon", 18, "icon-moon")}
         </button>

@@ -5,26 +5,6 @@
 //   • tracks the active breakpoint on resize
 // Tokens are declared with data-token (the CSS custom-property name, sans "--").
 
-// Inject favicon + touch-icon links from one place so all pages share a single
-// source instead of repeating <link> tags across every head. Not render-blocking,
-// so running from this deferred script is fine. The SVG adapts to the OS theme;
-// the PNG is a fallback and apple-touch-icon covers iOS "add to home screen".
-(function injectFavicons() {
-  if (document.querySelector('link[rel="icon"]')) return;
-  const links = [
-    { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-    { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
-    { rel: "apple-touch-icon", href: "/apple-touch-icon.png" }
-  ];
-  const frag = document.createDocumentFragment();
-  for (const attrs of links) {
-    const link = document.createElement("link");
-    for (const [key, value] of Object.entries(attrs)) link.setAttribute(key, value);
-    frag.appendChild(link);
-  }
-  document.head.appendChild(frag);
-})();
-
 // toast(msg) / toast.success|info|warning|error(msg) / toast.promise(p, msgs).
 // One reused pill; typed toasts get a Tabler icon in the matching semantic
 // colour (same icons as the Alert component).

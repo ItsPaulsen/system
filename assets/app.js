@@ -1264,20 +1264,21 @@ function rafThrottle(fn) {
 function positionFloating(anchor, list) {
   const GAP = 4;
   const PAD = 8;
+  // getBoundingClientRect is relative to the visual viewport, so cap against the
+  // visual viewport height directly (the area above the keyboard) — no offset.
   const vv = window.visualViewport;
-  const viewTop = vv ? vv.offsetTop : 0;
-  const viewBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
+  const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
   list.style.left = `${rect.left + window.scrollX}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
-  const roomAbove = rect.top - viewTop - GAP - PAD;
+  const roomAbove = rect.top - GAP - PAD;
   // Strongly prefer below and CLIP the height to the space there (scrollable),
-  // rather than flipping. Only flip above when there's barely any room below
-  // (less than a couple of rows) and above genuinely has more.
-  const MIN = 96;
+  // clipping down to a sliver before ever flipping. Only flip above when there's
+  // essentially no room below and above genuinely has more.
+  const MIN = 24;
   if (roomBelow >= Math.min(natural, MIN) || roomBelow >= roomAbove) {
     list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
     if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;

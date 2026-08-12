@@ -1239,21 +1239,65 @@ function overlayScroll(surface, close) {
   };
 }
 
+// Coalesce rapid scroll/resize events into one reposition per animation frame,
+// so following the trigger stays smooth on touch instead of thrashing layout.
+function rafThrottle(fn) {
+  let raf = 0;
+  return () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      fn();
+    });
+  };
+}
+
+// Keep a floating list placed while open: throttled to a frame, and re-run on
+// visual-viewport changes too so it tracks the mobile keyboard showing/hiding.
+function trackViewport(reposition) {
+  const on = rafThrottle(reposition);
+  const vv = window.visualViewport;
+  return {
+    start() {
+      window.addEventListener("scroll", on, true);
+      window.addEventListener("resize", on);
+      vv?.addEventListener("resize", on);
+      vv?.addEventListener("scroll", on);
+    },
+    stop() {
+      window.removeEventListener("scroll", on, true);
+      window.removeEventListener("resize", on);
+      vv?.removeEventListener("resize", on);
+      vv?.removeEventListener("scroll", on);
+    }
+  };
+}
+
 // Position a select/combobox popover list against its anchor (the component
-// root). Top-layer popovers render at the viewport origin, so we set the list's
-// width + coordinates here, flipping it above when it won't fit below. Call
-// after showPopover() so the list is laid out and its height can be measured.
+// root). Prefer opening below; measure against the *visual* viewport so the
+// on-screen keyboard is accounted for, cap the height to the room available, and
+// flip above only when below is too tight. Call after showPopover().
 function positionListbox(anchor, list) {
   const GAP = 4;
+  const PAD = 8;
+  const vv = window.visualViewport;
+  const viewTop = vv ? vv.offsetTop : 0;
+  const viewBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
   list.style.left = `${rect.left}px`;
-  const height = list.offsetHeight;
-  const below = window.innerHeight - rect.bottom;
-  const flipUp = below < height + GAP && rect.top > below;
-  list.style.top = flipUp
-    ? `${Math.max(GAP, rect.top - height - GAP)}px`
-    : `${rect.bottom + GAP}px`;
+  list.style.maxHeight = ""; // measure at the CSS cap first
+  const natural = list.offsetHeight;
+  const roomBelow = viewBottom - rect.bottom - GAP - PAD;
+  const roomAbove = rect.top - viewTop - GAP - PAD;
+  if (natural <= roomBelow || roomBelow >= roomAbove) {
+    list.style.top = `${rect.bottom + GAP}px`;
+    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
+  } else {
+    const h = Math.min(natural, Math.max(0, roomAbove));
+    list.style.top = `${rect.top - h - GAP}px`;
+    if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
+  }
 }
 
 // Custom select: a styled trigger + a floating listbox. Native <select> is the
@@ -1285,14 +1329,13 @@ function initSelects() {
       trigger.setAttribute("aria-activedescendant", opt.id);
     };
     const isOpen = () => list.matches(":popover-open");
-    const reposition = () => positionListbox(root, list);
+    const track = trackViewport(() => positionListbox(root, list));
     const open = () => {
       if (isOpen()) return;
       list.showPopover();
       trigger.setAttribute("aria-expanded", "true");
       positionListbox(root, list);
-      window.addEventListener("scroll", reposition, true);
-      window.addEventListener("resize", reposition);
+      track.start();
       scroll.onOpen();
       setActive(activeIndex < 0 ? 0 : activeIndex);
     };
@@ -1301,8 +1344,7 @@ function initSelects() {
       list.hidePopover();
       trigger.setAttribute("aria-expanded", "false");
       trigger.removeAttribute("aria-activedescendant");
-      window.removeEventListener("scroll", reposition, true);
-      window.removeEventListener("resize", reposition);
+      track.stop();
       scroll.onClose();
     };
     const scroll = overlayScroll(list, close);
@@ -1430,21 +1472,20 @@ function initComboboxes() {
     };
     const isOpen = () => list.matches(":popover-open");
     const reposition = () => positionListbox(root, list);
+    const track = trackViewport(reposition);
     const open = () => {
       if (isOpen()) return;
       list.showPopover();
       input.setAttribute("aria-expanded", "true");
       positionListbox(root, list);
-      window.addEventListener("scroll", reposition, true);
-      window.addEventListener("resize", reposition);
+      track.start();
     };
     const close = () => {
       if (!isOpen()) return;
       list.hidePopover();
       input.setAttribute("aria-expanded", "false");
       setActive(null);
-      window.removeEventListener("scroll", reposition, true);
-      window.removeEventListener("resize", reposition);
+      track.stop();
     };
 
     // Substring filter (empty query shows everything); active row resets to the
@@ -1804,18 +1845,19 @@ function initPopovers() {
     // Desktop: follow the trigger on scroll, staying open. Touch: dismiss on an
     // outside scroll instead (like Select) so it doesn't ride along on a phone.
     const place = () => positionPopover(trigger, pop);
+    const placeThrottled = rafThrottle(place);
     const onScroll = (e) => {
-      if (overlayIsDesktop.matches) place();
+      if (overlayIsDesktop.matches) placeThrottled();
       else if (!pop.contains(e.target)) pop.hidePopover();
     };
     pop.addEventListener("toggle", (e) => {
       if (e.newState === "open") {
         place();
         window.addEventListener("scroll", onScroll, true);
-        window.addEventListener("resize", place);
+        window.addEventListener("resize", placeThrottled);
       } else {
         window.removeEventListener("scroll", onScroll, true);
-        window.removeEventListener("resize", place);
+        window.removeEventListener("resize", placeThrottled);
       }
     });
 

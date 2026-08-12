@@ -1783,7 +1783,8 @@ function positionPopover(trigger, pop) {
 // The dropdown menu keeps CSS anchor positioning (initMenus owns its keyboard
 // model); every other popover is positioned by JS so it clamps to the viewport
 // on any browser (CSS anchor positioning's flip/clamp fallbacks aren't reliable
-// yet) and follows the trigger on scroll, staying open, like the Combobox.
+// yet). On desktop it follows the trigger on scroll; on touch it dismisses on
+// scroll instead (like Select), so it doesn't ride along on a phone.
 function initPopovers() {
   const supportsAnchor = CSS.supports("position-area", "bottom");
   document.querySelectorAll(".popover[id]").forEach((pop) => {
@@ -1800,16 +1801,20 @@ function initPopovers() {
       return;
     }
 
-    // Place on open, and keep it placed on scroll/resize so it follows the
-    // trigger and stays open (only the menu uses CSS anchor positioning now).
+    // Desktop: follow the trigger on scroll, staying open. Touch: dismiss on an
+    // outside scroll instead (like Select) so it doesn't ride along on a phone.
     const place = () => positionPopover(trigger, pop);
+    const onScroll = (e) => {
+      if (overlayIsDesktop.matches) place();
+      else if (!pop.contains(e.target)) pop.hidePopover();
+    };
     pop.addEventListener("toggle", (e) => {
       if (e.newState === "open") {
         place();
-        window.addEventListener("scroll", place, true);
+        window.addEventListener("scroll", onScroll, true);
         window.addEventListener("resize", place);
       } else {
-        window.removeEventListener("scroll", place, true);
+        window.removeEventListener("scroll", onScroll, true);
         window.removeEventListener("resize", place);
       }
     });

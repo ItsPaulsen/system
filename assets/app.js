@@ -1252,52 +1252,16 @@ function rafThrottle(fn) {
   };
 }
 
-// Keep a floating list placed while open: throttled to a frame, and re-run on
-// visual-viewport changes too so it tracks the mobile keyboard showing/hiding.
-function trackViewport(reposition) {
-  const on = rafThrottle(reposition);
-  const vv = window.visualViewport;
-  return {
-    start() {
-      window.addEventListener("scroll", on, true);
-      window.addEventListener("resize", on);
-      vv?.addEventListener("resize", on);
-      vv?.addEventListener("scroll", on);
-    },
-    stop() {
-      window.removeEventListener("scroll", on, true);
-      window.removeEventListener("resize", on);
-      vv?.removeEventListener("resize", on);
-      vv?.removeEventListener("scroll", on);
-    }
-  };
-}
-
-// Position a select/combobox popover list against its anchor (the component
-// root). Prefer opening below; measure against the *visual* viewport so the
-// on-screen keyboard is accounted for, cap the height to the room available, and
-// flip above only when below is too tight. Call after showPopover().
-function positionListbox(anchor, list) {
+// Flip a select/combobox list above its trigger when it won't fit below and
+// there's more room above. The CSS-native version is anchor positioning, but
+// that lacks Safari support today, so this mirrors positionPopover's JS flip.
+// Call on open, once the list is visible so its height can be measured.
+function placeList(anchor, list) {
   const GAP = 4;
-  const PAD = 8;
-  const vv = window.visualViewport;
-  const viewTop = vv ? vv.offsetTop : 0;
-  const viewBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
-  list.style.width = `${rect.width}px`;
-  list.style.left = `${rect.left}px`;
-  list.style.maxHeight = ""; // measure at the CSS cap first
-  const natural = list.offsetHeight;
-  const roomBelow = viewBottom - rect.bottom - GAP - PAD;
-  const roomAbove = rect.top - viewTop - GAP - PAD;
-  if (natural <= roomBelow || roomBelow >= roomAbove) {
-    list.style.top = `${rect.bottom + GAP}px`;
-    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
-  } else {
-    const h = Math.min(natural, Math.max(0, roomAbove));
-    list.style.top = `${rect.top - h - GAP}px`;
-    if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
-  }
+  const below = window.innerHeight - rect.bottom;
+  const flip = below < list.offsetHeight + GAP && rect.top > below;
+  list.classList.toggle("select__list--above", flip);
 }
 
 // Custom select: a styled trigger + a floating listbox. Native <select> is the
@@ -1328,23 +1292,19 @@ function initSelects() {
       opt.scrollIntoView({ block: "nearest" });
       trigger.setAttribute("aria-activedescendant", opt.id);
     };
-    const isOpen = () => list.matches(":popover-open");
-    const track = trackViewport(() => positionListbox(root, list));
     const open = () => {
-      if (isOpen()) return;
-      list.showPopover();
+      if (!list.hidden) return;
+      list.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
-      positionListbox(root, list);
-      track.start();
+      placeList(trigger, list);
       scroll.onOpen();
       setActive(activeIndex < 0 ? 0 : activeIndex);
     };
     const close = () => {
-      if (!isOpen()) return;
-      list.hidePopover();
+      if (list.hidden) return;
+      list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
       trigger.removeAttribute("aria-activedescendant");
-      track.stop();
       scroll.onClose();
     };
     const scroll = overlayScroll(list, close);
@@ -1387,7 +1347,7 @@ function initSelects() {
     trigger.addEventListener("focus", () => {
       if (trigger.matches(":focus-visible")) open();
     });
-    trigger.addEventListener("click", () => (isOpen() ? close() : open()));
+    trigger.addEventListener("click", () => (list.hidden ? open() : close()));
 
     // Actions for each nav key while the list is open. The same keys also open a
     // closed list (Enter/Space just reveal it, matching a trigger click).
@@ -1405,7 +1365,7 @@ function initSelects() {
         close();
         return;
       }
-      if (!isOpen()) {
+      if (list.hidden) {
         if (e.key in keyActions) {
           e.preventDefault();
           open();
@@ -1420,7 +1380,7 @@ function initSelects() {
       }
       // Printable character → type-ahead (opening the list first if needed).
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        if (!isOpen()) open();
+        if (list.hidden) open();
         matchTypeahead(e.key);
       }
     });
@@ -1470,22 +1430,17 @@ function initComboboxes() {
         input.removeAttribute("aria-activedescendant");
       }
     };
-    const isOpen = () => list.matches(":popover-open");
-    const reposition = () => positionListbox(root, list);
-    const track = trackViewport(reposition);
     const open = () => {
-      if (isOpen()) return;
-      list.showPopover();
+      if (!list.hidden) return;
+      list.hidden = false;
       input.setAttribute("aria-expanded", "true");
-      positionListbox(root, list);
-      track.start();
+      placeList(input, list);
     };
     const close = () => {
-      if (!isOpen()) return;
-      list.hidePopover();
+      if (list.hidden) return;
+      list.hidden = true;
       input.setAttribute("aria-expanded", "false");
       setActive(null);
-      track.stop();
     };
 
     // Substring filter (empty query shows everything); active row resets to the
@@ -1498,8 +1453,6 @@ function initComboboxes() {
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
       setActive(vis[0] || null);
-      // Filtering changes the list height, so re-place it while open.
-      if (isOpen()) reposition();
     };
     const choose = (opt) => {
       if (!opt) return;
@@ -1519,7 +1472,7 @@ function initComboboxes() {
       }
     });
     input.addEventListener("click", () => {
-      if (!isOpen()) {
+      if (list.hidden) {
         open();
         filter();
       }
@@ -1532,7 +1485,7 @@ function initComboboxes() {
       }
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
-        if (!isOpen()) {
+        if (list.hidden) {
           open();
           filter();
           return;
@@ -1546,13 +1499,13 @@ function initComboboxes() {
         return;
       }
       if (e.key === "Enter") {
-        if (isOpen() && activeIndex >= 0 && !options[activeIndex].hidden) {
+        if (!list.hidden && activeIndex >= 0 && !options[activeIndex].hidden) {
           e.preventDefault();
           choose(options[activeIndex]);
         }
         return;
       }
-      if ((e.key === "Home" || e.key === "End") && isOpen()) {
+      if ((e.key === "Home" || e.key === "End") && !list.hidden) {
         const vis = visible();
         if (!vis.length) return;
         e.preventDefault();

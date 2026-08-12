@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 
 // Custom single-select: a styled trigger + a floating listbox. Reach for Native Select unless
@@ -17,7 +17,6 @@ export default function Select({
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(() => Math.max(0, options.indexOf(selected)));
   const rootRef = useRef(null);
-  const listRef = useRef(null);
   const id = useId();
   const buf = useRef("");
   const bufTimer = useRef(0);
@@ -69,30 +68,6 @@ export default function Select({
     }
   };
 
-  // Top-layer popover (matches the CSS) so the list escapes clipping ancestors.
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list || !open) return;
-    const place = () => {
-      const r = rootRef.current.getBoundingClientRect();
-      list.style.width = `${r.width}px`;
-      list.style.left = `${r.left}px`;
-      const h = list.offsetHeight;
-      const below = window.innerHeight - r.bottom;
-      list.style.top =
-        below < h + 4 && r.top > below ? `${Math.max(4, r.top - h - 4)}px` : `${r.bottom + 4}px`;
-    };
-    list.showPopover();
-    place();
-    window.addEventListener("scroll", place, true);
-    window.addEventListener("resize", place);
-    return () => {
-      window.removeEventListener("scroll", place, true);
-      window.removeEventListener("resize", place);
-      if (list.matches(":popover-open")) list.hidePopover();
-    };
-  }, [open]);
-
   return (
     <div
       className={["select", fill && "select--fill"].filter(Boolean).join(" ")}
@@ -114,7 +89,7 @@ export default function Select({
         <span className="select__value">{selected}</span>
         <IconChevronDown className="select__chevron" aria-hidden="true" />
       </button>
-      <ul className="select__list" role="listbox" tabIndex={-1} ref={listRef} popover="manual">
+      <ul className="select__list" role="listbox" tabIndex={-1} hidden={!open}>
         {options.map((opt, i) => (
           <li
             key={opt}

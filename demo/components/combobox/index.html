@@ -104,13 +104,7 @@
                   </span>
                 </div>
                 <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul
-                  class="select__list"
-                  id="cb-team-list"
-                  role="listbox"
-                  tabindex="-1"
-                  popover="manual"
-                >
+                <ul class="select__list" id="cb-team-list" role="listbox" tabindex="-1" hidden>
                   <li class="select__option" role="option">Design</li>
                   <li class="select__option" role="option">Engineering</li>
                   <li class="select__option" role="option">Marketing</li>
@@ -178,13 +172,7 @@
                   </span>
                 </div>
                 <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul
-                  class="select__list"
-                  id="cb-team-fill-list"
-                  role="listbox"
-                  tabindex="-1"
-                  popover="manual"
-                >
+                <ul class="select__list" id="cb-team-fill-list" role="listbox" tabindex="-1" hidden>
                   <li class="select__option" role="option">Design</li>
                   <li class="select__option" role="option">Engineering</li>
                   <li class="select__option" role="option">Marketing</li>
@@ -225,7 +213,7 @@
            <span class="tok-prop">aria-autocomplete</span>=<span class="tok-str">"list"</span> <span class="tok-prop">aria-controls</span>=<span class="tok-str">"cb-list"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__trailing combobox__chevron"</span><span class="tok-key">&gt;</span><span class="tok-key">&lt;svg</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span><span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
-  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__list"</span> <span class="tok-prop">id</span>=<span class="tok-str">"cb-list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">popover</span>=<span class="tok-str">"manual"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__list"</span> <span class="tok-prop">id</span>=<span class="tok-str">"cb-list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__option"</span> <span class="tok-prop">role</span>=<span class="tok-str">"option"</span><span class="tok-key">&gt;</span>Design<span class="tok-key">&lt;/li&gt;</span>
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"combobox__empty"</span> <span class="tok-prop">role</span>=<span class="tok-str">"presentation"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>No results<span class="tok-key">&lt;/li&gt;</span>
   <span class="tok-key">&lt;/ul&gt;</span>

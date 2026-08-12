@@ -48,7 +48,7 @@ Your own CSS does not live in any of these layers, and **unlayered CSS beats eve
   border-radius: 0;
 }
 
-/* Retint the whole system by overriding an anchor (the raw value tokens derive from) */
+/* Retint the whole system by overriding an anchor variable (the raw value the tokens derive from) */
 :root {
   --anchor-primary: 0 90 200;
 }

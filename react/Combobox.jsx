@@ -64,6 +64,7 @@ export default function Combobox({
   const rootRef = useRef(null);
   const listRef = useRef(null);
   const aboveRef = useRef();
+  const pointerRef = useRef(null); // last real pointer pos, to ignore scroll-synthesized moves
   const listId = useId();
 
   const q = query.trim().toLowerCase();
@@ -199,7 +200,14 @@ export default function Combobox({
                 role="option"
                 aria-selected={selected === opt}
                 onMouseDown={(e) => e.preventDefault()}
-                onMouseMove={() => setActive(i)}
+                onMouseMove={(e) => {
+                  // Wheel-scrolling slides rows under a still pointer, firing a
+                  // synthetic move (same clientX/Y). Only a real move re-highlights.
+                  const p = pointerRef.current;
+                  if (p && e.clientX === p.x && e.clientY === p.y) return;
+                  pointerRef.current = { x: e.clientX, y: e.clientY };
+                  setActive(i);
+                }}
                 onClick={() => choose(opt)}
               >
                 {opt}

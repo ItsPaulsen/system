@@ -1345,11 +1345,12 @@ function initSelects() {
     // Labels are static, lowercase them once for type-ahead instead of per key.
     const optionLabels = options.map((o) => o.textContent.trim().toLowerCase());
 
-    const setActive = (i) => {
+    // scroll=false for pointer moves: only keyboard nav should tug the scroll.
+    const setActive = (i, scroll = true) => {
       activeIndex = (i + options.length) % options.length;
       const opt = options[activeIndex];
       options.forEach((o, idx) => o.classList.toggle("is-active", idx === activeIndex));
-      opt.scrollIntoView({ block: "nearest" });
+      if (scroll) opt.scrollIntoView({ block: "nearest" });
       trigger.setAttribute("aria-activedescendant", opt.id);
     };
     const floating = floatingList(root, list);
@@ -1443,11 +1444,19 @@ function initSelects() {
         matchTypeahead(e.key);
       }
     });
+    // Wheel-scrolling slides rows under a still pointer, firing a synthetic
+    // mousemove (same clientX/Y). Ignore those so the highlight follows only a
+    // real move, and never scroll from the pointer.
+    let lastPointer = null;
     options.forEach((o, i) => {
       // Keep focus on the trigger when clicking an option.
       o.addEventListener("mousedown", (e) => e.preventDefault());
       o.addEventListener("click", () => select(i));
-      o.addEventListener("mousemove", () => setActive(i));
+      o.addEventListener("mousemove", (e) => {
+        if (lastPointer && e.clientX === lastPointer.x && e.clientY === lastPointer.y) return;
+        lastPointer = { x: e.clientX, y: e.clientY };
+        setActive(i, false);
+      });
     });
     // The list is portaled to <body>, so "outside" must exclude it too. And a
     // resize-induced blur (relatedTarget null) must not close it.
@@ -1482,11 +1491,12 @@ function initComboboxes() {
 
     const visible = () => options.filter((o) => !o.hidden);
 
-    const setActive = (opt) => {
+    // scroll=false for pointer moves: only keyboard nav should tug the scroll.
+    const setActive = (opt, scroll = true) => {
       activeIndex = opt ? options.indexOf(opt) : -1;
       options.forEach((o) => o.classList.toggle("is-active", o === opt));
       if (opt) {
-        opt.scrollIntoView({ block: "nearest" });
+        if (scroll) opt.scrollIntoView({ block: "nearest" });
         input.setAttribute("aria-activedescendant", opt.id);
       } else {
         input.removeAttribute("aria-activedescendant");
@@ -1589,11 +1599,19 @@ function initComboboxes() {
       }
     });
 
+    // Wheel-scrolling the list slides rows under a still pointer, which fires a
+    // synthetic mousemove (same clientX/Y). Ignore those so the highlight only
+    // follows a real move, and never scroll from the pointer.
+    let lastPointer = null;
     options.forEach((o) => {
       // Keep focus in the input when picking with the mouse.
       o.addEventListener("mousedown", (e) => e.preventDefault());
       o.addEventListener("click", () => choose(o));
-      o.addEventListener("mousemove", () => setActive(o));
+      o.addEventListener("mousemove", (e) => {
+        if (lastPointer && e.clientX === lastPointer.x && e.clientY === lastPointer.y) return;
+        lastPointer = { x: e.clientX, y: e.clientY };
+        setActive(o, false);
+      });
     });
     // List is portaled to <body>; exclude it from "outside", and don't close on
     // a resize-induced blur (relatedTarget null).

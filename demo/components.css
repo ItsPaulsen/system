@@ -834,10 +834,10 @@
 
   /* Reusable floating surface built on the native Popover API. Because it lives
    in the top layer it escapes any overflow/stacking context, and popover="auto"
-   gives light-dismiss (outside click), Esc, and focus-return for free. Placed
-   with CSS anchor positioning against its invoker (the popovertarget button);
-   app.js (positionPopover) covers engines without anchor positioning. Open-only
-   fade + rise, matching Dialog; close is instant. */
+   gives light-dismiss (outside click), Esc, and focus-return for free. app.js
+   (positionPopover) places it and keeps it clamped in view on scroll; the
+   dropdown menu is the one exception, positioned via CSS anchor positioning
+   (below). Open-only fade + rise, matching Dialog; close is instant. */
   .popover {
     position: fixed;
     width: max-content;
@@ -855,10 +855,11 @@
     transform: translateY(-4px);
   }
 
-  /* Declarative placement where supported: below the invoker, start-aligned,
-   flipping above when there's no room. */
+  /* The dropdown menu places itself declaratively with CSS anchor positioning:
+   below the invoker, start-aligned, flipping when there's no room. Other popovers
+   are positioned by app.js (positionPopover), so this block is menu-only. */
   @supports (position-area: bottom) {
-    .popover {
+    .menu__list {
       margin-block-start: 4px;
       position-area: block-end span-inline-end;
       position-try-fallbacks:
@@ -889,15 +890,6 @@
     padding: 1rem;
     font-size: var(--font-body-small-size);
     color: var(--ink-secondary);
-  }
-
-  /* Centre on the trigger instead of the menu's start-aligned edge (initPopovers
-   mirrors this for engines without anchor positioning). */
-  @supports (position-area: bottom) {
-    .popover--center {
-      position-area: block-end;
-      justify-self: anchor-center;
-    }
   }
 
   /* ── Dropdown Menu ─────────────────────────────────────────────────────── */

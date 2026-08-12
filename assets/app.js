@@ -1758,9 +1758,10 @@ function initCalendars() {
   });
 }
 
-// Place a popover under its invoker (flipping up when cramped, clamped to the
-// viewport). The stylesheet does this declaratively via CSS anchor positioning;
-// this is the fallback for engines that lack it (Firefox today).
+// Place a popover under its invoker: below by default, flipped up when cramped,
+// and clamped to the viewport so it never runs off-screen. Primary placement for
+// popovers; the dropdown menu uses CSS anchor positioning and only falls back
+// here where that's unsupported.
 function positionPopover(trigger, pop) {
   const GAP = 4;
   const PAD = 8;
@@ -1799,10 +1800,8 @@ function initPopovers() {
       return;
     }
 
-    // Turn off any CSS anchor positioning so the JS coordinates win cleanly,
-    // then place on open and keep placed on scroll/resize.
-    pop.style.setProperty("position-area", "none");
-    pop.style.marginBlockStart = "0";
+    // Place on open, and keep it placed on scroll/resize so it follows the
+    // trigger and stays open (only the menu uses CSS anchor positioning now).
     const place = () => positionPopover(trigger, pop);
     pop.addEventListener("toggle", (e) => {
       if (e.newState === "open") {

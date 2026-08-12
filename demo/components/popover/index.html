@@ -71,10 +71,10 @@
           <h3 class="subhead">Default</h3>
           <p class="section-note">
             The foundation under <a href="/demo/components/dropdown/">Dropdown Menu</a>: the native
-            Popover API for top-layer rendering, light-dismiss, and Esc, positioned with CSS anchor
-            positioning. No JavaScript; the <code>popovertarget</code> button drives it. Use
-            <code>--panel</code> for content padding and <code>--center</code> to center it on the
-            trigger.
+            Popover API for top-layer rendering, light-dismiss, and Esc. The
+            <code>popovertarget</code> button opens and closes it natively; app.js only positions it
+            and keeps it in view on scroll. Use <code>--panel</code> for content padding and
+            <code>--center</code> to center it on the trigger.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -135,9 +135,9 @@
         <section class="preview-block" data-lang="html">
           <h3 class="subhead">JavaScript</h3>
           <p class="section-note">
-            From <code>app.js</code>. Placement is CSS anchor positioning;
-            <code>initPopovers</code> is only the fallback for engines without it, plus a
-            close-on-Tab-away tidy-up.
+            From <code>app.js</code>. <code>initPopovers</code> positions each popover, clamps it to
+            the viewport, and keeps it placed on scroll, plus a close-on-Tab-away tidy-up. (The
+            dropdown menu is the exception, placed with CSS anchor positioning.)
           </p>
           <div data-source="/assets/app.js" data-fn="initPopovers"></div>
         </section>

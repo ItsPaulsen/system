@@ -1211,7 +1211,7 @@ function injectCodeCopy() {
 }
 
 // Shared overlay scroll behavior for trigger-anchored surfaces (menu, select,
-// combobox). Desktop: lock the page while open, the pointer stays over the
+// popover). Desktop: lock the page while open, the pointer stays over the
 // surface so page-scroll isn't the intent. Touch: dismiss on a scroll that
 // starts outside the surface, which is exactly how a touch scroll begins.
 // Call onOpen()/onClose() from the component's own open/close.
@@ -1773,6 +1773,15 @@ function initPopovers() {
       };
       trigger.addEventListener("focusout", onFocusOut);
       pop.addEventListener("focusout", onFocusOut);
+
+      // Same overlay scroll behavior as menu/select: desktop locks the page
+      // while open, touch dismisses on a scroll that starts outside it. (The
+      // menu runs this in initMenus off its own toggle.)
+      const scroll = overlayScroll(pop, () => pop.hidePopover());
+      pop.addEventListener("toggle", (e) => {
+        if (e.newState === "open") scroll.onOpen();
+        else scroll.onClose();
+      });
     }
   });
 }

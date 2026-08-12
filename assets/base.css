@@ -1720,6 +1720,12 @@
     max-width: 100%;
   }
 
+  /* The calendar is a fixed grid, not a fluid-width demo: keep its size and let
+   the example card mask any overflow on narrow screens instead of squashing it. */
+  .component-preview > .calendar {
+    max-width: none;
+  }
+
   /* Example card: the live preview on top, its code panel below,
    both inside one border. Language switches via the page's HTML/React tabs. */
   .example {

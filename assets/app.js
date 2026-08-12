@@ -1501,7 +1501,9 @@ function initComboboxes() {
       });
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
-      setActive(vis[0] || null);
+      // No row is pre-highlighted (matches shadcn): Enter on a fresh open closes
+      // without picking; arrow keys move into the list.
+      setActive(null);
       // Filtering changes the list height, so re-place it while open.
       if (!list.hidden) floating.reflow();
     };
@@ -1544,16 +1546,19 @@ function initComboboxes() {
         const vis = visible();
         if (!vis.length) return;
         const cur = vis.indexOf(options[activeIndex]);
-        const next =
-          e.key === "ArrowDown" ? (cur + 1) % vis.length : (cur - 1 + vis.length) % vis.length;
+        let next;
+        if (cur === -1) next = e.key === "ArrowDown" ? 0 : vis.length - 1;
+        else
+          next =
+            e.key === "ArrowDown" ? (cur + 1) % vis.length : (cur - 1 + vis.length) % vis.length;
         setActive(vis[next]);
         return;
       }
       if (e.key === "Enter") {
-        if (!list.hidden && activeIndex >= 0 && !options[activeIndex].hidden) {
-          e.preventDefault();
-          choose(options[activeIndex]);
-        }
+        if (list.hidden) return;
+        e.preventDefault();
+        if (activeIndex >= 0 && !options[activeIndex].hidden) choose(options[activeIndex]);
+        else close();
         return;
       }
       if ((e.key === "Home" || e.key === "End") && !list.hidden) {

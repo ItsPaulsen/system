@@ -1216,14 +1216,6 @@ function injectCodeCopy() {
 // starts outside the surface, which is exactly how a touch scroll begins.
 // Call onOpen()/onClose() from the component's own open/close.
 const overlayIsDesktop = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-// Full CSS anchor positioning (incl. position-try flip/clamp) glues a floating
-// element to its trigger natively: sticky on scroll, no JS drift. Where it's
-// present we let CSS place popovers + the combobox list on desktop; where it's
-// absent (or on touch, which keeps dismiss-on-scroll / keyboard-aware sizing)
-// the JS positioners run instead. anchorSeq gives each JS-anchored pair a name.
-const supportsAnchorPositioning = CSS.supports("position-try-fallbacks", "flip-block");
-let anchorSeq = 0;
 function overlayScroll(surface, close) {
   let onScroll = null;
   return {
@@ -1481,30 +1473,19 @@ function initComboboxes() {
     const isOpen = () => list.matches(":popover-open");
     const reposition = () => positionListbox(root, list);
     const track = trackViewport(reposition);
-    // Desktop + full anchor positioning: CSS glues the list to the input
-    // (sticky). Otherwise JS positions it (touch keeps keyboard-aware sizing).
-    const anchored = supportsAnchorPositioning && overlayIsDesktop.matches;
-    if (anchored) {
-      const name = `--combobox-${anchorSeq++}`;
-      root.style.setProperty("anchor-name", name);
-      list.style.setProperty("position-anchor", name);
-      list.classList.add("is-anchored");
-    }
     const open = () => {
       if (isOpen()) return;
       list.showPopover();
       input.setAttribute("aria-expanded", "true");
-      if (!anchored) {
-        positionListbox(root, list);
-        track.start();
-      }
+      positionListbox(root, list);
+      track.start();
     };
     const close = () => {
       if (!isOpen()) return;
       list.hidePopover();
       input.setAttribute("aria-expanded", "false");
       setActive(null);
-      if (!anchored) track.stop();
+      track.stop();
     };
 
     // Substring filter (empty query shows everything); active row resets to the
@@ -1517,9 +1498,8 @@ function initComboboxes() {
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
       setActive(vis[0] || null);
-      // Filtering changes the list height; re-place it (CSS anchor mode
-      // re-lays out on its own).
-      if (!anchored && isOpen()) reposition();
+      // Filtering changes the list height, so re-place it while open.
+      if (isOpen()) reposition();
     };
     const choose = (opt) => {
       if (!opt) return;
@@ -1842,10 +1822,10 @@ function positionPopover(trigger, pop) {
 }
 
 // The dropdown menu keeps CSS anchor positioning (initMenus owns its keyboard
-// model). Other popovers: on desktop with full anchor positioning, CSS glues
-// them to the trigger (sticky, no JS drift); otherwise JS positions them,
-// clamping to the viewport, following on scroll on desktop and dismissing on
-// scroll on touch (like Select) so they don't ride along on a phone.
+// model); every other popover is positioned by JS so it clamps to the viewport
+// on any browser (CSS anchor positioning's flip/clamp fallbacks aren't reliable
+// yet). On desktop it follows the trigger on scroll; on touch it dismisses on
+// scroll instead (like Select), so it doesn't ride along on a phone.
 function initPopovers() {
   const supportsAnchor = CSS.supports("position-area", "bottom");
   document.querySelectorAll(".popover[id]").forEach((pop) => {
@@ -1862,31 +1842,24 @@ function initPopovers() {
       return;
     }
 
-    if (supportsAnchorPositioning && overlayIsDesktop.matches) {
-      // Desktop with full anchor positioning: CSS glues it to the trigger and
-      // follows on scroll natively (sticky, no JS drift).
-      pop.classList.add("is-anchored");
-    } else {
-      // Otherwise position with JS: desktop follows on scroll, staying open;
-      // touch dismisses on an outside scroll (like Select) so it doesn't ride
-      // along on a phone.
-      const place = () => positionPopover(trigger, pop);
-      const placeThrottled = rafThrottle(place);
-      const onScroll = (e) => {
-        if (overlayIsDesktop.matches) placeThrottled();
-        else if (!pop.contains(e.target)) pop.hidePopover();
-      };
-      pop.addEventListener("toggle", (e) => {
-        if (e.newState === "open") {
-          place();
-          window.addEventListener("scroll", onScroll, true);
-          window.addEventListener("resize", placeThrottled);
-        } else {
-          window.removeEventListener("scroll", onScroll, true);
-          window.removeEventListener("resize", placeThrottled);
-        }
-      });
-    }
+    // Desktop: follow the trigger on scroll, staying open. Touch: dismiss on an
+    // outside scroll instead (like Select) so it doesn't ride along on a phone.
+    const place = () => positionPopover(trigger, pop);
+    const placeThrottled = rafThrottle(place);
+    const onScroll = (e) => {
+      if (overlayIsDesktop.matches) placeThrottled();
+      else if (!pop.contains(e.target)) pop.hidePopover();
+    };
+    pop.addEventListener("toggle", (e) => {
+      if (e.newState === "open") {
+        place();
+        window.addEventListener("scroll", onScroll, true);
+        window.addEventListener("resize", placeThrottled);
+      } else {
+        window.removeEventListener("scroll", onScroll, true);
+        window.removeEventListener("resize", placeThrottled);
+      }
+    });
 
     // Native auto-popover light-dismisses on outside click / Esc; also close
     // when focus leaves the trigger+popover group (Tab away).

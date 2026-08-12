@@ -855,31 +855,17 @@
     transform: translateY(-4px);
   }
 
-  /* CSS anchor positioning: below the invoker, start-aligned, flipping when
-   there's no room. The dropdown menu always uses it; popovers + the combobox
-   list opt in via .is-anchored, which app.js adds on desktop where the browser
-   fully supports anchor positioning (otherwise app.js positions them in JS). */
+  /* The dropdown menu places itself declaratively with CSS anchor positioning:
+   below the invoker, start-aligned, flipping when there's no room. Other popovers
+   are positioned by app.js (positionPopover), so this block is menu-only. */
   @supports (position-area: bottom) {
-    .menu__list,
-    .popover.is-anchored,
-    .select__list.is-anchored {
+    .menu__list {
       margin-block-start: 4px;
       position-area: block-end span-inline-end;
       position-try-fallbacks:
         flip-block,
         flip-inline,
         flip-block flip-inline;
-    }
-
-    /* Match the trigger width (JS mode sets this explicitly). */
-    .select__list.is-anchored {
-      width: anchor-size(width);
-    }
-
-    /* Centred popovers align to the trigger's midpoint. */
-    .popover--center.is-anchored {
-      position-area: block-end;
-      justify-self: anchor-center;
     }
   }
 

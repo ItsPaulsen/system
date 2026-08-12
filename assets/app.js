@@ -1779,34 +1779,50 @@ function positionPopover(trigger, pop) {
   pop.style.top = `${Math.round(top)}px`;
 }
 
-// Position every invoker-driven .popover on open, but only where CSS anchor
-// positioning is unsupported, otherwise the stylesheet owns placement. Covers
-// both the dropdown surface and standalone popovers; initMenus handles only the
-// menu keyboard model on top.
+// The dropdown menu keeps CSS anchor positioning (initMenus owns its keyboard
+// model); every other popover is positioned by JS so it clamps to the viewport
+// on any browser (CSS anchor positioning's flip/clamp fallbacks aren't reliable
+// yet) and follows the trigger on scroll, staying open, like the Combobox.
 function initPopovers() {
   const supportsAnchor = CSS.supports("position-area", "bottom");
   document.querySelectorAll(".popover[id]").forEach((pop) => {
     const trigger = document.querySelector(`[popovertarget="${pop.id}"]`);
     if (!trigger) return;
 
-    if (!supportsAnchor) {
-      pop.addEventListener("toggle", (e) => {
-        if (e.newState === "open") positionPopover(trigger, pop);
-      });
+    if (pop.classList.contains("menu__list")) {
+      // JS only fills in where anchor positioning is unsupported.
+      if (!supportsAnchor) {
+        pop.addEventListener("toggle", (e) => {
+          if (e.newState === "open") positionPopover(trigger, pop);
+        });
+      }
+      return;
     }
 
-    // A native auto-popover only light-dismisses on outside click / Esc, so it
-    // lingers when you Tab away. Close once focus leaves the trigger+popover
-    // group (Tab into the popover's own content keeps it open). The menu runs
-    // its own keyboard model, so leave those to initMenus.
-    if (!pop.classList.contains("menu__list")) {
-      const onFocusOut = (e) => {
-        const to = e.relatedTarget;
-        if (to && to !== trigger && !pop.contains(to)) pop.hidePopover();
-      };
-      trigger.addEventListener("focusout", onFocusOut);
-      pop.addEventListener("focusout", onFocusOut);
-    }
+    // Turn off any CSS anchor positioning so the JS coordinates win cleanly,
+    // then place on open and keep placed on scroll/resize.
+    pop.style.setProperty("position-area", "none");
+    pop.style.marginBlockStart = "0";
+    const place = () => positionPopover(trigger, pop);
+    pop.addEventListener("toggle", (e) => {
+      if (e.newState === "open") {
+        place();
+        window.addEventListener("scroll", place, true);
+        window.addEventListener("resize", place);
+      } else {
+        window.removeEventListener("scroll", place, true);
+        window.removeEventListener("resize", place);
+      }
+    });
+
+    // Native auto-popover light-dismisses on outside click / Esc; also close
+    // when focus leaves the trigger+popover group (Tab away).
+    const onFocusOut = (e) => {
+      const to = e.relatedTarget;
+      if (to && to !== trigger && !pop.contains(to)) pop.hidePopover();
+    };
+    trigger.addEventListener("focusout", onFocusOut);
+    pop.addEventListener("focusout", onFocusOut);
   });
 }
 

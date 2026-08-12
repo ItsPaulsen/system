@@ -741,11 +741,12 @@
   }
 
   .select__list {
+    /* Portaled to <body> and positioned in page coordinates by app.js
+     (positionFloating): it escapes any clipping/overflow ancestor (like shadcn),
+     and absolute page coords scroll with the document so it stays glued to the
+     trigger with no drift. JS sets left/top/width/max-height. */
     position: absolute;
-    top: calc(100% + 4px);
-    inset-inline-start: 0;
-    z-index: 30;
-    width: 100%;
+    z-index: 50;
     max-height: 260px;
     margin: 0;
     padding: 4px;
@@ -770,12 +771,6 @@
     /* Open-only fade + rise, matching the Dropdown Menu popover. */
     opacity: 0;
     transform: translateY(-4px);
-  }
-
-  /* Flipped above the trigger when there's no room below (toggled by JS). */
-  .select__list--above {
-    top: auto;
-    bottom: calc(100% + 4px);
   }
 
   .select__list::-webkit-scrollbar {

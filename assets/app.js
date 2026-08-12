@@ -1256,12 +1256,57 @@ function rafThrottle(fn) {
 // there's more room above. The CSS-native version is anchor positioning, but
 // that lacks Safari support today, so this mirrors positionPopover's JS flip.
 // Call on open, once the list is visible so its height can be measured.
-function placeList(anchor, list) {
+// Position a select/combobox list (portaled to <body>) against its anchor, in
+// PAGE coordinates so it scrolls with the document and stays glued to the
+// trigger. Measures against the visual viewport (keyboard-aware): opens below,
+// flips above only when below can't fit and above has more room, and caps the
+// height to the space available so it clips instead of hiding behind the keyboard.
+function positionFloating(anchor, list) {
   const GAP = 4;
+  const PAD = 8;
+  const vv = window.visualViewport;
+  const viewTop = vv ? vv.offsetTop : 0;
+  const viewBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
-  const below = window.innerHeight - rect.bottom;
-  const flip = below < list.offsetHeight + GAP && rect.top > below;
-  list.classList.toggle("select__list--above", flip);
+  list.style.width = `${rect.width}px`;
+  list.style.left = `${rect.left + window.scrollX}px`;
+  list.style.maxHeight = "";
+  const natural = list.offsetHeight;
+  const roomBelow = viewBottom - rect.bottom - GAP - PAD;
+  const roomAbove = rect.top - viewTop - GAP - PAD;
+  if (natural <= roomBelow || roomBelow >= roomAbove) {
+    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
+    if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
+  } else {
+    const h = Math.min(natural, Math.max(0, roomAbove));
+    list.style.top = `${rect.top + window.scrollY - h - GAP}px`;
+    if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
+  }
+}
+
+// Portal a list to <body> while open and keep it placed on scroll/resize and on
+// visual-viewport changes (mobile keyboard). Never closes on those, just
+// re-places, so it stays open like shadcn.
+function floatingList(anchor, list) {
+  const reflow = rafThrottle(() => positionFloating(anchor, list));
+  const vv = window.visualViewport;
+  return {
+    reflow,
+    open() {
+      document.body.appendChild(list);
+      positionFloating(anchor, list);
+      window.addEventListener("scroll", reflow, true);
+      window.addEventListener("resize", reflow);
+      vv?.addEventListener("resize", reflow);
+      vv?.addEventListener("scroll", reflow);
+    },
+    close() {
+      window.removeEventListener("scroll", reflow, true);
+      window.removeEventListener("resize", reflow);
+      vv?.removeEventListener("resize", reflow);
+      vv?.removeEventListener("scroll", reflow);
+    }
+  };
 }
 
 // Custom select: a styled trigger + a floating listbox. Native <select> is the
@@ -1292,12 +1337,12 @@ function initSelects() {
       opt.scrollIntoView({ block: "nearest" });
       trigger.setAttribute("aria-activedescendant", opt.id);
     };
+    const floating = floatingList(root, list);
     const open = () => {
       if (!list.hidden) return;
       list.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
-      placeList(trigger, list);
-      scroll.onOpen();
+      floating.open();
       setActive(activeIndex < 0 ? 0 : activeIndex);
     };
     const close = () => {
@@ -1305,9 +1350,8 @@ function initSelects() {
       list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
       trigger.removeAttribute("aria-activedescendant");
-      scroll.onClose();
+      floating.close();
     };
-    const scroll = overlayScroll(list, close);
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
       // Rich options (e.g. a flag + label) mirror their markup into the trigger;
@@ -1390,11 +1434,14 @@ function initSelects() {
       o.addEventListener("click", () => select(i));
       o.addEventListener("mousemove", () => setActive(i));
     });
+    // The list is portaled to <body>, so "outside" must exclude it too. And a
+    // resize-induced blur (relatedTarget null) must not close it.
     document.addEventListener("click", (e) => {
-      if (!root.contains(e.target)) close();
+      if (!root.contains(e.target) && !list.contains(e.target)) close();
     });
     root.addEventListener("focusout", (e) => {
-      if (!root.contains(e.relatedTarget)) close();
+      const to = e.relatedTarget;
+      if (to && !root.contains(to) && !list.contains(to)) close();
     });
   });
 }
@@ -1430,17 +1477,19 @@ function initComboboxes() {
         input.removeAttribute("aria-activedescendant");
       }
     };
+    const floating = floatingList(root, list);
     const open = () => {
       if (!list.hidden) return;
       list.hidden = false;
       input.setAttribute("aria-expanded", "true");
-      placeList(input, list);
+      floating.open();
     };
     const close = () => {
       if (list.hidden) return;
       list.hidden = true;
       input.setAttribute("aria-expanded", "false");
       setActive(null);
+      floating.close();
     };
 
     // Substring filter (empty query shows everything); active row resets to the
@@ -1453,6 +1502,8 @@ function initComboboxes() {
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
       setActive(vis[0] || null);
+      // Filtering changes the list height, so re-place it while open.
+      if (!list.hidden) floating.reflow();
     };
     const choose = (opt) => {
       if (!opt) return;
@@ -1519,11 +1570,14 @@ function initComboboxes() {
       o.addEventListener("click", () => choose(o));
       o.addEventListener("mousemove", () => setActive(o));
     });
+    // List is portaled to <body>; exclude it from "outside", and don't close on
+    // a resize-induced blur (relatedTarget null).
     document.addEventListener("click", (e) => {
-      if (!root.contains(e.target)) close();
+      if (!root.contains(e.target) && !list.contains(e.target)) close();
     });
     root.addEventListener("focusout", (e) => {
-      if (!root.contains(e.relatedTarget)) close();
+      const to = e.relatedTarget;
+      if (to && !root.contains(to) && !list.contains(to)) close();
     });
   });
 }

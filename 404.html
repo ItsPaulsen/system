@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Page not found</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/globals.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      /* Centered in the viewport below the injected nav. */
+      .notfound {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem var(--page-gutter) 4rem;
+        text-align: center;
+      }
+
+      .notfound__art {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        border-radius: var(--radius-md);
+      }
+
+      .notfound__rule {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 0 2rem;
+        border: 0;
+        border-top: var(--border-width) solid var(--fill-tertiary);
+      }
+
+      .notfound__title {
+        margin: 0 0 1.5rem;
+        font-size: var(--font-title-small-size);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="notfound">
+      <img class="notfound__art" src="/assets/images/404.webp" alt="" width="412" height="400" />
+      <hr class="notfound__rule" />
+      <h1 class="notfound__title">Looks like you're lost…</h1>
+      <a class="btn" href="/">Go home</a>
+    </main>
+  </body>
+</html>

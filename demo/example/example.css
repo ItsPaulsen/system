@@ -1091,13 +1091,9 @@
 
 .ex-footer__col-list {
   margin: 0;
+  padding: 0;
   list-style: none;
   display: grid;
-
-  /* Block padding gives the first/last link's focus outline (offset 2 + 3px)
-     room inside the clipped ::details-content; it lives on the list, not the
-     clip box, so the accordion still collapses to zero cleanly. */
-  padding: 8px 0;
 }
 
 .ex-footer__col-list a {
@@ -1107,17 +1103,14 @@
   color: var(--ink-primary);
   text-decoration: none;
   font-size: var(--font-body-small-size);
+
+  /* Links run flush to the head, so the focus ring draws inset: a positive
+     offset would be shaved by the accordion's clip box (overflow below). */
+  outline-offset: calc(-1 * var(--focus-ring-width));
 }
 
 .ex-footer__col::details-content {
   overflow: hidden;
-
-  /* The overflow needed for the height animation would otherwise shave the
-     full-width links' focus outline on the sides. Bleed the clip box past the
-     list inline (negative margin) and restore the list's edge with matching
-     padding, so the ring has room while the links stay aligned with the head. */
-  margin-inline: -8px;
-  padding-inline: 8px;
 }
 
 /* Ease the accordion open/close on mobile, same recipe as .accordion. Gated on

@@ -3111,6 +3111,11 @@
     background: var(--background-secondary);
     border: var(--border-width) solid var(--fill-tertiary);
     border-radius: var(--radius-md);
+
+    /* It's a control, not a document: no text I-beam over day/weekday labels,
+       and no drag-selecting the numbers. */
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   /* Inside a Popover the popover is the surface: drop the border, and go

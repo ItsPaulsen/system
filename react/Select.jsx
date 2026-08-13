@@ -55,6 +55,7 @@ export default function Select({
   defaultValue,
   onChange,
   fill,
+  disabled,
   "aria-label": ariaLabel
 }) {
   const [uncontrolled, setUncontrolled] = useState(defaultValue ?? options[0]);
@@ -158,6 +159,7 @@ export default function Select({
         aria-expanded={open}
         aria-label={ariaLabel}
         aria-activedescendant={open ? `${id}-${active}` : undefined}
+        disabled={disabled}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={onKeyDown}
       >

@@ -23,29 +23,42 @@ const toast = (() => {
   let el;
   let iconEl;
   let textEl;
+  let politeEl;
+  let assertiveEl;
   let timer;
-  // Mount the live region up front (idempotent) so its first announcement isn't
-  // injected and populated in the same tick, some screen readers miss that.
+  // Visually-hidden style for the announce-only live regions.
+  const SR_ONLY =
+    "position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;";
+  // Mount the pill + both live regions up front (idempotent) so a first
+  // announcement isn't injected and populated in the same tick — some screen
+  // readers miss that. The visible pill is aria-hidden; the message is announced
+  // through a persistent region of the right politeness. Swapping role/aria-live
+  // on one shared node per message is unreliable across readers, so keep both.
   const ensure = () => {
     if (el) return;
     el = document.createElement("div");
     el.className = "toast";
-    el.setAttribute("role", "status");
-    el.setAttribute("aria-live", "polite");
+    el.setAttribute("aria-hidden", "true");
     iconEl = document.createElement("span");
     iconEl.className = "toast__icon";
     textEl = document.createElement("span");
     textEl.className = "toast__text";
     el.append(iconEl, textEl);
-    document.body.appendChild(el);
+    politeEl = document.createElement("div");
+    politeEl.setAttribute("role", "status");
+    politeEl.setAttribute("aria-live", "polite");
+    politeEl.style.cssText = SR_ONLY;
+    assertiveEl = document.createElement("div");
+    assertiveEl.setAttribute("role", "alert");
+    assertiveEl.setAttribute("aria-live", "assertive");
+    assertiveEl.style.cssText = SR_ONLY;
+    document.body.append(el, politeEl, assertiveEl);
   };
   const render = (message, type = "default") => {
     ensure();
-    // error/warning are interruptive, assertive/alert so they aren't queued
-    // behind whatever a polite region is already reading.
+    // error/warning are interruptive, assertive so they aren't queued behind
+    // whatever a polite region is already reading.
     const assertive = type === "error" || type === "warning";
-    el.setAttribute("role", assertive ? "alert" : "status");
-    el.setAttribute("aria-live", assertive ? "assertive" : "polite");
     el.dataset.type = type;
     // Loading uses the ring spinner (matches the Spinner component); the other
     // types use their semantic Tabler glyph.
@@ -55,6 +68,10 @@ const toast = (() => {
     iconEl.innerHTML = iconMarkup;
     textEl.textContent = message;
     el.classList.add("is-visible");
+    // Announce via the matching persistent region; clear the other so a stale
+    // message can't be re-read.
+    (assertive ? assertiveEl : politeEl).textContent = message;
+    (assertive ? politeEl : assertiveEl).textContent = "";
   };
 
   const show = (message, opts = {}) => {
@@ -1271,7 +1288,11 @@ function positionFloating(anchor, list, wasAbove) {
   const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
-  list.style.left = `${rect.left + window.scrollX}px`;
+  // Clamp horizontally so a list near the right edge (or wider than the space to
+  // its right) doesn't run off-screen — same guard positionPopover/tooltip use.
+  const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
+  const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
+  list.style.left = `${left + window.scrollX}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
@@ -1342,6 +1363,10 @@ function initSelects() {
     options.forEach((o, i) => {
       if (!o.id) o.id = `${root.id || "select"}-opt-${i}`;
     });
+    // Tie the trigger to its listbox (the combobox markup does this statically);
+    // needed for the aria-activedescendant relationship to resolve.
+    if (!list.id) list.id = `${root.id || "select"}-list`;
+    trigger.setAttribute("aria-controls", list.id);
     // Labels are static, lowercase them once for type-ahead instead of per key.
     const optionLabels = options.map((o) => o.textContent.trim().toLowerCase());
 
@@ -1681,6 +1706,11 @@ function initCalendars() {
     const maxYear = today.getFullYear();
     const maxDate = new Date(maxYear, 11, 31);
     maxDate.setHours(0, 0, 0, 0);
+    // Floor a decade back, mirroring the seeded year range, so paging backward is
+    // bounded (matches the dropdown) instead of appending years forever.
+    const minYear = maxYear - 10;
+    const minDate = new Date(minYear, 0, 1);
+    minDate.setHours(0, 0, 0, 0);
     let selected = null;
     const initial = root.getAttribute("data-cal-value");
     if (initial) {
@@ -1700,12 +1730,14 @@ function initCalendars() {
       });
     }
     const ensureYearOption = (y) => {
-      if (y > maxYear) return; // never offer a year past the cap
+      if (y > maxYear || y < minYear) return; // stay within the bounded range
       if ([...yearSel.options].some((o) => Number(o.value) === y)) return;
       const o = document.createElement("option");
       o.value = String(y);
       o.textContent = String(y);
-      yearSel.appendChild(o);
+      // Insert in ascending order so the dropdown never shows years out of order.
+      const after = [...yearSel.options].find((opt) => Number(opt.value) > y);
+      yearSel.insertBefore(o, after || null);
     };
     if (!yearSel.children.length) {
       for (let y = maxYear - 10; y <= maxYear; y += 1) ensureYearOption(y);
@@ -1715,9 +1747,11 @@ function initCalendars() {
       monthSel.value = String(view.getMonth());
       ensureYearOption(view.getFullYear());
       yearSel.value = String(view.getFullYear());
-      // No month beyond the one holding maxDate.
+      // No month beyond the one holding maxDate, nor before the floor.
       const nextStart = new Date(view.getFullYear(), view.getMonth() + 1, 1);
       if (next) next.disabled = nextStart > maxDate;
+      const viewStart = new Date(view.getFullYear(), view.getMonth(), 1);
+      if (prev) prev.disabled = viewStart <= minDate;
       const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
       const start = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
       daysEl.replaceChildren();
@@ -1754,7 +1788,7 @@ function initCalendars() {
     }
 
     function focusDate(d) {
-      if (d > maxDate) return; // don't roam past the cap
+      if (d > maxDate || d < minDate) return; // stay within the bounded range
       if (d.getMonth() !== view.getMonth() || d.getFullYear() !== view.getFullYear()) {
         view = new Date(d.getFullYear(), d.getMonth(), 1);
         render();
@@ -2164,6 +2198,7 @@ function initTooltips() {
       if (e.key === "Escape") hide();
     };
     const show = () => {
+      clearTimeout(hideTimer);
       place();
       bubble.classList.add("is-visible");
       // Fixed-position bubble would float away from the trigger on scroll,
@@ -2171,11 +2206,25 @@ function initTooltips() {
       window.addEventListener("scroll", onScroll, { capture: true, passive: true });
       document.addEventListener("keydown", onKeydown, true);
     };
+    // WCAG 1.4.13 (hoverable): keep it up while the pointer is over the trigger
+    // OR the bubble, so a user can move onto the tooltip to read it. A short
+    // grace delay covers the gap between the two.
+    let hideTimer;
+    const scheduleHide = () => {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hide, 120);
+    };
 
     root.addEventListener("mouseenter", show);
-    root.addEventListener("mouseleave", hide);
+    root.addEventListener("mouseleave", scheduleHide);
+    bubble.addEventListener("mouseenter", () => clearTimeout(hideTimer));
+    bubble.addEventListener("mouseleave", scheduleHide);
     root.addEventListener("focusin", show);
-    root.addEventListener("focusout", hide);
+    // Ignore focus moving between the trigger's own descendants; only hide when
+    // focus actually leaves the trigger.
+    root.addEventListener("focusout", (e) => {
+      if (!e.relatedTarget || !root.contains(e.relatedTarget)) hide();
+    });
   });
 }
 
@@ -2183,15 +2232,19 @@ function initTooltips() {
 // standard modal behaviour, one scroll context, no
 // double-scroll. --scrollbar-comp reserves the removed scrollbar's width so the
 // page doesn't shift as it disappears.
+let scrollLockCount = 0;
 function lockBodyScroll() {
   const root = document.documentElement;
-  if (root.classList.contains("is-scroll-locked")) return;
+  scrollLockCount += 1;
+  if (scrollLockCount > 1) return; // an outer overlay already holds the lock
   const comp = window.innerWidth - root.clientWidth;
   root.style.setProperty("--scrollbar-comp", comp + "px");
   root.classList.add("is-scroll-locked");
 }
 function unlockBodyScroll() {
   const root = document.documentElement;
+  scrollLockCount = Math.max(0, scrollLockCount - 1);
+  if (scrollLockCount > 0) return; // another overlay is still open, stay locked
   root.classList.remove("is-scroll-locked");
   root.style.removeProperty("--scrollbar-comp");
 }
@@ -2204,7 +2257,7 @@ function initDialogs() {
     const opener = event.target.closest("[data-dialog-open]");
     if (opener) {
       const dlg = document.getElementById(opener.dataset.dialogOpen);
-      if (dlg && typeof dlg.showModal === "function") {
+      if (dlg && !dlg.open && typeof dlg.showModal === "function") {
         lockBodyScroll();
         dlg.showModal();
         // Unlock on ANY close path, the close button, a backdrop click, or Esc
@@ -2261,13 +2314,22 @@ function wireSearch() {
     results.hidden = true;
     results.innerHTML = "";
     input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
     active = -1;
   };
 
-  const paint = () =>
-    results.querySelectorAll(".site-nav__result").forEach((li, i) => {
-      li.classList.toggle("is-active", i === active);
+  const paint = () => {
+    const items = results.querySelectorAll(".site-nav__result[data-href]");
+    items.forEach((li, i) => {
+      const on = i === active;
+      li.classList.toggle("is-active", on);
+      li.setAttribute("aria-selected", String(on));
     });
+    // Expose the highlighted row to assistive tech so arrowing announces it.
+    const activeEl = items[active];
+    if (activeEl) input.setAttribute("aria-activedescendant", activeEl.id);
+    else input.removeAttribute("aria-activedescendant");
+  };
 
   const move = (delta) => {
     if (!matches.length) return;
@@ -2294,7 +2356,8 @@ function wireSearch() {
     active = 0;
     results.innerHTML = matches
       .map(
-        (p) => `<li class="site-nav__result" role="option" data-href="${p.href}">${p.label}</li>`
+        (p, i) =>
+          `<li class="site-nav__result" id="nav-search-result-${i}" role="option" aria-selected="false" data-href="${p.href}">${p.label}</li>`
       )
       .join("");
     paint();
@@ -2437,6 +2500,12 @@ function init() {
     if (codeCopy) {
       const code = codeCopy.parentElement.querySelector("code");
       if (!code) return;
+      // navigator.clipboard is undefined on insecure origins (file://, plain
+      // http), so guard before deref — otherwise it throws before the .catch.
+      if (!navigator.clipboard) {
+        toast("Copy failed");
+        return;
+      }
       navigator.clipboard
         .writeText(code.textContent)
         .then(() => {

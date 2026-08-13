@@ -54,6 +54,7 @@ export default function Combobox({
   onChange,
   fill,
   placeholder,
+  disabled,
   "aria-label": ariaLabel
 }) {
   const [query, setQuery] = useState(defaultValue);
@@ -166,6 +167,7 @@ export default function Combobox({
           aria-activedescendant={open && active >= 0 ? `${listId}-${active}` : undefined}
           autoComplete="off"
           placeholder={placeholder}
+          disabled={disabled}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);

@@ -198,6 +198,60 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <p class="section-note">
+            The native <code>disabled</code> attribute on the field; it inherits the
+            <a href="/demo/components/input/">Input</a> disabled skin and can't be typed in or
+            opened.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="combobox" data-combobox style="width: 280px">
+                <div class="input__container combobox__control">
+                  <input
+                    class="input__element"
+                    type="text"
+                    role="combobox"
+                    aria-label="Team"
+                    aria-expanded="false"
+                    aria-autocomplete="list"
+                    placeholder="Search teams…"
+                    autocomplete="off"
+                    disabled
+                  />
+                  <span class="input__trailing combobox__chevron" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                  <li class="select__option" role="option">Design</li>
+                  <li class="select__option" role="option">Engineering</li>
+                  <li class="combobox__empty" role="presentation" hidden>No results</li>
+                </ul>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Combobox
+                disabled
+                aria-label="Team"
+                placeholder="Search teams…"
+                options={teams}
+              />
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h3 class="subhead">Component</h3>
           <p class="section-note">

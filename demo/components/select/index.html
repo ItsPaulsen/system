@@ -161,6 +161,51 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h3 class="subhead">Disabled</h3>
+          <p class="section-note">
+            The native <code>disabled</code> button attribute; the trigger can't open or receive
+            focus.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="select" data-select style="width: 280px">
+                <button
+                  class="select__trigger"
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  disabled
+                >
+                  <span class="select__value">Design</span>
+                  <svg
+                    class="select__chevron"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
+                </button>
+                <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                  <li class="select__option" role="option" aria-selected="true">Design</li>
+                  <li class="select__option" role="option">Engineering</li>
+                  <li class="select__option" role="option">Product</li>
+                  <li class="select__option" role="option">Marketing</li>
+                </ul>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Select disabled aria-label="Team" options={teams} />
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h3 class="subhead">Component</h3>
           <p class="section-note">

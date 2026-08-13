@@ -729,6 +729,12 @@
     box-shadow: 0 0 0 1px var(--focus);
   }
 
+  .select__trigger:disabled {
+    color: var(--ink-tertiary);
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .select__chevron {
     flex-shrink: 0;
     width: 1.25em;

@@ -323,7 +323,7 @@
         </div>
 
         <div class="ex-menu__foot">
-          <div class="tabs tabs--pill ex-menu__theme" role="tablist" aria-label="Theme">
+          <div class="tabs tabs--pill ex-menu__theme" role="radiogroup" aria-label="Theme">
             <input
               type="radio"
               name="ex-theme-menu"
@@ -427,9 +427,6 @@
     }
     radios.forEach(function (r) {
       r.checked = r.dataset.themeOpt === t;
-    });
-    document.querySelectorAll(".tabs__tab[data-theme-opt]").forEach(function (tab) {
-      tab.setAttribute("aria-selected", tab.dataset.themeOpt === t ? "true" : "false");
     });
   }
   radios.forEach(function (r) {

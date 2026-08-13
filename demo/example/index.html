@@ -125,8 +125,16 @@
           <!-- Theme segmented toggle (low) -->
           <div class="ex-marquee__item" style="--x: 680px; --y: 248px">
             <div class="ex-card ex-theme-wrap">
-              <div class="tabs tabs--pill" role="tablist" aria-label="Theme">
-                <button class="tabs__tab" type="button" data-theme-opt="light" aria-selected="true">
+              <div class="tabs tabs--pill" role="radiogroup" aria-label="Theme">
+                <input
+                  type="radio"
+                  name="ex-theme-marquee-a"
+                  id="ex-theme-marquee-a-light"
+                  class="tabs__radio"
+                  data-theme-opt="light"
+                  checked
+                />
+                <label class="tabs__tab" for="ex-theme-marquee-a-light">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -142,8 +150,15 @@
                     />
                   </svg>
                   <span class="tabs__label">Light</span>
-                </button>
-                <button class="tabs__tab" type="button" data-theme-opt="dark" aria-selected="false">
+                </label>
+                <input
+                  type="radio"
+                  name="ex-theme-marquee-a"
+                  id="ex-theme-marquee-a-dark"
+                  class="tabs__radio"
+                  data-theme-opt="dark"
+                />
+                <label class="tabs__tab" for="ex-theme-marquee-a-dark">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -158,7 +173,7 @@
                     />
                   </svg>
                   <span class="tabs__label">Dark</span>
-                </button>
+                </label>
               </div>
             </div>
           </div>
@@ -484,8 +499,16 @@
           <!-- Theme segmented toggle (low) -->
           <div class="ex-marquee__item" style="--x: calc(680px + var(--ex-stride)); --y: 248px">
             <div class="ex-card ex-theme-wrap">
-              <div class="tabs tabs--pill" role="tablist" aria-label="Theme">
-                <button class="tabs__tab" type="button" data-theme-opt="light" aria-selected="true">
+              <div class="tabs tabs--pill" role="radiogroup" aria-label="Theme">
+                <input
+                  type="radio"
+                  name="ex-theme-marquee-b"
+                  id="ex-theme-marquee-b-light"
+                  class="tabs__radio"
+                  data-theme-opt="light"
+                  checked
+                />
+                <label class="tabs__tab" for="ex-theme-marquee-b-light">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -501,8 +524,15 @@
                     />
                   </svg>
                   <span class="tabs__label">Light</span>
-                </button>
-                <button class="tabs__tab" type="button" data-theme-opt="dark" aria-selected="false">
+                </label>
+                <input
+                  type="radio"
+                  name="ex-theme-marquee-b"
+                  id="ex-theme-marquee-b-dark"
+                  class="tabs__radio"
+                  data-theme-opt="dark"
+                />
+                <label class="tabs__tab" for="ex-theme-marquee-b-dark">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -517,7 +547,7 @@
                     />
                   </svg>
                   <span class="tabs__label">Dark</span>
-                </button>
+                </label>
               </div>
             </div>
           </div>

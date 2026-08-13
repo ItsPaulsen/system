@@ -3264,7 +3264,7 @@
   }
 
   @media (hover: hover) {
-    .calendar__day:not(.is-selected):hover {
+    .calendar__day:not(.is-selected, .is-outside):hover {
       background: var(--background-secondary-hover);
     }
   }
@@ -3277,10 +3277,11 @@
     animation: none;
   }
 
-  /* Days spilling in from the neighbouring months read quieter. */
+  /* Neighbouring-month days read quieter and are inert (rendered as non-button
+     divs, aria-hidden), so faint ink-tertiary is fine: WCAG exempts inactive text. */
   .calendar__day.is-outside {
-    /* Adjacent-month dates are still read, so ink-secondary for AA (tertiary fails in light). */
-    color: var(--ink-secondary);
+    color: var(--ink-tertiary);
+    cursor: default;
   }
 
   /* Out-of-range leading cells: hold the column, show and do nothing. */

@@ -1846,6 +1846,16 @@ function initCalendars() {
           row.appendChild(gap);
           continue;
         }
+        // Neighbouring-month days show their number but are inert (not a button,
+        // not focusable/clickable), so selection stays inside the shown month.
+        if (d.getMonth() !== view.getMonth()) {
+          const out = document.createElement("div");
+          out.className = "calendar__day is-outside";
+          out.setAttribute("aria-hidden", "true");
+          out.textContent = String(d.getDate());
+          row.appendChild(out);
+          continue;
+        }
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "calendar__day";
@@ -1856,7 +1866,6 @@ function initCalendars() {
           "aria-label",
           d.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })
         );
-        if (d.getMonth() !== view.getMonth()) btn.classList.add("is-outside");
         if (same(d, today)) {
           btn.classList.add("is-today");
           btn.setAttribute("aria-current", "date");
@@ -1867,12 +1876,11 @@ function initCalendars() {
         btn.tabIndex = isSel ? 0 : -1;
         row.appendChild(btn);
       }
-      // Guarantee one tabbable cell even with nothing selected (buttons only, so
-      // the leading is-empty spacers never take focus).
+      // Guarantee one tabbable cell even with nothing selected. Only in-month
+      // days are buttons (spacers and outside days are inert divs), so the first
+      // one is a safe target.
       if (!daysEl.querySelector('[tabindex="0"]')) {
-        const cur = [...daysEl.querySelectorAll("button.calendar__day")].find(
-          (b) => !b.classList.contains("is-outside")
-        );
+        const cur = daysEl.querySelector("button.calendar__day");
         if (cur) cur.tabIndex = 0;
       }
     }
@@ -1934,12 +1942,12 @@ function initCalendars() {
 
     daysEl.addEventListener("click", (e) => {
       const btn = e.target.closest(".calendar__day");
-      if (btn) select(new Date(`${btn.dataset.date}T00:00:00`));
+      if (btn && btn.dataset.date) select(new Date(`${btn.dataset.date}T00:00:00`));
     });
 
     daysEl.addEventListener("keydown", (e) => {
       const btn = e.target.closest(".calendar__day");
-      if (!btn) return;
+      if (!btn || !btn.dataset.date) return;
       const cur = new Date(`${btn.dataset.date}T00:00:00`);
       const dow = (cur.getDay() + 6) % 7;
       const dayMoves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };

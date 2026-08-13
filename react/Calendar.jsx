@@ -77,7 +77,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
 
   const onKeyDown = (e) => {
     const btn = e.target.closest(".calendar__day");
-    if (!btn) return;
+    if (!btn?.dataset.date) return;
     const cur = parse(btn.dataset.date);
     const dow = mondayIndex(cur);
     const moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
@@ -178,7 +178,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
         onKeyDown={onKeyDown}
         onClick={(e) => {
           const btn = e.target.closest(".calendar__day");
-          if (btn) pick(parse(btn.dataset.date));
+          if (btn?.dataset.date) pick(parse(btn.dataset.date));
         }}
       >
         <div className="calendar__weekdays" role="row">
@@ -199,14 +199,17 @@ export default function Calendar({ value, defaultValue, onSelect }) {
               // Leading days before the floor hold their column but stay blank.
               if (d < minDate)
                 return <div key={iso(d)} className="calendar__day is-empty" aria-hidden="true" />;
+              // Neighbouring-month days show their number but are inert (not a
+              // button, not focusable/clickable), so selection stays in-month.
+              if (d.getMonth() !== view.getMonth())
+                return (
+                  <div key={iso(d)} className="calendar__day is-outside" aria-hidden="true">
+                    {d.getDate()}
+                  </div>
+                );
               const isToday = same(d, today);
               const isSelected = same(d, selected);
-              const cls = [
-                "calendar__day",
-                d.getMonth() !== view.getMonth() && "is-outside",
-                isToday && "is-today",
-                isSelected && "is-selected"
-              ]
+              const cls = ["calendar__day", isToday && "is-today", isSelected && "is-selected"]
                 .filter(Boolean)
                 .join(" ");
               return (

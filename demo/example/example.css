@@ -1059,6 +1059,9 @@
   justify-content: space-between;
   gap: 1rem;
   min-height: 56px;
+
+  /* Matches the links' start padding below so heads and links stay aligned. */
+  padding-inline-start: 4px;
   cursor: pointer;
   list-style: none;
   color: var(--ink-primary);
@@ -1099,14 +1102,22 @@
 .ex-footer__col-list a {
   display: flex;
   align-items: center;
-  min-height: 48px;
+
+  /* Roomier tap rows in the mobile accordion; tightened to a list rhythm at md. */
+  padding-block: 12px;
+
+  /* Start padding sets the label in from the box edge, so the inset focus ring
+     below has ~4px of breathing room to the left of the text. */
+  padding-inline-start: 4px;
   color: var(--ink-primary);
   text-decoration: none;
   font-size: var(--font-body-small-size);
 
   /* Links run flush to the head, so the focus ring draws inset: a positive
-     offset would be shaved by the accordion's clip box (overflow below). */
+     offset would be shaved by the accordion's clip box (overflow below). Skip
+     the global converge animation, which would sweep the ring in from outside. */
   outline-offset: calc(-1 * var(--focus-ring-width));
+  animation: none;
 }
 
 .ex-footer__col::details-content {
@@ -1245,7 +1256,7 @@
 
   .ex-footer__col-head {
     min-height: 0;
-    padding-block: 0 16px;
+    padding-block: 0 12px;
     cursor: default;
     pointer-events: none;
     color: var(--ink-secondary);
@@ -1258,13 +1269,9 @@
     display: none;
   }
 
-  .ex-footer__col-list {
-    gap: 12px;
-  }
-
   .ex-footer__col-list a {
     display: block;
-    min-height: 0;
+    padding-block: 6px;
   }
 
   .ex-footer__bottom {

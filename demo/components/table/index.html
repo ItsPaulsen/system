@@ -76,7 +76,10 @@
       <div class="preview-grid">
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
-          <p class="section-note">Wrap in <code>.table-wrap</code> so wide tables scroll.</p>
+          <p class="section-note">
+            Wrap in <code>.table-wrap</code> so wide tables scroll (keyboard-scrollable when they
+            overflow; see JavaScript below).
+          </p>
           <div class="example" data-example>
             <div class="component-preview">
               <div class="table-wrap" style="width: 100%">
@@ -156,6 +159,18 @@
     <span class="tok-key">&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;</span>Ada Berg<span class="tok-key">&lt;/td&gt;</span>…<span class="tok-key">&lt;/tr&gt;&lt;/tbody&gt;</span>
   <span class="tok-key">&lt;/table&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Only while a <code>.table-wrap</code> actually overflows does
+            it become a focusable scroll region (<code>role="region"</code> +
+            <code>tabindex</code> + label), so keyboard users can pan a wide table without a stray
+            tab stop on ones that fit. The React <code>Table</code> does the same with a
+            <code>ResizeObserver</code>.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initTables"></div>
         </section>
       </div>
     </div>

@@ -146,8 +146,9 @@
           <h2 class="subhead">JavaScript</h2>
           <p class="section-note">
             From <code>app.js</code>. One delegated listener opens <code>[data-dialog-open]</code>,
-            closes <code>[data-dialog-close]</code> and backdrop clicks, and locks body scroll.
-            Shared with <a href="/demo/components/sheet/">Sheet</a>.
+            closes <code>[data-dialog-close]</code> and backdrop clicks, and locks body scroll. It
+            also names each modal from its title (<code>aria-labelledby</code>) so screen readers
+            announce more than "dialog". Shared with <a href="/demo/components/sheet/">Sheet</a>.
           </p>
           <div data-source="/assets/app.js" data-fn="initDialogs"></div>
         </section>

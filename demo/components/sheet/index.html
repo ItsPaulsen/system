@@ -207,7 +207,8 @@
           <p class="section-note">
             From <code>app.js</code>. Shared with <a href="/demo/components/dialog/">Dialog</a>: one
             delegated listener opens <code>[data-dialog-open]</code>, closes on the button,
-            backdrop, and Esc, and locks body scroll.
+            backdrop, and Esc, locks body scroll, and names each modal from its title
+            (<code>aria-labelledby</code>) for screen readers.
           </p>
           <div data-source="/assets/app.js" data-fn="initDialogs"></div>
         </section>

@@ -75,7 +75,7 @@
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <div class="tabs" role="tablist">
+              <div class="tabs" role="radiogroup" aria-label="View">
                 <input
                   type="radio"
                   name="tabs-default"
@@ -99,6 +99,7 @@
             <script type="text/plain" class="example__react">
               <Tabs
                 name="view"
+                aria-label="View"
                 defaultValue="overview"
                 items={[
                   { value: "overview", label: "Overview" },
@@ -118,7 +119,12 @@
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <div class="tabs tabs--pill" role="tablist" style="width: 260px">
+              <div
+                class="tabs tabs--pill"
+                role="radiogroup"
+                aria-label="Theme"
+                style="width: 260px"
+              >
                 <input type="radio" name="tabs-icon" id="tab-icon-1" class="tabs__radio" checked />
                 <label class="tabs__tab" for="tab-icon-1">
                   <svg
@@ -160,6 +166,7 @@
               <Tabs
                 pill
                 name="theme"
+                aria-label="Theme"
                 defaultValue="light"
                 items={[
                   { value: "light", label: "Light", icon: <IconSun /> },
@@ -174,7 +181,7 @@
           <h2 class="subhead">Disabled</h2>
           <div class="example" data-example>
             <div class="component-preview">
-              <div class="tabs" role="tablist" style="width: 200px">
+              <div class="tabs" role="radiogroup" aria-label="Section" style="width: 200px">
                 <input type="radio" name="tabs-two" id="tab-two-1" class="tabs__radio" checked />
                 <label class="tabs__tab" for="tab-two-1"
                   ><span class="tabs__label">Home</span></label
@@ -188,6 +195,7 @@
             <script type="text/plain" class="example__react">
               <Tabs
                 name="section"
+                aria-label="Section"
                 defaultValue="home"
                 items={[
                   { value: "home", label: "Home" },
@@ -209,7 +217,7 @@
 
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
-          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span><span class="tok-key">&gt;</span>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"radiogroup"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"View"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
   <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t1"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
   <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t2"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">/&gt;</span>

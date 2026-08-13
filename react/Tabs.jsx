@@ -1,9 +1,19 @@
 import { Fragment, useId, useState } from "react";
 
-// Segmented tab switcher. Radios sharing a name make the tabs mutually exclusive (CSS-only, no
-// JS). `pill` fully rounds the track. `items` are { value, label, icon?, disabled? }. Uncontrolled
-// via defaultValue; pass value + onChange to control it.
-export default function Tabs({ items, name, value, defaultValue, onChange, pill, className }) {
+// Segmented control: a single choice styled as a track. Radios sharing a name make it mutually
+// exclusive (CSS-only, no JS) — it's a radiogroup, not tabs (no panels). `pill` fully rounds the
+// track. `items` are { value, label, icon?, disabled? }. Uncontrolled via defaultValue; pass
+// value + onChange to control it. `aria-label` names the group for assistive tech.
+export default function Tabs({
+  items,
+  name,
+  value,
+  defaultValue,
+  onChange,
+  pill,
+  className,
+  "aria-label": ariaLabel
+}) {
   const auto = useId();
   const group = name || auto;
   const [uncontrolled, setUncontrolled] = useState(defaultValue ?? items[0]?.value);
@@ -11,7 +21,7 @@ export default function Tabs({ items, name, value, defaultValue, onChange, pill,
   const cls = ["tabs", pill && "tabs--pill", className].filter(Boolean).join(" ");
 
   return (
-    <div className={cls} role="tablist">
+    <div className={cls} role="radiogroup" aria-label={ariaLabel}>
       {items.map((item) => {
         const id = `${group}-${item.value}`;
         return (

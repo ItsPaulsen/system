@@ -1834,6 +1834,15 @@ function initCalendars() {
           row.setAttribute("role", "row");
           daysEl.appendChild(row);
         }
+        // Leading days before the floor get an inert spacer instead of a button,
+        // so the first in-range day keeps its column (mirrors the trailing cap).
+        if (d < minDate) {
+          const gap = document.createElement("div");
+          gap.className = "calendar__day is-empty";
+          gap.setAttribute("aria-hidden", "true");
+          row.appendChild(gap);
+          continue;
+        }
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "calendar__day";
@@ -1855,9 +1864,10 @@ function initCalendars() {
         btn.tabIndex = isSel ? 0 : -1;
         row.appendChild(btn);
       }
-      // Guarantee one tabbable cell even with nothing selected.
+      // Guarantee one tabbable cell even with nothing selected (buttons only, so
+      // the leading is-empty spacers never take focus).
       if (!daysEl.querySelector('[tabindex="0"]')) {
-        const cur = [...daysEl.querySelectorAll(".calendar__day")].find(
+        const cur = [...daysEl.querySelectorAll("button.calendar__day")].find(
           (b) => !b.classList.contains("is-outside")
         );
         if (cur) cur.tabIndex = 0;

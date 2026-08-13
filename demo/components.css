@@ -3272,6 +3272,11 @@
     color: var(--ink-tertiary);
   }
 
+  /* Out-of-range leading cells: hold the column, show and do nothing. */
+  .calendar__day.is-empty {
+    visibility: hidden;
+  }
+
   /* Today wears the hover surface at rest; the selected day is filled (and wins
    over today's surface since it's declared later). */
   .calendar__day.is-today {

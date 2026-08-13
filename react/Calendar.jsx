@@ -34,6 +34,8 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   }, []);
   const maxYear = today.getFullYear();
   const maxDate = useMemo(() => new Date(maxYear, 11, 31), [maxYear]);
+  // Floor a decade back, matching the year dropdown; days before it aren't shown.
+  const minDate = useMemo(() => new Date(maxYear - 10, 0, 1), [maxYear]);
 
   const [uncontrolled, setUncontrolled] = useState(() => parse(defaultValue));
   const selected = value !== undefined ? parse(value) : uncontrolled;
@@ -66,7 +68,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   };
 
   const roam = (d) => {
-    if (d > maxDate) return;
+    if (d > maxDate || d < minDate) return;
     if (d.getMonth() !== view.getMonth() || d.getFullYear() !== view.getFullYear()) {
       setView(new Date(d.getFullYear(), d.getMonth(), 1));
     }
@@ -125,6 +127,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
           className="calendar__nav"
           type="button"
           aria-label="Previous month"
+          disabled={new Date(view.getFullYear(), view.getMonth(), 1) <= minDate}
           onClick={() => setMonth(view.getMonth() - 1)}
         >
           <Chevron d="M15 6l-6 6l6 6" />
@@ -193,6 +196,9 @@ export default function Calendar({ value, defaultValue, onSelect }) {
         {weeks.map((week) => (
           <div key={iso(week[0])} className="calendar__week" role="row">
             {week.map((d) => {
+              // Leading days before the floor hold their column but stay blank.
+              if (d < minDate)
+                return <div key={iso(d)} className="calendar__day is-empty" aria-hidden="true" />;
               const isToday = same(d, today);
               const isSelected = same(d, selected);
               const cls = [

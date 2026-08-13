@@ -3278,9 +3278,9 @@
   }
 
   /* Neighbouring-month days read quieter and are inert (rendered as non-button
-     divs, aria-hidden), so faint ink-tertiary is fine: WCAG exempts inactive text. */
+     divs, aria-hidden), so a faint fill tint is fine: WCAG exempts inactive text. */
   .calendar__day.is-outside {
-    color: var(--ink-tertiary);
+    color: var(--fill-primary);
     cursor: default;
   }
 

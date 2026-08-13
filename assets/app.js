@@ -2043,11 +2043,22 @@ function initPopovers() {
       }
     });
 
-    // Native auto-popover light-dismisses on outside click / Esc; also close
-    // when focus leaves the trigger+popover group (Tab away).
-    const onFocusOut = (e) => {
-      const to = e.relatedTarget;
-      if (to && to !== trigger && !pop.contains(to)) pop.hidePopover();
+    // Native auto-popover light-dismisses on outside click / Esc. We also close
+    // on a genuine Tab-away, but must NOT close when the user clicks the
+    // popover's own non-interactive area (dead space, weekday row, inert
+    // outside days): that blurs focus to <body>, which shadcn keeps open.
+    // Defer so we read where focus actually settled, not the transient blur.
+    const onFocusOut = () => {
+      requestAnimationFrame(() => {
+        if (!pop.matches(":popover-open")) return;
+        const a = document.activeElement;
+        // Keep open unless focus genuinely moved to another control. Clicking the
+        // popover's own dead space bubbles focus to a focusable ancestor (e.g. the
+        // skip-target .wrap, tabindex=-1) or <body>; neither is a Tab-away.
+        if (!a || a === trigger || a === document.body || pop.contains(a) || a.contains(pop))
+          return;
+        pop.hidePopover();
+      });
     };
     trigger.addEventListener("focusout", onFocusOut);
     pop.addEventListener("focusout", onFocusOut);

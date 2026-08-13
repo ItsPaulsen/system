@@ -769,10 +769,17 @@ function setGridOverlay(show) {
 // the first open; at md they're forced open (CSS hides the chevron and makes the
 // summary inert) so they read as static columns. Driving `open` from JS keeps it
 // robust across engines without relying on the ::details-content pseudo.
+//
+// Only reconcile when the breakpoint actually crosses: mobile browsers fire
+// `resize` on every scroll (the toolbar shows/hides), and re-forcing open state
+// each time would slam the user's open column shut and re-open the first one.
+let footerWide;
 function syncFooterColumns() {
   const cols = document.querySelectorAll(".ex-footer__col");
   if (!cols.length) return;
   const wide = window.matchMedia("(min-width: 768px)").matches;
+  if (wide === footerWide) return;
+  footerWide = wide;
   cols.forEach((col, i) => {
     // Mobile: a shared name makes them an exclusive accordion (one open at a
     // time), natively. Desktop drops the name so every column can stay open.

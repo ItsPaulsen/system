@@ -2032,9 +2032,21 @@ function initPopovers() {
       if (overlayIsDesktop.matches) placeThrottled();
       else if (!pop.contains(e.target)) pop.hidePopover();
     };
+    // A calendar panel moves focus to its first control on open (the prev-month
+    // arrow), like shadcn, so keyboard users land inside without an extra Tab.
+    // :focus-visible stays pointer-aware, so mouse opens don't flash a ring.
+    const focusFirst = pop.querySelector(".calendar")
+      ? () => {
+          const el = pop.querySelector(
+            'button:not([disabled]), select, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          el?.focus();
+        }
+      : null;
     pop.addEventListener("toggle", (e) => {
       if (e.newState === "open") {
         place();
+        focusFirst?.();
         window.addEventListener("scroll", onScroll, true);
         window.addEventListener("resize", placeThrottled);
       } else {

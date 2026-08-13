@@ -805,7 +805,6 @@
   .select__option {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 0.5rem;
     min-height: 40px;
     padding: 0 0.75rem;
@@ -831,6 +830,7 @@
   .select__option[aria-selected="true"]::after {
     content: "";
     flex-shrink: 0;
+    margin-left: auto;
     width: 1.125em;
     height: 1.125em;
     background: currentcolor;

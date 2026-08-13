@@ -3,8 +3,6 @@
   "short_name": "System",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#282828",
-  "theme_color": "#282828",
   "icons": [
     { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
     { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" },

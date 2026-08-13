@@ -107,9 +107,11 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     if (d > maxDate) break;
     days.push(d);
   }
-  // One tabbable cell: the selected day if it's in view, else the first of this month.
+  // One tabbable cell: the selected day if it falls in the shown month, else the
+  // first of this month. Must be an in-month day, since outside days are inert
+  // divs now (a spillover selected day would leave the grid with no tab stop).
   const tabbable =
-    (selected && days.find((d) => same(d, selected))) ||
+    (selected && days.find((d) => same(d, selected) && d.getMonth() === view.getMonth())) ||
     days.find((d) => d.getMonth() === view.getMonth());
 
   // Chunk into weeks so each renders as a role="row" of 7 gridcells.

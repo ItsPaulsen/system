@@ -844,25 +844,62 @@ const GRID_BREAKPOINTS = {
   }
 };
 
+// Roving-tabindex keyboard model for a role="tablist" of role="tab" buttons
+// (WAI-ARIA tabs pattern): Left/Right + Home/End move selection AND focus, and
+// only the selected tab is tabbable. onSelect(tab) reveals the matching panel.
+// Returns activate() so callers can set the initial tab without stealing focus.
+function wireTablist(tabs, onSelect) {
+  const activate = (tab, focus) => {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      t.tabIndex = on ? 0 : -1;
+    });
+    if (focus) tab.focus();
+    onSelect(tab);
+  };
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => activate(tab, false));
+    tab.addEventListener("keydown", (e) => {
+      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      let next;
+      if (step) next = tabs[(i + step + tabs.length) % tabs.length];
+      else if (e.key === "Home") next = tabs[0];
+      else if (e.key === "End") next = tabs[tabs.length - 1];
+      else return;
+      e.preventDefault();
+      activate(next, true);
+    });
+  });
+  return activate;
+}
+
 function initGridTabs() {
   const tabList = document.querySelector("[data-grid-tabs]");
   const panel = document.querySelector("[data-grid-panel]");
   if (!tabList || !panel) return;
-  const tabs = tabList.querySelectorAll(".docs-tabs__tab");
-  const setActive = (name) => {
-    const values = GRID_BREAKPOINTS[name];
+  const tabs = [...tabList.querySelectorAll(".docs-tabs__tab")];
+  // Every tab drives the single breakpoint panel; wire the tab/panel pairing.
+  const panelId = panel.id || (panel.id = "grid-tab-panel");
+  panel.setAttribute("role", "tabpanel");
+  tabs.forEach((t, i) => {
+    if (!t.id) t.id = `${panelId}-tab-${i}`;
+    t.setAttribute("aria-controls", panelId);
+  });
+  const setActive = (tab) => {
+    const values = GRID_BREAKPOINTS[tab.dataset.tab];
     if (!values) return;
-    tabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === name)));
+    panel.setAttribute("aria-labelledby", tab.id);
     panel.querySelectorAll("[data-grid-key]").forEach((el) => {
       const v = values[el.dataset.gridKey] || "";
       if (el.dataset.gridKey === "name") el.innerHTML = v;
       else el.textContent = v;
     });
   };
-  tabs.forEach((t) => t.addEventListener("click", () => setActive(t.dataset.tab)));
+  const activate = wireTablist(tabs, setActive);
   // Default to the first tab so entering the page always starts here.
-  const first = tabs[0]?.dataset.tab;
-  if (first) setActive(first);
+  const first = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
+  if (first) activate(first, false);
 }
 
 // Tabler arrow-right at 16px, stroke 2, matches ARROW_LEFT_ICON.
@@ -1094,7 +1131,7 @@ function initExamples() {
   const examples = [...document.querySelectorAll("[data-example]")];
   if (!tablist || !examples.length) return;
 
-  examples.forEach((ex) => {
+  examples.forEach((ex, i) => {
     const preview = ex.querySelector(".component-preview");
     const reactEl = ex.querySelector(".example__react");
     const html = preview ? dedent(preview.innerHTML).trim() : "";
@@ -1107,6 +1144,8 @@ function initExamples() {
     reactEl?.remove();
     const holder = document.createElement("div");
     holder.className = "example__code";
+    holder.id = `example-code-${i}`;
+    holder.setAttribute("role", "tabpanel");
     ex.appendChild(holder);
   });
 
@@ -1135,14 +1174,20 @@ function initExamples() {
   };
 
   const tabs = [...tablist.querySelectorAll("[data-code-lang]")];
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
-      render(tab.dataset.codeLang);
-    });
+  // The per-example code holders are the tabpanels; every language tab controls
+  // the whole set (content swaps in place), each labelled by the selected tab.
+  const holders = examples.map((ex) => ex.querySelector(".example__code"));
+  const panelIds = holders.map((h) => h.id).join(" ");
+  tabs.forEach((tab, i) => {
+    if (!tab.id) tab.id = `code-tab-${i}`;
+    tab.setAttribute("aria-controls", panelIds);
+  });
+  const activate = wireTablist(tabs, (tab) => {
+    render(tab.dataset.codeLang);
+    holders.forEach((h) => h.setAttribute("aria-labelledby", tab.id));
   });
   const active = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
-  render(active.dataset.codeLang);
+  activate(active, false);
 }
 
 // Split already-highlighted code HTML into per-line <span class="line"> wrappers,
@@ -1658,6 +1703,15 @@ function initComboboxes() {
 // that's the date-picker recipe.
 function initCalendars() {
   const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  const WEEKDAY_LABELS = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
   const MONTHS = [
     "Jan",
     "Feb",
@@ -1678,16 +1732,10 @@ function initCalendars() {
     const yearSel = root.querySelector("[data-cal-year]");
     if (!daysEl || !monthSel || !yearSel) return;
 
-    // Weekday header (once).
-    const head = root.querySelector(".calendar__weekdays");
-    if (head && !head.children.length) {
-      WEEKDAYS.forEach((w) => {
-        const s = document.createElement("span");
-        s.className = "calendar__weekday";
-        s.textContent = w;
-        head.appendChild(s);
-      });
-    }
+    // Days container is the ARIA grid: a columnheader row of weekday names, then
+    // one role="row" per week (see render). The weekday header lives inside the
+    // grid so screen readers can associate each day cell with its column.
+    daysEl.setAttribute("role", "grid");
 
     const iso = (d) =>
       `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -1752,17 +1800,44 @@ function initCalendars() {
       if (next) next.disabled = nextStart > maxDate;
       const viewStart = new Date(view.getFullYear(), view.getMonth(), 1);
       if (prev) prev.disabled = viewStart <= minDate;
+      daysEl.setAttribute(
+        "aria-label",
+        view.toLocaleDateString(undefined, { month: "long", year: "numeric" })
+      );
       const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
       const start = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
       daysEl.replaceChildren();
+      // Columnheader row (weekday names). Abbreviated on screen; aria-label spells
+      // the full name so it reads clearly when a day cell announces its column.
+      const headRow = document.createElement("div");
+      headRow.className = "calendar__weekdays";
+      headRow.setAttribute("role", "row");
+      WEEKDAYS.forEach((w, wi) => {
+        const s = document.createElement("span");
+        s.className = "calendar__weekday";
+        s.setAttribute("role", "columnheader");
+        s.setAttribute("aria-label", WEEKDAY_LABELS[wi]);
+        s.textContent = w;
+        headRow.appendChild(s);
+      });
+      daysEl.appendChild(headRow);
+      let row = null;
       for (let i = 0; i < 42; i += 1) {
         const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
         // Don't render trailing days past the cap, there's no month to reach them
         // in (the cap is always end of December, so this only trims the spill-over).
         if (d > maxDate) break;
+        // Open a new week row every 7th cell so each row groups its 7 gridcells.
+        if (i % 7 === 0) {
+          row = document.createElement("div");
+          row.className = "calendar__week";
+          row.setAttribute("role", "row");
+          daysEl.appendChild(row);
+        }
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "calendar__day";
+        btn.setAttribute("role", "gridcell");
         btn.textContent = String(d.getDate());
         btn.dataset.date = iso(d);
         btn.setAttribute(
@@ -1776,13 +1851,15 @@ function initCalendars() {
         }
         const isSel = same(d, selected);
         btn.classList.toggle("is-selected", isSel);
-        btn.setAttribute("aria-pressed", String(isSel));
+        btn.setAttribute("aria-selected", String(isSel));
         btn.tabIndex = isSel ? 0 : -1;
-        daysEl.appendChild(btn);
+        row.appendChild(btn);
       }
       // Guarantee one tabbable cell even with nothing selected.
       if (!daysEl.querySelector('[tabindex="0"]')) {
-        const cur = [...daysEl.children].find((b) => !b.classList.contains("is-outside"));
+        const cur = [...daysEl.querySelectorAll(".calendar__day")].find(
+          (b) => !b.classList.contains("is-outside")
+        );
         if (cur) cur.tabIndex = 0;
       }
     }

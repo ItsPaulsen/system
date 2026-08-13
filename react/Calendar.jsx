@@ -1,6 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+// Full names for the columnheaders' aria-label (the visible text is abbreviated).
+const WEEKDAY_LABELS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday"
+];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const iso = (d) =>
@@ -100,6 +110,11 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     (selected && days.find((d) => same(d, selected))) ||
     days.find((d) => d.getMonth() === view.getMonth());
 
+  // Chunk into weeks so each renders as a role="row" of 7 gridcells.
+  const weeks = [];
+  for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+  const gridLabel = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
   const setMonth = (m) => setView(new Date(view.getFullYear(), m, 1));
   const setYear = (y) => setView(new Date(y, view.getMonth(), 1));
 
@@ -152,15 +167,10 @@ export default function Calendar({ value, defaultValue, onSelect }) {
           <Chevron d="M9 6l6 6l-6 6" />
         </button>
       </div>
-      <div className="calendar__weekdays" aria-hidden="true">
-        {WEEKDAYS.map((w) => (
-          <span key={w} className="calendar__weekday">
-            {w}
-          </span>
-        ))}
-      </div>
       <div
         className="calendar__days"
+        role="grid"
+        aria-label={gridLabel}
         ref={daysRef}
         onKeyDown={onKeyDown}
         onClick={(e) => {
@@ -168,36 +178,53 @@ export default function Calendar({ value, defaultValue, onSelect }) {
           if (btn) pick(parse(btn.dataset.date));
         }}
       >
-        {days.map((d) => {
-          const isToday = same(d, today);
-          const isSelected = same(d, selected);
-          const cls = [
-            "calendar__day",
-            d.getMonth() !== view.getMonth() && "is-outside",
-            isToday && "is-today",
-            isSelected && "is-selected"
-          ]
-            .filter(Boolean)
-            .join(" ");
-          return (
-            <button
-              key={iso(d)}
-              type="button"
-              className={cls}
-              data-date={iso(d)}
-              aria-label={d.toLocaleDateString(undefined, {
-                day: "numeric",
-                month: "long",
-                year: "numeric"
-              })}
-              aria-current={isToday ? "date" : undefined}
-              aria-pressed={isSelected}
-              tabIndex={same(d, tabbable) ? 0 : -1}
+        <div className="calendar__weekdays" role="row">
+          {WEEKDAYS.map((w, i) => (
+            <span
+              key={w}
+              className="calendar__weekday"
+              role="columnheader"
+              aria-label={WEEKDAY_LABELS[i]}
             >
-              {d.getDate()}
-            </button>
-          );
-        })}
+              {w}
+            </span>
+          ))}
+        </div>
+        {weeks.map((week) => (
+          <div key={iso(week[0])} className="calendar__week" role="row">
+            {week.map((d) => {
+              const isToday = same(d, today);
+              const isSelected = same(d, selected);
+              const cls = [
+                "calendar__day",
+                d.getMonth() !== view.getMonth() && "is-outside",
+                isToday && "is-today",
+                isSelected && "is-selected"
+              ]
+                .filter(Boolean)
+                .join(" ");
+              return (
+                <button
+                  key={iso(d)}
+                  type="button"
+                  role="gridcell"
+                  className={cls}
+                  data-date={iso(d)}
+                  aria-label={d.toLocaleDateString(undefined, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                  })}
+                  aria-current={isToday ? "date" : undefined}
+                  aria-selected={isSelected}
+                  tabIndex={same(d, tabbable) ? 0 : -1}
+                >
+                  {d.getDate()}
+                </button>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );

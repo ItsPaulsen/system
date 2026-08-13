@@ -3216,11 +3216,18 @@
     outline-offset: var(--focus-ring-offset);
   }
 
-  .calendar__weekdays,
+  /* One 7-column grid holds the whole month (role="grid"). The weekday
+   columnheader row and each week row are role-only wrappers, so display:contents
+   lets their cells land directly on the grid tracks. */
   .calendar__days {
     display: grid;
     grid-template-columns: repeat(7, 2rem);
     gap: 2px;
+  }
+
+  .calendar__weekdays,
+  .calendar__week {
+    display: contents;
   }
 
   .calendar__weekday {

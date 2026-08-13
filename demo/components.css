@@ -299,8 +299,8 @@
    than :has(). The radios are visually hidden and out of flow, so the flex
    track lays out only the labels.
 
-   Structure:
-   <div class="tabs" role="tablist">
+   Structure (a single-choice segmented control — a radiogroup, not tabs):
+   <div class="tabs" role="radiogroup" aria-label="View">
      <input type="radio" name="group" id="t1" class="tabs__radio" checked />
      <label class="tabs__tab" for="t1"><span class="tabs__label">Overview</span></label>
      …
@@ -2176,8 +2176,11 @@
     transition: opacity var(--motion-default);
   }
 
+  /* Hoverable once shown (WCAG 1.4.13): the pointer can move onto the bubble to
+     read it. Base stays pointer-events:none so a hidden bubble never blocks clicks. */
   .tooltip__bubble.is-visible {
     opacity: 1;
+    pointer-events: auto;
   }
 
   .tooltip__bubble::after {

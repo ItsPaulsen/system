@@ -371,11 +371,8 @@
     flex: none;
   }
 
-  /* Selected: radio-driven (default) or state-driven via aria-selected, so a
-   tab set can also reflect external state (e.g. the current theme) without a
-   form control. */
-  .tabs__radio:checked + .tabs__tab,
-  .tabs__tab[aria-selected="true"] {
+  /* Selected tab: driven off the checked radio. */
+  .tabs__radio:checked + .tabs__tab {
     background: var(--background-secondary);
     color: var(--ink-primary);
   }
@@ -395,8 +392,7 @@
   /* Hover only where a real pointer exists, so it doesn't stick after a tap on
    touch; :active covers the pressed feedback. */
   @media (hover: hover) {
-    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover,
-    .tabs__tab[aria-selected="false"]:hover {
+    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
       background: var(--fill-quaternary-hover);
     }
   }

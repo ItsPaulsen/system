@@ -117,21 +117,7 @@
 
           <nav class="ex-footer__nav" aria-label="Footer">
             <details class="ex-footer__col" open>
-              <summary class="ex-footer__col-head">
-                Foundations
-                <svg
-                  class="ex-footer__col-chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </summary>
+              <summary class="ex-footer__col-head">Foundations</summary>
               <ul class="ex-footer__col-list">
                 <li><a href="#">Colours</a></li>
                 <li><a href="#">Typography</a></li>
@@ -140,21 +126,7 @@
             </details>
 
             <details class="ex-footer__col">
-              <summary class="ex-footer__col-head">
-                Components
-                <svg
-                  class="ex-footer__col-chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </summary>
+              <summary class="ex-footer__col-head">Components</summary>
               <ul class="ex-footer__col-list">
                 <li><a href="#">Buttons</a></li>
                 <li><a href="#">Cards</a></li>
@@ -164,21 +136,7 @@
             </details>
 
             <details class="ex-footer__col">
-              <summary class="ex-footer__col-head">
-                Resources
-                <svg
-                  class="ex-footer__col-chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
-              </summary>
+              <summary class="ex-footer__col-head">Resources</summary>
               <ul class="ex-footer__col-list">
                 <li><a href="#">Getting started</a></li>
                 <li><a href="#">Tokens</a></li>

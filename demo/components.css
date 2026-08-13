@@ -526,7 +526,8 @@
   }
 
   .input__element::placeholder {
-    color: var(--ink-tertiary);
+    /* Placeholder is active text, so ink-secondary for AA (tertiary fails at 3.4:1 in light). */
+    color: var(--ink-secondary);
   }
 
   .input__container:has(.input__element:disabled) {
@@ -1013,7 +1014,9 @@
   .menu__shortcut {
     margin-inline-start: auto;
     padding-inline-start: 1rem;
-    color: var(--ink-tertiary);
+
+    /* Readable hint text, so ink-secondary to clear AA (tertiary fails at 3.4:1 in light). */
+    color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     font-variant-numeric: tabular-nums;
   }
@@ -2794,7 +2797,9 @@
     justify-content: center;
     min-width: 40px;
     height: 40px;
-    color: var(--ink-tertiary);
+
+    /* Signals skipped pages, so ink-secondary for AA (tertiary fails at 3.4:1 in light). */
+    color: var(--ink-secondary);
   }
 
   /* ── Slider ────────────────────────────────────────────────────────────── */
@@ -3238,7 +3243,9 @@
     place-items: center;
     height: 1.75rem;
     font-size: var(--font-caption-medium-size);
-    color: var(--ink-tertiary);
+
+    /* Column headers are read, so ink-secondary to clear AA (tertiary fails at 3.4:1 in light). */
+    color: var(--ink-secondary);
   }
 
   .calendar__day {
@@ -3272,7 +3279,8 @@
 
   /* Days spilling in from the neighbouring months read quieter. */
   .calendar__day.is-outside {
-    color: var(--ink-tertiary);
+    /* Adjacent-month dates are still read, so ink-secondary for AA (tertiary fails in light). */
+    color: var(--ink-secondary);
   }
 
   /* Out-of-range leading cells: hold the column, show and do nothing. */

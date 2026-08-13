@@ -188,6 +188,7 @@ export default function Combobox({
             className="select__list"
             id={listId}
             role="listbox"
+            aria-label={ariaLabel}
             tabIndex={-1}
             ref={listRef}
             hidden={!open}

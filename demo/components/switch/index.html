@@ -71,13 +71,15 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            Native <code>&lt;input type="checkbox"&gt;</code>: works with forms and screen readers.
+            Native <code>&lt;input type="checkbox"&gt;</code> (works in forms);
+            <code>role="switch"</code>
+            makes screen readers announce it as a switch, not a checkbox.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
               <label class="switch">
                 <span class="switch__input-wrapper">
-                  <input type="checkbox" class="switch__input" />
+                  <input type="checkbox" role="switch" class="switch__input" />
                   <span class="switch__knob"></span>
                 </span>
                 <span class="switch__label">Notifications</span>
@@ -95,7 +97,7 @@
             <div class="component-preview">
               <label class="switch">
                 <span class="switch__input-wrapper">
-                  <input type="checkbox" class="switch__input" disabled />
+                  <input type="checkbox" role="switch" class="switch__input" disabled />
                   <span class="switch__knob"></span>
                 </span>
                 <span class="switch__label">Notifications</span>
@@ -120,7 +122,7 @@
           <h2 class="subhead">Component</h2>
           <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__input-wrapper"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__input"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"checkbox"</span> <span class="tok-prop">role</span>=<span class="tok-str">"switch"</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__input"</span> <span class="tok-key">/&gt;</span>
     <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__knob"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
   <span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"switch__label"</span><span class="tok-key">&gt;</span>Notifications<span class="tok-key">&lt;/span&gt;</span>

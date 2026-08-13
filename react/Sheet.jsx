@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useId, useRef } from "react";
 
 // Panel that slides in from a screen edge, built on native <dialog> via showModal(), so the
 // focus trap, Esc-to-close, and inert background come for free. side="left" flips it to the
@@ -8,11 +8,12 @@ const SheetContext = createContext(null);
 
 export function Sheet({ children }) {
   const ref = useRef(null);
-  return <SheetContext.Provider value={ref}>{children}</SheetContext.Provider>;
+  const titleId = useId();
+  return <SheetContext.Provider value={{ ref, titleId }}>{children}</SheetContext.Provider>;
 }
 
 export function SheetTrigger({ children, ...rest }) {
-  const ref = useContext(SheetContext);
+  const { ref } = useContext(SheetContext);
   return (
     <button type="button" onClick={() => ref.current?.showModal()} {...rest}>
       {children}
@@ -21,7 +22,7 @@ export function SheetTrigger({ children, ...rest }) {
 }
 
 export function SheetClose({ children, ...rest }) {
-  const ref = useContext(SheetContext);
+  const { ref } = useContext(SheetContext);
   return (
     <button type="button" onClick={() => ref.current?.close()} {...rest}>
       {children}
@@ -30,7 +31,7 @@ export function SheetClose({ children, ...rest }) {
 }
 
 export function SheetContent({ side, className, children, ...rest }) {
-  const ref = useContext(SheetContext);
+  const { ref, titleId } = useContext(SheetContext);
 
   useEffect(() => {
     const dlg = ref.current;
@@ -66,7 +67,7 @@ export function SheetContent({ side, className, children, ...rest }) {
 
   const cls = ["sheet", side === "left" && "sheet--left", className].filter(Boolean).join(" ");
   return (
-    <dialog ref={ref} className={cls} {...rest}>
+    <dialog ref={ref} className={cls} aria-labelledby={titleId} {...rest}>
       <div className="sheet__inner" tabIndex={-1}>
         {children}
       </div>
@@ -83,8 +84,9 @@ export function SheetHeader({ children, ...rest }) {
 }
 
 export function SheetTitle({ children, ...rest }) {
+  const { titleId } = useContext(SheetContext);
   return (
-    <h2 className="sheet__title" {...rest}>
+    <h2 id={titleId} className="sheet__title" {...rest}>
       {children}
     </h2>
   );

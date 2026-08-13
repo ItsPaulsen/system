@@ -2110,6 +2110,13 @@
     border-radius: 12px;
   }
 
+  /* Focusable only when it actually scrolls (JS/React toggle tabindex on overflow),
+     so keyboard users can pan a wide table without a stray tab stop on ones that fit. */
+  .table-wrap:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: 2px;
+  }
+
   .table {
     width: 100%;
     border-collapse: collapse;
@@ -2642,7 +2649,7 @@
   .avatar--sm {
     width: 32px;
     height: 32px;
-    font-size: 0.8125rem;
+    font-size: var(--font-caption-medium-size);
   }
 
   .avatar--lg {

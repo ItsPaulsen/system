@@ -2336,10 +2336,45 @@ function unlockBodyScroll() {
   root.style.removeProperty("--scrollbar-comp");
 }
 
+// A wide .table-wrap scrolls, but overflow:auto alone isn't keyboard-reachable.
+// Make it a focusable region ONLY while it actually overflows, so a table that
+// fits its column doesn't leave an empty tab stop. ResizeObserver re-checks on
+// layout changes (responsive breakpoints, font swaps).
+function initTables() {
+  document.querySelectorAll(".table-wrap").forEach((wrap) => {
+    const label =
+      wrap.getAttribute("aria-label") ||
+      wrap.querySelector("caption")?.textContent.trim() ||
+      "Scrollable table";
+    const sync = () => {
+      if (wrap.scrollWidth > wrap.clientWidth + 1) {
+        wrap.setAttribute("role", "region");
+        wrap.setAttribute("tabindex", "0");
+        wrap.setAttribute("aria-label", label);
+      } else {
+        wrap.removeAttribute("role");
+        wrap.removeAttribute("tabindex");
+      }
+    };
+    sync();
+    if (typeof ResizeObserver === "function") new ResizeObserver(sync).observe(wrap);
+  });
+}
+
 // Dialog + Sheet (both native <dialog>): open via [data-dialog-open], close via
 // [data-dialog-close] or a click on the backdrop. One delegated listener so
 // dynamically-added dialogs work too. Body scroll locks while a modal is open.
 function initDialogs() {
+  // Name every modal from its title so screen readers announce more than "dialog"
+  // (mirrors the React Dialog/Sheet aria-labelledby wiring).
+  document.querySelectorAll("dialog.dialog, dialog.sheet").forEach((dlg, i) => {
+    if (dlg.hasAttribute("aria-labelledby") || dlg.hasAttribute("aria-label")) return;
+    const title = dlg.querySelector(".dialog__title, .sheet__title");
+    if (!title) return;
+    if (!title.id) title.id = dlg.id ? `${dlg.id}-title` : `dialog-title-${i}`;
+    dlg.setAttribute("aria-labelledby", title.id);
+  });
+
   document.addEventListener("click", (event) => {
     const opener = event.target.closest("[data-dialog-open]");
     if (opener) {
@@ -2517,6 +2552,7 @@ function init() {
   initSliders();
   initTooltips();
   initDialogs();
+  initTables();
   refreshResponsive();
 
   let frame;

@@ -157,6 +157,7 @@ export default function Select({
         className="select__trigger"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={`${id}-list`}
         aria-label={ariaLabel}
         aria-activedescendant={open ? `${id}-${active}` : undefined}
         disabled={disabled}
@@ -168,7 +169,15 @@ export default function Select({
       </button>
       {mounted &&
         createPortal(
-          <ul className="select__list" role="listbox" tabIndex={-1} ref={listRef} hidden={!open}>
+          <ul
+            className="select__list"
+            id={`${id}-list`}
+            role="listbox"
+            aria-label={ariaLabel}
+            tabIndex={-1}
+            ref={listRef}
+            hidden={!open}
+          >
             {options.map((opt, i) => (
               <li
                 key={opt}

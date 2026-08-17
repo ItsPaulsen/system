@@ -6,7 +6,10 @@ const DialogContext = createContext(null);
 export function Dialog({ children }) {
   const ref = useRef(null);
   const titleId = useId();
-  return <DialogContext.Provider value={{ ref, titleId }}>{children}</DialogContext.Provider>;
+  const descId = useId();
+  return (
+    <DialogContext.Provider value={{ ref, titleId, descId }}>{children}</DialogContext.Provider>
+  );
 }
 
 export function DialogTrigger({ children, ...rest }) {
@@ -28,7 +31,7 @@ export function DialogClose({ children, ...rest }) {
 }
 
 export function DialogContent({ children, ...rest }) {
-  const { ref, titleId } = useContext(DialogContext);
+  const { ref, titleId, descId } = useContext(DialogContext);
 
   useEffect(() => {
     const dlg = ref.current;
@@ -65,7 +68,13 @@ export function DialogContent({ children, ...rest }) {
   }, [ref]);
 
   return (
-    <dialog ref={ref} className="dialog" aria-labelledby={titleId} {...rest}>
+    <dialog
+      ref={ref}
+      className="dialog"
+      aria-labelledby={titleId}
+      aria-describedby={descId}
+      {...rest}
+    >
       <div className="dialog__inner" tabIndex={-1}>
         {children}
       </div>
@@ -83,8 +92,9 @@ export function DialogTitle({ children, className, ...rest }) {
 }
 
 export function DialogDescription({ children, className, ...rest }) {
+  const { descId } = useContext(DialogContext);
   return (
-    <p className={["dialog__text", className].filter(Boolean).join(" ")} {...rest}>
+    <p id={descId} className={["dialog__text", className].filter(Boolean).join(" ")} {...rest}>
       {children}
     </p>
   );

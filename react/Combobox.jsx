@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { IconChevronDown } from "@tabler/icons-react";
 
 // Coalesce scroll/resize repositioning to one update per frame.
@@ -14,10 +13,11 @@ function rafThrottle(fn) {
   };
 }
 
-// Position a portaled list in PAGE coordinates (scrolls with the document, glued
-// to the trigger), measured against the visual viewport so the keyboard is
-// accounted for. Prefers below; hysteresis keeps it on its side, clipping down to
-// MIN before flipping, so it behaves the same both ways. Returns the new side.
+// Position the list with position:fixed in viewport coordinates, glued to the
+// trigger and measured against the visual viewport so the keyboard is accounted
+// for. The list stays in the DOM (not portaled) so VoiceOver can follow
+// aria-activedescendant into it. Prefers below; hysteresis keeps it on its side,
+// clipping down to MIN before flipping, so it behaves the same both ways.
 function positionFloating(anchor, list, wasAbove) {
   const GAP = 4;
   const PAD = 8;
@@ -25,8 +25,9 @@ function positionFloating(anchor, list, wasAbove) {
   const vv = window.visualViewport;
   const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
+  list.style.position = "fixed";
   list.style.width = `${rect.width}px`;
-  list.style.left = `${rect.left + window.scrollX}px`;
+  list.style.left = `${rect.left}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
@@ -37,10 +38,10 @@ function positionFloating(anchor, list, wasAbove) {
   else above = roomBelow < MIN && roomAbove > roomBelow;
   if (above) {
     const h = Math.min(natural, Math.max(0, roomAbove));
-    list.style.top = `${rect.top + window.scrollY - h - GAP}px`;
+    list.style.top = `${rect.top - h - GAP}px`;
     if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
   } else {
-    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
+    list.style.top = `${rect.bottom + GAP}px`;
     if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
   }
   return above;
@@ -61,8 +62,8 @@ export default function Combobox({
   const [selected, setSelected] = useState(defaultValue || null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1); // no row pre-highlighted
-  const [mounted, setMounted] = useState(false);
   const rootRef = useRef(null);
+  const inputRef = useRef(null);
   const listRef = useRef(null);
   const aboveRef = useRef();
   const pointerRef = useRef(null); // last real pointer pos, to ignore scroll-synthesized moves
@@ -71,11 +72,9 @@ export default function Combobox({
   const q = query.trim().toLowerCase();
   const matches = options.filter((o) => q === "" || o.toLowerCase().includes(q));
 
-  useEffect(() => setMounted(true), []);
-
-  // Portal the list to <body> (escapes clipping), position it in page coords, and
-  // keep it placed on scroll/resize/keyboard. On touch, lift the field toward the
-  // top so the list has room below it above the keyboard.
+  // Position the (in-DOM, position:fixed) list and keep it placed on
+  // scroll/resize/keyboard. On touch, lift the field toward the top so the list
+  // has room below it above the keyboard.
   useEffect(() => {
     const list = listRef.current;
     if (!list || !open) return;
@@ -155,8 +154,17 @@ export default function Combobox({
         className={["input__container", "combobox__control", fill && "input__container--fill"]
           .filter(Boolean)
           .join(" ")}
+        // The whole field is a hit target (like shadcn): clicking the padding
+        // around the input/chevron focuses the input rather than doing nothing.
+        onMouseDown={(e) => {
+          if (e.target === inputRef.current || e.target.closest(".combobox__chevron")) return;
+          e.preventDefault();
+          inputRef.current?.focus();
+          setOpen(true);
+        }}
       >
         <input
+          ref={inputRef}
           className="input__element"
           type="text"
           role="combobox"
@@ -178,52 +186,63 @@ export default function Combobox({
           onClick={() => setOpen(true)}
           onKeyDown={onKeyDown}
         />
-        <span className="input__trailing combobox__chevron" aria-hidden="true">
+        {/* Chevron toggles the list too (like shadcn); it's a non-focusable,
+            aria-hidden span, a mouse affordance only, since the input already
+            exposes open state and choices to the keyboard and screen readers. */}
+        <span
+          className="input__trailing combobox__chevron"
+          aria-hidden="true"
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => {
+            const willOpen = !open;
+            setOpen(willOpen);
+            if (willOpen) inputRef.current?.focus();
+          }}
+        >
           <IconChevronDown />
         </span>
       </div>
-      {mounted &&
-        createPortal(
-          <ul
-            className="select__list"
-            id={listId}
-            role="listbox"
-            aria-label={ariaLabel}
-            tabIndex={-1}
-            ref={listRef}
-            hidden={!open}
+      {/* Polite live region: the visible "No results" row is presentational, so
+          announce the empty result set here instead. */}
+      <div className="sr-only" role="status">
+        {open && !matches.length ? "No results" : ""}
+      </div>
+      <ul
+        className="select__list"
+        id={listId}
+        role="listbox"
+        aria-label={ariaLabel}
+        tabIndex={-1}
+        ref={listRef}
+        hidden={!open}
+      >
+        {matches.map((opt, i) => (
+          <li
+            key={opt}
+            id={`${listId}-${i}`}
+            className={["select__option", i === active && "is-active"].filter(Boolean).join(" ")}
+            role="option"
+            aria-selected={selected === opt}
+            onMouseDown={(e) => e.preventDefault()}
+            onMouseMove={(e) => {
+              // Wheel-scrolling slides rows under a still pointer, firing a
+              // synthetic move (same clientX/Y). Only a real move re-highlights.
+              const p = pointerRef.current;
+              if (p && e.clientX === p.x && e.clientY === p.y) return;
+              pointerRef.current = { x: e.clientX, y: e.clientY };
+              setActive(i);
+            }}
+            onClick={() => choose(opt)}
           >
-            {matches.map((opt, i) => (
-              <li
-                key={opt}
-                id={`${listId}-${i}`}
-                className={["select__option", i === active && "is-active"]
-                  .filter(Boolean)
-                  .join(" ")}
-                role="option"
-                aria-selected={selected === opt}
-                onMouseDown={(e) => e.preventDefault()}
-                onMouseMove={(e) => {
-                  // Wheel-scrolling slides rows under a still pointer, firing a
-                  // synthetic move (same clientX/Y). Only a real move re-highlights.
-                  const p = pointerRef.current;
-                  if (p && e.clientX === p.x && e.clientY === p.y) return;
-                  pointerRef.current = { x: e.clientX, y: e.clientY };
-                  setActive(i);
-                }}
-                onClick={() => choose(opt)}
-              >
-                {opt}
-              </li>
-            ))}
-            {!matches.length && (
-              <li className="combobox__empty" role="presentation">
-                No results
-              </li>
-            )}
-          </ul>,
-          document.body
+            {opt}
+          </li>
+        ))}
+        {!matches.length && (
+          <li className="combobox__empty" role="presentation">
+            No results
+          </li>
         )}
+      </ul>
     </div>
   );
 }

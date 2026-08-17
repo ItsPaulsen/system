@@ -1,4 +1,4 @@
-import { createContext, useContext, useId } from "react";
+import { createContext, useContext, useEffect, useId, useState } from "react";
 
 // Floating surface on the native Popover API: top-layer, light-dismiss, Esc, and CSS anchor
 // positioning, all driven by the trigger's popovertarget. --panel pads content, --center
@@ -12,8 +12,25 @@ export function Popover({ children }) {
 
 export function PopoverTrigger({ className = "button button--secondary", children, ...rest }) {
   const id = useContext(PopoverContext);
+  // The native popover doesn't reflect open state to the trigger; sync
+  // aria-expanded off its toggle event so screen readers hear open/closed.
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const pop = document.getElementById(id);
+    if (!pop) return;
+    const onToggle = (e) => setOpen(e.newState === "open");
+    pop.addEventListener("toggle", onToggle);
+    return () => pop.removeEventListener("toggle", onToggle);
+  }, [id]);
   return (
-    <button type="button" className={className} popoverTarget={id} aria-haspopup="dialog" {...rest}>
+    <button
+      type="button"
+      className={className}
+      popoverTarget={id}
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      {...rest}
+    >
       {children}
     </button>
   );

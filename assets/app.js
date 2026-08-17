@@ -1333,10 +1333,16 @@ function rafThrottle(fn) {
 // trigger. Measures against the visual viewport (keyboard-aware): opens below,
 // flips above only when below can't fit and above has more room, and caps the
 // height to the space available so it clips instead of hiding behind the keyboard.
-function positionFloating(anchor, list, wasAbove) {
+// fixed=true positions in viewport coords for a position:fixed list that stays in
+// the DOM (Combobox, so VoiceOver can follow aria-activedescendant into it); the
+// default adds scroll offsets for a position:absolute list portaled to <body>
+// (Select). getBoundingClientRect is viewport-relative either way.
+function positionFloating(anchor, list, wasAbove, fixed = false) {
   const GAP = 4;
   const PAD = 8;
   const MIN = 88; // clip a side down to this before flipping to the other
+  const sx = fixed ? 0 : window.scrollX;
+  const sy = fixed ? 0 : window.scrollY;
   // getBoundingClientRect is relative to the visual viewport, so cap against the
   // visual viewport height directly (the area above the keyboard) — no offset.
   const vv = window.visualViewport;
@@ -1347,7 +1353,7 @@ function positionFloating(anchor, list, wasAbove) {
   // its right) doesn't run off-screen — same guard positionPopover/tooltip use.
   const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
   const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
-  list.style.left = `${left + window.scrollX}px`;
+  list.style.left = `${left + sx}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
@@ -1361,38 +1367,52 @@ function positionFloating(anchor, list, wasAbove) {
   else above = roomBelow < MIN && roomAbove > roomBelow;
   if (above) {
     const h = Math.min(natural, Math.max(0, roomAbove));
-    list.style.top = `${rect.top + window.scrollY - h - GAP}px`;
+    list.style.top = `${rect.top + sy - h - GAP}px`;
     if (natural > roomAbove) list.style.maxHeight = `${Math.max(0, roomAbove)}px`;
   } else {
-    list.style.top = `${rect.bottom + window.scrollY + GAP}px`;
+    list.style.top = `${rect.bottom + sy + GAP}px`;
     if (natural > roomBelow) list.style.maxHeight = `${Math.max(0, roomBelow)}px`;
   }
   return above;
 }
 
-// Portal a list to <body> while open and keep it placed on scroll/resize and on
-// visual-viewport changes (mobile keyboard). Never closes on those, just
-// re-places, so it stays open like shadcn.
-function floatingList(anchor, list) {
+// Keep a list placed against its anchor on scroll/resize and visual-viewport
+// changes (mobile keyboard). Never closes on those, just re-places, like shadcn.
+// Default: portal to <body>, position:absolute in page coords (Select). fixed:
+// leave the list in the DOM and float it with position:fixed (Combobox), so a
+// screen reader can follow aria-activedescendant into it — a body portal breaks
+// that for a control that keeps focus in the input.
+function floatingList(anchor, list, { fixed = false } = {}) {
   let above;
   const place = () => {
-    above = positionFloating(anchor, list, above);
+    above = positionFloating(anchor, list, above, fixed);
   };
   const reflow = rafThrottle(place);
+  // Capturing scroll catches page/ancestor scrolls to keep the list glued, but it
+  // also catches the list's OWN internal scroll (scrollIntoView keeping the active
+  // row visible). Re-placing on that rewrites the list's inline styles on every
+  // arrow key, which makes VoiceOver re-read and drop the option name — so ignore
+  // scrolls that originate inside the list.
+  const onScroll = (e) => {
+    const t = e.target;
+    if (t instanceof Node && list.contains(t)) return; // the list's own scroll
+    reflow();
+  };
   const vv = window.visualViewport;
   return {
     reflow,
     open() {
       above = undefined;
-      document.body.appendChild(list);
+      if (fixed) list.style.position = "fixed";
+      else document.body.appendChild(list);
       place();
-      window.addEventListener("scroll", reflow, true);
+      window.addEventListener("scroll", onScroll, true);
       window.addEventListener("resize", reflow);
       vv?.addEventListener("resize", reflow);
       vv?.addEventListener("scroll", reflow);
     },
     close() {
-      window.removeEventListener("scroll", reflow, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", reflow);
       vv?.removeEventListener("resize", reflow);
       vv?.removeEventListener("scroll", reflow);
@@ -1564,8 +1584,18 @@ function initComboboxes() {
     const empty = root.querySelector(".combobox__empty");
     if (!input || !list || !options.length) return;
 
+    // Polite live region so an empty result set is announced; the visible
+    // ".combobox__empty" row is presentational and never reaches a screen reader.
+    const status = document.createElement("div");
+    status.className = "sr-only";
+    status.setAttribute("role", "status");
+    root.appendChild(status);
+
     options.forEach((o, i) => {
       if (!o.id) o.id = `${root.id || list.id || "combobox"}-opt-${i}`;
+      // Every listbox option must expose a selected state; without it VoiceOver
+      // can announce the active row inconsistently.
+      if (!o.hasAttribute("aria-selected")) o.setAttribute("aria-selected", "false");
     });
     // Labels are static, cache them for filtering instead of reading the DOM.
     const labels = options.map((o) => o.textContent.trim());
@@ -1584,7 +1614,7 @@ function initComboboxes() {
         input.removeAttribute("aria-activedescendant");
       }
     };
-    const floating = floatingList(root, list);
+    const floating = floatingList(root, list, { fixed: true });
     const open = () => {
       if (!list.hidden) return;
       list.hidden = false;
@@ -1613,6 +1643,7 @@ function initComboboxes() {
       });
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
+      status.textContent = vis.length === 0 ? "No results" : "";
       // No row is pre-highlighted (matches shadcn): Enter on a fresh open closes
       // without picking; arrow keys move into the list.
       setActive(null);
@@ -1637,6 +1668,36 @@ function initComboboxes() {
       }
     });
     input.addEventListener("click", () => {
+      if (list.hidden) {
+        open();
+        filter();
+      }
+    });
+
+    // Clicking the chevron toggles the list too (like shadcn); keep focus in the
+    // input so typing still filters.
+    const chevron = root.querySelector(".combobox__chevron");
+    if (chevron) {
+      chevron.addEventListener("mousedown", (e) => e.preventDefault());
+      chevron.addEventListener("click", () => {
+        if (list.hidden) {
+          input.focus();
+          open();
+          filter();
+        } else {
+          close();
+        }
+      });
+    }
+
+    // The whole field is a hit target (like shadcn): clicking its padding — the
+    // dead space around the shorter input and by the chevron — focuses the input
+    // instead of doing nothing. The input and chevron handle their own clicks.
+    const control = root.querySelector(".combobox__control");
+    control?.addEventListener("mousedown", (e) => {
+      if (e.target === input || chevron?.contains(e.target)) return;
+      e.preventDefault();
+      input.focus();
       if (list.hidden) {
         open();
         filter();
@@ -1695,8 +1756,9 @@ function initComboboxes() {
         setActive(o, false);
       });
     });
-    // List is portaled to <body>; exclude it from "outside", and don't close on
-    // a resize-induced blur (relatedTarget null).
+    // The list stays inside root (position:fixed, not portaled), so a click or
+    // focus anywhere in root already counts as inside; close only on a genuine
+    // outside interaction.
     document.addEventListener("click", (e) => {
       if (!root.contains(e.target) && !list.contains(e.target)) close();
     });
@@ -2052,7 +2114,11 @@ function initPopovers() {
           el?.focus();
         }
       : null;
+    // The native popover doesn't reflect open state to the trigger, so sync
+    // aria-expanded ourselves (screen readers otherwise never hear open/closed).
+    trigger.setAttribute("aria-expanded", "false");
     pop.addEventListener("toggle", (e) => {
+      trigger.setAttribute("aria-expanded", String(e.newState === "open"));
       if (e.newState === "open") {
         place();
         focusFirst?.();
@@ -2411,11 +2477,19 @@ function initDialogs() {
   // Name every modal from its title so screen readers announce more than "dialog"
   // (mirrors the React Dialog/Sheet aria-labelledby wiring).
   document.querySelectorAll("dialog.dialog, dialog.sheet").forEach((dlg, i) => {
-    if (dlg.hasAttribute("aria-labelledby") || dlg.hasAttribute("aria-label")) return;
     const title = dlg.querySelector(".dialog__title, .sheet__title");
-    if (!title) return;
-    if (!title.id) title.id = dlg.id ? `${dlg.id}-title` : `dialog-title-${i}`;
-    dlg.setAttribute("aria-labelledby", title.id);
+    if (title && !dlg.hasAttribute("aria-labelledby") && !dlg.hasAttribute("aria-label")) {
+      if (!title.id) title.id = dlg.id ? `${dlg.id}-title` : `dialog-title-${i}`;
+      dlg.setAttribute("aria-labelledby", title.id);
+    }
+    // Point aria-describedby at the dialog's short body text so a consequence
+    // (e.g. a destructive-action warning) is announced on open. Deliberately not
+    // the sheet body: it's long prose and would be read out in full on open.
+    const desc = dlg.querySelector(".dialog__text");
+    if (desc && !dlg.hasAttribute("aria-describedby")) {
+      if (!desc.id) desc.id = dlg.id ? `${dlg.id}-desc` : `dialog-desc-${i}`;
+      dlg.setAttribute("aria-describedby", desc.id);
+    }
   });
 
   document.addEventListener("click", (event) => {

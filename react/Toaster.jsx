@@ -61,16 +61,26 @@ export function Toaster() {
   const Icon = ICON[type];
 
   return (
-    <div
-      className={["toast", visible && "is-visible"].filter(Boolean).join(" ")}
-      role={assertive ? "alert" : "status"}
-      aria-live={assertive ? "assertive" : "polite"}
-      data-type={type}
-    >
-      <span className="toast__icon">
-        {type === "loading" ? <span className="toast__spinner" /> : Icon ? <Icon /> : null}
-      </span>
-      <span className="toast__text">{current?.message}</span>
-    </div>
+    <>
+      {/* Two persistent live regions, created before any message and never
+          role-swapped (swapping role/aria-live on one node is unreliable). The
+          message flows through the matching one; the visible pill is aria-hidden. */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {current && !assertive ? current.message : ""}
+      </div>
+      <div className="sr-only" role="alert" aria-live="assertive">
+        {current && assertive ? current.message : ""}
+      </div>
+      <div
+        className={["toast", visible && "is-visible"].filter(Boolean).join(" ")}
+        data-type={type}
+        aria-hidden="true"
+      >
+        <span className="toast__icon">
+          {type === "loading" ? <span className="toast__spinner" /> : Icon ? <Icon /> : null}
+        </span>
+        <span className="toast__text">{current?.message}</span>
+      </div>
+    </>
   );
 }

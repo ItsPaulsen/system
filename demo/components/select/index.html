@@ -83,6 +83,7 @@
                   aria-haspopup="listbox"
                   aria-expanded="false"
                 >
+                  <span class="sr-only">Team</span>
                   <span class="select__value">Design</span>
                   <svg
                     class="select__chevron"
@@ -98,7 +99,7 @@
                   </svg>
                 </button>
                 <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <ul class="select__list" role="listbox" aria-label="Team" tabindex="-1" hidden>
                   <li class="select__option" role="option" aria-selected="true">Design</li>
                   <li class="select__option" role="option">Engineering</li>
                   <li class="select__option" role="option">Product</li>
@@ -132,6 +133,7 @@
                   aria-haspopup="listbox"
                   aria-expanded="false"
                 >
+                  <span class="sr-only">Team</span>
                   <span class="select__value">Design</span>
                   <svg
                     class="select__chevron"
@@ -147,7 +149,7 @@
                   </svg>
                 </button>
                 <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <ul class="select__list" role="listbox" aria-label="Team" tabindex="-1" hidden>
                   <li class="select__option" role="option" aria-selected="true">Design</li>
                   <li class="select__option" role="option">Engineering</li>
                   <li class="select__option" role="option">Product</li>
@@ -177,6 +179,7 @@
                   aria-expanded="false"
                   disabled
                 >
+                  <span class="sr-only">Team</span>
                   <span class="select__value">Design</span>
                   <svg
                     class="select__chevron"
@@ -192,7 +195,7 @@
                   </svg>
                 </button>
                 <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul class="select__list" role="listbox" tabindex="-1" hidden>
+                <ul class="select__list" role="listbox" aria-label="Team" tabindex="-1" hidden>
                   <li class="select__option" role="option" aria-selected="true">Design</li>
                   <li class="select__option" role="option">Engineering</li>
                   <li class="select__option" role="option">Product</li>
@@ -220,10 +223,11 @@
           <h2 class="subhead">Component</h2>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"select"</span> <span class="tok-prop">data-select</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__trigger"</span> <span class="tok-prop">aria-haspopup</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">aria-expanded</span>=<span class="tok-str">"false"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"sr-only"</span><span class="tok-key">&gt;</span>Team<span class="tok-key">&lt;/span&gt;</span>
     <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__value"</span><span class="tok-key">&gt;</span>Design<span class="tok-key">&lt;/span&gt;</span>
     <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__chevron"</span> …<span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
   <span class="tok-key">&lt;/button&gt;</span>
-  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"listbox"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Team"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">hidden</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"select__option"</span> <span class="tok-prop">role</span>=<span class="tok-str">"option"</span> <span class="tok-prop">aria-selected</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span>Design<span class="tok-key">&lt;/li&gt;</span>
   <span class="tok-key">&lt;/ul&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>

@@ -47,8 +47,9 @@ function positionFloating(anchor, list, wasAbove) {
 }
 
 // Custom single-select: a styled trigger + a floating listbox. Reach for Native Select unless
-// you need custom option rendering. Focus stays on the trigger; the active option is tracked
-// with aria-activedescendant. Uncontrolled via defaultValue; pass value + onChange to control.
+// you need custom option rendering. Opening moves focus into the portaled list (so VoiceOver
+// speaks each option); closing returns it to the trigger. Uncontrolled via defaultValue; pass
+// value + onChange to control.
 export default function Select({
   options,
   value,
@@ -64,6 +65,7 @@ export default function Select({
   const [active, setActive] = useState(() => Math.max(0, options.indexOf(selected)));
   const [mounted, setMounted] = useState(false);
   const rootRef = useRef(null);
+  const triggerRef = useRef(null);
   const listRef = useRef(null);
   const aboveRef = useRef();
   const pointerRef = useRef(null); // last real pointer pos, to ignore scroll-synthesized moves
@@ -84,6 +86,7 @@ export default function Select({
     };
     const reflow = rafThrottle(place);
     place();
+    list.focus(); // move focus into the list so VoiceOver speaks the active option
     window.addEventListener("scroll", reflow, true);
     window.addEventListener("resize", reflow);
     window.visualViewport?.addEventListener("resize", reflow);
@@ -96,11 +99,16 @@ export default function Select({
     };
   }, [open]);
 
+  // Close and hand focus back to the trigger (keyboard close / selection).
+  const closeToTrigger = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
   const choose = (i) => {
     if (value === undefined) setUncontrolled(options[i]);
     onChange?.(options[i]);
     setActive(i);
-    setOpen(false);
+    closeToTrigger();
   };
   const move = (i) => setActive((i + options.length) % options.length);
 
@@ -115,9 +123,24 @@ export default function Select({
     }
   };
 
-  const onKeyDown = (e) => {
+  // Trigger just opens; once open, focus is in the list (Enter/Space open via the
+  // native button click). Focus alone doesn't open (unlike the input-first Combobox).
+  const onTriggerKeyDown = (e) => {
+    if (open) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setOpen(true);
+    } else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      setOpen(true);
+      typeahead(e.key);
+    }
+  };
+
+  // Navigation runs on the list, which holds focus while open.
+  const onListKeyDown = (e) => {
     if (e.key === "Escape" || e.key === "Tab") {
-      setOpen(false);
+      e.preventDefault();
+      closeToTrigger();
       return;
     }
     const nav = {
@@ -125,44 +148,32 @@ export default function Select({
       ArrowUp: () => move(active - 1),
       Home: () => setActive(0),
       End: () => setActive(options.length - 1),
-      Enter: () => (open ? choose(active) : setOpen(true)),
-      " ": () => (open ? choose(active) : setOpen(true))
+      Enter: () => choose(active),
+      " ": () => choose(active)
     };
     if (e.key in nav) {
       e.preventDefault();
-      if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
-        setOpen(true);
-        return;
-      }
       nav[e.key]();
       return;
     }
-    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      if (!open) setOpen(true);
-      typeahead(e.key);
-    }
+    if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) typeahead(e.key);
   };
 
   return (
-    <div
-      className={["select", fill && "select--fill"].filter(Boolean).join(" ")}
-      ref={rootRef}
-      onBlur={(e) => {
-        const to = e.relatedTarget;
-        if (to && !rootRef.current.contains(to) && !listRef.current?.contains(to)) setOpen(false);
-      }}
-    >
+    <div className={["select", fill && "select--fill"].filter(Boolean).join(" ")} ref={rootRef}>
       <button
         type="button"
+        ref={triggerRef}
         className="select__trigger"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={`${id}-list`}
-        aria-label={ariaLabel}
-        aria-activedescendant={open ? `${id}-${active}` : undefined}
+        // Fold the value into the name so VoiceOver reads "Team, Design" like a
+        // native select; a bare aria-label would override and drop the value.
+        aria-label={ariaLabel ? `${ariaLabel}, ${selected}` : undefined}
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
-        onKeyDown={onKeyDown}
+        onKeyDown={onTriggerKeyDown}
       >
         <span className="select__value">{selected}</span>
         <IconChevronDown className="select__chevron" aria-hidden="true" />
@@ -177,6 +188,15 @@ export default function Select({
             tabIndex={-1}
             ref={listRef}
             hidden={!open}
+            // Focus lives here while open; the ref points at the active option so
+            // VoiceOver speaks it, and it and the option stay in one portaled subtree.
+            aria-activedescendant={open ? `${id}-${active}` : undefined}
+            onKeyDown={onListKeyDown}
+            onBlur={(e) => {
+              const to = e.relatedTarget;
+              if (!to || (!rootRef.current?.contains(to) && !listRef.current?.contains(to)))
+                setOpen(false);
+            }}
           >
             {options.map((opt, i) => (
               <li

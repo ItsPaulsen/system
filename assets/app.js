@@ -1404,7 +1404,7 @@ function floatingList(anchor, list) {
 // default; this is for when option rendering needs to be custom. Handles
 // open/close, click + keyboard selection (arrows/Enter/Esc), and click-away.
 function initSelects() {
-  document.querySelectorAll("[data-select]").forEach((root) => {
+  document.querySelectorAll("[data-select]").forEach((root, si) => {
     const trigger = root.querySelector(".select__trigger");
     const list = root.querySelector(".select__list");
     const valueEl = root.querySelector(".select__value");
@@ -1412,26 +1412,29 @@ function initSelects() {
     if (!trigger || !list || !options.length) return;
 
     let activeIndex = options.findIndex((o) => o.getAttribute("aria-selected") === "true");
-    // Focus stays on the trigger the whole time (the list is never focused), so
-    // Tab/Shift+Tab move through the page normally, no focus trap. The active
-    // option is tracked with .is-active + aria-activedescendant.
+    // Unique per instance (si), or duplicate ids collide across selects and the
+    // aria-controls/activedescendant refs resolve to the wrong list.
+    const base = root.id || `select-${si}`;
     options.forEach((o, i) => {
-      if (!o.id) o.id = `${root.id || "select"}-opt-${i}`;
+      if (!o.id) o.id = `${base}-opt-${i}`;
     });
-    // Tie the trigger to its listbox (the combobox markup does this statically);
-    // needed for the aria-activedescendant relationship to resolve.
-    if (!list.id) list.id = `${root.id || "select"}-list`;
+    if (!list.id) list.id = `${base}-list`;
     trigger.setAttribute("aria-controls", list.id);
     // Labels are static, lowercase them once for type-ahead instead of per key.
     const optionLabels = options.map((o) => o.textContent.trim().toLowerCase());
 
+    // The open list takes DOM focus (see open()); the active option is tracked
+    // with .is-active + aria-activedescendant ON THE LIST. Keeping the ref on the
+    // list (not the trigger) means the pointer and its target stay in one subtree,
+    // so VoiceOver still follows it once the list is portaled to <body> — an
+    // activedescendant ref reaching across the portal from the trigger isn't.
     // scroll=false for pointer moves: only keyboard nav should tug the scroll.
     const setActive = (i, scroll = true) => {
       activeIndex = (i + options.length) % options.length;
       const opt = options[activeIndex];
       options.forEach((o, idx) => o.classList.toggle("is-active", idx === activeIndex));
       if (scroll) opt.scrollIntoView({ block: "nearest" });
-      trigger.setAttribute("aria-activedescendant", opt.id);
+      list.setAttribute("aria-activedescendant", opt.id);
     };
     const floating = floatingList(root, list);
     const open = () => {
@@ -1440,13 +1443,17 @@ function initSelects() {
       trigger.setAttribute("aria-expanded", "true");
       floating.open();
       setActive(activeIndex < 0 ? 0 : activeIndex);
+      list.focus(); // move focus into the list so the active option is spoken
     };
-    const close = () => {
+    // refocus=true hands focus back to the trigger (keyboard close / selection);
+    // a click-away or a blur elsewhere closes with focus already gone, so false.
+    const close = (refocus = true) => {
       if (list.hidden) return;
       list.hidden = true;
       trigger.setAttribute("aria-expanded", "false");
-      trigger.removeAttribute("aria-activedescendant");
+      list.removeAttribute("aria-activedescendant");
       floating.close();
+      if (refocus) trigger.focus();
     };
     const select = (i) => {
       options.forEach((o, idx) => o.setAttribute("aria-selected", String(idx === i)));
@@ -1482,15 +1489,22 @@ function initSelects() {
       }
     };
 
-    // Open on keyboard focus; mouse focus isn't :focus-visible, so a click
-    // toggles instead of double-firing here.
-    trigger.addEventListener("focus", () => {
-      if (trigger.matches(":focus-visible")) open();
-    });
+    // Trigger just opens/toggles; once open, focus is in the list and the list's
+    // own keydown drives navigation. Enter/Space open via the native button click.
+    // Focus alone doesn't open (unlike Combobox, which is input-first).
     trigger.addEventListener("click", () => (list.hidden ? open() : close()));
+    trigger.addEventListener("keydown", (e) => {
+      if (!list.hidden) return;
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        open();
+      } else if (e.key.length === 1 && e.key !== " " && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        open();
+        matchTypeahead(e.key);
+      }
+    });
 
-    // Actions for each nav key while the list is open. The same keys also open a
-    // closed list (Enter/Space just reveal it, matching a trigger click).
+    // Navigation runs on the list, which holds focus while open.
     const keyActions = {
       ArrowDown: () => setActive(activeIndex + 1),
       ArrowUp: () => setActive(activeIndex - 1),
@@ -1499,37 +1513,25 @@ function initSelects() {
       Enter: () => select(activeIndex),
       " ": () => select(activeIndex)
     };
-
-    trigger.addEventListener("keydown", (e) => {
+    list.addEventListener("keydown", (e) => {
       if (e.key === "Escape" || e.key === "Tab") {
-        close();
+        e.preventDefault();
+        close(); // back to the trigger; a second Tab then leaves normally
         return;
       }
-      if (list.hidden) {
-        if (e.key in keyActions) {
-          e.preventDefault();
-          open();
-          // Enter/Space/arrows just open; Home/End also jump within the list.
-          if (e.key === "Home" || e.key === "End") keyActions[e.key]();
-          return;
-        }
-      } else if (e.key in keyActions) {
+      if (e.key in keyActions) {
         e.preventDefault();
         keyActions[e.key]();
         return;
       }
-      // Printable character → type-ahead (opening the list first if needed).
-      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        if (list.hidden) open();
-        matchTypeahead(e.key);
-      }
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) matchTypeahead(e.key);
     });
     // Wheel-scrolling slides rows under a still pointer, firing a synthetic
     // mousemove (same clientX/Y). Ignore those so the highlight follows only a
     // real move, and never scroll from the pointer.
     let lastPointer = null;
     options.forEach((o, i) => {
-      // Keep focus on the trigger when clicking an option.
+      // Keep focus on the list (not the option) so it doesn't fall to <body>.
       o.addEventListener("mousedown", (e) => e.preventDefault());
       o.addEventListener("click", () => select(i));
       o.addEventListener("mousemove", (e) => {
@@ -1538,14 +1540,14 @@ function initSelects() {
         setActive(i, false);
       });
     });
-    // The list is portaled to <body>, so "outside" must exclude it too. And a
-    // resize-induced blur (relatedTarget null) must not close it.
+    // The list is portaled to <body>, so "outside" must exclude it too. Closing
+    // from here leaves focus where the user put it (refocus=false).
     document.addEventListener("click", (e) => {
-      if (!root.contains(e.target) && !list.contains(e.target)) close();
+      if (!root.contains(e.target) && !list.contains(e.target)) close(false);
     });
-    root.addEventListener("focusout", (e) => {
+    list.addEventListener("focusout", (e) => {
       const to = e.relatedTarget;
-      if (to && !root.contains(to) && !list.contains(to)) close();
+      if (!to || (!root.contains(to) && !list.contains(to))) close(false);
     });
   });
 }

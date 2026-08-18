@@ -2089,10 +2089,13 @@
     }
 
     /* Docs buttons (Copy CSS, Example, code-block copy) paint their own surface,
-     which the forced palette strips; outline them so each stays a visible button. */
+     which the forced palette strips; outline them so each stays a visible button.
+     currentColor makes the border match the button's own text: a link-styled
+     button like Example keeps its accent/LinkText edge, a plain button gets
+     ButtonText, so the outline always agrees with the label. */
     .btn,
     .code-copy {
-      border: var(--border-width) solid ButtonBorder;
+      border: var(--border-width) solid currentcolor;
     }
 
     /* The active React/HTML tab is shown only by an underline bar (::after) whose

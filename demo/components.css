@@ -2667,14 +2667,20 @@
       border: var(--border-width) solid ButtonBorder;
     }
 
-    /* Controls and pills lose their painted fill/border, so outline each to keep
-     it a discrete element: buttons (incl. dialog/empty actions), badges (meaning
-     is the text, not the tint), and avatar fallbacks. Not a Highlight fill, which
-     would read as "selected" and is not reliably light across themes. */
+    /* Controls and pills lose their painted fill/border, so outline each with its
+     own text colour (currentColor) so the border agrees with the label: buttons
+     (incl. dialog/empty actions) and badges (meaning is the text, not the tint). */
     .button,
-    .badge,
+    .badge {
+      border: var(--border-width) solid currentcolor;
+    }
+
+    /* Avatar: its gray surface is stripped, leaving the initials/icon floating.
+     A CanvasText ring restores the circle and reads reliably (ButtonBorder can be
+     faint). Not a Highlight fill: that would look "selected" and isn't a neutral
+     placeholder surface. */
     .avatar {
-      border: var(--border-width) solid ButtonBorder;
+      border: var(--border-width) solid CanvasText;
     }
 
     /* Separator draws with a background fill the forced palette strips; use a

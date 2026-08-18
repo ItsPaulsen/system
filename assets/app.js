@@ -2486,6 +2486,43 @@ function initTables() {
   });
 }
 
+// NavMenu dropdowns reveal on :hover / :focus-within (CSS). Layer on the disclosure
+// semantics CSS can't express: the trigger link advertises its panel (aria-haspopup +
+// aria-controls) and reflects open state (aria-expanded), and Esc collapses an open
+// panel and returns focus to the trigger (WCAG 1.4.13) even though focus-within would
+// otherwise keep it open. The trigger stays a real navigable link; this only annotates it.
+function initNavMenus() {
+  document.querySelectorAll(".nav-menu__item").forEach((item, i) => {
+    const trigger = item.querySelector(":scope > .nav-menu__link");
+    const panel = item.querySelector(":scope > .nav-menu__menu");
+    if (!trigger || !panel) return;
+
+    if (!panel.id) panel.id = `nav-menu-panel-${i}`;
+    trigger.setAttribute("aria-haspopup", "true");
+    trigger.setAttribute("aria-controls", panel.id);
+    trigger.setAttribute("aria-expanded", "false");
+
+    item.addEventListener("focusin", () => {
+      trigger.setAttribute("aria-expanded", "true");
+      item.removeAttribute("data-collapsed");
+    });
+    item.addEventListener("focusout", (e) => {
+      if (!item.contains(e.relatedTarget)) {
+        trigger.setAttribute("aria-expanded", "false");
+        item.removeAttribute("data-collapsed");
+      }
+    });
+    item.addEventListener("pointerenter", () => item.removeAttribute("data-collapsed"));
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && item.contains(document.activeElement)) {
+        item.setAttribute("data-collapsed", "");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.focus();
+      }
+    });
+  });
+}
+
 // Dialog + Sheet (both native <dialog>): open via [data-dialog-open], close via
 // [data-dialog-close] or a click on the backdrop. One delegated listener so
 // dynamically-added dialogs work too. Body scroll locks while a modal is open.
@@ -2686,6 +2723,7 @@ function init() {
   initTooltips();
   initDialogs();
   initTables();
+  initNavMenus();
   refreshResponsive();
 
   let frame;

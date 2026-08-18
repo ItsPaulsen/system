@@ -124,8 +124,8 @@
           <h2 class="subhead">With dropdown</h2>
           <p class="section-note">
             Give an item a <code>.nav-menu__menu</code> panel and it opens on hover or keyboard
-            focus. The top-level link stays clickable (no chevron); items without a panel stay
-            plain.
+            focus; Esc closes it. The top-level link stays clickable (no chevron) and advertises its
+            panel to screen readers; items without a panel stay plain.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -215,7 +215,8 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             Compound parts. Add a <code>NavMenuPanel</code> inside an item for a dropdown;
-            <code>current</code> marks the active link. Opening is CSS-only.
+            <code>current</code> marks the active link. The reveal is CSS; the parts wire the
+            <code>aria-expanded</code>/<code>haspopup</code> and Esc-to-close.
           </p>
           <div data-source="/react/NavMenu.jsx"></div>
         </section>
@@ -234,6 +235,18 @@
     <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__item"</span><span class="tok-key">&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"nav-menu__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#"</span><span class="tok-key">&gt;</span>Reports<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
   <span class="tok-key">&lt;/ul&gt;</span>
 <span class="tok-key">&lt;/nav&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. The panel reveals in CSS; this only annotates a panel-owning
+            trigger
+            (<code>aria-haspopup</code>/<code>aria-controls</code>/<code>aria-expanded</code>) and
+            adds Esc-to-close, so a dropdown parent announces and dismisses like a menu while
+            staying a real link. The React parts do the same internally.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initNavMenus"></div>
         </section>
       </div>
     </div>

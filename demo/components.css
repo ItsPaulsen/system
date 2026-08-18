@@ -2547,6 +2547,16 @@
       transform 0.15s ease-out;
   }
 
+  /* Esc (see initNavMenus) force-closes an open panel even while focus stays on the
+   trigger, which :focus-within would otherwise keep open. Cleared on pointer re-enter
+   or when focus leaves the item, so the next hover/focus reopens it. Same specificity
+   as the open rule above, so source order wins. */
+  .nav-menu__item[data-collapsed] .nav-menu__menu {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+  }
+
   .nav-menu__menu-link {
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);

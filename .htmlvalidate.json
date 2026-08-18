@@ -3,6 +3,22 @@
   "rules": {
     "void-style": "off",
     "no-inline-style": "off",
-    "doctype-style": ["error", { "style": "lowercase" }]
+    "doctype-style": ["error", { "style": "lowercase" }],
+
+    "wcag/h30": "error",
+    "wcag/h32": "error",
+    "wcag/h36": "error",
+    "wcag/h37": "error",
+    "wcag/h63": "error",
+    "wcag/h67": "error",
+    "wcag/h71": "error",
+    "input-missing-label": "error",
+    "multiple-labeled-controls": "error",
+    "no-redundant-role": "error",
+    "aria-label-misuse": "error",
+    "hidden-focusable": "error",
+    "empty-heading": "error",
+    "heading-level": "error",
+    "text-content": "error"
   }
 }

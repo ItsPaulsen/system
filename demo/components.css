@@ -2234,8 +2234,8 @@
     display: inline-block;
     width: 1.5rem;
     height: 1.5rem;
-    border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
-    border-top-color: currentcolor;
+    border: 2px solid currentcolor;
+    border-right-color: transparent;
     border-radius: var(--radius-full);
     animation: spinner-rotate 0.7s linear infinite;
   }
@@ -3481,9 +3481,9 @@
       background: Highlight;
     }
 
-    /* Spinner: the faint ring and its arc collapse to one colour, so the spin is
-     invisible. Repaint it shadcn-style: a mostly-filled CanvasText arc with a
-     single transparent quadrant as the gap, so the rotation reads clearly. */
+    /* Spinner: the forced palette makes the arc's transparent gap opaque, so the
+     ring looks solid and the spin disappears. Pin the gap transparent and the arc
+     to CanvasText so the mostly-filled shadcn-style arc still reads. */
     .spinner {
       forced-color-adjust: none;
       border-color: CanvasText;

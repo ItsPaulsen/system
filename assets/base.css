@@ -1996,8 +1996,8 @@
      circles (their paths sit inside a 24 viewBox), not the full box. */
     width: 0.85rem;
     height: 0.85rem;
-    border: 2px solid color-mix(in oklab, currentcolor 20%, transparent);
-    border-top-color: currentcolor;
+    border: 2px solid currentcolor;
+    border-right-color: transparent;
     border-radius: 50%;
     animation: toast-spin 0.7s linear infinite;
   }
@@ -2062,8 +2062,8 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Toast promise spinner: same shadcn-style mostly-filled arc as .spinner so
-     the loading state reads (its faint ring + arc otherwise collapse to one colour). */
+    /* Toast promise spinner: same as .spinner. The forced palette fills the arc's
+     transparent gap, so pin the gap transparent + arc to CanvasText so it reads. */
     .toast__spinner {
       forced-color-adjust: none;
       border-color: CanvasText;

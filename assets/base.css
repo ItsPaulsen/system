@@ -2079,7 +2079,11 @@
       background: Highlight;
     }
 
+    /* Recentre the knob: the added 1px track border shrinks the inner box, so the
+     original 2px inset sits it low (dark gap under it). 1px keeps it centred. */
     .docs-switch__toggle::before {
+      top: 1px;
+      inset-inline-start: 1px;
       background: ButtonText;
     }
 
@@ -2092,6 +2096,19 @@
     .palette-swatch {
       forced-color-adjust: none;
       border: var(--border-width) solid ButtonBorder;
+    }
+
+    /* Spacing bars show a length via their width but paint it with a background
+     fill that's stripped; use a solid CanvasText bar so the length still reads. */
+    .token-list__bar {
+      background: CanvasText;
+    }
+
+    /* Landing picker rows are link-cards on a plain background fill (no border), so
+     they vanish; outline each with its link colour so the selectable row is
+     bounded and reads as interactive. */
+    .token-list--flush a.token-list__row {
+      border: var(--border-width) solid currentcolor;
     }
 
     /* The search field's painted box vanishes; outline it so the input is visible,

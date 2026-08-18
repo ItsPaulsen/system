@@ -1308,3 +1308,16 @@
     grid-template-columns: subgrid;
   }
 }
+
+/* Forced colors (Windows High Contrast): the composed cards and the tinted
+   log-out button lose their surface/fill, so outline them to keep their bounds
+   visible (in the hero marquee and on the settings screen). */
+@media (forced-colors: active) {
+  .ex-card {
+    border: var(--border-width) solid CanvasText;
+  }
+
+  .ex-logout {
+    border: var(--border-width) solid ButtonBorder;
+  }
+}

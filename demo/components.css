@@ -483,10 +483,7 @@
    colour and a 1px outset shadow doubles it to ~2px on the outside, no
    separate ring, no layout shift. Uses --focus (not raw primary) since this is
    a focus affordance, so it matches every other focus ring. */
-  /* Key off the input's own focus, not :focus-within: in an input-group with a
-   trailing button, :focus-within would light the whole field border when the
-   button is focused too. (For a plain single input the two are equivalent.) */
-  .input__container:has(.input__element:focus) {
+  .input__container:focus-within {
     border-color: var(--focus);
     box-shadow: 0 0 0 1px var(--focus);
   }
@@ -508,8 +505,8 @@
     border-color: var(--red);
   }
 
-  .input__container--invalid:has(.input__element:focus),
-  .input__container:has(:user-invalid):has(.input__element:focus) {
+  .input__container--invalid:focus-within,
+  .input__container:has(:user-invalid):focus-within {
     border-color: var(--red);
     box-shadow: 0 0 0 1px var(--red);
   }
@@ -3332,7 +3329,7 @@
 
     /* Focus affordances built from box-shadow (input, custom select, menu trigger)
      disappear, so substitute a real outline, which forced-colors always renders. */
-    .input__container:has(.input__element:focus),
+    .input__container:focus-within,
     .select__trigger:focus-visible,
     .select__trigger[aria-expanded="true"],
     .menu__trigger:focus-visible,
@@ -3386,7 +3383,8 @@
     .tooltip__bubble,
     .select__list,
     .nav-menu__menu,
-    .dialog {
+    .dialog,
+    .tabs {
       border: var(--border-width) solid CanvasText;
     }
 
@@ -3395,9 +3393,15 @@
      (incl. dialog/empty actions), badges (meaning is the text, not the tint), and
      pagination page/prev/next buttons (transparent otherwise, so they'd float). */
     .button,
-    .badge,
-    .pagination__link {
+    .badge {
       border: var(--border-width) solid currentcolor;
+    }
+
+    /* Pagination page/prev/next: currentColor doesn't reliably render as a border
+     on these transparent <button>s in the forced palette, so use the explicit
+     ButtonBorder system colour. */
+    .pagination__link {
+      border: var(--border-width) solid ButtonBorder;
     }
 
     /* Hover feedback: the token background swap is stripped, so mark the hovered
@@ -3514,6 +3518,14 @@
     .spinner {
       forced-color-adjust: none;
       border-color: CanvasText;
+      border-right-color: transparent;
+    }
+
+    /* Loading-button spinner: same fix. Its faint track ring drops out in the
+     forced palette (fine), so make the arc a currentColor gap-ring that spins. */
+    .button--loading::after {
+      forced-color-adjust: none;
+      border-color: currentcolor;
       border-right-color: transparent;
     }
   }

@@ -477,6 +477,16 @@
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--ink-primary);
+
+    /* Whole field reads as a text field (like shadcn's bare input + the nav
+     search): text cursor over the container's strips, not just the input. Select
+     and file variants override to pointer. */
+    cursor: text;
+  }
+
+  /* Whole file field is the click target, so pointer over the container too. */
+  .input__container:has(.input__element--file) {
+    cursor: pointer;
   }
 
   /* Active state is the border itself (MD3 outlined field): it turns the focus
@@ -636,6 +646,7 @@
    </label> */
   .input__container--select {
     position: relative;
+    cursor: pointer;
   }
 
   .input__container--select .input__element {

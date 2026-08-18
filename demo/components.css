@@ -562,6 +562,11 @@
   .input__element--file {
     display: inline-flex;
     align-items: center;
+
+    /* Undo the base align-self: stretch: the file control centres at its content
+     height (its field is a click target, not text entry, and has no focus-border
+     flicker to fix). */
+    align-self: center;
     padding-block: 0;
     color: var(--ink-secondary);
     cursor: pointer;

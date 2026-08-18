@@ -2044,10 +2044,16 @@
    that mode; uses system-color keywords and never touches the token pipeline,
    so neutral retinting is unaffected. (Component library has its own block.) */
   @media (forced-colors: active) {
-    /* Code snippets lose their surface background; a CanvasText border keeps each
-     block delineated (same structural line as the component surfaces). */
+    /* Standalone code snippets lose their surface background; a CanvasText border
+     keeps each block delineated. Code inside a preview .example is already bounded
+     by that box (its own border + the .example__code divider), so exclude it to
+     avoid a double border. */
     pre {
       border: var(--border-width) solid CanvasText;
+    }
+
+    .example pre {
+      border: 0;
     }
 
     .docs-switch__toggle {

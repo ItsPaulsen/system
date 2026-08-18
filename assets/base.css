@@ -1066,7 +1066,14 @@
   .palette-table table {
     width: 100%;
     min-width: 480px;
-    border-collapse: collapse;
+
+    /* Separate (not collapse) so the row dividers render through the normal
+     box-border path. iOS/mobile WebKit snaps collapsed table borders to whole
+     device pixels and skips the sub-pixel AA it gives block borders, so the same
+     --fill-tertiary hairline looks harder here than on the div-based token/type
+     lists. border-spacing:0 keeps the cell tops touching into one continuous line. */
+    border-collapse: separate;
+    border-spacing: 0;
   }
 
   .palette-table thead th {

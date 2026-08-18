@@ -2130,6 +2130,12 @@
       color: HighlightText;
     }
 
+    /* The search clear (X) is a mask tinted faint --ink-secondary that dims in the
+     forced palette; paint it CanvasText so the clear affordance stays visible. */
+    .site-nav__search::-webkit-search-cancel-button {
+      background: CanvasText;
+    }
+
     /* The typeahead dropdown floats on a shadow, stripped in high contrast; border
      it so the results panel stays a delineated surface. */
     .site-nav__results {

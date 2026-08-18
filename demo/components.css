@@ -3422,6 +3422,12 @@
       opacity: 1;
     }
 
+    /* The native-select dropdown chevron is a mask tinted faint --ink-secondary,
+     which dims in the forced palette; paint it CanvasText so the affordance shows. */
+    .input__container--select::after {
+      background: CanvasText;
+    }
+
     /* Sheet: the edge shadow separating it from the page is gone; border only the
      inner edge (the other three sides sit at the viewport). Positioned by physical
      inset, so the right-anchored default borders its left edge, and .sheet--left

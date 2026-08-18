@@ -786,12 +786,16 @@ function syncFooterColumns() {
     if (wide) col.removeAttribute("name");
     else col.setAttribute("name", "ex-footer-nav");
     col.open = wide ? true : i === 0;
-    // Desktop columns are static labels, not controls, drop the summary from
-    // the tab order (it's already pointer-events:none in CSS).
+    // Desktop columns are static labels: block the toggle (mouse is already
+    // stopped by pointer-events:none in CSS; this also stops keyboard Enter).
+    // Never add tabindex to the primary <summary> — it trips the "interactive
+    // element in a summary" audit and the spec forbids it.
     const head = col.querySelector("summary");
-    if (head) {
-      if (wide) head.setAttribute("tabindex", "-1");
-      else head.removeAttribute("tabindex");
+    if (head && !head.dataset.footerBound) {
+      head.dataset.footerBound = "1";
+      head.addEventListener("click", (e) => {
+        if (window.matchMedia("(min-width: 768px)").matches) e.preventDefault();
+      });
     }
   });
 }

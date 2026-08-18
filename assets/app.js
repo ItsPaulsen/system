@@ -765,39 +765,46 @@ function setGridOverlay(show) {
   });
 }
 
-// Footer link columns are <details>. On mobile they behave as accordions with
-// the first open; at md they're forced open (CSS hides the chevron and makes the
-// summary inert) so they read as static columns. Driving `open` from JS keeps it
-// robust across engines without relying on the ::details-content pseudo.
+// Footer link columns are a responsive pattern, rendered by breakpoint:
+//   • mobile  → native <details> accordions (a shared name = one open at a time,
+//     first open), so the toggle, chevron, and open/close animation are all the
+//     browser's own.
+//   • desktop → a static heading + list, with no <summary> at all. A primary
+//     <summary> is always a focusable control and can't legally be made inert (a
+//     tabindex on it trips the "interactive element in a summary" audit), so at
+//     md the columns become plain, non-interactive markup instead.
 //
-// Only reconcile when the breakpoint actually crosses: mobile browsers fire
-// `resize` on every scroll (the toolbar shows/hides), and re-forcing open state
-// each time would slam the user's open column shut and re-open the first one.
+// The label/link data is read once from the injected markup, then the nav is
+// re-rendered on each breakpoint cross. Only reconcile when the breakpoint
+// actually crosses: mobile browsers fire `resize` on every scroll (the toolbar
+// shows/hides), and re-rendering each time would slam the user's open column
+// shut and re-open the first one.
 let footerWide;
+let footerData;
 function syncFooterColumns() {
-  const cols = document.querySelectorAll(".ex-footer__col");
-  if (!cols.length) return;
+  const nav = document.querySelector(".ex-footer__nav");
+  if (!nav) return;
   const wide = window.matchMedia("(min-width: 768px)").matches;
-  if (wide === footerWide) return;
+  if (footerData && wide === footerWide) return;
   footerWide = wide;
-  cols.forEach((col, i) => {
-    // Mobile: a shared name makes them an exclusive accordion (one open at a
-    // time), natively. Desktop drops the name so every column can stay open.
-    if (wide) col.removeAttribute("name");
-    else col.setAttribute("name", "ex-footer-nav");
-    col.open = wide ? true : i === 0;
-    // Desktop columns are static labels: block the toggle (mouse is already
-    // stopped by pointer-events:none in CSS; this also stops keyboard Enter).
-    // Never add tabindex to the primary <summary> — it trips the "interactive
-    // element in a summary" audit and the spec forbids it.
-    const head = col.querySelector("summary");
-    if (head && !head.dataset.footerBound) {
-      head.dataset.footerBound = "1";
-      head.addEventListener("click", (e) => {
-        if (window.matchMedia("(min-width: 768px)").matches) e.preventDefault();
-      });
-    }
-  });
+  if (!footerData) {
+    footerData = [...nav.querySelectorAll(".ex-footer__col")].map((col) => ({
+      label: col.querySelector(".ex-footer__col-head").textContent.trim(),
+      links: [...col.querySelectorAll(".ex-footer__col-list a")].map((a) => ({
+        text: a.textContent.trim(),
+        href: a.getAttribute("href")
+      }))
+    }));
+  }
+  nav.innerHTML = footerData
+    .map((col, i) => {
+      const items = col.links.map((l) => `<li><a href="${l.href}">${l.text}</a></li>`).join("");
+      if (wide) {
+        return `<div class="ex-footer__col"><div class="ex-footer__col-head">${col.label}</div><ul class="ex-footer__col-list">${items}</ul></div>`;
+      }
+      return `<details class="ex-footer__col" name="ex-footer-nav"${i === 0 ? " open" : ""}><summary class="ex-footer__col-head">${col.label}</summary><ul class="ex-footer__col-list">${items}</ul></details>`;
+    })
+    .join("");
 }
 
 function refreshResponsive() {

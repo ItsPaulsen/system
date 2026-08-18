@@ -1151,15 +1151,6 @@
   }
 }
 
-/* Desktop columns are static, but syncFooterColumns() sets open=true from JS
-   after first paint, with the transition still live, columns that start closed
-   in the HTML would slide open on load. Kill the transition at md so they snap. */
-@media (min-width: 768px) {
-  .ex-footer__col::details-content {
-    transition: none;
-  }
-}
-
 /* Hairline comes from .separator; this only sets the footer's spacing. */
 .ex-footer__divider {
   margin: 4rem 0 2rem;
@@ -1258,7 +1249,6 @@
     min-height: 0;
     padding-block: 0 12px;
     cursor: default;
-    pointer-events: none;
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);

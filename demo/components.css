@@ -3443,8 +3443,15 @@
     }
 
     /* Thumb is the accent handle (like --primary-foreground normally): Highlight
-     to match the fill, with a Canvas ring so it stays distinct on the filled part. */
-    .slider::-webkit-slider-thumb,
+     to match the fill, with a Canvas ring so it stays distinct on the filled part.
+     Split per-engine: grouping ::-webkit- with ::-moz- in one list makes each
+     browser treat the whole rule as invalid and drop it. */
+    .slider::-webkit-slider-thumb {
+      forced-color-adjust: none;
+      background: Highlight;
+      border-color: Canvas;
+    }
+
     .slider::-moz-range-thumb {
       forced-color-adjust: none;
       background: Highlight;

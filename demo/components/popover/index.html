@@ -89,8 +89,18 @@
                   Open popover
                 </button>
               </div>
-              <div class="popover popover--panel popover--center" id="popover-demo" popover>
-                <p style="margin: 0 0 0.5rem; color: var(--ink-primary); font-weight: 500">
+              <div
+                class="popover popover--panel popover--center"
+                id="popover-demo"
+                popover
+                role="dialog"
+                aria-labelledby="popover-demo-title"
+                tabindex="-1"
+              >
+                <p
+                  id="popover-demo-title"
+                  style="margin: 0 0 0.5rem; color: var(--ink-primary); font-weight: 500"
+                >
                   Keyboard shortcuts
                 </p>
                 <p style="margin: 0">
@@ -102,7 +112,7 @@
             <script type="text/plain" class="example__react">
               <Popover>
                 <PopoverTrigger>Open popover</PopoverTrigger>
-                <PopoverContent center>
+                <PopoverContent center aria-label="Keyboard shortcuts">
                   <p>
                     <strong>Keyboard shortcuts</strong>
                   </p>
@@ -128,8 +138,8 @@
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"popover-x"</span><span class="tok-key">&gt;</span>Open popover<span class="tok-key">&lt;/button&gt;</span>
-<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--panel popover--center"</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x"</span> <span class="tok-prop">popover</span><span class="tok-key">&gt;</span>
-  …
+<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--panel popover--center"</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x"</span> <span class="tok-prop">popover</span> <span class="tok-prop">role</span>=<span class="tok-str">"dialog"</span> <span class="tok-prop">aria-labelledby</span>=<span class="tok-str">"popover-x-title"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;p</span> <span class="tok-prop">id</span>=<span class="tok-str">"popover-x-title"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/p&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>
 

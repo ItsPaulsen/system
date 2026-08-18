@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId, useRef } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
 // Compound dialog backed by showModal(), so focus trap, Esc, and inert backdrop come free.
 const DialogContext = createContext(null);
@@ -7,8 +7,13 @@ export function Dialog({ children }) {
   const ref = useRef(null);
   const titleId = useId();
   const descId = useId();
+  // Only wire aria-describedby when a DialogDescription actually mounts, so the
+  // <dialog> never points at a missing id.
+  const [hasDesc, setHasDesc] = useState(false);
   return (
-    <DialogContext.Provider value={{ ref, titleId, descId }}>{children}</DialogContext.Provider>
+    <DialogContext.Provider value={{ ref, titleId, descId, hasDesc, setHasDesc }}>
+      {children}
+    </DialogContext.Provider>
   );
 }
 
@@ -31,7 +36,7 @@ export function DialogClose({ children, ...rest }) {
 }
 
 export function DialogContent({ children, ...rest }) {
-  const { ref, titleId, descId } = useContext(DialogContext);
+  const { ref, titleId, descId, hasDesc } = useContext(DialogContext);
 
   useEffect(() => {
     const dlg = ref.current;
@@ -72,7 +77,7 @@ export function DialogContent({ children, ...rest }) {
       ref={ref}
       className="dialog"
       aria-labelledby={titleId}
-      aria-describedby={descId}
+      aria-describedby={hasDesc ? descId : undefined}
       {...rest}
     >
       <div className="dialog__inner" tabIndex={-1}>
@@ -92,7 +97,12 @@ export function DialogTitle({ children, className, ...rest }) {
 }
 
 export function DialogDescription({ children, className, ...rest }) {
-  const { descId } = useContext(DialogContext);
+  const { descId, setHasDesc } = useContext(DialogContext);
+  // Tell DialogContent a description exists so it wires aria-describedby.
+  useEffect(() => {
+    setHasDesc(true);
+    return () => setHasDesc(false);
+  }, [setHasDesc]);
   return (
     <p id={descId} className={["dialog__text", className].filter(Boolean).join(" ")} {...rest}>
       {children}

@@ -89,17 +89,32 @@ export default function Combobox({
         rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })
       );
     }
-    window.addEventListener("scroll", reflow, true);
+    // Capturing scroll also catches the list's own internal scroll (the active-row
+    // scrollIntoView below), so ignore scrolls that originate inside the list —
+    // re-placing on those rewrites inline styles and makes VoiceOver re-read.
+    const onScroll = (e) => {
+      if (e.target instanceof Node && list.contains(e.target)) return;
+      reflow();
+    };
+    window.addEventListener("scroll", onScroll, true);
     window.addEventListener("resize", reflow);
     window.visualViewport?.addEventListener("resize", reflow);
     window.visualViewport?.addEventListener("scroll", reflow);
     return () => {
-      window.removeEventListener("scroll", reflow, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", reflow);
       window.visualViewport?.removeEventListener("resize", reflow);
       window.visualViewport?.removeEventListener("scroll", reflow);
     };
   }, [open]);
+
+  // Keep the active row visible on arrow nav (parity with the vanilla list).
+  useEffect(() => {
+    if (!open || active < 0) return;
+    listRef.current
+      ?.querySelector(".select__option.is-active")
+      ?.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
 
   // Filtering changes the list height, so re-place it (keeping the current side).
   useEffect(() => {

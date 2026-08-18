@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId, useState } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
 // Floating surface on the native Popover API: top-layer, light-dismiss, Esc, and CSS anchor
 // positioning, all driven by the trigger's popovertarget. --panel pads content, --center
@@ -38,11 +38,28 @@ export function PopoverTrigger({ className = "button button--secondary", childre
 
 export function PopoverContent({ panel = true, center, className, children, ...rest }) {
   const id = useContext(PopoverContext);
+  const ref = useRef(null);
   const cls = ["popover", panel && "popover--panel", center && "popover--center", className]
     .filter(Boolean)
     .join(" ");
+  // role="dialog" (the trigger promises aria-haspopup="dialog"), so move focus in
+  // on open like shadcn; the native popover returns focus to the trigger on close.
+  // Name it with aria-label / aria-labelledby via ...rest.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onToggle = (e) => {
+      if (e.newState !== "open") return;
+      const focusable = el.querySelector(
+        'button:not([disabled]), select, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      (focusable || el).focus();
+    };
+    el.addEventListener("toggle", onToggle);
+    return () => el.removeEventListener("toggle", onToggle);
+  }, []);
   return (
-    <div className={cls} id={id} popover="auto" {...rest}>
+    <div ref={ref} className={cls} id={id} popover="auto" role="dialog" tabIndex={-1} {...rest}>
       {children}
     </div>
   );

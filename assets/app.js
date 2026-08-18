@@ -1327,12 +1327,10 @@ function rafThrottle(fn) {
 // Flip a select/combobox list above its trigger when it won't fit below and
 // there's more room above. The CSS-native version is anchor positioning, but
 // that lacks Safari support today, so this mirrors positionPopover's JS flip.
-// Call on open, once the list is visible so its height can be measured.
-// Position a select/combobox list (portaled to <body>) against its anchor, in
-// PAGE coordinates so it scrolls with the document and stays glued to the
-// trigger. Measures against the visual viewport (keyboard-aware): opens below,
-// flips above only when below can't fit and above has more room, and caps the
-// height to the space available so it clips instead of hiding behind the keyboard.
+// Call on open, once the list is visible so its height can be measured. Measures
+// against the visual viewport (keyboard-aware): opens below, flips above only when
+// below can't fit and above has more room, and caps the height to the space
+// available so it clips instead of hiding behind the keyboard.
 // fixed=true positions in viewport coords for a position:fixed list that stays in
 // the DOM (Combobox, so VoiceOver can follow aria-activedescendant into it); the
 // default adds scroll offsets for a position:absolute list portaled to <body>
@@ -2103,15 +2101,18 @@ function initPopovers() {
       if (overlayIsDesktop.matches) placeThrottled();
       else if (!pop.contains(e.target)) pop.hidePopover();
     };
-    // A calendar panel moves focus to its first control on open (the prev-month
-    // arrow), like shadcn, so keyboard users land inside without an extra Tab.
-    // :focus-visible stays pointer-aware, so mouse opens don't flash a ring.
-    const focusFirst = pop.querySelector(".calendar")
+    // A calendar panel or a role="dialog" popover moves focus inside on open (like
+    // shadcn), so keyboard/screen-reader users land in it. Calendar has controls to
+    // land on; a plain dialog with no focusable content takes focus on the panel
+    // itself (it carries tabindex="-1"). The native popover returns focus to the
+    // trigger on close, so no manual restore is needed.
+    const movesFocusIn = pop.querySelector(".calendar") || pop.getAttribute("role") === "dialog";
+    const focusFirst = movesFocusIn
       ? () => {
           const el = pop.querySelector(
             'button:not([disabled]), select, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
           );
-          el?.focus();
+          (el || pop).focus();
         }
       : null;
     // The native popover doesn't reflect open state to the trigger, so sync

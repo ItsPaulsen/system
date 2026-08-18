@@ -744,10 +744,10 @@
   }
 
   .select__list {
-    /* Portaled to <body> and positioned in page coordinates by app.js
-     (positionFloating): it escapes any clipping/overflow ancestor (like shadcn),
-     and absolute page coords scroll with the document so it stays glued to the
-     trigger with no drift. JS sets left/top/width/max-height. */
+    /* Positioned by app.js (positionFloating), which sets left/top/width/max-height.
+     Select portals this to <body> and uses position:absolute page coords (below);
+     Combobox keeps it in the DOM and overrides to position:fixed so a screen reader
+     can follow aria-activedescendant into it (a body portal breaks that). */
     position: absolute;
     z-index: 50;
     max-height: 260px;

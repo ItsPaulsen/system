@@ -3360,9 +3360,8 @@
       background: HighlightText;
     }
 
-    /* Checkbox / radio: the painted checked fill would vanish otherwise. */
-    .checkbox__input:checked,
-    .radio__input:checked {
+    /* Checkbox: the painted checked fill would vanish otherwise. */
+    .checkbox__input:checked {
       forced-color-adjust: none;
       background: Highlight;
       border-color: Highlight;
@@ -3370,6 +3369,20 @@
 
     .checkbox__check {
       color: HighlightText;
+    }
+
+    /* Radio: keep the ring + transparent centre (its border-width dot) rather than
+     a solid fill, so the checked state still reads as a radio with a dot. */
+    .radio__input:checked {
+      forced-color-adjust: none;
+      border-color: Highlight;
+    }
+
+    /* Alert + toast icons keep their semantic colour (the colour is set on the SVG
+     for alerts / the wrapper span for toasts; opt out so the forced palette
+     doesn't remap it). */
+    .alert__icon {
+      forced-color-adjust: none;
     }
 
     /* Focus affordances built from box-shadow (input, custom select, menu trigger)

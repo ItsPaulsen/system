@@ -2062,6 +2062,13 @@
       border: var(--border-width) solid CanvasText;
     }
 
+    /* Keep the typed toast icon's semantic colour (like the Alert icons). The
+     colour is set on this wrapper span, so the forced palette would remap it to a
+     system colour and the SVG would inherit that; opt out to preserve it. */
+    .toast__icon {
+      forced-color-adjust: none;
+    }
+
     /* Toast promise spinner: same as .spinner. The forced palette fills the arc's
      transparent gap, so pin the gap transparent + arc to CanvasText so it reads. */
     .toast__spinner {

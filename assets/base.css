@@ -2044,6 +2044,12 @@
    that mode; uses system-color keywords and never touches the token pipeline,
    so neutral retinting is unaffected. (Component library has its own block.) */
   @media (forced-colors: active) {
+    /* Code snippets lose their surface background; a CanvasText border keeps each
+     block delineated (same structural line as the component surfaces). */
+    pre {
+      border: var(--border-width) solid CanvasText;
+    }
+
     .docs-switch__toggle {
       border: var(--border-width) solid ButtonBorder;
     }

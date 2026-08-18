@@ -2062,6 +2062,14 @@
       border: var(--border-width) solid CanvasText;
     }
 
+    /* Toast promise spinner: same shadcn-style mostly-filled arc as .spinner so
+     the loading state reads (its faint ring + arc otherwise collapse to one colour). */
+    .toast__spinner {
+      forced-color-adjust: none;
+      border-color: CanvasText;
+      border-right-color: transparent;
+    }
+
     .docs-switch__toggle {
       border: var(--border-width) solid ButtonBorder;
     }

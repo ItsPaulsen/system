@@ -3482,12 +3482,12 @@
     }
 
     /* Spinner: the faint ring and its arc collapse to one colour, so the spin is
-     invisible. Make the ring an empty (transparent) gap and the arc a solid system
-     colour, like shadcn, so the rotation reads. */
+     invisible. Repaint it shadcn-style: a mostly-filled CanvasText arc with a
+     single transparent quadrant as the gap, so the rotation reads clearly. */
     .spinner {
       forced-color-adjust: none;
-      border-color: transparent;
-      border-top-color: CanvasText;
+      border-color: CanvasText;
+      border-right-color: transparent;
     }
   }
 }

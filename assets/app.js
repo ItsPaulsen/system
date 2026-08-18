@@ -166,9 +166,9 @@ function injectSkipLink() {
   if (!wrap) return;
   if (!wrap.id) wrap.id = "main";
   wrap.setAttribute("tabindex", "-1");
-  // Make the skip target a real main landmark (docs pages ship no <main>; the
-  // sidebar <aside> lives outside .wrap, so main wraps only the page content).
-  if (!wrap.hasAttribute("role")) wrap.setAttribute("role", "main");
+  // .wrap is the skip target and the main landmark. Pages ship it as <main>; only
+  // patch role for a legacy <div class="wrap"> (a real <main> needs no role).
+  if (wrap.tagName !== "MAIN" && !wrap.hasAttribute("role")) wrap.setAttribute("role", "main");
   const a = document.createElement("a");
   a.className = "skip-link";
   a.href = `#${wrap.id}`;

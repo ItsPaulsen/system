@@ -3442,10 +3442,12 @@
       background: Highlight;
     }
 
+    /* Thumb is the accent handle (like --primary-foreground normally): Highlight
+     to match the fill, with a Canvas ring so it stays distinct on the filled part. */
     .slider::-webkit-slider-thumb,
     .slider::-moz-range-thumb {
       forced-color-adjust: none;
-      background: ButtonText;
+      background: Highlight;
       border-color: Canvas;
     }
 

@@ -983,34 +983,34 @@
     line-height: 1.6;
   }
 
-  /* GitHub-flavoured syntax tokens for the intro code sample. Manual spans in
-   HTML, no highlighter dependency for a single snippet. light-dark() picks the
-   theme via color-scheme (set per theme on :root), so each token is one rule. */
+  /* Syntax tokens for the code samples, mapped to our palette (GitHub-flavoured hue
+   families, but on-system and centrally contrast-controlled). Each --token is themed
+   per color-scheme, so one rule covers both; the light-dark() fallback keeps colours
+   right if a page ever loads base.css without the tokens. All clear AA on the code
+   surface in both themes (light 5.4–7.0, dark 6.5–7.1). key=red, prop=amber,
+   selector=green, fn=fuchsia, str/var=blue (both blue-family, as before). */
   pre .tok-key {
-    color: light-dark(#cf222e, #ff7b72);
+    color: var(--red, light-dark(#bf0000, #ff9696));
   }
 
   pre .tok-selector {
-    color: light-dark(#116329, #7ee787);
+    color: var(--green, light-dark(#007a16, #54cb99));
   }
 
   pre .tok-prop {
-    color: light-dark(#953800, #ffa657);
+    color: var(--amber, light-dark(#aa5100, #eaaa50));
   }
 
-  /* Functions / url() / @import: our fuchsia token (themed per color-scheme) lifts
-   the light-mode contrast over GitHub's purple (5.05 → 6.70 on white); dark is a
-   wash. Fallback hex keeps it right if a page loads base.css without the tokens. */
   pre .tok-fn {
     color: var(--fuchsia, light-dark(#9827a0, #eb9def));
   }
 
   pre .tok-str {
-    color: light-dark(#0a3069, #a5d6ff);
+    color: var(--blue, light-dark(#1950c8, #8cbeff));
   }
 
   pre .tok-var {
-    color: light-dark(#0550ae, #79c0ff);
+    color: var(--blue, light-dark(#1950c8, #8cbeff));
   }
 
   /* Line numbers. <code> is a grid so each .line is its own row; the "\n"s kept

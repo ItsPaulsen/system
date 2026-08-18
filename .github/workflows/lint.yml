@@ -1,8 +1,8 @@
 name: Lint
 
+# Pull requests only. On main, linting runs as the gating `lint` job inside the
+# deploy workflow, so a push shows one workflow (lint -> deploy) not two.
 on:
-  push:
-    branches: [main]
   pull_request:
 
 # A newer push to the same branch/PR supersedes older lint runs — cancel them

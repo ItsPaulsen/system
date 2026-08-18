@@ -19,7 +19,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Gate the deploy on lint so a failing push never publishes.
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
   deploy:
+    needs: lint
     runs-on: ubuntu-latest
     # Static upload+deploy takes seconds; fail fast if a running job wedges so
     # it releases the Pages lock instead of hanging the queue.

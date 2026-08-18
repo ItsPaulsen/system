@@ -2106,6 +2106,12 @@
       color: HighlightText;
     }
 
+    /* The typeahead dropdown floats on a shadow, stripped in high contrast; border
+     it so the results panel stays a delineated surface. */
+    .site-nav__results {
+      border: var(--border-width) solid CanvasText;
+    }
+
     /* Shadow / radius / motion previews demonstrate a visual property the forced
      palette would erase; opt them out so the sample still renders. */
     .preview-card__chip[data-shadow-demo],

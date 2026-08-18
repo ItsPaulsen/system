@@ -3379,7 +3379,10 @@
     .card,
     .popover,
     .accordion__item,
-    .tooltip__bubble {
+    .tooltip__bubble,
+    .select__list,
+    .nav-menu__menu,
+    .dialog {
       border: var(--border-width) solid CanvasText;
     }
 
@@ -3411,10 +3414,17 @@
       background: CanvasText;
     }
 
-    /* Sheet: the edge shadow separating it from the page is gone, so add a border
-     (all sides is simplest; only the inner edge is actually on-screen). */
+    /* Sheet: the edge shadow separating it from the page is gone; border only the
+     inner edge (the other three sides sit at the viewport). Positioned by physical
+     inset, so the right-anchored default borders its left edge, and .sheet--left
+     its right. */
     .sheet {
-      border: var(--border-width) solid CanvasText;
+      border-left: var(--border-width) solid CanvasText;
+    }
+
+    .sheet--left {
+      border-left: 0;
+      border-right: var(--border-width) solid CanvasText;
     }
 
     /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint it like

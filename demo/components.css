@@ -2658,14 +2658,16 @@
       border: var(--border-width) solid ButtonText;
     }
 
-    /* Surfaces (alert, card, popover, accordion rows) lose their background, so
-     add a border to keep the container boundary visible. */
+    /* Surfaces (alert, card, popover, accordion rows, tooltip) lose their
+     background, so add a CanvasText border to keep the container boundary visible
+     (the same neutral structural line as the separator/avatar/sheet, and more
+     reliably visible than the button-specific ButtonBorder). */
     .alert,
     .card,
     .popover,
     .accordion__item,
     .tooltip__bubble {
-      border: var(--border-width) solid ButtonBorder;
+      border: var(--border-width) solid CanvasText;
     }
 
     /* Controls and pills lose their painted fill/border, so outline each with its

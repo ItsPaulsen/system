@@ -2725,6 +2725,29 @@
       background: ButtonText;
       border-color: Canvas;
     }
+
+    /* Progress: track and value fills both vanish, leaving nothing. Outline the
+     track and mark the filled value as a system selection so the bar reads. */
+    .progress {
+      forced-color-adjust: none;
+      background: Canvas;
+      border: var(--border-width) solid ButtonText;
+    }
+
+    .progress::-webkit-progress-bar {
+      forced-color-adjust: none;
+      background: Canvas;
+    }
+
+    .progress::-webkit-progress-value {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .progress::-moz-progress-bar {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
   }
 
   /* ── Avatar ────────────────────────────────────────────────────────────── */

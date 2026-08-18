@@ -716,7 +716,7 @@
   }
 
   .lede {
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
     margin: 0;
   }

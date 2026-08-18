@@ -2628,6 +2628,32 @@
       background: Highlight;
       color: HighlightText;
     }
+
+    /* Selected tab, checked chip, current page, and selected day all paint state
+     with a background tint the forced palette strips; restate them as a system
+     selection so the active choice stays distinguishable. */
+    .tabs__radio:checked + .tabs__tab,
+    .chip:has(input:checked),
+    .pagination__link[aria-current="page"],
+    .calendar__day.is-selected {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    /* Today carries only a faint fill; keep a border so it still reads as marked. */
+    .calendar__day.is-today {
+      border: var(--border-width) solid ButtonText;
+    }
+
+    /* Surfaces (alert, card, popover, accordion rows) lose their background, so
+     add a border to keep the container boundary visible. */
+    .alert,
+    .card,
+    .popover,
+    .accordion__item {
+      border: var(--border-width) solid ButtonBorder;
+    }
   }
 
   /* ── Avatar ────────────────────────────────────────────────────────────── */

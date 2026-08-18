@@ -80,10 +80,12 @@
         <section class="preview-block">
           <h2 class="subhead">As radio (single-select)</h2>
           <p class="section-note">
-            Radios share a <code>name</code>: only one in the group can be checked.
+            Radios share a <code>name</code>: only one in the group can be checked. Wrap the set in
+            a labelled group (<code>role="radiogroup"</code> + <code>aria-label</code>) so a screen
+            reader announces what the choices are for.
           </p>
           <div class="example" data-example>
-            <div class="component-preview">
+            <div class="component-preview" role="radiogroup" aria-label="Time range">
               <label class="chip chip--as-radio">
                 <input type="radio" name="chip-when" class="chip__input" checked />
                 Today
@@ -113,9 +115,14 @@
 
         <section class="preview-block">
           <h2 class="subhead">As checkbox (multi-select)</h2>
-          <p class="section-note">Leading checkmark appears on checked.</p>
+          <p class="section-note">
+            Leading checkmark appears on checked. Wrap the set in a labelled group (<code
+              >role="group"</code
+            >
+            + <code>aria-label</code>) for screen-reader context.
+          </p>
           <div class="example" data-example>
-            <div class="component-preview">
+            <div class="component-preview" role="group" aria-label="Teams">
               <label class="chip chip--as-checkbox">
                 <input type="checkbox" class="chip__input" checked />
                 Design

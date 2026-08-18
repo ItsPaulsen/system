@@ -1,5 +1,11 @@
+import { cloneElement, isValidElement } from "react";
+
 // Small status/label pill. `variant` picks a style (primary | secondary | outline) or a
 // colour tint (amber | blue | fuchsia | green | red); startIcon/endIcon slot a leading/trailing glyph.
+// Icons are decorative (the badge's text carries the meaning), so they're marked aria-hidden.
+const decorative = (icon) =>
+  isValidElement(icon) ? cloneElement(icon, { "aria-hidden": "true" }) : icon;
+
 export default function Badge({ variant, startIcon, endIcon, children, className, ...rest }) {
   const cls = [
     "badge",
@@ -12,9 +18,9 @@ export default function Badge({ variant, startIcon, endIcon, children, className
     .join(" ");
   return (
     <span className={cls} {...rest}>
-      {startIcon}
+      {decorative(startIcon)}
       {children}
-      {endIcon}
+      {decorative(endIcon)}
     </span>
   );
 }

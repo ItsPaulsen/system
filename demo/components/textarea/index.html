@@ -106,11 +106,55 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Invalid</h2>
+          <p class="section-note">
+            Same wiring as Input: <code>--invalid</code> on the container, an
+            <code>input__error</code> message, and <code>aria-invalid</code> +
+            <code>aria-describedby</code> on the field.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input" style="max-width: 360px">
+                <span class="input__label">Message</span>
+                <span class="input__container input__container--textarea input__container--invalid">
+                  <textarea
+                    class="input__element"
+                    rows="4"
+                    aria-invalid="true"
+                    aria-describedby="textarea-msg-error"
+                  ></textarea>
+                </span>
+                <span class="input__error" id="textarea-msg-error">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                  Please add a short message.
+                </span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Textarea label="Message" rows={4} error="Please add a short message." />
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            <code>label</code> renders the field label; <code>rows</code>, <code>placeholder</code>,
-            <code>disabled</code>, and value props pass through to the textarea.
+            <code>label</code> names the field; <code>hint</code>/<code>error</code> and
+            <code>required</code> mirror Input (<code>error</code> implies invalid). Other props
+            (<code>rows</code>, <code>placeholder</code>, value) pass through to the textarea.
           </p>
           <div data-source="/react/Textarea.jsx"></div>
         </section>

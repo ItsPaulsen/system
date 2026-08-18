@@ -11,7 +11,11 @@ export function Avatar({ src, alt = "", fallback, size, status, className, ...re
       ) : (
         <span className="avatar__fallback">{fallback ?? <IconUser />}</span>
       )}
-      {status && <span className="avatar__status" aria-hidden="true" />}
+      {status && (
+        <span className="avatar__status">
+          <span className="sr-only">Online</span>
+        </span>
+      )}
     </span>
   );
 }

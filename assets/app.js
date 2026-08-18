@@ -226,7 +226,7 @@ function injectNav() {
   // results list is populated + wired in wireSearch() once the DOM is ready.
   const searchInput = currentProjectPages()
     ? `<div class="site-nav__search-wrap">
-          <input class="site-nav__search" type="search" placeholder="Search…" aria-label="Search this project" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="nav-search-results" aria-autocomplete="list" />
+          <input class="site-nav__search" type="search" name="site-search" placeholder="Search…" aria-label="Search this project" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="nav-search-results" aria-autocomplete="list" />
           <ul class="site-nav__results" id="nav-search-results" role="listbox" hidden></ul>
         </div>`
     : "";

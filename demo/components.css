@@ -2573,202 +2573,6 @@
     }
   }
 
-  /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
-   These controls paint their state with background / mask / box-shadow, all of
-   which the forced-colors palette strips, leaving toggles and focus rings
-   invisible. Restore visibility with system colors and real borders/outlines.
-   `forced-color-adjust: none` is used only where we must keep a painted fill
-   (the checked checkbox/switch), and paired with system colors so it still
-   respects the user's palette. */
-  @media (forced-colors: active) {
-    /* Switch: outline the track, fill it on when checked, keep the knob solid. */
-    .switch__input {
-      border: var(--border-width) solid ButtonBorder;
-    }
-
-    .switch__input:checked {
-      forced-color-adjust: none;
-      background: Highlight;
-    }
-
-    .switch__knob {
-      background: ButtonText;
-    }
-
-    .switch__input:checked + .switch__knob {
-      background: HighlightText;
-    }
-
-    /* Checkbox / radio: the painted checked fill would vanish otherwise. */
-    .checkbox__input:checked,
-    .radio__input:checked {
-      forced-color-adjust: none;
-      background: Highlight;
-      border-color: Highlight;
-    }
-
-    .checkbox__check {
-      color: HighlightText;
-    }
-
-    /* Focus affordances built from box-shadow (input, custom select) disappear,
-     so substitute a real outline, which forced-colors always renders. */
-    .input__container:focus-within,
-    .select__trigger:focus-visible,
-    .select__trigger[aria-expanded="true"] {
-      outline: 2px solid Highlight;
-      outline-offset: 1px;
-    }
-
-    /* The active option is shown only by a background tint, so make it a system
-     selection instead. */
-    .select__option:hover,
-    .select__option.is-active {
-      forced-color-adjust: none;
-      background: Highlight;
-      color: HighlightText;
-    }
-
-    /* Selected tab, checked chip, current page, and selected day all paint state
-     with a background tint the forced palette strips; restate them as a system
-     selection so the active choice stays distinguishable. */
-    .tabs__radio:checked + .tabs__tab,
-    .pagination__link[aria-current="page"],
-    .calendar__day.is-selected {
-      forced-color-adjust: none;
-      background: Highlight;
-      color: HighlightText;
-    }
-
-    /* Checked chip: pin base plus hover/active to the system selection. Because
-     forced-color-adjust:none keeps the painted fill, it also exposes the token
-     hover/active tints, so the hover/active states must be restated (selectors
-     mirror the base rules to win on source order) or a light tint lands under
-     HighlightText and the label becomes unreadable. */
-    .chip:has(input:checked),
-    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
-    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
-      forced-color-adjust: none;
-      background: Highlight;
-      color: HighlightText;
-    }
-
-    /* Today carries only a faint fill; keep a border so it still reads as marked. */
-    .calendar__day.is-today {
-      border: var(--border-width) solid ButtonText;
-    }
-
-    /* Surfaces (alert, card, popover, accordion rows, tooltip) lose their
-     background, so add a CanvasText border to keep the container boundary visible
-     (the same neutral structural line as the separator/avatar/sheet, and more
-     reliably visible than the button-specific ButtonBorder). */
-    .alert,
-    .card,
-    .popover,
-    .accordion__item,
-    .tooltip__bubble {
-      border: var(--border-width) solid CanvasText;
-    }
-
-    /* Controls and pills lose their painted fill/border, so outline each with its
-     own text colour (currentColor) so the border agrees with the label: buttons
-     (incl. dialog/empty actions) and badges (meaning is the text, not the tint). */
-    .button,
-    .badge {
-      border: var(--border-width) solid currentcolor;
-    }
-
-    /* Hover feedback: the token background swap is stripped, so mark the hovered
-     button's border as a system selection (the theme's accent, e.g. brown). */
-    .button:hover {
-      border-color: Highlight;
-    }
-
-    /* Avatar: its gray surface is stripped, leaving the initials/icon floating.
-     A CanvasText ring restores the circle and reads reliably (ButtonBorder can be
-     faint). Not a Highlight fill: that would look "selected" and isn't a neutral
-     placeholder surface. */
-    .avatar {
-      border: var(--border-width) solid CanvasText;
-    }
-
-    /* Separator draws with a background fill the forced palette strips; use a
-     text-colour line so the divider stays visible (covers vertical too). */
-    .separator {
-      background: CanvasText;
-    }
-
-    /* Sheet: the edge shadow separating it from the page is gone, so add a border
-     (all sides is simplest; only the inner edge is actually on-screen). */
-    .sheet {
-      border: var(--border-width) solid CanvasText;
-    }
-
-    /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint it like
-     Progress: Highlight for the filled portion on an empty (Canvas) outlined track.
-     WebKit draws the fill via the --slider-fill gradient; Firefox uses
-     -moz-range-progress. */
-    .slider::-webkit-slider-runnable-track {
-      forced-color-adjust: none;
-      background: linear-gradient(
-        to right,
-        Highlight var(--slider-fill),
-        Canvas var(--slider-fill)
-      );
-      border: var(--border-width) solid ButtonText;
-    }
-
-    .slider::-moz-range-track {
-      forced-color-adjust: none;
-      background: Canvas;
-      border: var(--border-width) solid ButtonText;
-    }
-
-    .slider::-moz-range-progress {
-      forced-color-adjust: none;
-      background: Highlight;
-    }
-
-    .slider::-webkit-slider-thumb,
-    .slider::-moz-range-thumb {
-      forced-color-adjust: none;
-      background: ButtonText;
-      border-color: Canvas;
-    }
-
-    /* Progress: track and value fills both vanish, leaving nothing. Outline the
-     track and mark the filled value as a system selection so the bar reads. */
-    .progress {
-      forced-color-adjust: none;
-      background: Canvas;
-      border: var(--border-width) solid ButtonText;
-    }
-
-    .progress::-webkit-progress-bar {
-      forced-color-adjust: none;
-      background: Canvas;
-    }
-
-    .progress::-webkit-progress-value {
-      forced-color-adjust: none;
-      background: Highlight;
-    }
-
-    .progress::-moz-progress-bar {
-      forced-color-adjust: none;
-      background: Highlight;
-    }
-
-    /* Spinner: the faint ring and its arc collapse to one colour, so the spin is
-     invisible. Make the ring an empty (transparent) gap and the arc a solid system
-     colour, like shadcn, so the rotation reads. */
-    .spinner {
-      forced-color-adjust: none;
-      border-color: transparent;
-      border-top-color: CanvasText;
-    }
-  }
-
   /* ── Avatar ────────────────────────────────────────────────────────────── */
 
   /* A user's image, with initials (or a glyph) as the fallback when no image is
@@ -3480,5 +3284,201 @@
   .popover--calendar {
     padding: 0;
     border-radius: var(--radius-md);
+  }
+
+  /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
+   These controls paint their state with background / mask / box-shadow, all of
+   which the forced-colors palette strips, leaving toggles and focus rings
+   invisible. Restore visibility with system colors and real borders/outlines.
+   `forced-color-adjust: none` is used only where we must keep a painted fill
+   (the checked checkbox/switch), and paired with system colors so it still
+   respects the user's palette. */
+  @media (forced-colors: active) {
+    /* Switch: outline the track, fill it on when checked, keep the knob solid. */
+    .switch__input {
+      border: var(--border-width) solid ButtonBorder;
+    }
+
+    .switch__input:checked {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .switch__knob {
+      background: ButtonText;
+    }
+
+    .switch__input:checked + .switch__knob {
+      background: HighlightText;
+    }
+
+    /* Checkbox / radio: the painted checked fill would vanish otherwise. */
+    .checkbox__input:checked,
+    .radio__input:checked {
+      forced-color-adjust: none;
+      background: Highlight;
+      border-color: Highlight;
+    }
+
+    .checkbox__check {
+      color: HighlightText;
+    }
+
+    /* Focus affordances built from box-shadow (input, custom select) disappear,
+     so substitute a real outline, which forced-colors always renders. */
+    .input__container:focus-within,
+    .select__trigger:focus-visible,
+    .select__trigger[aria-expanded="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: 1px;
+    }
+
+    /* The active option is shown only by a background tint, so make it a system
+     selection instead. */
+    .select__option:hover,
+    .select__option.is-active {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    /* Selected tab, checked chip, current page, and selected day all paint state
+     with a background tint the forced palette strips; restate them as a system
+     selection so the active choice stays distinguishable. */
+    .tabs__radio:checked + .tabs__tab,
+    .pagination__link[aria-current="page"],
+    .calendar__day.is-selected {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    /* Checked chip: pin base plus hover/active to the system selection. Because
+     forced-color-adjust:none keeps the painted fill, it also exposes the token
+     hover/active tints, so the hover/active states must be restated (selectors
+     mirror the base rules to win on source order) or a light tint lands under
+     HighlightText and the label becomes unreadable. */
+    .chip:has(input:checked),
+    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
+    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    /* Today carries only a faint fill; keep a border so it still reads as marked. */
+    .calendar__day.is-today {
+      border: var(--border-width) solid ButtonText;
+    }
+
+    /* Surfaces (alert, card, popover, accordion rows, tooltip) lose their
+     background, so add a CanvasText border to keep the container boundary visible
+     (the same neutral structural line as the separator/avatar/sheet, and more
+     reliably visible than the button-specific ButtonBorder). */
+    .alert,
+    .card,
+    .popover,
+    .accordion__item,
+    .tooltip__bubble {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Controls and pills lose their painted fill/border, so outline each with its
+     own text colour (currentColor) so the border agrees with the label: buttons
+     (incl. dialog/empty actions) and badges (meaning is the text, not the tint). */
+    .button,
+    .badge {
+      border: var(--border-width) solid currentcolor;
+    }
+
+    /* Hover feedback: the token background swap is stripped, so mark the hovered
+     button's border as a system selection (the theme's accent, e.g. brown). */
+    .button:hover {
+      border-color: Highlight;
+    }
+
+    /* Avatar: its gray surface is stripped, leaving the initials/icon floating.
+     A CanvasText ring restores the circle and reads reliably (ButtonBorder can be
+     faint). Not a Highlight fill: that would look "selected" and isn't a neutral
+     placeholder surface. */
+    .avatar {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Separator draws with a background fill the forced palette strips; use a
+     text-colour line so the divider stays visible (covers vertical too). */
+    .separator {
+      background: CanvasText;
+    }
+
+    /* Sheet: the edge shadow separating it from the page is gone, so add a border
+     (all sides is simplest; only the inner edge is actually on-screen). */
+    .sheet {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint it like
+     Progress: Highlight for the filled portion on an empty (Canvas) outlined track.
+     WebKit draws the fill via the --slider-fill gradient; Firefox uses
+     -moz-range-progress. */
+    .slider::-webkit-slider-runnable-track {
+      forced-color-adjust: none;
+      background: linear-gradient(
+        to right,
+        Highlight var(--slider-fill),
+        Canvas var(--slider-fill)
+      );
+      border: var(--border-width) solid ButtonText;
+    }
+
+    .slider::-moz-range-track {
+      forced-color-adjust: none;
+      background: Canvas;
+      border: var(--border-width) solid ButtonText;
+    }
+
+    .slider::-moz-range-progress {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .slider::-webkit-slider-thumb,
+    .slider::-moz-range-thumb {
+      forced-color-adjust: none;
+      background: ButtonText;
+      border-color: Canvas;
+    }
+
+    /* Progress: track and value fills both vanish, leaving nothing. Outline the
+     track and mark the filled value as a system selection so the bar reads. */
+    .progress {
+      forced-color-adjust: none;
+      background: Canvas;
+      border: var(--border-width) solid ButtonText;
+    }
+
+    .progress::-webkit-progress-bar {
+      forced-color-adjust: none;
+      background: Canvas;
+    }
+
+    .progress::-webkit-progress-value {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .progress::-moz-progress-bar {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    /* Spinner: the faint ring and its arc collapse to one colour, so the spin is
+     invisible. Make the ring an empty (transparent) gap and the arc a solid system
+     colour, like shadcn, so the rotation reads. */
+    .spinner {
+      forced-color-adjust: none;
+      border-color: transparent;
+      border-top-color: CanvasText;
+    }
   }
 }

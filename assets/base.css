@@ -2112,12 +2112,25 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Shadow / radius / motion previews demonstrate a visual property the forced
-     palette would erase; opt them out so the sample still renders. */
+    /* Radius / shadow previews: don't force the brand surface (that fights the
+     mode). Show a plain outlined box instead — the radius reads via the border's
+     corners; shadow depth can't be shown in high contrast at all, so those tiles
+     read uniform, which is honest for a mode with no depth. */
     .preview-card__chip[data-shadow-demo],
-    .preview-card__chip[data-radius-demo],
+    .preview-card__chip[data-radius-demo] {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Motion preview: outline the track (bar) and make the sliding handle a
+     Highlight dot, like the slider, so the movement reads against the forced
+     palette instead of forcing the brand surface. */
     .motion-demo {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    .motion-demo::after {
       forced-color-adjust: none;
+      background: Highlight;
     }
 
     /* Docs buttons (Copy CSS, Example, code-block copy) paint their own surface,

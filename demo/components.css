@@ -483,7 +483,10 @@
    colour and a 1px outset shadow doubles it to ~2px on the outside, no
    separate ring, no layout shift. Uses --focus (not raw primary) since this is
    a focus affordance, so it matches every other focus ring. */
-  .input__container:focus-within {
+  /* Key off the input's own focus, not :focus-within: in an input-group with a
+   trailing button, :focus-within would light the whole field border when the
+   button is focused too. (For a plain single input the two are equivalent.) */
+  .input__container:has(.input__element:focus) {
     border-color: var(--focus);
     box-shadow: 0 0 0 1px var(--focus);
   }
@@ -505,8 +508,8 @@
     border-color: var(--red);
   }
 
-  .input__container--invalid:focus-within,
-  .input__container:has(:user-invalid):focus-within {
+  .input__container--invalid:has(.input__element:focus),
+  .input__container:has(:user-invalid):has(.input__element:focus) {
     border-color: var(--red);
     box-shadow: 0 0 0 1px var(--red);
   }
@@ -3329,7 +3332,7 @@
 
     /* Focus affordances built from box-shadow (input, custom select, menu trigger)
      disappear, so substitute a real outline, which forced-colors always renders. */
-    .input__container:focus-within,
+    .input__container:has(.input__element:focus),
     .select__trigger:focus-visible,
     .select__trigger[aria-expanded="true"],
     .menu__trigger:focus-visible,

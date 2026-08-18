@@ -2663,8 +2663,15 @@
     .alert,
     .card,
     .popover,
-    .accordion__item {
+    .accordion__item,
+    .tooltip__bubble {
       border: var(--border-width) solid ButtonBorder;
+    }
+
+    /* Hover feedback: the token background swap is stripped, so mark the hovered
+     button's border as a system selection (the theme's accent, e.g. brown). */
+    .button:hover {
+      border-color: Highlight;
     }
 
     /* Controls and pills lose their painted fill/border, so outline each with its

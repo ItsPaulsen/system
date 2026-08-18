@@ -524,6 +524,11 @@
   .input__element {
     flex: 1;
     min-width: 0;
+
+    /* Fill the field height (the container centres its items) so there are no dead
+     strips above/below: clicking anywhere hits the input directly, so it focuses
+     without a blur/refocus flicker, and the text cursor covers the whole field. */
+    align-self: stretch;
     padding: 0 1rem;
     border: 0;
     background: transparent;

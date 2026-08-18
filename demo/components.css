@@ -2075,12 +2075,13 @@
     animation: focus-ring-converge var(--motion-default);
   }
 
-  /* +/- toggle on a soft-primary surface. The vertical stroke hides when the
-   item is open, so the plus reads as a minus. */
+  /* +/- toggle on a soft-primary surface. Drawn as two CSS bars (not an inline
+   SVG) so the <summary> holds no embedded content, which trips the "interactive
+   content in <summary>" audit. The vertical bar hides when the item is open, so
+   the plus reads as a minus. */
   .accordion__toggle {
+    position: relative;
     flex-shrink: 0;
-    display: grid;
-    place-items: center;
     width: 32px;
     height: 32px;
     border-radius: var(--radius-full);
@@ -2088,16 +2089,25 @@
     color: var(--primary-foreground);
   }
 
-  .accordion__toggle-icon {
-    width: 18px;
-    height: 18px;
+  .accordion__toggle::before,
+  .accordion__toggle::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 11px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentcolor;
+    translate: -50% -50%;
   }
 
-  .accordion__toggle-v {
+  .accordion__toggle::after {
+    rotate: 90deg;
     transition: opacity var(--motion-default);
   }
 
-  .accordion__item[open] .accordion__toggle-v {
+  .accordion__item[open] .accordion__toggle::after {
     opacity: 0;
   }
 

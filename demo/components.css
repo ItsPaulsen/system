@@ -674,8 +674,10 @@
   .input__element::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
-    width: 1.25rem;
-    height: 1.25rem;
+
+    /* 28px hit target (over the 24px WCAG 2.5.8 minimum), matching the nav search. */
+    width: 1.75rem;
+    height: 1.75rem;
     background: var(--ink-secondary);
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6l-12 12'/%3E%3Cpath d='M6 6l12 12'/%3E%3C/svg%3E")
       center / 14px no-repeat;

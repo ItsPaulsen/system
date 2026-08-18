@@ -1996,7 +1996,7 @@
      circles (their paths sit inside a 24 viewBox), not the full box. */
     width: 0.85rem;
     height: 0.85rem;
-    border: 2px solid currentcolor;
+    border: 1.5px solid currentcolor;
     border-right-color: color-mix(in oklab, currentcolor 25%, transparent);
     border-radius: 50%;
     animation: toast-spin 0.7s linear infinite;

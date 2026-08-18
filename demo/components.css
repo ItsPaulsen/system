@@ -2704,13 +2704,23 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Slider: the track fill and shadow vanish, leaving no visible bar. Outline the
-     track, mark the Firefox progress as a selection, and make the thumb a solid dot
-     with a contrasting ring so its position reads. */
-    .slider::-webkit-slider-runnable-track,
+    /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint a real
+     two-tone bar with system colours (Highlight filled / GrayText rest, outlined)
+     so both the track and how far it's filled read. WebKit draws the fill via the
+     --slider-fill gradient; Firefox uses -moz-range-progress. */
+    .slider::-webkit-slider-runnable-track {
+      forced-color-adjust: none;
+      background: linear-gradient(
+        to right,
+        Highlight var(--slider-fill),
+        GrayText var(--slider-fill)
+      );
+      border: var(--border-width) solid ButtonText;
+    }
+
     .slider::-moz-range-track {
       forced-color-adjust: none;
-      background: Canvas;
+      background: GrayText;
       border: var(--border-width) solid ButtonText;
     }
 
@@ -2747,6 +2757,15 @@
     .progress::-moz-progress-bar {
       forced-color-adjust: none;
       background: Highlight;
+    }
+
+    /* Spinner: the faint ring and its arc collapse to one colour, so the spin is
+     invisible. Make the ring an empty (transparent) gap and the arc a solid system
+     colour, like shadcn, so the rotation reads. */
+    .spinner {
+      forced-color-adjust: none;
+      border-color: transparent;
+      border-top-color: CanvasText;
     }
   }
 

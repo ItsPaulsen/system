@@ -3290,12 +3290,12 @@
   }
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
-   These controls paint their state with background / mask / box-shadow, all of
-   which the forced-colors palette strips, leaving toggles and focus rings
-   invisible. Restore visibility with system colors and real borders/outlines.
-   `forced-color-adjust: none` is used only where we must keep a painted fill
-   (the checked checkbox/switch), and paired with system colors so it still
-   respects the user's palette. */
+   The forced palette strips backgrounds, shadows and masks, so any state or
+   surface shown only by a fill/shadow disappears. Restore it with system colours
+   and real borders/outlines. `forced-color-adjust: none` is used where a painted
+   fill must survive (checked controls, the slider/progress bars); it's always
+   paired with system colours so the user's palette is still respected. This block
+   sits at the end of the layer so its overrides win over each component's rules. */
   @media (forced-colors: active) {
     /* Switch: outline the track, fill it on when checked, keep the knob solid. */
     .switch__input {
@@ -3336,18 +3336,12 @@
       outline-offset: 1px;
     }
 
-    /* The active option is shown only by a background tint, so make it a system
-     selection instead. */
+    /* Active/selected states — active option, selected tab, current page, selected
+     day — show only by a background tint the forced palette strips; restate each as
+     a system selection so the choice stays distinguishable. (Chip is separate below:
+     its hover/active variants need pinning too.) */
     .select__option:hover,
-    .select__option.is-active {
-      forced-color-adjust: none;
-      background: Highlight;
-      color: HighlightText;
-    }
-
-    /* Selected tab, checked chip, current page, and selected day all paint state
-     with a background tint the forced palette strips; restate them as a system
-     selection so the active choice stays distinguishable. */
+    .select__option.is-active,
     .tabs__radio:checked + .tabs__tab,
     .pagination__link[aria-current="page"],
     .calendar__day.is-selected {

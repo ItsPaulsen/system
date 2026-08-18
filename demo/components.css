@@ -3388,9 +3388,11 @@
 
     /* Controls and pills lose their painted fill/border, so outline each with its
      own text colour (currentColor) so the border agrees with the label: buttons
-     (incl. dialog/empty actions) and badges (meaning is the text, not the tint). */
+     (incl. dialog/empty actions), badges (meaning is the text, not the tint), and
+     pagination page/prev/next buttons (transparent otherwise, so they'd float). */
     .button,
-    .badge {
+    .badge,
+    .pagination__link {
       border: var(--border-width) solid currentcolor;
     }
 

@@ -2111,6 +2111,13 @@
       border: var(--border-width) solid currentcolor;
     }
 
+    /* The row chevron sets its own faint --ink-tertiary colour, which dims to an
+     invisible GrayText; pin it to LinkText so it matches the row's link colour. */
+    .token-list--flush a.token-list__row::after {
+      forced-color-adjust: none;
+      color: LinkText;
+    }
+
     /* The search field's painted box vanishes; outline it so the input is visible,
      and mark the active typeahead result as a system selection. */
     .site-nav__search {

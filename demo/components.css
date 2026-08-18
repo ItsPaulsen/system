@@ -3408,10 +3408,13 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Separator draws with a background fill the forced palette strips; use a
-     text-colour line so the divider stays visible (covers vertical too). */
-    .separator {
+    /* Separators (standalone + the menu/dropdown divider) draw with a background
+     fill the forced palette strips; use a text-colour line so they stay visible.
+     Force full opacity since the menu divider is normally a faint 0.4. */
+    .separator,
+    .menu__separator {
       background: CanvasText;
+      opacity: 1;
     }
 
     /* Sheet: the edge shadow separating it from the page is gone; border only the

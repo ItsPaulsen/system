@@ -2720,12 +2720,15 @@
     outline-offset: 0;
   }
 
-  /* Active page reads as a solid primary chip. */
+  /* Active page reads as a solid primary chip. It's the current page, not a
+   navigation target, so no hover feedback (the :hover pairing just re-asserts the
+   chip so it never picks up the grey row hover) and the cursor stays default. */
   .pagination__link[aria-current="page"],
   .pagination__link[aria-current="page"]:hover {
     background: var(--primary);
     color: var(--neutral-white);
     font-weight: 500;
+    cursor: default;
   }
 
   .pagination__link:disabled {

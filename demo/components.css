@@ -2704,23 +2704,23 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint a real
-     two-tone bar with system colours (Highlight filled / GrayText rest, outlined)
-     so both the track and how far it's filled read. WebKit draws the fill via the
-     --slider-fill gradient; Firefox uses -moz-range-progress. */
+    /* Slider: the token fill/shadow vanish, leaving no visible bar. Repaint it like
+     Progress: Highlight for the filled portion on an empty (Canvas) outlined track.
+     WebKit draws the fill via the --slider-fill gradient; Firefox uses
+     -moz-range-progress. */
     .slider::-webkit-slider-runnable-track {
       forced-color-adjust: none;
       background: linear-gradient(
         to right,
         Highlight var(--slider-fill),
-        GrayText var(--slider-fill)
+        Canvas var(--slider-fill)
       );
       border: var(--border-width) solid ButtonText;
     }
 
     .slider::-moz-range-track {
       forced-color-adjust: none;
-      background: GrayText;
+      background: Canvas;
       border: var(--border-width) solid ButtonText;
     }
 

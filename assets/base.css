@@ -2056,6 +2056,12 @@
       border: 0;
     }
 
+    /* Toast pops up on its own surface, which the forced palette strips; a
+     CanvasText border keeps it a visible, delineated notification. */
+    .toast {
+      border: var(--border-width) solid CanvasText;
+    }
+
     .docs-switch__toggle {
       border: var(--border-width) solid ButtonBorder;
     }

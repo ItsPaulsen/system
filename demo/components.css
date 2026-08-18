@@ -2633,9 +2633,21 @@
      with a background tint the forced palette strips; restate them as a system
      selection so the active choice stays distinguishable. */
     .tabs__radio:checked + .tabs__tab,
-    .chip:has(input:checked),
     .pagination__link[aria-current="page"],
     .calendar__day.is-selected {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    /* Checked chip: pin base plus hover/active to the system selection. Because
+     forced-color-adjust:none keeps the painted fill, it also exposes the token
+     hover/active tints, so the hover/active states must be restated (selectors
+     mirror the base rules to win on source order) or a light tint lands under
+     HighlightText and the label becomes unreadable. */
+    .chip:has(input:checked),
+    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover,
+    .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
       forced-color-adjust: none;
       background: Highlight;
       color: HighlightText;
@@ -2653,6 +2665,50 @@
     .popover,
     .accordion__item {
       border: var(--border-width) solid ButtonBorder;
+    }
+
+    /* Controls and pills lose their painted fill/border, so outline each to keep
+     it a discrete element: buttons (incl. dialog/empty actions), badges (meaning
+     is the text, not the tint), and avatar fallbacks. Not a Highlight fill, which
+     would read as "selected" and is not reliably light across themes. */
+    .button,
+    .badge,
+    .avatar {
+      border: var(--border-width) solid ButtonBorder;
+    }
+
+    /* Separator draws with a background fill the forced palette strips; use a
+     text-colour line so the divider stays visible (covers vertical too). */
+    .separator {
+      background: CanvasText;
+    }
+
+    /* Sheet: the edge shadow separating it from the page is gone, so add a border
+     (all sides is simplest; only the inner edge is actually on-screen). */
+    .sheet {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Slider: the track fill and shadow vanish, leaving no visible bar. Outline the
+     track, mark the Firefox progress as a selection, and make the thumb a solid dot
+     with a contrasting ring so its position reads. */
+    .slider::-webkit-slider-runnable-track,
+    .slider::-moz-range-track {
+      forced-color-adjust: none;
+      background: Canvas;
+      border: var(--border-width) solid ButtonText;
+    }
+
+    .slider::-moz-range-progress {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+
+    .slider::-webkit-slider-thumb,
+    .slider::-moz-range-thumb {
+      forced-color-adjust: none;
+      background: ButtonText;
+      border-color: Canvas;
     }
   }
 

@@ -2087,5 +2087,18 @@
     .motion-demo {
       forced-color-adjust: none;
     }
+
+    /* Docs buttons (Copy CSS, Example, code-block copy) paint their own surface,
+     which the forced palette strips; outline them so each stays a visible button. */
+    .btn,
+    .code-copy {
+      border: var(--border-width) solid ButtonBorder;
+    }
+
+    /* The active React/HTML tab is shown only by an underline bar (::after) whose
+     background the forced palette strips; restate it as a system selection. */
+    .docs-tabs__tab[aria-selected="true"]::after {
+      background: Highlight;
+    }
   }
 }

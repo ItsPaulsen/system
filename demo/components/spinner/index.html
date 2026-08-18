@@ -98,18 +98,19 @@
           <h2 class="subhead">On a color</h2>
           <p class="section-note">
             The arc is <code>currentColor</code>, so it inherits the surrounding text color. Inside
-            a button or on a tint it needs no extra styling.
+            an already-labelled control, silence it (<code>label={null}</code> in React, or
+            <code>aria-hidden</code> in HTML) so the label isn't announced twice.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
               <button class="button button--primary" type="button" disabled>
-                <span class="spinner spinner--sm" role="status" aria-label="Saving"></span>
+                <span class="spinner spinner--sm" aria-hidden="true"></span>
                 Saving
               </button>
             </div>
             <script type="text/plain" class="example__react">
               <Button variant="primary" disabled>
-                <Spinner size="sm" label="Saving" /> Saving
+                <Spinner size="sm" label={null} /> Saving
               </Button>
             </script>
           </div>

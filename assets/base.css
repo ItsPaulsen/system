@@ -2145,11 +2145,12 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Motion preview: outline the track (bar) and make the sliding handle a
-     Highlight dot, like the slider, so the movement reads against the forced
-     palette instead of forcing the brand surface. */
+    /* Motion preview: bound the track and make the sliding handle a Highlight dot,
+     like the slider. Use outline (not border) for the track: the handle is sized
+     by top/bottom insets, so a border would shrink its box and make it oval. */
     .motion-demo {
-      border: var(--border-width) solid CanvasText;
+      outline: var(--border-width) solid CanvasText;
+      outline-offset: calc(-1 * var(--border-width));
     }
 
     .motion-demo::after {

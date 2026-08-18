@@ -2668,18 +2668,18 @@
       border: var(--border-width) solid ButtonBorder;
     }
 
-    /* Hover feedback: the token background swap is stripped, so mark the hovered
-     button's border as a system selection (the theme's accent, e.g. brown). */
-    .button:hover {
-      border-color: Highlight;
-    }
-
     /* Controls and pills lose their painted fill/border, so outline each with its
      own text colour (currentColor) so the border agrees with the label: buttons
      (incl. dialog/empty actions) and badges (meaning is the text, not the tint). */
     .button,
     .badge {
       border: var(--border-width) solid currentcolor;
+    }
+
+    /* Hover feedback: the token background swap is stripped, so mark the hovered
+     button's border as a system selection (the theme's accent, e.g. brown). */
+    .button:hover {
+      border-color: Highlight;
     }
 
     /* Avatar: its gray surface is stripped, leaving the initials/icon floating.

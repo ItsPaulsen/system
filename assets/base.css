@@ -998,8 +998,11 @@
     color: light-dark(#953800, #ffa657);
   }
 
+  /* Functions / url() / @import: our fuchsia token (themed per color-scheme) lifts
+   the light-mode contrast over GitHub's purple (5.05 → 6.70 on white); dark is a
+   wash. Fallback hex keeps it right if a page loads base.css without the tokens. */
   pre .tok-fn {
-    color: light-dark(#8250df, #d2a8ff);
+    color: var(--fuchsia, light-dark(#9827a0, #eb9def));
   }
 
   pre .tok-str {

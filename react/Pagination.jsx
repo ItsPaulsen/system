@@ -35,7 +35,7 @@ export default function Pagination({ total, page, defaultPage = 1, onPageChange 
             disabled={current === 1}
             onClick={() => go(current - 1)}
           >
-            <IconChevronLeft />
+            <IconChevronLeft aria-hidden="true" />
           </button>
         </li>
         {windowed(current, total).map((p, i) =>
@@ -66,7 +66,7 @@ export default function Pagination({ total, page, defaultPage = 1, onPageChange 
             disabled={current === total}
             onClick={() => go(current + 1)}
           >
-            <IconChevronRight />
+            <IconChevronRight aria-hidden="true" />
           </button>
         </li>
       </ul>

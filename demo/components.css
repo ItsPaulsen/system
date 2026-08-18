@@ -3140,6 +3140,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+
+    /* DOM/tab order is prev, next, month, year (like shadcn); order keeps the
+     visual as prev, month/year, next (see .calendar__nav + .calendar__nav). */
+    order: 1;
   }
 
   .calendar__select {
@@ -3229,18 +3233,34 @@
     outline-offset: var(--focus-ring-offset);
   }
 
-  /* One 7-column grid holds the whole month (role="grid"). The weekday
-   columnheader row and each week row are role-only wrappers, so display:contents
-   lets their cells land directly on the grid tracks. */
+  /* The next button (second consecutive nav) sits visually on the right even
+   though it comes second in the DOM/tab order (prev, next, month, year). */
+  .calendar__nav + .calendar__nav {
+    order: 2;
+  }
+
+  /* The month is a role="grid" of role="row"s (weekday columnheaders + week rows).
+   Rows are real grids (not display:contents): a role="row" with display:contents
+   gets dropped from the a11y tree in Safari/VoiceOver, malforming the grid so it
+   reads cells linearly. Each row lays out its own 7 columns; the grid just stacks
+   them. Visually identical to one 7-column grid with 2px gaps. */
   .calendar__days {
     display: grid;
-    grid-template-columns: repeat(7, 2rem);
     gap: 2px;
   }
 
   .calendar__weekdays,
   .calendar__week {
-    display: contents;
+    display: grid;
+    grid-template-columns: repeat(7, 2rem);
+    gap: 2px;
+  }
+
+  /* gridcell wrapper around each day button (the button is the focusable, the
+   cell is grid structure); it's the 2rem grid track holding the 2rem button. */
+  .calendar__cell {
+    display: grid;
+    place-items: center;
   }
 
   .calendar__weekday {

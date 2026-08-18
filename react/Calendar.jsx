@@ -119,11 +119,26 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
   const gridLabel = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
+  // Announce month/year changes via a live region (a grid's aria-label change
+  // isn't spoken on its own). Compare against the previous label so it stays quiet
+  // on mount and only speaks on an actual change.
+  const [announce, setAnnounce] = useState("");
+  const prevLabel = useRef(gridLabel);
+  useEffect(() => {
+    if (prevLabel.current !== gridLabel) {
+      setAnnounce(gridLabel);
+      prevLabel.current = gridLabel;
+    }
+  }, [gridLabel]);
+
   const setMonth = (m) => setView(new Date(view.getFullYear(), m, 1));
   const setYear = (y) => setView(new Date(y, view.getMonth(), 1));
 
   return (
     <div className="calendar">
+      <div className="sr-only" role="status">
+        {announce}
+      </div>
       <div className="calendar__head">
         <button
           className="calendar__nav"
@@ -133,6 +148,15 @@ export default function Calendar({ value, defaultValue, onSelect }) {
           onClick={() => setMonth(view.getMonth() - 1)}
         >
           <Chevron d="M15 6l-6 6l6 6" />
+        </button>
+        <button
+          className="calendar__nav"
+          type="button"
+          aria-label="Next month"
+          disabled={new Date(view.getFullYear(), view.getMonth() + 1, 1) > maxDate}
+          onClick={() => setMonth(view.getMonth() + 1)}
+        >
+          <Chevron d="M9 6l6 6l-6 6" />
         </button>
         <div className="calendar__period">
           <span className="calendar__select">
@@ -162,15 +186,6 @@ export default function Calendar({ value, defaultValue, onSelect }) {
             </select>
           </span>
         </div>
-        <button
-          className="calendar__nav"
-          type="button"
-          aria-label="Next month"
-          disabled={new Date(view.getFullYear(), view.getMonth() + 1, 1) > maxDate}
-          onClick={() => setMonth(view.getMonth() + 1)}
-        >
-          <Chevron d="M9 6l6 6l-6 6" />
-        </button>
       </div>
       <div
         className="calendar__days"
@@ -214,24 +229,30 @@ export default function Calendar({ value, defaultValue, onSelect }) {
               const cls = ["calendar__day", isToday && "is-today", isSelected && "is-selected"]
                 .filter(Boolean)
                 .join(" ");
+              // gridcell is a wrapper; the focusable day is a plain <button> inside,
+              // so VoiceOver reads the focused button (one day), not into the grid.
               return (
-                <button
+                <div
                   key={iso(d)}
-                  type="button"
+                  className="calendar__cell"
                   role="gridcell"
-                  className={cls}
-                  data-date={iso(d)}
-                  aria-label={d.toLocaleDateString(undefined, {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                  })}
-                  aria-current={isToday ? "date" : undefined}
                   aria-selected={isSelected}
-                  tabIndex={same(d, tabbable) ? 0 : -1}
                 >
-                  {d.getDate()}
-                </button>
+                  <button
+                    type="button"
+                    className={cls}
+                    data-date={iso(d)}
+                    aria-label={d.toLocaleDateString(undefined, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric"
+                    })}
+                    aria-current={isToday ? "date" : undefined}
+                    tabIndex={same(d, tabbable) ? 0 : -1}
+                  >
+                    {d.getDate()}
+                  </button>
+                </div>
               );
             })}
           </div>

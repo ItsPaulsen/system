@@ -1809,6 +1809,15 @@ function initCalendars() {
     // grid so screen readers can associate each day cell with its column.
     daysEl.setAttribute("role", "grid");
 
+    // Polite live region: prev/next and the month/year selects swap the grid
+    // silently (changing a non-focused grid's aria-label isn't announced), so
+    // speak the new "Month Year". Skip the first render so it stays quiet on load.
+    const status = document.createElement("div");
+    status.className = "sr-only";
+    status.setAttribute("role", "status");
+    root.appendChild(status);
+    let firstRender = true;
+
     const iso = (d) =>
       `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
         d.getDate()
@@ -1872,10 +1881,10 @@ function initCalendars() {
       if (next) next.disabled = nextStart > maxDate;
       const viewStart = new Date(view.getFullYear(), view.getMonth(), 1);
       if (prev) prev.disabled = viewStart <= minDate;
-      daysEl.setAttribute(
-        "aria-label",
-        view.toLocaleDateString(undefined, { month: "long", year: "numeric" })
-      );
+      const viewLabel = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      daysEl.setAttribute("aria-label", viewLabel);
+      if (!firstRender) status.textContent = viewLabel;
+      firstRender = false;
       const startDow = (new Date(view.getFullYear(), view.getMonth(), 1).getDay() + 6) % 7;
       const start = new Date(view.getFullYear(), view.getMonth(), 1 - startDow);
       daysEl.replaceChildren();
@@ -1925,10 +1934,15 @@ function initCalendars() {
           row.appendChild(out);
           continue;
         }
+        // The gridcell is a wrapper; the focusable day is a plain <button> inside
+        // it. VoiceOver then reads the focused button (not the cell), so it
+        // announces one day instead of reading into the grid.
+        const cell = document.createElement("div");
+        cell.className = "calendar__cell";
+        cell.setAttribute("role", "gridcell");
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "calendar__day";
-        btn.setAttribute("role", "gridcell");
         btn.textContent = String(d.getDate());
         btn.dataset.date = iso(d);
         btn.setAttribute(
@@ -1941,9 +1955,10 @@ function initCalendars() {
         }
         const isSel = same(d, selected);
         btn.classList.toggle("is-selected", isSel);
-        btn.setAttribute("aria-selected", String(isSel));
+        cell.setAttribute("aria-selected", String(isSel)); // selected state on the cell
         btn.tabIndex = isSel ? 0 : -1;
-        row.appendChild(btn);
+        cell.appendChild(btn);
+        row.appendChild(cell);
       }
       // Guarantee one tabbable cell even with nothing selected. Only in-month
       // days are buttons (spacers and outside days are inert divs), so the first

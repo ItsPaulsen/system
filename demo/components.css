@@ -3327,21 +3327,25 @@
       color: HighlightText;
     }
 
-    /* Focus affordances built from box-shadow (input, custom select) disappear,
-     so substitute a real outline, which forced-colors always renders. */
+    /* Focus affordances built from box-shadow (input, custom select, menu trigger)
+     disappear, so substitute a real outline, which forced-colors always renders. */
     .input__container:focus-within,
     .select__trigger:focus-visible,
-    .select__trigger[aria-expanded="true"] {
+    .select__trigger[aria-expanded="true"],
+    .menu__trigger:focus-visible,
+    .menu__trigger[aria-expanded="true"] {
       outline: 2px solid Highlight;
       outline-offset: 1px;
     }
 
-    /* Active/selected states — active option, selected tab, current page, selected
-     day — show only by a background tint the forced palette strips; restate each as
-     a system selection so the choice stays distinguishable. (Chip is separate below:
-     its hover/active variants need pinning too.) */
+    /* Active/selected states — active option, focused menu item, selected tab,
+     current page, selected day — show only by a background tint the forced palette
+     strips; restate each as a system selection so the choice stays distinguishable
+     (this also restores menu-item keyboard focus). (Chip is separate below: its
+     hover/active variants need pinning too.) */
     .select__option:hover,
     .select__option.is-active,
+    .menu__item:focus-visible,
     .tabs__radio:checked + .tabs__tab,
     .pagination__link[aria-current="page"],
     .calendar__day.is-selected {
@@ -3407,11 +3411,13 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Separators (standalone + the menu/dropdown divider) draw with a background
-     fill the forced palette strips; use a text-colour line so they stay visible.
-     Force full opacity since the menu divider is normally a faint 0.4. */
+    /* Separators (standalone, the menu/dropdown divider, and the breadcrumb chevron)
+     draw with a background fill the forced palette strips; use a text-colour line
+     so they stay visible. Force full opacity since the menu divider is a faint 0.4,
+     and the breadcrumb chevron is otherwise a dim GrayText. */
     .separator,
-    .menu__separator {
+    .menu__separator,
+    .breadcrumb__item:not(:first-child)::before {
       background: CanvasText;
       opacity: 1;
     }

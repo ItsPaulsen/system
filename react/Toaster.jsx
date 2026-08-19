@@ -45,7 +45,7 @@ export function Toaster() {
       setCurrent({ message, type: opts.type || "default" });
       setVisible(true);
       clearTimeout(timer.current);
-      // error/warning are interruptive; loading stays until the promise settles.
+      // Infinity duration = a loading toast; it stays until the promise settles.
       if (opts.duration !== Infinity) {
         timer.current = setTimeout(() => setVisible(false), opts.duration || 4000);
       }

@@ -356,9 +356,7 @@
     clip-path: inset(50%);
   }
 
-  /* State is driven off the radio via the adjacent-sibling combinator: cheaper
-   and more broadly supported than :has(). Base states first, then the
-   higher-specificity interaction states. */
+  /* Base states first, then the higher-specificity interaction states. */
 
   .tabs--pill .tabs__tab {
     border-radius: var(--radius-full);
@@ -1561,9 +1559,9 @@
     -webkit-user-select: none;
     user-select: none;
     transition:
-      background 75ms,
-      border-color 75ms,
-      color 75ms;
+      background var(--motion-default),
+      border-color var(--motion-default),
+      color var(--motion-default);
   }
 
   [data-size="sm"] .chip {
@@ -1631,14 +1629,10 @@
     clip-path: inset(50%);
   }
 
-  /* Interactive types, cursor pointer when enabled */
-
   .chip--as-checkbox:not(:has(input:disabled)),
   .chip--as-radio:not(:has(input:disabled)) {
     cursor: pointer;
   }
-
-  /* Hover / active, unchecked, non-disabled */
 
   @media (hover: hover) {
     .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
@@ -1662,22 +1656,16 @@
     animation: focus-ring-converge var(--motion-default);
   }
 
-  /* Disabled */
-
   .chip:has(input:disabled) {
     cursor: not-allowed;
     opacity: 0.5;
   }
-
-  /* Checked state, soft primary tint bg, primary text, no border */
 
   .chip:has(input:checked) {
     background: var(--primary-soft);
     border-color: transparent;
     color: var(--primary-foreground);
   }
-
-  /* Hover / active, checked, non-disabled */
 
   @media (hover: hover) {
     .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {

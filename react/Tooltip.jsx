@@ -67,7 +67,6 @@ export default function Tooltip({ label, side = "top", children }) {
     <span
       className="tooltip"
       ref={rootRef}
-      data-tooltip-side={side}
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
       onFocus={() => setVisible(true)}

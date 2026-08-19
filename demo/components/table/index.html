@@ -158,11 +158,9 @@
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">JavaScript</h2>
           <p class="section-note">
-            From <code>app.js</code>. Only while a <code>.table-wrap</code> actually overflows does
-            it become a focusable scroll region (<code>role="region"</code> +
-            <code>tabindex</code> + label), so keyboard users can pan a wide table without a stray
-            tab stop on ones that fit. The React <code>Table</code> does the same with a
-            <code>ResizeObserver</code>.
+            From <code>app.js</code>. Makes <code>.table-wrap</code> a focusable scroll region
+            (<code>role="region"</code> + <code>tabindex</code> + label) only while it overflows, so
+            tables that fit get no stray tab stop. React uses a <code>ResizeObserver</code>.
           </p>
           <div data-source="/assets/app.js" data-fn="initTables"></div>
         </section>

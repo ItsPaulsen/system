@@ -123,9 +123,8 @@
         <section class="preview-block">
           <h2 class="subhead">With dropdown</h2>
           <p class="section-note">
-            Give an item a <code>.nav-menu__menu</code> panel and it opens on hover or keyboard
-            focus; Esc closes it. The top-level link stays clickable (no chevron) and advertises its
-            panel to screen readers; items without a panel stay plain.
+            Add a <code>.nav-menu__menu</code> panel and the item opens on hover or focus (Esc
+            closes). The top-level link stays clickable; items with no panel stay plain.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -240,11 +239,9 @@
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">JavaScript</h2>
           <p class="section-note">
-            From <code>app.js</code>. The panel reveals in CSS; this only annotates a panel-owning
-            trigger
-            (<code>aria-haspopup</code>/<code>aria-controls</code>/<code>aria-expanded</code>) and
-            adds Esc-to-close, so a dropdown parent announces and dismisses like a menu while
-            staying a real link. The React parts do the same internally.
+            From <code>app.js</code>. Reveal is CSS; this only wires the trigger's
+            <code>aria-haspopup</code>/<code>aria-controls</code>/<code>aria-expanded</code> and
+            Esc-to-close, so the link still works.
           </p>
           <div data-source="/assets/app.js" data-fn="initNavMenus"></div>
         </section>

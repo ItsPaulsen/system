@@ -1,7 +1,8 @@
 import { IconUser } from "@tabler/icons-react";
 
 // Image with a fallback: pass `src` for a photo, or `fallback` (initials or a glyph)
-// when there's no image. `size` is "sm" | "lg"; `status` adds a presence dot.
+// when there's no image. `size` is "sm" | "lg"; `status` is a boolean online flag
+// that adds a green presence dot (the only state the system defines).
 export function Avatar({ src, alt = "", fallback, size, status, className, ...rest }) {
   const cls = ["avatar", size && `avatar--${size}`, className].filter(Boolean).join(" ");
   return (

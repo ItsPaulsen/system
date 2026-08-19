@@ -5,5 +5,10 @@
 export default function Spinner({ size, label = "Loading", className, ...rest }) {
   const cls = ["spinner", size && `spinner--${size}`, className].filter(Boolean).join(" ");
   const a11y = label ? { role: "status", "aria-label": label } : { "aria-hidden": "true" };
-  return <span className={cls} {...a11y} {...rest} />;
+  return (
+    <svg className={cls} viewBox="0 0 50 50" {...a11y} {...rest}>
+      <circle className="spinner__track" cx="25" cy="25" r="20" fill="none" strokeWidth="5" />
+      <circle className="spinner__arc" cx="25" cy="25" r="20" fill="none" strokeWidth="5" />
+    </svg>
+  );
 }

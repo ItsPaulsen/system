@@ -77,7 +77,28 @@ export function Toaster() {
         aria-hidden="true"
       >
         <span className="toast__icon">
-          {type === "loading" ? <span className="toast__spinner" /> : Icon ? <Icon /> : null}
+          {type === "loading" ? (
+            <svg className="toast__spinner" viewBox="0 0 50 50" aria-hidden="true">
+              <circle
+                className="toast__spinner-track"
+                cx="25"
+                cy="25"
+                r="20"
+                fill="none"
+                strokeWidth="5"
+              />
+              <circle
+                className="toast__spinner-arc"
+                cx="25"
+                cy="25"
+                r="20"
+                fill="none"
+                strokeWidth="5"
+              />
+            </svg>
+          ) : Icon ? (
+            <Icon />
+          ) : null}
         </span>
         <span className="toast__text">{current?.message}</span>
       </div>

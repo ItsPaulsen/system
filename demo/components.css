@@ -1325,49 +1325,54 @@
 
   /* Skins, hover/active guarded with :not(:disabled) so disabled state wins. */
 
+  /* primary/secondary/flat read the --accent* role, not --primary*: identical to
+   the brand by default, but wrapping the button (or any ancestor) in
+   [data-color="red|green|blue"] retints all three from one anchor. The
+   destructive skin below stays hardwired to red, it's a fixed semantic, not a
+   contextual accent. */
   .button--primary {
-    background: var(--primary);
-    color: var(--neutral-white);
+    background: var(--accent);
+    color: var(--accent-on);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .button--primary:not(:disabled):hover {
-      background: var(--primary-hover);
+      background: var(--accent-hover);
     }
   }
 
   .button--primary:not(:disabled):active {
-    background: var(--primary-active);
+    background: var(--accent-active);
   }
 
   .button--secondary {
-    background: var(--primary-soft);
-    color: var(--primary-foreground);
+    background: var(--accent-soft);
+    color: var(--accent-foreground);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .button--secondary:not(:disabled):hover {
-      background: var(--primary-soft-hover);
+      background: var(--accent-soft-hover);
     }
   }
 
   .button--secondary:not(:disabled):active {
-    background: var(--primary-soft-active);
+    background: var(--accent-soft-active);
   }
 
   .button--flat {
     background: transparent;
-    color: var(--primary-foreground);
+    color: var(--accent-foreground);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .button--flat:not(:disabled):hover {
-      background: var(--primary-soft-hover);
+      background: var(--accent-soft-hover);
     }
   }
 
   .button--flat:not(:disabled):active {
-    background: var(--primary-soft-active);
+    background: var(--accent-soft-active);
   }
 
   .button--destructive {
@@ -1398,14 +1403,22 @@
     background: transparent;
   }
 
-  /* Loading, a spinner replaces the label while the button holds its width and
-   keeps its skin colour (not the gray :disabled look). Interaction is blocked
-   with aria-disabled + pointer-events rather than the disabled attribute, so the
-   skin (and the spinner's currentcolor) stay intact. Pair with aria-busy="true"
-   and wrap the label in .button__label so it can be hidden.
+  /* Loading, the real Spinner (a nested <svg class="spinner">) overlays the label
+   while the button holds its width and keeps its skin colour (not the gray
+   :disabled look). Using the actual Spinner element (not a pseudo-element) is
+   why the in-button loader matches the standalone one exactly. Interaction is
+   blocked with aria-disabled + pointer-events, not the disabled attribute, so
+   the skin (and the spinner's currentcolor) stay intact. Pair with
+   aria-busy="true" and wrap the label in .button__label so it can be hidden.
 
    <button class="button button--primary button--loading" aria-busy="true"
-           aria-disabled="true"><span class="button__label">Saving…</span></button> */
+           aria-disabled="true">
+     <span class="button__label">Saving…</span>
+     <svg class="spinner" aria-hidden="true" viewBox="0 0 50 50">
+       <circle class="spinner__track" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+       <circle class="spinner__arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+     </svg>
+   </button> */
   .button--loading {
     position: relative;
     pointer-events: none;
@@ -1415,16 +1428,9 @@
     visibility: hidden;
   }
 
-  .button--loading::after {
-    content: "";
-    position: absolute;
-    width: 1.25em;
-    height: 1.25em;
-    border: 2px solid currentcolor;
-    border-right-color: color-mix(in oklab, currentcolor 25%, transparent);
-    border-radius: var(--radius-full);
-    animation: spinner-rotate 0.7s linear infinite;
-  }
+  /* The nested spinner sits centred over the hidden label, sized to it; the
+   sizing override lives with the Spinner rules below (after .spinner) so it
+   reads as a later, higher-specificity override rather than a descending one. */
 
   /* Inline-action button (in an Input Group slot) sits a touch tighter than a
    standalone one so it doesn't crowd the field; icon-only buttons stay square. */
@@ -2541,35 +2547,96 @@
   }
 
   /* ── Spinner ───────────────────────────────────────────────────────────────
-   Indeterminate loading indicator. Arc is currentColor so it inherits its
-   context (button text, ink, etc.); pair with a visually-hidden label.
+   Indeterminate loading indicator. A faint full-circle track with a solid arc
+   on top; the arc grows and shrinks while the whole thing rotates, so the fill
+   reads as travelling around the track in one direction. Arc colour is
+   currentColor, so it inherits its context (button text, ink, etc.); pair with
+   a visually-hidden label.
 
-   Structure: <span class="spinner" role="status" aria-label="Loading"></span> */
+   Mechanism: an <svg> of two concentric <circle>s. The svg spins; the arc
+   circle animates stroke-dasharray (the visible dash grows 1→100 then back)
+   and stroke-dashoffset (drifts negatively). Because dashoffset walks along the
+   path it wraps continuously past the top, so the arc never appears to reverse
+   — the reason this can't be faked with a conic-gradient, whose sweep can't run
+   past 360deg and back seamlessly.
+
+   Structure:
+     <svg class="spinner" role="status" aria-label="Loading" viewBox="0 0 50 50">
+       <circle class="spinner__track" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+       <circle class="spinner__arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+     </svg> */
   .spinner {
-    display: inline-block;
     width: 1.5rem;
     height: 1.5rem;
-    border: 2px solid currentcolor;
-    border-right-color: color-mix(in oklab, currentcolor 25%, transparent);
-    border-radius: var(--radius-full);
-    animation: spinner-rotate 0.7s linear infinite;
+    animation: spinner-rotate 2s linear infinite;
   }
 
   .spinner--sm {
     width: 1rem;
     height: 1rem;
-    border-width: 1.5px;
   }
 
   .spinner--lg {
     width: 2rem;
     height: 2rem;
-    border-width: 3px;
   }
 
+  /* In-button loader: the Spinner centred over the hidden label, sized to it. */
+  .button--loading .spinner {
+    position: absolute;
+    width: 1.25em;
+    height: 1.25em;
+  }
+
+  .spinner__track {
+    stroke: color-mix(in oklab, currentcolor 18%, transparent);
+  }
+
+  .spinner__arc {
+    stroke: currentcolor;
+    stroke-dasharray: 1px, 200px;
+    transform-origin: center;
+    animation: spinner-dash 2s ease-in-out infinite;
+  }
+
+  /* The svg rotates via transform (not the `rotate` property, which SVG support
+   for is patchy); the arc animates its dash on top. Both a 1:1 port of Digdir. */
   @keyframes spinner-rotate {
-    to {
-      rotate: 360deg;
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinner-dash {
+    0% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: 0;
+    }
+
+    50% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -15px;
+    }
+
+    100% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: -120px;
+    }
+  }
+
+  /* A spinner conveys ongoing state, so it must not freeze like decorative
+   motion: the global guard stops all animation after one near-instant cycle, so
+   re-enable an infinite (slowed, per Digdir) spin under reduced motion.
+   Overrides the guard's !important, hence !important here too. */
+  @media (prefers-reduced-motion: reduce) {
+    .spinner,
+    .spinner__arc {
+      animation-duration: 6s !important;
+      animation-iteration-count: infinite !important;
     }
   }
 
@@ -3852,21 +3919,16 @@
       background: Highlight;
     }
 
-    /* Spinner: the forced palette makes the arc's transparent gap opaque, so the
-     ring looks solid and the spin disappears. Pin the gap transparent and the arc
-     to CanvasText so the mostly-filled shadcn-style arc still reads. */
-    .spinner {
+    /* Spinner: the faint track drops out in the forced palette, so pin both
+     strokes to CanvasText (the dash animation still conveys motion on the arc). */
+    .spinner__track,
+    .spinner__arc {
       forced-color-adjust: none;
-      border-color: CanvasText;
-      border-right-color: transparent;
+      stroke: CanvasText;
     }
 
-    /* Loading-button spinner: same fix. Its faint track ring drops out in the
-     forced palette (fine), so make the arc a currentColor gap-ring that spins. */
-    .button--loading::after {
-      forced-color-adjust: none;
-      border-color: currentcolor;
-      border-right-color: transparent;
+    .spinner__track {
+      stroke: GrayText;
     }
   }
 }

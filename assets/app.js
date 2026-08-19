@@ -63,7 +63,12 @@ const toast = (() => {
     // Loading uses the ring spinner (matches the Spinner component); the other
     // types use their semantic Tabler glyph.
     let iconMarkup = "";
-    if (type === "loading") iconMarkup = '<span class="toast__spinner"></span>';
+    if (type === "loading")
+      iconMarkup =
+        '<svg class="toast__spinner" viewBox="0 0 50 50" aria-hidden="true">' +
+        '<circle class="toast__spinner-track" cx="25" cy="25" r="20" fill="none" stroke-width="5"/>' +
+        '<circle class="toast__spinner-arc" cx="25" cy="25" r="20" fill="none" stroke-width="5"/>' +
+        "</svg>";
     else if (ICONS[type]) iconMarkup = svg(type);
     iconEl.innerHTML = iconMarkup;
     textEl.textContent = message;

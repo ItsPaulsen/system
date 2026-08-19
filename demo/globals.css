@@ -165,12 +165,12 @@
     --fuchsia-hover: color-mix(in oklab, var(--fuchsia) 88%, white);
     --fuchsia-active: color-mix(in oklab, var(--fuchsia) 82%, white);
 
-    /* Focus is derived from the brand so it retints with --anchor-primary, but
-     it's not primary verbatim: same hue (stays our purple), just lighter
-     (+0.09 L) and a touch softer (−0.1 C) for a distinct focus tone. What
-     defines it is the transform (its relationship to primary), not the hue, so
-     swapping the brand colour retints the focus with it. */
-    --focus: oklch(from var(--primary) calc(l + 0.09) calc(c - 0.1) h);
+    /* Focus is a neutral, not the brand: near-black here, near-white in dark
+     (see the dark block). A neutral ring stays high-contrast on any surface,
+     including a [data-color] region, where a brand-tinted ring would clash or
+     wash out. It rides the neutral anchor, so retinting --anchor-neutral tints
+     the ring with everything else. */
+    --focus: var(--neutral-black);
     --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
     --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
@@ -225,6 +225,17 @@
     --fuchsia-soft: rgb(from var(--fuchsia-tint) r g b / 0.12);
     --fuchsia-soft-hover: rgb(from var(--fuchsia-tint) r g b / 0.23);
     --fuchsia-soft-active: rgb(from var(--fuchsia-tint) r g b / 0.27);
+
+    /* ── Accent role ─────────────────────────────────────────────────────
+     A contextual accent that defaults to the brand. Components read --accent*
+     instead of a named colour; wrapping any subtree in
+     [data-color="primary|red|green|blue"] repoints --accent-anchor and the whole
+     family re-derives from it. Only the anchor default lives here; the
+     derivation is in the `:root, [data-color]` rule below, so it re-runs at the
+     wrapper's scope (a custom property's var()s resolve on the element that
+     declares it, so deriving only on :root would bake in the brand and ignore a
+     descendant's anchor override). */
+    --accent-anchor: var(--anchor-primary);
 
     /* Overlay, alpha of --overlay-base; ramps deeper for hover/active. */
     --overlay: rgb(from var(--overlay-base) r g b / 0.45);
@@ -427,6 +438,63 @@
     --z-toast: 50;
   }
 
+  /* ── Contextual accent (data-color) ──────────────────────────────────────
+   The accent family is derived here, on both :root and every [data-color], so
+   the solid/hover/soft/foreground tokens re-compute at whichever scope sets the
+   anchor. (Declaring them only on :root would resolve --accent-anchor once, at
+   :root, and inherit the baked brand result down past any wrapper override.)
+   Same machinery as the named accents; --soft-lift and --neutral-white are
+   inherited in, so they resolve at each scope too. */
+  :root,
+  [data-color] {
+    --accent: rgb(var(--accent-anchor));
+    --accent-hover: color-mix(in oklab, var(--accent) 88%, white);
+    --accent-active: color-mix(in oklab, var(--accent) 82%, white);
+
+    /* Text/icon on the solid accent fill, black or white by the accent's own
+     lightness so it stays legible on any tint. round(1.15 - l) resolves to 1
+     (white) for darker accents like the brand violet or a light-theme red, and
+     0 (black) for light accents like the dark-theme tints. Chroma 0 keeps it a
+     neutral, hue is irrelevant. */
+    --accent-on: oklch(from var(--accent) clamp(0, round(1.15 - l), 1) 0 h);
+    --accent-foreground: var(--accent); /* text on the -soft surface (dark lightens) */
+    --accent-foreground-hover: var(--accent-hover);
+    --accent-foreground-active: var(--accent-active);
+    --accent-tint: color-mix(in oklab, var(--accent), white var(--soft-lift));
+    --accent-soft: rgb(from var(--accent-tint) r g b / 0.12);
+    --accent-soft-hover: rgb(from var(--accent-tint) r g b / 0.23);
+    --accent-soft-active: rgb(from var(--accent-tint) r g b / 0.27);
+  }
+
+  /* Repoint the accent per subtree. Three region contexts: brand (primary),
+   muted (neutral), destructive (red). primary/red just swap the anchor and let
+   the family re-derive; neutral is special (see below). The other color tokens
+   (--green, --blue, …) still exist for direct use, they're just not region
+   contexts. "primary" is the default, listed so an inner wrapper can reset a
+   nested region back. */
+  [data-color="primary"] {
+    --accent-anchor: var(--anchor-primary);
+  }
+
+  /* Neutral can't use --accent-anchor: --anchor-neutral is a fixed dark value
+   (the ink/shadow source) that doesn't flip per theme, so it'd be a dark button
+   on a dark page. Instead point the accent family straight at the ink/fill
+   tokens, which already flip light↔dark, so a neutral region reads in both.
+   --accent-on stays adaptive, so filled-neutral text auto-contrasts. */
+  [data-color="neutral"] {
+    --accent: var(--ink-primary);
+    --accent-hover: var(--ink-primary-hover);
+    --accent-active: var(--ink-primary-active);
+    --accent-foreground: var(--ink-primary);
+    --accent-soft: var(--fill-tertiary);
+    --accent-soft-hover: var(--fill-tertiary-hover);
+    --accent-soft-active: var(--fill-tertiary-active);
+  }
+
+  [data-color="red"] {
+    --accent-anchor: var(--anchor-red);
+  }
+
   /* Tablet ≥768 (md), grid jumps to 12 columns (px literals: media can't read vars) */
   @media (min-width: 768px) {
     :root {
@@ -461,6 +529,11 @@
     --overlay-base: #000;
 
     --anchor-primary: 118 55 255;
+
+    /* Focus flips to near-white on the dark stage (light theme uses near-black).
+     --neutral-white is pure white; hold it a hair off so the ring reads as a
+     ring, not a glare, while still clearing contrast on any dark surface. */
+    --focus: color-mix(in oklab, var(--neutral-white) 92%, var(--neutral-black));
 
     /* Tints, matched perceptual weight (C≈0.11-0.16) so no family pops harder. */
     --anchor-red: 255 150 150;
@@ -563,6 +636,31 @@
     --surface-rim:
       inset 0 1px 0 rgb(255 255 255 / 0.04), inset 1px 0 0 rgb(255 255 255 / 0.02),
       inset -1px 0 0 rgb(255 255 255 / 0.02);
+  }
+
+  /* Dark-theme accent overrides, applied at both the root and any [data-color]
+   scope so a wrapped region re-derives them from its own anchor (the light
+   family in `:root, [data-color]` above already re-derives; these override the
+   foreground + soft for dark). Mirrors primary's dark treatment so the default
+   brand accent is identical to --primary*: lift toward white then re-saturate
+   for foreground text, and derive the soft surface from a white-lifted accent
+   so a deep violet or a light tint both read against the dark stage. Neutral is
+   excluded: it already points at flip-per-theme ink/fill tokens, so this
+   chromatic treatment would wrongly recolour it. */
+  :root[data-theme="dark"],
+  :root[data-theme="dark"] [data-color]:not([data-color="neutral"]) {
+    --accent-foreground: oklch(
+      from color-mix(in oklab, var(--accent), white 60%) l calc(c * 1.5) h
+    );
+    --accent-foreground-hover: oklch(
+      from color-mix(in oklab, var(--accent-hover), white 60%) l calc(c * 1.5) h
+    );
+    --accent-foreground-active: oklch(
+      from color-mix(in oklab, var(--accent-active), white 60%) l calc(c * 1.5) h
+    );
+    --accent-soft: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.28);
+    --accent-soft-hover: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.39);
+    --accent-soft-active: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.43);
   }
 
   /* ── Density knob ──────────────────────────────────────────────────────────

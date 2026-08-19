@@ -82,9 +82,49 @@
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <span class="spinner spinner--sm" role="status" aria-label="Loading"></span>
-              <span class="spinner" role="status" aria-label="Loading"></span>
-              <span class="spinner spinner--lg" role="status" aria-label="Loading"></span>
+              <svg
+                class="spinner spinner--sm"
+                role="status"
+                aria-label="Loading"
+                viewBox="0 0 50 50"
+              >
+                <circle
+                  class="spinner__track"
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  fill="none"
+                  stroke-width="5"
+                />
+                <circle class="spinner__arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+              </svg>
+              <svg class="spinner" role="status" aria-label="Loading" viewBox="0 0 50 50">
+                <circle
+                  class="spinner__track"
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  fill="none"
+                  stroke-width="5"
+                />
+                <circle class="spinner__arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+              </svg>
+              <svg
+                class="spinner spinner--lg"
+                role="status"
+                aria-label="Loading"
+                viewBox="0 0 50 50"
+              >
+                <circle
+                  class="spinner__track"
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  fill="none"
+                  stroke-width="5"
+                />
+                <circle class="spinner__arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" />
+              </svg>
             </div>
             <script type="text/plain" class="example__react">
               <Spinner size="sm" />
@@ -104,7 +144,24 @@
           <div class="example" data-example>
             <div class="component-preview">
               <button class="button button--primary" type="button" disabled>
-                <span class="spinner spinner--sm" aria-hidden="true"></span>
+                <svg class="spinner spinner--sm" aria-hidden="true" viewBox="0 0 50 50">
+                  <circle
+                    class="spinner__track"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke-width="5"
+                  />
+                  <circle
+                    class="spinner__arc"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                    stroke-width="5"
+                  />
+                </svg>
                 Saving
               </button>
             </div>
@@ -127,7 +184,10 @@
 
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
-          <pre><code><span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner"</span> <span class="tok-prop">role</span>=<span class="tok-str">"status"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Loading"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+          <pre><code><span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner"</span> <span class="tok-prop">role</span>=<span class="tok-str">"status"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Loading"</span> <span class="tok-prop">viewBox</span>=<span class="tok-str">"0 0 50 50"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;circle</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner__track"</span> <span class="tok-prop">cx</span>=<span class="tok-str">"25"</span> <span class="tok-prop">cy</span>=<span class="tok-str">"25"</span> <span class="tok-prop">r</span>=<span class="tok-str">"20"</span> <span class="tok-prop">fill</span>=<span class="tok-str">"none"</span> <span class="tok-prop">stroke-width</span>=<span class="tok-str">"5"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;circle</span> <span class="tok-prop">class</span>=<span class="tok-str">"spinner__arc"</span> <span class="tok-prop">cx</span>=<span class="tok-str">"25"</span> <span class="tok-prop">cy</span>=<span class="tok-str">"25"</span> <span class="tok-prop">r</span>=<span class="tok-str">"20"</span> <span class="tok-prop">fill</span>=<span class="tok-str">"none"</span> <span class="tok-prop">stroke-width</span>=<span class="tok-str">"5"</span> <span class="tok-key">/&gt;</span>
+<span class="tok-key">&lt;/svg&gt;</span>
 
 <span class="tok-com">&lt;!-- Sizes: --sm --lg --&gt;</span></code></pre>
         </section>

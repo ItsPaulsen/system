@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import Spinner from "./Spinner";
 
 // Composes the button classes; styling lives in components.css + globals.css.
 const SKINS = ["primary", "secondary", "flat", "destructive"];
@@ -44,6 +45,7 @@ const Button = forwardRef(function Button(
       {startIcon}
       {loading ? <span className="button__label">{children}</span> : children}
       {endIcon}
+      {loading && <Spinner label={null} />}
     </button>
   );
 });

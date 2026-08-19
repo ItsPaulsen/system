@@ -1997,21 +1997,52 @@
   }
 
   /* Ring spinner matching the Spinner component (which lives in components.css,
-   not loaded site-wide, so the toast keeps its own copy here). */
+   not loaded site-wide, so the toast keeps a self-contained copy of the same
+   SVG grow/shrink spinner here — keep in sync with .spinner in components.css).
+   Rendered as <svg class="toast__spinner"><circle .-track/><circle .-arc/></svg>. */
   .toast__spinner {
     /* ~75% of the icon slot so it optically matches the other glyphs' inset
      circles (their paths sit inside a 24 viewBox), not the full box. */
     width: 0.85rem;
     height: 0.85rem;
-    border: 1.5px solid currentcolor;
-    border-right-color: color-mix(in oklab, currentcolor 25%, transparent);
-    border-radius: 50%;
-    animation: toast-spin 0.7s linear infinite;
+    animation: toast-spin 2s linear infinite;
+  }
+
+  .toast__spinner-track {
+    stroke: color-mix(in oklab, currentcolor 18%, transparent);
+  }
+
+  .toast__spinner-arc {
+    stroke: currentcolor;
+    stroke-dasharray: 1px, 200px;
+    transform-origin: center;
+    animation: toast-spin-dash 2s ease-in-out infinite;
   }
 
   @keyframes toast-spin {
-    to {
-      rotate: 360deg;
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes toast-spin-dash {
+    0% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: 0;
+    }
+
+    50% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -15px;
+    }
+
+    100% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: -120px;
     }
   }
 
@@ -2076,12 +2107,16 @@
       forced-color-adjust: none;
     }
 
-    /* Toast promise spinner: same as .spinner. The forced palette fills the arc's
-     transparent gap, so pin the gap transparent + arc to CanvasText so it reads. */
-    .toast__spinner {
+    /* Toast promise spinner: the faint track drops out in the forced palette, so
+     pin both strokes so the ring + arc still read (arc CanvasText, track dimmer). */
+    .toast__spinner-arc {
       forced-color-adjust: none;
-      border-color: CanvasText;
-      border-right-color: transparent;
+      stroke: CanvasText;
+    }
+
+    .toast__spinner-track {
+      forced-color-adjust: none;
+      stroke: GrayText;
     }
 
     .docs-switch__toggle {

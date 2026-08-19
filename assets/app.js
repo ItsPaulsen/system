@@ -290,6 +290,8 @@ const PROJECT_PAGES = {
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
         { label: "Empty", href: "/demo/components/empty/" },
+        { label: "Error Summary", href: "/demo/components/error-summary/", new: true },
+        { label: "File Upload", href: "/demo/components/file-upload/", new: true },
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
         { label: "Input Group", href: "/demo/components/input-group/" },
@@ -308,9 +310,10 @@ const PROJECT_PAGES = {
         { label: "Spinner", href: "/demo/components/spinner/" },
         { label: "Switch", href: "/demo/components/switch/" },
         { label: "Table", href: "/demo/components/table/" },
-        { label: "Tabs", href: "/demo/components/tabs/" },
+        { label: "Tabs", href: "/demo/components/tabs/", new: true },
         { label: "Textarea", href: "/demo/components/textarea/" },
         { label: "Toast", href: "/demo/components/toast/" },
+        { label: "Toggle group", href: "/demo/components/toggle-group/" },
         { label: "Tooltip", href: "/demo/components/tooltip/" }
       ]
     }
@@ -921,6 +924,61 @@ function initGridTabs() {
   // Default to the first tab so entering the page always starts here.
   const first = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
   if (first) activate(first, false);
+}
+
+// Tabbed panels: reuse the roving-tabindex model and show the panel each tab owns
+// (hidden on the rest). The markup carries all the ARIA; JS only wires behaviour.
+function initTabs() {
+  document.querySelectorAll(".tabs").forEach((root) => {
+    const list = root.querySelector(".tabs__list");
+    if (!list) return;
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    if (!tabs.length) return;
+    const panels = [...root.querySelectorAll(".tabs__panel")];
+    const setActive = (tab) => {
+      const id = tab.getAttribute("aria-controls");
+      panels.forEach((p) => (p.hidden = p.id !== id));
+    };
+    const activate = wireTablist(tabs, setActive);
+    const first = tabs.find((t) => t.getAttribute("aria-selected") === "true") || tabs[0];
+    activate(first, false);
+  });
+}
+
+// Character counter: keep an .input__count[data-max-count] in sync with its field's
+// length and flag over-limit (mirrors the React Input/Textarea maxCount behaviour).
+function initCharCount() {
+  document.querySelectorAll(".input__count[data-max-count]").forEach((counter) => {
+    const field = counter.closest(".input")?.querySelector(".input__element");
+    if (!field) return;
+    const max = Number(counter.dataset.maxCount);
+    const update = () => {
+      const n = field.value.length;
+      counter.textContent = `${n}/${max}`;
+      const over = n > max;
+      counter.classList.toggle("input__count--over", over);
+      field.setAttribute("aria-invalid", String(over));
+      field.closest(".input__container")?.classList.toggle("input__container--invalid", over);
+    };
+    field.addEventListener("input", update);
+    update();
+  });
+}
+
+// Error summary: move focus to the field each link names (not just scroll to it).
+// In a real form, insert the summary after a failed submit and call .focus() on it
+// so it is announced; here it ships in the page, so we only wire the links.
+function initErrorSummary() {
+  document.querySelectorAll(".error-summary__link").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const id = (link.getAttribute("href") || "").slice(1);
+      const field = document.getElementById(id);
+      if (!field) return;
+      e.preventDefault();
+      field.scrollIntoView({ block: "center", behavior: "smooth" });
+      field.focus();
+    });
+  });
 }
 
 // Tabler arrow-right at 16px, stroke 2, matches ARROW_LEFT_ICON.
@@ -2735,6 +2793,9 @@ function init() {
   initDialogs();
   initTables();
   initNavMenus();
+  initTabs();
+  initErrorSummary();
+  initCharCount();
   refreshResponsive();
 
   let frame;

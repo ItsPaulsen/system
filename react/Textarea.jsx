@@ -1,12 +1,27 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { IconAlertCircle } from "@tabler/icons-react";
 
 // Multi-line text field in the Input shell, with the same optional hint/error wiring as Input.
-// `invalid` is implied when `error` is set; other props (rows, placeholder, disabled, value,
-// onChange) pass through to the textarea. Omit `label` only when you pass an aria-label.
-export default function Textarea({ label, hint, error, invalid, required, className, ...rest }) {
+// `invalid` is implied when `error` is set or `maxCount` is exceeded; `maxCount` adds a live
+// character counter. Other props (rows, placeholder, disabled, value, onChange) pass through to
+// the textarea. Omit `label` only when you pass an aria-label.
+export default function Textarea({
+  label,
+  hint,
+  error,
+  invalid,
+  required,
+  maxCount,
+  className,
+  value,
+  defaultValue,
+  onChange,
+  ...rest
+}) {
   const id = useId();
-  const isInvalid = invalid || Boolean(error);
+  const [count, setCount] = useState(String(value ?? defaultValue ?? "").length);
+  const overLimit = maxCount != null && count > maxCount;
+  const isInvalid = invalid || Boolean(error) || overLimit;
   const containerCls = [
     "input__container",
     "input__container--textarea",
@@ -14,7 +29,15 @@ export default function Textarea({ label, hint, error, invalid, required, classN
   ]
     .filter(Boolean)
     .join(" ");
-  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  const describedBy =
+    [error ? `${id}-error` : hint ? `${id}-hint` : null, maxCount != null ? `${id}-count` : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
+
+  const handleChange = (e) => {
+    if (maxCount != null) setCount(e.target.value.length);
+    onChange?.(e);
+  };
 
   return (
     <label className={["input", className].filter(Boolean).join(" ")}>
@@ -32,6 +55,9 @@ export default function Textarea({ label, hint, error, invalid, required, classN
         <textarea
           className="input__element"
           required={required}
+          value={value}
+          defaultValue={defaultValue}
+          onChange={handleChange}
           aria-invalid={isInvalid || undefined}
           aria-describedby={describedBy}
           {...rest}
@@ -46,6 +72,14 @@ export default function Textarea({ label, hint, error, invalid, required, classN
         <span className="input__error" id={`${id}-error`}>
           <IconAlertCircle aria-hidden="true" />
           {error}
+        </span>
+      )}
+      {maxCount != null && (
+        <span
+          className={["input__count", overLimit && "input__count--over"].filter(Boolean).join(" ")}
+          id={`${id}-count`}
+        >
+          {count}/{maxCount}
         </span>
       )}
     </label>

@@ -139,11 +139,68 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Group error</h2>
+          <p class="section-note">
+            The error belongs to the whole group, not one option: put
+            <code>aria-invalid</code> + <code>aria-describedby</code> on the group and add a
+            <code>radio-group__error</code> message.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="radio-group"
+                role="radiogroup"
+                aria-label="Plan"
+                aria-invalid="true"
+                aria-describedby="radio-plan-error"
+              >
+                <label class="radio">
+                  <input type="radio" name="plan" class="radio__input" />
+                  <span class="radio__label">Starter</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="plan" class="radio__input" />
+                  <span class="radio__label">Team</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="plan" class="radio__input" />
+                  <span class="radio__label">Enterprise</span>
+                </label>
+                <span class="radio-group__error" id="radio-plan-error">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                  Choose a plan to continue.
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <RadioGroup label="Plan" error="Choose a plan to continue.">
+                <Radio name="plan">Starter</Radio>
+                <Radio name="plan">Team</Radio>
+                <Radio name="plan">Enterprise</Radio>
+              </RadioGroup>
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             <code>RadioGroup</code> wraps the options; each <code>Radio</code> shares the group's
-            <code>name</code>. Props pass through to the input.
+            <code>name</code>. <code>hint</code>/<code>error</code> apply to the whole group. Props
+            pass through to the input.
           </p>
           <div data-source="/react/Radio.jsx"></div>
         </section>

@@ -295,15 +295,15 @@
   gap: 0.5rem;
 }
 
-/* Theme toggle uses the real Tabs component (.tabs.tabs--pill with icons). This
-   is just the white surface it floats on in the marquee, 4px around the track. */
+/* Theme toggle uses the Toggle group component (.toggle-group--pill with icons).
+   This is just the white surface it floats on in the marquee, 4px around the track. */
 .ex-theme-wrap {
   display: inline-flex;
   padding: 8px;
   border-radius: var(--radius-full);
 }
 
-.ex-theme-wrap .tabs {
+.ex-theme-wrap .toggle-group {
   width: 368px;
 }
 
@@ -733,7 +733,7 @@
 }
 
 /* Theme toggle fills the footer width. */
-.ex-menu__theme.tabs {
+.ex-menu__theme.toggle-group {
   display: flex;
 }
 

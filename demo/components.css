@@ -251,9 +251,17 @@
     color: var(--background-primary);
   }
 
+  /* Group error: tint the radios red so an invalid group reads at the control, not
+   only in the message. The ring (unchecked) and dot (checked) are both drawn with
+   border-color, so one override covers both; the :root prefix matches the themed
+   :checked specificity and, coming later, wins in light and dark alike. */
+  :root .radio-group[aria-invalid="true"] .radio__input {
+    border-color: var(--red);
+  }
+
   /* Subtle fill on hover while still unchecked (quaternary tint).
    Declared last: higher specificity than the :disabled/:checked rules. */
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .checkbox__input:not(:disabled, :checked):hover,
     .radio__input:not(:disabled, :checked):hover {
       background: var(--fill-quaternary-hover);
@@ -283,30 +291,57 @@
     opacity: 0.5;
   }
 
-  /* ── Tabs ──────────────────────────────────────────────────────────────── */
+  /* Group-level hint/error for a radio or checkbox group. Wire to the group via
+   aria-describedby (and aria-invalid for the error) so it applies to the whole
+   set, not one control. Same caption look as the field hint/error. */
+  .radio-group__hint,
+  .checkbox-group__hint {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-secondary);
+  }
 
-  /* Segmented control: track is a fill tint over whatever surface the tabs
-   sit on. Active pill uses --background-secondary so it matches the elevated
+  .radio-group__error,
+  .checkbox-group__error {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--red);
+  }
+
+  .radio-group__error svg,
+  .checkbox-group__error svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ── Toggle group ──────────────────────────────────────────────────────── */
+
+  /* Segmented control: track is a fill tint over whatever surface it sits on.
+   The active segment uses --background-secondary so it matches the elevated
    surface (white in light, lighter-dark in dark), giving the "punched through"
    effect. Uses native radio inputs so no JavaScript is needed for mutual
    exclusion or keyboard nav.
 
-   Place tabs on a --background-secondary surface (card, sheet) for the effect
+   Place it on a --background-secondary surface (card, sheet) for the effect
    to read correctly.
 
    Each radio sits just before its label so state flows through the adjacent
-   sibling (.tabs__radio:checked + .tabs__tab), cheaper and more compatible
-   than :has(). The radios are visually hidden and out of flow, so the flex
-   track lays out only the labels.
+   sibling (.toggle-group__radio:checked + .toggle-group__tab), cheaper and
+   more compatible than :has(). The radios are visually hidden and out of flow,
+   so the flex track lays out only the labels.
 
    Structure (a single-choice segmented control — a radiogroup, not tabs):
-   <div class="tabs" role="radiogroup" aria-label="View">
-     <input type="radio" name="group" id="t1" class="tabs__radio" checked />
-     <label class="tabs__tab" for="t1"><span class="tabs__label">Overview</span></label>
+   <div class="toggle-group" role="radiogroup" aria-label="View">
+     <input type="radio" name="group" id="t1" class="toggle-group__radio" checked />
+     <label class="toggle-group__tab" for="t1"><span class="toggle-group__label">Overview</span></label>
      …
    </div> */
 
-  .tabs {
+  .toggle-group {
     display: inline-flex;
     gap: 0.25rem;
     padding: 0.25rem;
@@ -314,12 +349,12 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Pill variant: fully rounded track (the tabs match, below). */
-  .tabs--pill {
+  /* Pill variant: fully rounded track (the segments match, below). */
+  .toggle-group--pill {
     border-radius: var(--radius-full);
   }
 
-  .tabs__tab {
+  .toggle-group__tab {
     position: relative;
     flex: 1;
     display: inline-flex;
@@ -345,7 +380,7 @@
     transition: background var(--motion-default);
   }
 
-  .tabs__radio {
+  .toggle-group__radio {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -358,30 +393,30 @@
 
   /* Base states first, then the higher-specificity interaction states. */
 
-  .tabs--pill .tabs__tab {
+  .toggle-group--pill .toggle-group__tab {
     border-radius: var(--radius-full);
   }
 
-  /* Optional leading icon inside a tab. */
-  .tabs__tab svg {
+  /* Optional leading icon inside a segment. */
+  .toggle-group__tab svg {
     width: 18px;
     height: 18px;
     flex: none;
   }
 
-  /* Selected tab: driven off the checked radio. */
-  .tabs__radio:checked + .tabs__tab {
+  /* Selected segment: driven off the checked radio. */
+  .toggle-group__radio:checked + .toggle-group__tab {
     background: var(--background-secondary);
     color: var(--ink-primary);
   }
 
-  .tabs__radio:disabled + .tabs__tab {
+  .toggle-group__radio:disabled + .toggle-group__tab {
     cursor: not-allowed;
     color: var(--ink-tertiary);
     opacity: 0.5;
   }
 
-  .tabs__radio:focus-visible + .tabs__tab {
+  .toggle-group__radio:focus-visible + .toggle-group__tab {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
     animation: focus-ring-converge var(--motion-default);
@@ -389,18 +424,114 @@
 
   /* Hover only where a real pointer exists, so it doesn't stick after a tap on
    touch; :active covers the pressed feedback. */
-  @media (hover: hover) {
-    .tabs__radio:not(:checked, :disabled) + .tabs__tab:hover {
+  @media (hover: hover) and (pointer: fine) {
+    .toggle-group__radio:not(:checked, :disabled) + .toggle-group__tab:hover {
       background: var(--fill-quaternary-hover);
     }
   }
 
-  .tabs__radio:not(:checked, :disabled) + .tabs__tab:active {
+  .toggle-group__radio:not(:checked, :disabled) + .toggle-group__tab:active {
     background: var(--fill-quaternary-active);
   }
 
-  .tabs__radio:checked + .tabs__tab:active {
+  .toggle-group__radio:checked + .toggle-group__tab:active {
     background: var(--background-secondary-active);
+  }
+
+  /* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+  /* Tabbed panels: a tablist with an underline over the active tab, and one panel
+   shown below. Real ARIA tabs (tablist/tab/tabpanel), so keyboard nav and panel
+   toggling need initTabs() (or the React Tabs) — unlike Toggle group, which is a
+   CSS-only radiogroup. The list carries a bottom hairline; the active tab paints a
+   --primary bar over it via ::after so the indicator sits on that line.
+
+   Structure:
+   <div class="tabs">
+     <div class="tabs__list" role="tablist" aria-label="…"> role=tab buttons </div>
+     <div class="tabs__panel" role="tabpanel" aria-labelledby="…" tabindex="0"> … </div>
+   </div> */
+
+  .tabs__list {
+    display: flex;
+    gap: 0.25rem;
+    border-block-end: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .tabs__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: inherit;
+    color: var(--ink-secondary);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+
+    /* Skip the ~300ms double-tap-zoom wait so activation is instant on touch. */
+    touch-action: manipulation;
+    transition: color var(--motion-default);
+  }
+
+  /* Underline indicator: a bar overlapping the list's bottom hairline. Always
+   present (transparent) so it fades in rather than popping. */
+  .tabs__tab::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: calc(-1 * var(--border-width));
+    height: 2px;
+    background: transparent;
+    transition: background var(--motion-default);
+  }
+
+  .tabs__tab svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+
+  .tabs__tab[aria-selected="true"] {
+    color: var(--ink-primary);
+  }
+
+  .tabs__tab[aria-selected="true"]::after {
+    background: var(--primary);
+  }
+
+  .tabs__tab:disabled {
+    cursor: not-allowed;
+    color: var(--ink-tertiary);
+    opacity: 0.5;
+  }
+
+  .tabs__tab:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: calc(-1 * var(--focus-ring-width));
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tabs__tab:not([aria-selected="true"], :disabled):hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .tabs__panel {
+    padding-block-start: 1rem;
+  }
+
+  .tabs__panel:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    animation: focus-ring-converge var(--motion-default);
   }
 
   /* ── Input ─────────────────────────────────────────────────────────────── */
@@ -463,8 +594,23 @@
 
   .input__error svg {
     flex-shrink: 0;
-    width: 1em;
-    height: 1em;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Character counter (maxCount): its own trailing-aligned line, tabular so the
+   digits don't jitter while typing. Turns danger past the limit, paired with
+   aria-invalid on the field. Secondary ink for AA, not tertiary. */
+  .input__count {
+    align-self: flex-end;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .input__count--over {
+    color: var(--red);
   }
 
   .input__container {
@@ -672,8 +818,7 @@
     width: 1.25em;
     height: 1.25em;
     background: var(--ink-secondary);
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    mask: var(--icon-chevron-down) center / contain no-repeat;
     pointer-events: none;
   }
 
@@ -705,7 +850,7 @@
     cursor: pointer;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .input__element::-webkit-search-cancel-button:hover {
       background: var(--ink-primary);
     }
@@ -861,7 +1006,7 @@
     background: var(--background-secondary-hover);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .select__option:hover {
       background: var(--background-secondary-hover);
     }
@@ -877,8 +1022,7 @@
     width: 1.125em;
     height: 1.125em;
     background: currentcolor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    mask: var(--icon-check) center / contain no-repeat;
   }
 
   /* ── Popover ───────────────────────────────────────────────────────────── */
@@ -1036,7 +1180,7 @@
     cursor: not-allowed;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .menu__item:hover {
       background: var(--background-secondary-hover);
     }
@@ -1072,7 +1216,7 @@
     background: var(--red-soft-hover);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .menu__item--danger:hover {
       background: var(--red-soft-hover);
     }
@@ -1186,7 +1330,7 @@
     color: var(--neutral-white);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .button--primary:not(:disabled):hover {
       background: var(--primary-hover);
     }
@@ -1201,7 +1345,7 @@
     color: var(--primary-foreground);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .button--secondary:not(:disabled):hover {
       background: var(--primary-soft-hover);
     }
@@ -1216,7 +1360,7 @@
     color: var(--primary-foreground);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .button--flat:not(:disabled):hover {
       background: var(--primary-soft-hover);
     }
@@ -1231,7 +1375,7 @@
     color: var(--red);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .button--destructive:not(:disabled):hover {
       background: var(--red-soft-hover);
     }
@@ -1435,7 +1579,7 @@
     outline-offset: var(--focus-ring-offset);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     a.card:hover,
     button.card:not(:disabled):hover {
       background: var(--background-secondary-hover);
@@ -1447,7 +1591,7 @@
     background: var(--background-secondary-active);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     a.card--alternate:hover,
     button.card--alternate:not(:disabled):hover {
       background: var(--background-primary-hover);
@@ -1598,8 +1742,7 @@
     margin-inline-end: calc(-1 * var(--chip-gap));
     background: currentcolor;
     opacity: 0;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    mask: var(--icon-check) center / contain no-repeat;
     transition:
       width var(--motion-default),
       margin-inline-end var(--motion-default),
@@ -1634,7 +1777,7 @@
     cursor: pointer;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .chip--as-checkbox:not(:has(input:disabled, input:checked)):hover,
     .chip--as-radio:not(:has(input:disabled, input:checked)):hover {
       border-color: var(--fill-primary-hover);
@@ -1667,7 +1810,7 @@
     color: var(--primary-foreground);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
       background: var(--primary-soft-hover);
     }
@@ -1681,6 +1824,135 @@
    so it isn't interactive: no pointer (and no hover/active feedback above). */
   .chip--as-radio:has(input:checked):not(:has(input:disabled)) {
     cursor: default;
+  }
+
+  /* ── File upload ───────────────────────────────────────────────────────── */
+
+  /* Dashed dropzone wrapping a native file input. The input is a transparent
+   full-box overlay (not 1px-clipped), so a click anywhere opens the picker AND a
+   dropped file lands on the input, native drag-and-drop with no JS. The Browse
+   button is a presentational span (the overlay handles the click); it reacts to
+   the box hover since the pointer can't reach it under the overlay. The ring
+   shows on :focus-within since the input itself is transparent. */
+  .file-upload {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    text-align: center;
+    border: var(--border-width) dashed var(--ink-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--ink-secondary);
+    cursor: pointer;
+    transition:
+      border-color var(--motion-default),
+      background var(--motion-default);
+  }
+
+  .file-upload__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .file-upload__icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--primary-foreground);
+  }
+
+  /* Explicit vertical rhythm (no flex gap): 8px icon→title, title and hint touch,
+   16px above the Browse button whether the text above it is the hint or title. */
+  .file-upload__title {
+    margin-top: 0.5rem;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  .file-upload__hint {
+    font-size: var(--font-caption-medium-size);
+    color: var(--ink-secondary);
+  }
+
+  /* Presentational Browse button (soft-primary, like button--secondary). */
+  .file-upload__button {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    margin-top: 1rem;
+    padding-inline: 16px;
+    border-radius: var(--radius-full);
+    background: var(--primary-soft);
+    color: var(--primary-foreground);
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .file-upload:hover {
+      border-color: var(--ink-secondary);
+    }
+
+    .file-upload:hover .file-upload__button {
+      background: var(--primary-soft-hover);
+    }
+  }
+
+  .file-upload:has(:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .file-upload:has(:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* ── Error summary ─────────────────────────────────────────────────────── */
+
+  /* Post-submit list of form errors, each a link to its field. Inserted after a
+   failed submit and focused (tabindex=-1 + aria-labelledby its heading) so it is
+   announced; the links jump to and focus the offending field. Links stay ink so
+   they clear AA on the soft-red surface (the red is carried by the icon). */
+  .error-summary {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background: var(--red-soft);
+    color: var(--ink-primary);
+  }
+
+  .error-summary__title {
+    margin: 0 0 0.25rem;
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    line-height: var(--font-body-medium-emphasized-lh);
+  }
+
+  .error-summary__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding-inline-start: 1.5rem;
+    font-size: var(--font-body-small-size);
+  }
+
+  .error-summary__link {
+    color: var(--ink-primary);
+    font-weight: 400;
+    text-underline-offset: 2px;
+  }
+
+  .error-summary__link:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* ── Alert ─────────────────────────────────────────────────────────────── */
@@ -1973,7 +2245,7 @@
     transition: background var(--motion-default);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .sheet__close:hover {
       background: var(--background-secondary-hover);
     }
@@ -2049,7 +2321,7 @@
   }
 
   /* Hover surface only while collapsed, an open panel's summary shouldn't tint. */
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .accordion__item:not([open]) .accordion__summary:hover {
       background: var(--background-secondary-hover);
     }
@@ -2397,7 +2669,7 @@
     transition: color var(--motion-default);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .link:hover {
       color: var(--primary-foreground-hover);
     }
@@ -2414,7 +2686,7 @@
 
   /* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
    fades in and the chevron slides on hover, so the arrow grows out of the text. */
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .link--cta:hover .link-arrow__line {
       opacity: 1;
     }
@@ -2473,7 +2745,7 @@
     transition: color var(--motion-default);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .breadcrumb__link:hover {
       text-decoration: underline;
     }
@@ -2611,7 +2883,7 @@
     text-decoration: none;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .nav-menu__menu-link:hover {
       background: var(--background-secondary-hover);
     }
@@ -2752,7 +3024,7 @@
     transition: background var(--motion-default);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .pagination__link:hover {
       background: var(--background-secondary-hover);
     }
@@ -2780,7 +3052,7 @@
     cursor: not-allowed;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .pagination__link:disabled:hover {
       background: transparent;
     }
@@ -3166,7 +3438,7 @@
     cursor: pointer;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .calendar__select select:hover {
       background: var(--background-secondary-hover);
     }
@@ -3191,8 +3463,7 @@
     pointer-events: none;
     color: var(--ink-secondary);
     background: currentcolor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    mask: var(--icon-chevron-down) center / contain no-repeat;
   }
 
   .calendar__select:has(select:disabled)::after {
@@ -3222,7 +3493,7 @@
     height: 1.25rem;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .calendar__nav:hover {
       background: var(--background-secondary-hover);
     }
@@ -3288,7 +3559,7 @@
     cursor: pointer;
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .calendar__day:not(.is-selected, .is-outside):hover {
       background: var(--background-secondary-hover);
     }
@@ -3403,7 +3674,7 @@
     .select__option:hover,
     .select__option.is-active,
     .menu__item:focus-visible,
-    .tabs__radio:checked + .tabs__tab,
+    .toggle-group__radio:checked + .toggle-group__tab,
     .pagination__link[aria-current="page"],
     .pagination__link[aria-current="page"]:hover,
     .calendar__day.is-selected {
@@ -3435,6 +3706,7 @@
      (the same neutral structural line as the separator/avatar/sheet, and more
      reliably visible than the button-specific ButtonBorder). */
     .alert,
+    .error-summary,
     .card,
     .popover,
     .accordion__item,
@@ -3442,7 +3714,7 @@
     .select__list,
     .nav-menu__menu,
     .dialog,
-    .tabs {
+    .toggle-group {
       border: var(--border-width) solid CanvasText;
     }
 
@@ -3494,6 +3766,13 @@
     .input__element::-webkit-search-cancel-button,
     .input__element::-webkit-search-cancel-button:hover {
       background: CanvasText;
+    }
+
+    /* Active tab underline: the ::after bar loses its --primary fill, so repaint it
+     with the system Highlight so the current tab still reads as selected. */
+    .tabs__tab[aria-selected="true"]::after {
+      forced-color-adjust: none;
+      background: Highlight;
     }
 
     /* Sheet: the edge shadow separating it from the page is gone; border only the

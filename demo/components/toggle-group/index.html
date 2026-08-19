@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Toggle group - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Toggle group</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Toggle group"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">
+            A single choice from a few options, styled as a segmented track. For content panels, use
+            <a href="/demo/components/tabs/">Tabs</a>.
+          </p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            Radios share a <code>name</code>, which makes them mutually exclusive. No JS.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="toggle-group" role="radiogroup" aria-label="View">
+                <input
+                  type="radio"
+                  name="tg-default"
+                  id="tg-default-1"
+                  class="toggle-group__radio"
+                  checked
+                />
+                <label class="toggle-group__tab" for="tg-default-1"
+                  ><span class="toggle-group__label">Overview</span></label
+                >
+                <input
+                  type="radio"
+                  name="tg-default"
+                  id="tg-default-2"
+                  class="toggle-group__radio"
+                />
+                <label class="toggle-group__tab" for="tg-default-2"
+                  ><span class="toggle-group__label">Details</span></label
+                >
+                <input
+                  type="radio"
+                  name="tg-default"
+                  id="tg-default-3"
+                  class="toggle-group__radio"
+                />
+                <label class="toggle-group__tab" for="tg-default-3"
+                  ><span class="toggle-group__label">Settings</span></label
+                >
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ToggleGroup
+                name="view"
+                aria-label="View"
+                defaultValue="overview"
+                items={[
+                  { value: "overview", label: "Overview" },
+                  { value: "details", label: "Details" },
+                  { value: "settings", label: "Settings" },
+                ]}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">With icons</h2>
+          <p class="section-note">
+            Put an icon before <code>toggle-group__label</code>. <code>toggle-group--pill</code>
+            fully rounds the track.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="toggle-group toggle-group--pill"
+                role="radiogroup"
+                aria-label="Theme"
+                style="width: 260px"
+              >
+                <input
+                  type="radio"
+                  name="tg-icon"
+                  id="tg-icon-1"
+                  class="toggle-group__radio"
+                  checked
+                />
+                <label class="toggle-group__tab" for="tg-icon-1">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                    <path
+                      d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
+                    />
+                  </svg>
+                  <span class="toggle-group__label">Light</span>
+                </label>
+                <input type="radio" name="tg-icon" id="tg-icon-2" class="toggle-group__radio" />
+                <label class="toggle-group__tab" for="tg-icon-2">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
+                    />
+                  </svg>
+                  <span class="toggle-group__label">Dark</span>
+                </label>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ToggleGroup
+                pill
+                name="theme"
+                aria-label="Theme"
+                defaultValue="light"
+                items={[
+                  { value: "light", label: "Light", icon: <IconSun /> },
+                  { value: "dark", label: "Dark", icon: <IconMoon /> },
+                ]}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Disabled</h2>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="toggle-group" role="radiogroup" aria-label="Section" style="width: 200px">
+                <input
+                  type="radio"
+                  name="tg-two"
+                  id="tg-two-1"
+                  class="toggle-group__radio"
+                  checked
+                />
+                <label class="toggle-group__tab" for="tg-two-1"
+                  ><span class="toggle-group__label">Home</span></label
+                >
+                <input
+                  type="radio"
+                  name="tg-two"
+                  id="tg-two-2"
+                  class="toggle-group__radio"
+                  disabled
+                />
+                <label class="toggle-group__tab" for="tg-two-2"
+                  ><span class="toggle-group__label">Disabled</span></label
+                >
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ToggleGroup
+                name="section"
+                aria-label="Section"
+                defaultValue="home"
+                items={[
+                  { value: "home", label: "Home" },
+                  { value: "disabled", label: "Disabled", disabled: true },
+                ]}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>items</code> drive the segments; <code>pill</code> rounds the track. Uncontrolled
+            via <code>defaultValue</code>, or pass <code>value</code> + <code>onChange</code>.
+          </p>
+          <div data-source="/react/ToggleGroup.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group"</span> <span class="tok-prop">role</span>=<span class="tok-str">"radiogroup"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"View"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__radio"</span> <span class="tok-key">checked /&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t1"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t2"</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__radio"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t2"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"toggle-group__label"</span><span class="tok-key">&gt;</span>Details<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

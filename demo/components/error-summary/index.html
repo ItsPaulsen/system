@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Error Summary - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Error Summary</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Error summary"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">
+            After a failed submit, list every error at the top of the form and link each one to its
+            field.
+          </p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            A labelled region with a link per error. Insert it after a failed submit and call
+            <code>.focus()</code> on it (<code>tabindex="-1"</code>) so it is announced.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="error-summary"
+                tabindex="-1"
+                aria-labelledby="es-heading"
+                style="width: 100%; max-width: 420px"
+              >
+                <p class="error-summary__title" id="es-heading">There is a problem</p>
+                <ul class="error-summary__list">
+                  <li>
+                    <a class="error-summary__link" href="#es-email">Enter a valid email address</a>
+                  </li>
+                  <li>
+                    <a class="error-summary__link" href="#es-name">Enter your full name</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ErrorSummary
+                errors={[
+                  { id: "email", message: "Enter a valid email address" },
+                  { id: "name", message: "Enter your full name" },
+                ]}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">In a form</h2>
+          <p class="section-note">
+            The fields stack above one another; each summary link jumps to and focuses its field.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 1rem;
+                  width: 100%;
+                  max-width: 420px;
+                "
+              >
+                <label class="input">
+                  <span class="input__label">Full name</span>
+                  <span class="input__container input__container--invalid">
+                    <input
+                      id="es2-name"
+                      class="input__element"
+                      type="text"
+                      value=""
+                      aria-invalid="true"
+                      aria-describedby="es2-name-error"
+                    />
+                  </span>
+                  <span class="input__error" id="es2-name-error">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                      <path d="M12 8v4" />
+                      <path d="M12 16h.01" />
+                    </svg>
+                    Enter your full name.
+                  </span>
+                </label>
+
+                <label class="input">
+                  <span class="input__label">Email</span>
+                  <span class="input__container input__container--invalid">
+                    <input
+                      id="es2-email"
+                      class="input__element"
+                      type="email"
+                      value="not-an-email"
+                      aria-invalid="true"
+                      aria-describedby="es2-email-error"
+                    />
+                  </span>
+                  <span class="input__error" id="es2-email-error">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                      <path d="M12 8v4" />
+                      <path d="M12 16h.01" />
+                    </svg>
+                    Enter a valid email address.
+                  </span>
+                </label>
+
+                <div class="error-summary" tabindex="-1" aria-labelledby="es2-heading">
+                  <p class="error-summary__title" id="es2-heading">There is a problem</p>
+                  <ul class="error-summary__list">
+                    <li>
+                      <a class="error-summary__link" href="#es2-name">Enter your full name</a>
+                    </li>
+                    <li>
+                      <a class="error-summary__link" href="#es2-email"
+                        >Enter a valid email address</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <form onSubmit={handleSubmit}>
+                <Input id="name" label="Full name" error="Enter your full name." />
+                <Input id="email" label="Email" type="email" error="Enter a valid email address." />
+                <ErrorSummary
+                  errors={[
+                    { id: "name", message: "Enter your full name" },
+                    { id: "email", message: "Enter a valid email address" },
+                  ]}
+                />
+              </form>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>errors</code> are <code>{ id, message }</code>, where <code>id</code> matches the
+            field's <code>id</code>. Mount it with the current list: it renders nothing while empty
+            and focuses itself the moment errors appear.
+          </p>
+          <div data-source="/react/ErrorSummary.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>initErrorSummary()</code> makes each link focus its field, not just scroll to it.
+          </p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"error-summary"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">aria-labelledby</span>=<span class="tok-str">"es-h"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"error-summary__title"</span> <span class="tok-prop">id</span>=<span class="tok-str">"es-h"</span><span class="tok-key">&gt;</span>There is a problem<span class="tok-key">&lt;/p&gt;</span>
+  <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"error-summary__list"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;li&gt;&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"error-summary__link"</span> <span class="tok-prop">href</span>=<span class="tok-str">"#es-email"</span><span class="tok-key">&gt;</span>Enter a valid email address<span class="tok-key">&lt;/a&gt;&lt;/li&gt;</span>
+  <span class="tok-key">&lt;/ul&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

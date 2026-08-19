@@ -42,7 +42,10 @@
               Copy CSS
             </button>
           </div>
-          <p class="lede">Layered sections of content; only one visible at a time.</p>
+          <p class="lede">
+            Layered sections of content; one panel shown at a time. For a plain single choice with
+            no panels, use <a href="/demo/components/toggle-group/">Toggle group</a>.
+          </p>
         </div>
       </header>
 
@@ -71,40 +74,98 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            Radios share a <code>name</code>, which makes them mutually exclusive. No JS.
+            Arrow keys move between tabs and switch the panel; the panel is a tab stop so keyboard
+            users reach its content. Needs <code>initTabs()</code>.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <div class="tabs" role="radiogroup" aria-label="View">
-                <input
-                  type="radio"
-                  name="tabs-default"
-                  id="tab-default-1"
-                  class="tabs__radio"
-                  checked
-                />
-                <label class="tabs__tab" for="tab-default-1"
-                  ><span class="tabs__label">Overview</span></label
+              <div class="tabs" style="width: 100%">
+                <div class="tabs__list" role="tablist" aria-label="Project">
+                  <button
+                    class="tabs__tab"
+                    type="button"
+                    role="tab"
+                    id="tab-overview"
+                    aria-controls="panel-overview"
+                    aria-selected="true"
+                    tabindex="0"
+                  >
+                    <span class="tabs__label">Overview</span>
+                  </button>
+                  <button
+                    class="tabs__tab"
+                    type="button"
+                    role="tab"
+                    id="tab-activity"
+                    aria-controls="panel-activity"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="tabs__label">Activity</span>
+                  </button>
+                  <button
+                    class="tabs__tab"
+                    type="button"
+                    role="tab"
+                    id="tab-settings"
+                    aria-controls="panel-settings"
+                    aria-selected="false"
+                    tabindex="-1"
+                  >
+                    <span class="tabs__label">Settings</span>
+                  </button>
+                </div>
+                <div
+                  class="tabs__panel"
+                  role="tabpanel"
+                  id="panel-overview"
+                  aria-labelledby="tab-overview"
+                  tabindex="0"
                 >
-                <input type="radio" name="tabs-default" id="tab-default-2" class="tabs__radio" />
-                <label class="tabs__tab" for="tab-default-2"
-                  ><span class="tabs__label">Details</span></label
+                  <p>A summary of the workspace: members, recent files, and shared links.</p>
+                </div>
+                <div
+                  class="tabs__panel"
+                  role="tabpanel"
+                  id="panel-activity"
+                  aria-labelledby="tab-activity"
+                  tabindex="0"
+                  hidden
                 >
-                <input type="radio" name="tabs-default" id="tab-default-3" class="tabs__radio" />
-                <label class="tabs__tab" for="tab-default-3"
-                  ><span class="tabs__label">Settings</span></label
+                  <p>A running log of edits and comments from everyone on the team.</p>
+                </div>
+                <div
+                  class="tabs__panel"
+                  role="tabpanel"
+                  id="panel-settings"
+                  aria-labelledby="tab-settings"
+                  tabindex="0"
+                  hidden
                 >
+                  <p>Permissions, visibility, and the options that apply to the whole workspace.</p>
+                </div>
               </div>
             </div>
             <script type="text/plain" class="example__react">
               <Tabs
-                name="view"
-                aria-label="View"
+                aria-label="Project"
                 defaultValue="overview"
                 items={[
-                  { value: "overview", label: "Overview" },
-                  { value: "details", label: "Details" },
-                  { value: "settings", label: "Settings" },
+                  {
+                    value: "overview",
+                    label: "Overview",
+                    panel: <p>A summary of the workspace: members, recent files, and shared links.</p>,
+                  },
+                  {
+                    value: "activity",
+                    label: "Activity",
+                    panel: <p>A running log of edits and comments from everyone on the team.</p>,
+                  },
+                  {
+                    value: "settings",
+                    label: "Settings",
+                    panel: <p>Permissions, visibility, and the options for the whole workspace.</p>,
+                  },
                 ]}
               />
             </script>
@@ -113,93 +174,89 @@
 
         <section class="preview-block">
           <h2 class="subhead">With icons</h2>
-          <p class="section-note">
-            Put an icon before <code>tabs__label</code>. <code>tabs--pill</code> fully rounds the
-            track.
-          </p>
+          <p class="section-note">Put an icon before <code>tabs__label</code>.</p>
           <div class="example" data-example>
             <div class="component-preview">
-              <div
-                class="tabs tabs--pill"
-                role="radiogroup"
-                aria-label="Theme"
-                style="width: 260px"
-              >
-                <input type="radio" name="tabs-icon" id="tab-icon-1" class="tabs__radio" checked />
-                <label class="tabs__tab" for="tab-icon-1">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+              <div class="tabs" style="width: 100%">
+                <div class="tabs__list" role="tablist" aria-label="Content">
+                  <button
+                    class="tabs__tab"
+                    type="button"
+                    role="tab"
+                    id="tab-preview"
+                    aria-controls="panel-preview"
+                    aria-selected="true"
+                    tabindex="0"
                   >
-                    <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                    <path
-                      d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
-                    />
-                  </svg>
-                  <span class="tabs__label">Light</span>
-                </label>
-                <input type="radio" name="tabs-icon" id="tab-icon-2" class="tabs__radio" />
-                <label class="tabs__tab" for="tab-icon-2">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                      <path
+                        d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"
+                      />
+                    </svg>
+                    <span class="tabs__label">Preview</span>
+                  </button>
+                  <button
+                    class="tabs__tab"
+                    type="button"
+                    role="tab"
+                    id="tab-code"
+                    aria-controls="panel-code"
+                    aria-selected="false"
+                    tabindex="-1"
                   >
-                    <path
-                      d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
-                    />
-                  </svg>
-                  <span class="tabs__label">Dark</span>
-                </label>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 8l-4 4l4 4" />
+                      <path d="M17 8l4 4l-4 4" />
+                      <path d="M14 4l-4 16" />
+                    </svg>
+                    <span class="tabs__label">Code</span>
+                  </button>
+                </div>
+                <div
+                  class="tabs__panel"
+                  role="tabpanel"
+                  id="panel-preview"
+                  aria-labelledby="tab-preview"
+                  tabindex="0"
+                >
+                  <p>The rendered result, exactly as it appears to a reader.</p>
+                </div>
+                <div
+                  class="tabs__panel"
+                  role="tabpanel"
+                  id="panel-code"
+                  aria-labelledby="tab-code"
+                  tabindex="0"
+                  hidden
+                >
+                  <p>The markup behind the preview, ready to copy.</p>
+                </div>
               </div>
             </div>
             <script type="text/plain" class="example__react">
               <Tabs
-                pill
-                name="theme"
-                aria-label="Theme"
-                defaultValue="light"
+                aria-label="Content"
+                defaultValue="preview"
                 items={[
-                  { value: "light", label: "Light", icon: <IconSun /> },
-                  { value: "dark", label: "Dark", icon: <IconMoon /> },
-                ]}
-              />
-            </script>
-          </div>
-        </section>
-
-        <section class="preview-block">
-          <h2 class="subhead">Disabled</h2>
-          <div class="example" data-example>
-            <div class="component-preview">
-              <div class="tabs" role="radiogroup" aria-label="Section" style="width: 200px">
-                <input type="radio" name="tabs-two" id="tab-two-1" class="tabs__radio" checked />
-                <label class="tabs__tab" for="tab-two-1"
-                  ><span class="tabs__label">Home</span></label
-                >
-                <input type="radio" name="tabs-two" id="tab-two-2" class="tabs__radio" disabled />
-                <label class="tabs__tab" for="tab-two-2"
-                  ><span class="tabs__label">Disabled</span></label
-                >
-              </div>
-            </div>
-            <script type="text/plain" class="example__react">
-              <Tabs
-                name="section"
-                aria-label="Section"
-                defaultValue="home"
-                items={[
-                  { value: "home", label: "Home" },
-                  { value: "disabled", label: "Disabled", disabled: true },
+                  { value: "preview", label: "Preview", icon: <IconEye />, panel: <p>The rendered result.</p> },
+                  { value: "code", label: "Code", icon: <IconCode />, panel: <p>The markup behind it.</p> },
                 ]}
               />
             </script>
@@ -209,19 +266,27 @@
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            <code>items</code> drive the tabs; <code>pill</code> rounds the track. Uncontrolled via
-            <code>defaultValue</code>, or pass <code>value</code> + <code>onChange</code>.
+            <code>items</code> carry each tab's <code>label</code> and <code>panel</code>.
+            Uncontrolled via <code>defaultValue</code>, or pass <code>value</code> +
+            <code>onChange</code>. Arrow-key nav and roving focus are built in.
           </p>
           <div data-source="/react/Tabs.jsx"></div>
         </section>
 
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
-          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span> <span class="tok-prop">role</span>=<span class="tok-str">"radiogroup"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"View"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">checked /&gt;</span>
-  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t1"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
-  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"radio"</span> <span class="tok-prop">name</span>=<span class="tok-str">"group"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t2"</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__radio"</span> <span class="tok-key">/&gt;</span>
-  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">for</span>=<span class="tok-str">"t2"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Details<span class="tok-key">&lt;/span&gt;&lt;/label&gt;</span>
+          <p class="section-note">
+            The markup carries every ARIA attribute; <code>initTabs()</code> only wires the keyboard
+            and panel toggling.
+          </p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__list"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tablist"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Project"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__tab"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tab"</span> <span class="tok-prop">id</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">aria-controls</span>=<span class="tok-str">"p1"</span> <span class="tok-prop">aria-selected</span>=<span class="tok-str">"true"</span> <span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__label"</span><span class="tok-key">&gt;</span>Overview<span class="tok-key">&lt;/span&gt;&lt;/button&gt;</span>
+    <span class="tok-com">&lt;!-- …more tabs --&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"tabs__panel"</span> <span class="tok-prop">role</span>=<span class="tok-str">"tabpanel"</span> <span class="tok-prop">id</span>=<span class="tok-str">"p1"</span> <span class="tok-prop">aria-labelledby</span>=<span class="tok-str">"t1"</span> <span class="tok-prop">tabindex</span>=<span class="tok-str">"0"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-com">&lt;!-- …more panels, hidden on the rest --&gt;</span>
 <span class="tok-key">&lt;/div&gt;</span></code></pre>
         </section>
       </div>

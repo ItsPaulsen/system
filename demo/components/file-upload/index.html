@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>File Upload - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>File Upload</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="File upload"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">A dashed dropzone around a native file input; click or drop to pick.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            The whole box is the <code>&lt;label&gt;</code>, so a click anywhere opens the picker
+            and native drag-and-drop works with no JS. The hidden input keeps the focus ring via
+            <code>:focus-within</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="file-upload" style="width: 100%">
+                <input type="file" class="file-upload__input" name="doc" />
+                <svg
+                  class="file-upload__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                  <path d="M7 9l5 -5l5 5" />
+                  <path d="M12 4l0 12" />
+                </svg>
+                <span class="file-upload__title">Drop a file here or browse</span>
+                <span class="file-upload__hint">PNG or JPG, up to 5 MB</span>
+                <span class="file-upload__button">Browse files</span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <FileUpload name="doc" accept="image/png,image/jpeg" hint="PNG or JPG, up to 5 MB" />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Multiple, no hint</h2>
+          <p class="section-note">
+            Drop the hint line for a compact zone. <code>multiple</code> accepts a set;
+            <code>accept</code> filters the picker.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="file-upload" style="width: 100%">
+                <input type="file" class="file-upload__input" name="docs" multiple accept=".pdf" />
+                <svg
+                  class="file-upload__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                  <path d="M7 9l5 -5l5 5" />
+                  <path d="M12 4l0 12" />
+                </svg>
+                <span class="file-upload__title">Add documents</span>
+                <span class="file-upload__button">Browse files</span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <FileUpload name="docs" multiple accept=".pdf" title="Add documents" />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>title</code> is the prompt, <code>hint</code> an optional second line,
+            <code>buttonLabel</code> the Browse button; the wrapping label names the input. Other
+            props (<code>accept</code>, <code>multiple</code>, <code>disabled</code>,
+            <code>onChange</code>) pass through.
+          </p>
+          <div data-source="/react/FileUpload.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <pre><code><span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"file-upload"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">type</span>=<span class="tok-str">"file"</span> <span class="tok-prop">class</span>=<span class="tok-str">"file-upload__input"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;svg</span> <span class="tok-prop">class</span>=<span class="tok-str">"file-upload__icon"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/svg&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"file-upload__title"</span><span class="tok-key">&gt;</span>Drop a file here or browse<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"file-upload__hint"</span><span class="tok-key">&gt;</span>PNG or JPG, up to 5 MB<span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/label&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

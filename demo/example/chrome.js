@@ -281,16 +281,16 @@
         </div>
 
         <div class="ex-menu__foot">
-          <div class="tabs tabs--pill ex-menu__theme" role="radiogroup" aria-label="Theme">
+          <div class="toggle-group toggle-group--pill ex-menu__theme" role="radiogroup" aria-label="Theme">
             <input
               type="radio"
               name="ex-theme-menu"
               id="ex-theme-menu-light"
-              class="tabs__radio"
+              class="toggle-group__radio"
               data-theme-opt="light"
               checked
             />
-            <label class="tabs__tab" for="ex-theme-menu-light">
+            <label class="toggle-group__tab" for="ex-theme-menu-light">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -305,16 +305,16 @@
                   d="M3 12h1M12 3v1M20 12h1M12 20v1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7M17.7 17.7l.7 .7M6.3 17.7l-.7 .7"
                 />
               </svg>
-              <span class="tabs__label">Light</span>
+              <span class="toggle-group__label">Light</span>
             </label>
             <input
               type="radio"
               name="ex-theme-menu"
               id="ex-theme-menu-dark"
-              class="tabs__radio"
+              class="toggle-group__radio"
               data-theme-opt="dark"
             />
-            <label class="tabs__tab" for="ex-theme-menu-dark">
+            <label class="toggle-group__tab" for="ex-theme-menu-dark">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -328,7 +328,7 @@
                   d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"
                 />
               </svg>
-              <span class="tabs__label">Dark</span>
+              <span class="toggle-group__label">Dark</span>
             </label>
           </div>
         </div>
@@ -368,7 +368,7 @@
   });
 
   // Theme toggle lives in the injected menu; keep every theme control in sync.
-  const radios = document.querySelectorAll(".tabs__radio[data-theme-opt]");
+  const radios = document.querySelectorAll(".toggle-group__radio[data-theme-opt]");
   function applyTheme(t) {
     const root = document.documentElement;
     root.classList.add("no-transitions");

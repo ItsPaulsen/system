@@ -91,6 +91,36 @@
         </section>
 
         <section class="preview-block">
+          <h2 class="subhead">Character count</h2>
+          <p class="section-note">
+            <code>maxCount</code> shows a live counter and flags the field
+            (<code>aria-invalid</code>) once it's exceeded. It's a soft limit: the field still
+            accepts input, so nothing is lost. The count is in the field's
+            <code>aria-describedby</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <label class="input" style="max-width: 360px">
+                <span class="input__label">Bio</span>
+                <span class="input__container input__container--textarea">
+                  <textarea
+                    name="bio"
+                    class="input__element"
+                    rows="3"
+                    aria-describedby="textarea-bio-count"
+                  >
+A short line about yourself.</textarea>
+                </span>
+                <span class="input__count" id="textarea-bio-count" data-max-count="80">0/80</span>
+              </label>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Textarea label="Bio" rows={3} maxCount={80} defaultValue="A short line about yourself." />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h2 class="subhead">Disabled</h2>
           <div class="example" data-example>
             <div class="component-preview">
@@ -155,9 +185,10 @@ Can't edit this.</textarea>
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            <code>label</code> names the field; <code>hint</code>/<code>error</code> and
-            <code>required</code> mirror Input (<code>error</code> implies invalid). Other props
-            (<code>rows</code>, <code>placeholder</code>, value) pass through to the textarea.
+            <code>label</code> names the field; <code>hint</code>/<code>error</code>,
+            <code>required</code>, and <code>maxCount</code> mirror Input (<code>error</code> or an
+            exceeded <code>maxCount</code> implies invalid). Other props (<code>rows</code>,
+            <code>placeholder</code>, value) pass through to the textarea.
           </p>
           <div data-source="/react/Textarea.jsx"></div>
         </section>

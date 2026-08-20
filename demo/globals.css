@@ -136,12 +136,20 @@
     --ink-primary: var(--ink-base);
     --ink-primary-hover: color-mix(in oklab, var(--ink-primary) 88%, var(--background-secondary));
     --ink-primary-active: color-mix(in oklab, var(--ink-primary) 82%, var(--background-secondary));
-    --ink-secondary: rgb(from var(--ink-base) r g b / 0.7);
-    --ink-secondary-hover: rgb(from var(--ink-base) r g b / 0.81);
-    --ink-secondary-active: rgb(from var(--ink-base) r g b / 0.85);
-    --ink-tertiary: rgb(from var(--ink-base) r g b / 0.55);
-    --ink-tertiary-hover: rgb(from var(--ink-base) r g b / 0.66);
-    --ink-tertiary-active: rgb(from var(--ink-base) r g b / 0.7);
+
+    /* Opaque, not alpha: muted ink is mixed toward the base surface
+     (--background-secondary, pure white in light / near-anchor in dark) instead
+     of made translucent. Same percentages as the old alphas, so on the page it
+     looks identical, but it no longer picks up whatever sits behind it, so a
+     caption or a filled neutral surface reads the same gray on any surface.
+     Matches how the big systems ship muted text (opaque steps, not alpha), and
+     lets the neutral data-color use --ink-secondary as a real solid fill. */
+    --ink-secondary: color-mix(in oklab, var(--ink-base) 70%, var(--background-secondary));
+    --ink-secondary-hover: color-mix(in oklab, var(--ink-base) 81%, var(--background-secondary));
+    --ink-secondary-active: color-mix(in oklab, var(--ink-base) 85%, var(--background-secondary));
+    --ink-tertiary: color-mix(in oklab, var(--ink-base) 55%, var(--background-secondary));
+    --ink-tertiary-hover: color-mix(in oklab, var(--ink-base) 66%, var(--background-secondary));
+    --ink-tertiary-active: color-mix(in oklab, var(--ink-base) 70%, var(--background-secondary));
 
     /* ── Semantic ────────────────────────────────────────────────────────
      Each family opaque from its anchor; hover/active derived via color-mix
@@ -448,8 +456,15 @@
   :root,
   [data-color] {
     --accent: rgb(var(--accent-anchor));
-    --accent-hover: color-mix(in oklab, var(--accent) 88%, white);
-    --accent-active: color-mix(in oklab, var(--accent) 82%, white);
+
+    /* Light lifts a bit harder (86/80, not 88/82): a colored fill on a bright
+     page shifts less perceptibly on hover than a light fill on the dark stage,
+     so light needs a stronger nudge to match dark's felt change. Dark holds at
+     88/82, reset in the dark block below. Step stays 6 between hover and active.
+     Neutral runs on --ink-primary-hover/active (already the strongest lift), so
+     it's left as is. */
+    --accent-hover: color-mix(in oklab, var(--accent) 86%, white);
+    --accent-active: color-mix(in oklab, var(--accent) 80%, white);
 
     /* Text/icon on the solid accent fill, black or white by the accent's own
      lightness so it stays legible on any tint. round(1.15 - l) resolves to 1
@@ -464,6 +479,13 @@
     --accent-soft: rgb(from var(--accent-tint) r g b / 0.12);
     --accent-soft-hover: rgb(from var(--accent-tint) r g b / 0.23);
     --accent-soft-active: rgb(from var(--accent-tint) r g b / 0.27);
+
+    /* Border for outline controls in a region: the region's own colour, so an
+     outlined button/input inside [data-color] reads in that colour and flips
+     per theme with --accent. Neutral repoints it to the standard control border
+     (--ink-tertiary) below. Not consumed by a component here yet, it's the role
+     primitive for outline treatments (kept per the full-API principle). */
+    --accent-border: var(--accent);
   }
 
   /* Repoint the accent per subtree. Three region contexts: brand (primary),
@@ -485,10 +507,20 @@
     --accent: var(--ink-primary);
     --accent-hover: var(--ink-primary-hover);
     --accent-active: var(--ink-primary-active);
-    --accent-foreground: var(--ink-primary);
+
+    /* Filled fill stays full ink in both themes: our dark colored fills are
+     bright pastels, so a bright (near-white) neutral sits with them, where a
+     mid-gray would read dull and off-tone. Outline/soft text is the "subtle"
+     ink, not full ink, matching how the filled and outline neutrals split
+     (Digdir: base-default fill vs text-subtle outline). */
+    --accent-foreground: var(--ink-secondary);
     --accent-soft: var(--fill-tertiary);
     --accent-soft-hover: var(--fill-tertiary-hover);
     --accent-soft-active: var(--fill-tertiary-active);
+
+    /* Neutral outline uses the standard control border, not the near-black
+     fill, so a neutral outlined control matches every input/button. */
+    --accent-border: var(--ink-tertiary);
   }
 
   [data-color="red"] {
@@ -649,6 +681,10 @@
    chromatic treatment would wrongly recolour it. */
   :root[data-theme="dark"],
   :root[data-theme="dark"] [data-color]:not([data-color="neutral"]) {
+    /* Hold hover/active at the gentler 88/82: on the dark stage a light fill
+     already reads a clear hover, so it doesn't need the light-theme 84/78 lift. */
+    --accent-hover: color-mix(in oklab, var(--accent) 88%, white);
+    --accent-active: color-mix(in oklab, var(--accent) 82%, white);
     --accent-foreground: oklch(
       from color-mix(in oklab, var(--accent), white 60%) l calc(c * 1.5) h
     );

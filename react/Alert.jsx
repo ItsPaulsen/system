@@ -6,11 +6,13 @@ import {
 } from "@tabler/icons-react";
 
 // Inline status message; the variant picks the surface, icon, and live-region role.
+// `accent` is a non-semantic callout that follows the data-color region.
 const ICON = {
   info: IconInfoCircle,
   success: IconCircleCheck,
   warning: IconAlertTriangle,
-  error: IconAlertCircle
+  error: IconAlertCircle,
+  accent: IconInfoCircle
 };
 
 export default function Alert({ variant = "info", title, children, className, ...rest }) {

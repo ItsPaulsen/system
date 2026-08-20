@@ -171,6 +171,41 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Colors</h2>
+          <p class="section-note">
+            Wrap any ancestor in <code>data-color</code> (<code>primary</code>,
+            <code>neutral</code>, <code>red</code>); the checked fill retints from that context.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div data-color="primary">
+                <label class="chip chip--as-checkbox">
+                  <input name="chip-color-1" type="checkbox" class="chip__input" checked />
+                  Primary
+                </label>
+              </div>
+              <div data-color="neutral">
+                <label class="chip chip--as-checkbox">
+                  <input name="chip-color-2" type="checkbox" class="chip__input" checked />
+                  Neutral
+                </label>
+              </div>
+              <div data-color="red">
+                <label class="chip chip--as-checkbox">
+                  <input name="chip-color-3" type="checkbox" class="chip__input" checked />
+                  Red
+                </label>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <div data-color="red">
+                <Chip defaultChecked>Red</Chip>
+              </div>
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">

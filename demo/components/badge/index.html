@@ -79,9 +79,31 @@
           <div class="example" data-example>
             <div class="component-preview">
               <span class="badge badge--primary">Primary</span>
+              <span class="badge badge--neutral">Neutral</span>
               <span class="badge badge--secondary">Secondary</span>
               <span class="badge badge--outline">Outline</span>
             </div>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Colors</h2>
+          <p class="section-note">
+            Wrap any ancestor in <code>data-color</code> (<code>primary</code>,
+            <code>neutral</code>, <code>red</code>); the <code>--primary</code> badge retints from
+            that one context. The colour tints carry meaning, so they stay fixed.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <span data-color="primary"><span class="badge badge--primary">Primary</span></span>
+              <span data-color="neutral"><span class="badge badge--primary">Neutral</span></span>
+              <span data-color="red"><span class="badge badge--primary">Red</span></span>
+            </div>
+            <script type="text/plain" class="example__react">
+              <span data-color="red">
+                <Badge variant="primary">New</Badge>
+              </span>
+            </script>
           </div>
         </section>
 

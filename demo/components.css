@@ -1483,7 +1483,14 @@
 
   /* Skins */
 
+  /* Reads --accent, so it's brand by default and retints inside a data-color
+   region. For the fixed solid-ink emphasis badge use --neutral. */
   .badge--primary {
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  .badge--neutral {
     background: var(--ink-primary);
     color: var(--background-primary);
   }
@@ -1811,19 +1818,19 @@
   }
 
   .chip:has(input:checked) {
-    background: var(--primary-soft);
+    background: var(--accent-soft);
     border-color: transparent;
-    color: var(--primary-foreground);
+    color: var(--accent-foreground);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):hover {
-      background: var(--primary-soft-hover);
+      background: var(--accent-soft-hover);
     }
   }
 
   .chip--as-checkbox:has(input:checked):not(:has(input:disabled)):active {
-    background: var(--primary-soft-active);
+    background: var(--accent-soft-active);
   }
 
   /* A checked single-select chip is the current choice, it can't be un-picked,
@@ -1837,9 +1844,10 @@
   /* Dashed dropzone wrapping a native file input. The input is a transparent
    full-box overlay (not 1px-clipped), so a click anywhere opens the picker AND a
    dropped file lands on the input, native drag-and-drop with no JS. The Browse
-   button is a presentational span (the overlay handles the click); it reacts to
-   the box hover since the pointer can't reach it under the overlay. The ring
-   shows on :focus-within since the input itself is transparent. */
+   button is a presentational span raised above the overlay so it shows its own
+   hover/active only when the pointer is over the button itself (the click still
+   works via the wrapping <label>). The ring shows on :focus-within since the
+   input itself is transparent. */
   .file-upload {
     position: relative;
     display: flex;
@@ -1886,8 +1894,12 @@
     color: var(--ink-secondary);
   }
 
-  /* Presentational Browse button (soft-primary, like button--secondary). */
+  /* Presentational Browse button (soft-primary, like button--secondary). Raised
+   above the transparent input overlay (z-index) so it receives :hover/:active
+   directly; the click still opens the picker because the whole box is a <label>. */
   .file-upload__button {
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     height: 40px;
@@ -1899,6 +1911,11 @@
     font-size: var(--font-body-small-emphasized-size);
     font-weight: var(--font-body-small-emphasized-weight);
     line-height: 1;
+    transition: background var(--motion-default);
+  }
+
+  .file-upload__button:active {
+    background: var(--primary-soft-active);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -1906,7 +1923,7 @@
       border-color: var(--ink-secondary);
     }
 
-    .file-upload:hover .file-upload__button {
+    .file-upload__button:hover {
       background: var(--primary-soft-hover);
     }
   }
@@ -2041,6 +2058,16 @@
 
   .alert--error .alert__icon {
     color: var(--red);
+  }
+
+  /* Non-semantic callout: reads --accent, so it follows a data-color region
+   (brand by default). Unlike the status variants, its colour carries no meaning. */
+  .alert--accent {
+    background: var(--accent-soft);
+  }
+
+  .alert--accent .alert__icon {
+    color: var(--accent-foreground);
   }
 
   /* ── Dialog ────────────────────────────────────────────────────────────── */

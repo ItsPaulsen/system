@@ -175,6 +175,41 @@
         </section>
 
         <section class="preview-block">
+          <h2 class="subhead">Accent</h2>
+          <p class="section-note">
+            A non-semantic callout. Its colour carries no meaning, so it follows a
+            <code>data-color</code> region (<code>primary</code>, <code>neutral</code>,
+            <code>red</code>); brand by default.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="alert alert--accent" role="status">
+                <svg
+                  class="alert__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                  <path d="M12 8h.01" />
+                  <path d="M11 12h1v4h1" />
+                </svg>
+                <div class="alert__body">
+                  <p class="alert__text">You're using the latest version.</p>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Alert variant="accent">You're using the latest version.</Alert>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h2 class="subhead">With title</h2>
           <p class="section-note">Add a title for multi-line messages.</p>
           <div class="example" data-example>

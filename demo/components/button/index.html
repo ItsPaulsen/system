@@ -76,9 +76,14 @@
       <div class="preview-grid">
         <section class="preview-block">
           <h2 class="subhead">Size</h2>
-          <p class="section-note">Set <code>data-size</code> on any ancestor.</p>
+          <p class="section-note">
+            Set <code>data-size</code> on any ancestor. xs 32 / sm 40 / md 48 (default) / lg 56.
+          </p>
           <div class="example" data-example>
             <div class="component-preview">
+              <div data-size="xs">
+                <button type="button" class="button button--primary">Extra small</button>
+              </div>
               <div data-size="sm">
                 <button type="button" class="button button--primary">Small</button>
               </div>
@@ -90,6 +95,7 @@
               </div>
             </div>
             <script type="text/plain" class="example__react">
+              <Button size="xs">Extra small</Button>
               <Button size="sm">Small</Button>
               <Button size="md">Medium</Button>
               <Button size="lg">Large</Button>

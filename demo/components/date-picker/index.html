@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Date picker - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Date picker</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Calendar"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">A trigger that opens a calendar to pick a single date.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            A <a href="/demo/components/calendar/">Calendar</a> inside a
+            <a href="/demo/components/popover/">Popover</a>, with
+            <code>data-cal-target</code> pointed at the trigger's label. Picking a day fills the
+            label and closes the popover.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button
+                class="button button--secondary button--with-start-icon"
+                type="button"
+                popovertarget="date-popover"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"
+                  />
+                  <path d="M16 3v4" />
+                  <path d="M8 3v4" />
+                  <path d="M4 11h16" />
+                </svg>
+                <span data-dp-label>Pick a date</span>
+              </button>
+              <div class="popover popover--calendar" id="date-popover" popover>
+                <div class="calendar" data-calendar data-cal-target="[data-dp-label]">
+                  <div class="calendar__head">
+                    <button
+                      class="calendar__nav"
+                      type="button"
+                      data-cal-prev
+                      aria-label="Previous month"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M15 6l-6 6l6 6" />
+                      </svg>
+                    </button>
+                    <button
+                      class="calendar__nav"
+                      type="button"
+                      data-cal-next
+                      aria-label="Next month"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </button>
+                    <div class="calendar__period">
+                      <span class="calendar__select">
+                        <select name="select-3" data-cal-month aria-label="Month"></select>
+                      </span>
+                      <span class="calendar__select">
+                        <select name="select-4" data-cal-year aria-label="Year"></select>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="calendar__days" data-cal-days></div>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <button
+                className="button button--secondary button--with-start-icon"
+                popoverTarget="date-popover"
+              >
+                <IconCalendar />
+                <span>{date ? formatDate(date) : "Pick a date"}</span>
+              </button>
+              <div className="popover popover--calendar" id="date-popover" popover="auto">
+                <Calendar
+                  onSelect={(iso) => {
+                    setDate(iso);
+                    document.getElementById("date-popover").hidePopover();
+                  }}
+                />
+              </div>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            The picker is <a href="/demo/components/calendar/">Calendar</a> in a Popover;
+            <code>onSelect</code> (ISO date) updates the trigger label and closes it. Capped at 31
+            Dec of the current year.
+          </p>
+          <div data-source="/react/Calendar.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <pre><code><span class="tok-com">&lt;!-- Trigger with a label span the calendar writes into. --&gt;</span>
+<span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span> <span class="tok-prop">popovertarget</span>=<span class="tok-str">"date-popover"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">data-dp-label</span><span class="tok-key">&gt;</span>Pick a date<span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/button&gt;</span>
+<span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"popover popover--calendar"</span> <span class="tok-prop">id</span>=<span class="tok-str">"date-popover"</span> <span class="tok-prop">popover</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar"</span> <span class="tok-prop">data-calendar</span> <span class="tok-prop">data-cal-target</span>=<span class="tok-str">"[data-dp-label]"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Same <code>initCalendars</code> as
+            <a href="/demo/components/calendar/">Calendar</a>; <code>data-cal-target</code> makes it
+            a picker (writes the label, closes the popover on pick).
+          </p>
+          <div data-source="/assets/app.js" data-fn="initCalendars"></div>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

@@ -1279,6 +1279,15 @@
     transition: background var(--motion-default);
   }
 
+  /* xs is the compact control size (32 tall, 14 label) for dense chrome like the
+   date-range footer; the icon rides the 14px label at 1.25em (~17.5). */
+  [data-size="xs"] .button {
+    --button-size: 32px;
+    --button-font: var(--font-caption-medium-emphasized-size);
+    --button-gap: 6px;
+    --button-px: 12px;
+  }
+
   /* sm keeps the md label size (16), so the default 1.25em icon lands at 20 too;
    just tighten the icon gap to 6 on the smaller button. */
   [data-size="sm"] .button {
@@ -2526,6 +2535,76 @@
     border-bottom: 0;
   }
 
+  /* Data table: sortable headers + row selection. Both are progressive
+   enhancements over the plain table (initDataTables wires the behaviour); the
+   markup degrades to a static table with no JS.
+
+   Sortable column: a <th aria-sort="none"> whose label is a .table__sort button.
+   The indicator is a chevron that shows faint on hover, solid when the column is
+   the active sort, and flips for ascending. aria-sort is the single source of
+   truth, so screen readers announce the state and CSS reads it for the arrow. */
+  .table__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .table__sort::after {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    background: currentcolor;
+    mask: var(--icon-chevron-down) center / contain no-repeat;
+    opacity: 0;
+    transition: opacity var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .table th[aria-sort="none"] .table__sort:hover::after {
+      opacity: 0.4;
+    }
+  }
+
+  .table th[aria-sort="ascending"] .table__sort::after,
+  .table th[aria-sort="descending"] .table__sort::after {
+    opacity: 1;
+  }
+
+  /* Chevron points down for descending; flip it for ascending. */
+  .table th[aria-sort="ascending"] .table__sort::after {
+    rotate: 180deg;
+  }
+
+  .table__sort:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Select column: tight, centred on the checkbox; the header + each row carry a
+   .checkbox. A row with its box checked lifts onto the accent-soft surface. */
+  .table th.table__select,
+  .table td.table__select {
+    width: 1px; /* shrink-to-fit; the checkbox sets the real width */
+    padding-inline: 0.75rem;
+  }
+
+  .table__select .checkbox {
+    vertical-align: middle;
+  }
+
+  .table tbody tr:has(.checkbox__input:checked) td {
+    background: var(--accent-soft);
+  }
+
   /* ── Tooltip ───────────────────────────────────────────────────────────── */
 
   /* CSS-only label on hover/focus. Wrap a focusable trigger; the bubble shows on
@@ -2772,6 +2851,131 @@
 
   .progress::-moz-progress-bar {
     background: var(--primary-foreground);
+  }
+
+  /* ── Steps ───────────────────────────────────────────────────────────────────
+   Numbered progress through a linear, multi-step flow (checkout, wizard). An
+   <ol> so the sequence is semantic; the active step carries aria-current="step"
+   and finished steps get .is-done. Colours ride --accent, so a [data-color]
+   region retints the whole track.
+
+   The connector is split into two halves per step (an outgoing ::after and an
+   incoming ::before) that each stop at the indicator's edge, so the line never
+   runs under a circle and the indicator needs no opaque fill to hide it. A
+   segment reads filled when the step it leaves is done (::after) and the step it
+   enters is done or current (::before), so the track fills up to the active step.
+
+   Structure:
+   <ol class="steps">
+     <li class="steps__step is-done">
+       <span class="steps__indicator"><span class="steps__num">1</span></span>
+       <span class="steps__label">Cart</span>
+     </li>
+     <li class="steps__step is-current" aria-current="step">…</li>
+     <li class="steps__step">…</li>
+   </ol> */
+  .steps {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps__step {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    text-align: center;
+  }
+
+  /* Connector halves, pinned to the indicator's vertical centre (2rem tall). Each
+   stops at the indicator edge (50% ∓ 1rem) so it spans only the gap. */
+  .steps__step:not(:last-child)::after,
+  .steps__step:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    top: 1rem;
+    height: 2px;
+    background: var(--fill-tertiary);
+  }
+
+  .steps__step:not(:last-child)::after {
+    left: calc(50% + 1rem);
+    right: 0;
+  }
+
+  .steps__step:not(:first-child)::before {
+    left: 0;
+    right: calc(50% + 1rem);
+  }
+
+  /* Filled up to the active step: the half leaving a done step, and the half
+   entering a done or current step. */
+  .steps__step.is-done::after {
+    background: var(--accent);
+  }
+
+  .steps__step.is-done::before,
+  .steps__step.is-current::before {
+    background: var(--accent);
+  }
+
+  .steps__indicator {
+    position: relative; /* lift above the connector halves */
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-full);
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--fill-tertiary);
+    color: var(--ink-tertiary);
+    font-size: var(--font-caption-medium-size);
+    font-weight: 500;
+  }
+
+  .steps__step.is-current .steps__indicator {
+    box-shadow: inset 0 0 0 2px var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .steps__step.is-done .steps__indicator {
+    background: var(--accent);
+    box-shadow: none;
+    color: var(--accent-on);
+  }
+
+  /* Finished steps swap the number for a check (same markup, .is-done on the li). */
+  .steps__step.is-done .steps__num {
+    display: none;
+  }
+
+  .steps__step.is-done .steps__indicator::after {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    background: currentcolor;
+    mask: var(--icon-check) center / contain no-repeat;
+  }
+
+  .steps__label {
+    font-size: var(--font-body-small-size);
+    color: var(--ink-tertiary);
+  }
+
+  .steps__step.is-current .steps__label {
+    color: var(--ink-primary);
+    font-weight: 500;
+  }
+
+  .steps__step.is-done .steps__label {
+    color: var(--ink-primary);
   }
 
   /* ── Link ──────────────────────────────────────────────────────────────────
@@ -3720,11 +3924,151 @@
     font-weight: 500;
   }
 
+  /* Range calendar (Date range). Kept in the Calendar banner above so Copy CSS
+   pulls the whole calendar family in one go.
+   Two months side by side (stacking to one column when cramped) for picking a
+   start + end date. initDateRanges drives it; markup degrades to two static
+   month grids. The endpoints match the single calendar's selected day (neutral,
+   accent only inside a data-color region) and the days between wear a soft band
+   drawn on the gridcell, bridged across the 2px column gaps with a left box-shadow
+   so it reads continuous. */
+  .calendar__months {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  @media (min-width: 36rem) {
+    .calendar--range .calendar__months {
+      flex-direction: row;
+    }
+  }
+
+  .calendar__month {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* prev/label/next row per month; a spacer opposite the nav keeps the label
+   optically centred (prev is on the first month, next on the second). */
+  .calendar__caption {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+  }
+
+  .calendar__caption-label {
+    flex: 1;
+    text-align: center;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  .calendar__nav-spacer {
+    width: 2rem;
+    flex: none;
+  }
+
+  /* Soft band on every day in the range (endpoints included). is-range sits on the
+   gridcell; each week row becomes one rounded pill, capped where the range starts/
+   ends or where it meets the week edge, so a multi-week range reads as one pill per
+   row. Endpoints match the single calendar's selected day (neutral, not accent). */
+  .calendar__cell.is-range {
+    background: var(--fill-tertiary);
+  }
+
+  /* Bridge the 2px column gap, but only between two adjacent in-range cells
+   (mid-band) so a cap never bleeds into the gap. (Left side is .is-range, not the
+   compound, to keep specificity below the data-color band override further down.) */
+  .is-range + .calendar__cell.is-range {
+    box-shadow: -2px 0 0 0 var(--fill-tertiary);
+  }
+
+  /* Left cap: first in-range cell of a row (range start, or a week that opens
+   mid-range). Right cap: last in-range cell of a row (range end, or a week that
+   runs to its edge). */
+  .calendar__week > .calendar__cell.is-range:first-child,
+  .calendar__week > :not(.is-range) + .calendar__cell.is-range {
+    border-start-start-radius: var(--radius-sm);
+    border-end-start-radius: var(--radius-sm);
+  }
+
+  .calendar__week > .calendar__cell.is-range:last-child,
+  .calendar__week > .calendar__cell.is-range:has(+ :not(.is-range)) {
+    border-start-end-radius: var(--radius-sm);
+    border-end-end-radius: var(--radius-sm);
+  }
+
+  .calendar__day.is-range-start,
+  .calendar__day.is-range-end {
+    background: var(--primary-foreground);
+    color: var(--background-secondary);
+    font-weight: 500;
+  }
+
+  /* Keep endpoints filled on hover (the generic day-hover surface would otherwise
+   paint over them). */
+  @media (hover: hover) and (pointer: fine) {
+    .calendar__day.is-range-start:hover,
+    .calendar__day.is-range-end:hover {
+      background: var(--primary-foreground);
+    }
+  }
+
+  /* Neutral by default (above), but inside a data-color region the selected day
+   and range endpoints/band pick up the region's accent, like Button/Chip/Badge.
+   (In a neutral region --accent resolves to the same neutral ink/soft, so it
+   stays neutral there.) */
+  [data-color] .calendar__day.is-selected,
+  [data-color] .calendar__day.is-range-start,
+  [data-color] .calendar__day.is-range-end {
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-color] .calendar__day.is-range-start:hover,
+    [data-color] .calendar__day.is-range-end:hover {
+      background: var(--accent);
+    }
+  }
+
+  /* .calendar__week (always the cell's parent) is in the selector only to keep
+   specificity above the row-cap rules above, satisfying no-descending-specificity. */
+  [data-color] .calendar__week .calendar__cell.is-range {
+    background: var(--accent-soft);
+  }
+
+  [data-color] .calendar__week .calendar__cell.is-range + .calendar__cell.is-range {
+    box-shadow: -2px 0 0 0 var(--accent-soft);
+  }
+
   /* Calendar in a Popover = date picker. The popover is just the surface (shadow
    + rounding); the calendar fills it edge to edge, so drop the popover padding. */
   .popover--calendar {
     padding: 0;
     border-radius: var(--radius-md);
+  }
+
+  /* Range footer: a full-bleed divider (negative margins cancel the calendar's own
+   padding so the line runs edge to edge), Clear on the left, Cancel + Apply on the
+   right. Wrap it in data-size="xs" in the markup to scale the buttons down. */
+  .calendar__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: var(--space-8) calc(-1 * var(--space-8)) calc(-1 * var(--space-8));
+    padding: var(--space-8);
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .calendar__footer-actions {
+    display: flex;
+    gap: 0.5rem;
   }
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
@@ -3800,7 +4144,9 @@
     .toggle-group__radio:checked + .toggle-group__tab,
     .pagination__link[aria-current="page"],
     .pagination__link[aria-current="page"]:hover,
-    .calendar__day.is-selected {
+    .calendar__day.is-selected,
+    .calendar__day.is-range-start,
+    .calendar__day.is-range-end {
       forced-color-adjust: none;
       background: Highlight;
       color: HighlightText;
@@ -3822,6 +4168,32 @@
     /* Today carries only a faint fill; keep a border so it still reads as marked. */
     .calendar__day.is-today {
       border: var(--border-width) solid ButtonText;
+    }
+
+    /* Steps: rings and accent fills are stripped, so outline every indicator and
+     pin the current/done states to system colours; keep the connectors visible. */
+    .steps__indicator {
+      forced-color-adjust: none;
+      border: 2px solid ButtonBorder;
+      box-shadow: none;
+      color: CanvasText;
+    }
+
+    .steps__step.is-current .steps__indicator {
+      border-color: Highlight;
+      color: Highlight;
+    }
+
+    .steps__step.is-done .steps__indicator {
+      background: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
+
+    .steps__step::before,
+    .steps__step::after {
+      forced-color-adjust: none;
+      background: CanvasText;
     }
 
     /* Surfaces (alert, card, popover, accordion rows, tooltip) lose their

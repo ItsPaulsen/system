@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Date range - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Date range</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Calendar"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">Two months for choosing a start and end date.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            Click a start, then an end (clicking earlier swaps them); hovering previews the band.
+            The footer stages the pick: Clear empties it, Cancel reverts, Apply commits. Colours are
+            neutral unless wrapped in a <a href="/demo/theming/">data-color</a> region (shown here
+            in <code>primary</code>). Stacks to one column when cramped.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="calendar calendar--range"
+                data-color="primary"
+                data-daterange
+                data-range-start="2026-08-04"
+                data-range-end="2026-08-12"
+              >
+                <div class="calendar__months">
+                  <div class="calendar__month">
+                    <div class="calendar__caption">
+                      <button
+                        class="calendar__nav"
+                        type="button"
+                        data-range-prev
+                        aria-label="Previous month"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M15 6l-6 6l6 6" />
+                        </svg>
+                      </button>
+                      <span class="calendar__caption-label" data-range-caption="0"></span>
+                      <span class="calendar__nav-spacer" aria-hidden="true"></span>
+                    </div>
+                    <div class="calendar__days" data-range-days="0"></div>
+                  </div>
+                  <div class="calendar__month">
+                    <div class="calendar__caption">
+                      <span class="calendar__nav-spacer" aria-hidden="true"></span>
+                      <span class="calendar__caption-label" data-range-caption="1"></span>
+                      <button
+                        class="calendar__nav"
+                        type="button"
+                        data-range-next
+                        aria-label="Next month"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M9 6l6 6l-6 6" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div class="calendar__days" data-range-days="1"></div>
+                  </div>
+                </div>
+                <div class="calendar__footer" data-size="xs">
+                  <button
+                    class="button button--flat"
+                    type="button"
+                    data-color="neutral"
+                    data-range-clear
+                  >
+                    Clear
+                  </button>
+                  <div class="calendar__footer-actions">
+                    <button class="button button--secondary" type="button" data-range-cancel>
+                      Cancel
+                    </button>
+                    <button class="button button--primary" type="button" data-range-apply>
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <div data-color="primary">
+                <DateRange defaultStart="2026-08-04" defaultEnd="2026-08-12" />
+              </div>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            Uncontrolled via <code>defaultStart</code>/<code>defaultEnd</code>. Picks stage into the
+            footer; <code>onChange</code> fires on Apply with <code>{ start, end }</code> (ISO
+            dates), and <code>onApply</code>/<code>onCancel</code> fire alongside.
+          </p>
+          <div data-source="/react/DateRange.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar calendar--range"</span> <span class="tok-prop">data-daterange</span>
+     <span class="tok-prop">data-range-start</span>=<span class="tok-str">"2026-08-04"</span> <span class="tok-prop">data-range-end</span>=<span class="tok-str">"2026-08-12"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__months"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__month"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__caption"</span><span class="tok-key">&gt;</span>
+        <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav"</span> <span class="tok-prop">data-range-prev</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
+        <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__caption-label"</span> <span class="tok-prop">data-range-caption</span>=<span class="tok-str">"0"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+        <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__nav-spacer"</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+      <span class="tok-key">&lt;/div&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__days"</span> <span class="tok-prop">data-range-days</span>=<span class="tok-str">"0"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
+    <span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-com">&lt;!-- second .calendar__month: spacer, caption "1", data-range-next, days "1" --&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__footer"</span> <span class="tok-prop">data-size</span>=<span class="tok-str">"xs"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--flat"</span> <span class="tok-prop">data-color</span>=<span class="tok-str">"neutral"</span> <span class="tok-prop">data-range-clear</span><span class="tok-key">&gt;</span>Clear<span class="tok-key">&lt;/button&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"calendar__footer-actions"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span> <span class="tok-prop">data-range-cancel</span><span class="tok-key">&gt;</span>Cancel<span class="tok-key">&lt;/button&gt;</span>
+      <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--primary"</span> <span class="tok-prop">data-range-apply</span><span class="tok-key">&gt;</span>Apply<span class="tok-key">&lt;/button&gt;</span>
+    <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Renders both months, tracks start/end (swapping when the
+            second pick is earlier), previews on hover, and stages the footer: Clear empties, Cancel
+            reverts, Apply writes <code>data-range-target-start</code>/<code>-end</code> and closes
+            the popover.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initDateRanges"></div>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

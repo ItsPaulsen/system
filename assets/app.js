@@ -272,7 +272,7 @@ const PROJECT_PAGES = {
       links: [
         { label: "Introduction", href: "/demo/" },
         { label: "Colors", href: "/demo/colors/" },
-        { label: "Theming", href: "/demo/theming/", new: true },
+        { label: "Theming", href: "/demo/theming/" },
         { label: "Typography", href: "/demo/typography/" },
         { label: "Layout", href: "/demo/layout/" },
         { label: "Radii", href: "/demo/radii/" },
@@ -293,6 +293,8 @@ const PROJECT_PAGES = {
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
+        { label: "Date picker", href: "/demo/components/date-picker/" },
+        { label: "Date range", href: "/demo/components/date-range/", new: true },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
         { label: "Empty", href: "/demo/components/empty/" },
@@ -1977,63 +1979,66 @@ function initCalendars() {
         headRow.appendChild(s);
       });
       daysEl.appendChild(headRow);
-      let row = null;
-      for (let i = 0; i < 42; i += 1) {
-        const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-        // Don't render trailing days past the cap, there's no month to reach them
-        // in (the cap is always end of December, so this only trims the spill-over).
-        if (d > maxDate) break;
-        // Open a new week row every 7th cell so each row groups its 7 gridcells.
-        if (i % 7 === 0) {
-          row = document.createElement("div");
-          row.className = "calendar__week";
-          row.setAttribute("role", "row");
-          daysEl.appendChild(row);
+      for (let w = 0; w < 6; w += 1) {
+        const weekDays = [];
+        for (let i = 0; i < 7; i += 1) {
+          const idx = w * 7 + i;
+          weekDays.push(new Date(start.getFullYear(), start.getMonth(), start.getDate() + idx));
         }
-        // Leading days before the floor get an inert spacer instead of a button,
-        // so the first in-range day keeps its column (mirrors the trailing cap).
-        if (d < minDate) {
-          const gap = document.createElement("div");
-          gap.className = "calendar__day is-empty";
-          gap.setAttribute("aria-hidden", "true");
-          row.appendChild(gap);
+        // Drop a whole week with no in-month, in-range day (e.g. a trailing all-
+        // spillover row), so the grid never shows a fully-greyed week.
+        if (!weekDays.some((d) => d.getMonth() === view.getMonth() && d >= minDate && d <= maxDate))
           continue;
-        }
-        // Neighbouring-month days show their number but are inert (not a button,
-        // not focusable/clickable), so selection stays inside the shown month.
-        if (d.getMonth() !== view.getMonth()) {
-          const out = document.createElement("div");
-          out.className = "calendar__day is-outside";
-          out.setAttribute("aria-hidden", "true");
-          out.textContent = String(d.getDate());
-          row.appendChild(out);
-          continue;
-        }
-        // The gridcell is a wrapper; the focusable day is a plain <button> inside
-        // it. VoiceOver then reads the focused button (not the cell), so it
-        // announces one day instead of reading into the grid.
-        const cell = document.createElement("div");
-        cell.className = "calendar__cell";
-        cell.setAttribute("role", "gridcell");
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "calendar__day";
-        btn.textContent = String(d.getDate());
-        btn.dataset.date = iso(d);
-        btn.setAttribute(
-          "aria-label",
-          d.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })
-        );
-        if (same(d, today)) {
-          btn.classList.add("is-today");
-          btn.setAttribute("aria-current", "date");
-        }
-        const isSel = same(d, selected);
-        btn.classList.toggle("is-selected", isSel);
-        cell.setAttribute("aria-selected", String(isSel)); // selected state on the cell
-        btn.tabIndex = isSel ? 0 : -1;
-        cell.appendChild(btn);
-        row.appendChild(cell);
+        const row = document.createElement("div");
+        row.className = "calendar__week";
+        row.setAttribute("role", "row");
+        daysEl.appendChild(row);
+        weekDays.forEach((d) => {
+          // Out-of-range days (before the floor / past the cap) hold their column
+          // with an inert spacer.
+          if (d < minDate || d > maxDate) {
+            const gap = document.createElement("div");
+            gap.className = "calendar__day is-empty";
+            gap.setAttribute("aria-hidden", "true");
+            row.appendChild(gap);
+            return;
+          }
+          // Neighbouring-month days show their number but are inert (not a button,
+          // not focusable/clickable), so selection stays inside the shown month.
+          if (d.getMonth() !== view.getMonth()) {
+            const out = document.createElement("div");
+            out.className = "calendar__day is-outside";
+            out.setAttribute("aria-hidden", "true");
+            out.textContent = String(d.getDate());
+            row.appendChild(out);
+            return;
+          }
+          // The gridcell is a wrapper; the focusable day is a plain <button> inside
+          // it. VoiceOver then reads the focused button (not the cell), so it
+          // announces one day instead of reading into the grid.
+          const cell = document.createElement("div");
+          cell.className = "calendar__cell";
+          cell.setAttribute("role", "gridcell");
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "calendar__day";
+          btn.textContent = String(d.getDate());
+          btn.dataset.date = iso(d);
+          btn.setAttribute(
+            "aria-label",
+            d.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })
+          );
+          if (same(d, today)) {
+            btn.classList.add("is-today");
+            btn.setAttribute("aria-current", "date");
+          }
+          const isSel = same(d, selected);
+          btn.classList.toggle("is-selected", isSel);
+          cell.setAttribute("aria-selected", String(isSel)); // selected state on the cell
+          btn.tabIndex = isSel ? 0 : -1;
+          cell.appendChild(btn);
+          row.appendChild(cell);
+        });
       }
       // Guarantee one tabbable cell even with nothing selected. Only in-month
       // days are buttons (spacers and outside days are inert divs), so the first
@@ -2134,6 +2139,342 @@ function initCalendars() {
         e.preventDefault();
         select(cur);
       }
+    });
+
+    render();
+  });
+}
+
+// Date range: two months side by side for picking a start + end date. First click
+// sets the start (clearing any range); the next click sets the end (swapping if
+// it's earlier); a click after a complete range starts over. Hovering while only
+// the start is set previews the band to the pointer. Keyboard mirrors the single
+// calendar (arrows, Home/End, PageUp/Down, Enter/Space), roving one tab stop
+// across both grids. Endpoints + a formatted range write back to
+// data-range-target-start/-end and close any enclosing popover.
+function initDateRanges() {
+  const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  const WEEKDAY_LABELS = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+  ];
+  document.querySelectorAll("[data-daterange]").forEach((root) => {
+    const grids = [0, 1].map((i) => root.querySelector(`[data-range-days="${i}"]`));
+    const captions = [0, 1].map((i) => root.querySelector(`[data-range-caption="${i}"]`));
+    if (grids.some((g) => !g)) return;
+    const prev = root.querySelector("[data-range-prev]");
+    const next = root.querySelector("[data-range-next]");
+    const clearBtn = root.querySelector("[data-range-clear]");
+    const cancelBtn = root.querySelector("[data-range-cancel]");
+    const applyBtn = root.querySelector("[data-range-apply]");
+
+    const iso = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+    const same = (a, b) => a && b && iso(a) === iso(b);
+    const parse = (s) => {
+      const d = s && new Date(`${s}T00:00:00`);
+      return d && !Number.isNaN(d.getTime()) ? d : null;
+    };
+    const fmt = (d) =>
+      d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const maxYear = today.getFullYear();
+    const maxDate = new Date(maxYear, 11, 31);
+    maxDate.setHours(0, 0, 0, 0);
+    const minDate = new Date(maxYear - 10, 0, 1);
+    minDate.setHours(0, 0, 0, 0);
+
+    let start = parse(root.getAttribute("data-range-start"));
+    let end = parse(root.getAttribute("data-range-end"));
+    let previewEnd = null;
+    let focusIso = start ? iso(start) : null;
+    const base = start || today;
+    let view = new Date(base.getFullYear(), base.getMonth(), 1);
+
+    // With a footer, selection is staged: picks update the calendar but only Apply
+    // commits (writes targets + closes). committed is the baseline Cancel reverts to.
+    const hasFooter = !!applyBtn;
+    let committed = { start, end };
+
+    grids.forEach((g) => g.setAttribute("role", "grid"));
+
+    // Polite live region announcing the shown months on navigation.
+    const status = document.createElement("div");
+    status.className = "sr-only";
+    status.setAttribute("role", "status");
+    root.appendChild(status);
+    let firstRender = true;
+
+    function monthGrid(monthDate, gridEl) {
+      const y = monthDate.getFullYear();
+      const m = monthDate.getMonth();
+      gridEl.setAttribute(
+        "aria-label",
+        monthDate.toLocaleDateString(undefined, { month: "long", year: "numeric" })
+      );
+      gridEl.replaceChildren();
+      const headRow = document.createElement("div");
+      headRow.className = "calendar__weekdays";
+      headRow.setAttribute("role", "row");
+      WEEKDAYS.forEach((w, wi) => {
+        const s = document.createElement("span");
+        s.className = "calendar__weekday";
+        s.setAttribute("role", "columnheader");
+        s.setAttribute("aria-label", WEEKDAY_LABELS[wi]);
+        s.textContent = w;
+        headRow.appendChild(s);
+      });
+      gridEl.appendChild(headRow);
+      const startDow = (new Date(y, m, 1).getDay() + 6) % 7;
+      const gridStart = new Date(y, m, 1 - startDow);
+      for (let w = 0; w < 6; w += 1) {
+        const weekDays = [];
+        for (let i = 0; i < 7; i += 1) {
+          const idx = w * 7 + i;
+          weekDays.push(
+            new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + idx)
+          );
+        }
+        // Drop a whole week with no in-month, in-range day (e.g. a trailing all-
+        // spillover row), matching the reference; the weeks that remain still show
+        // their neighbouring-month days greyed for context.
+        if (!weekDays.some((d) => d.getMonth() === m && d >= minDate && d <= maxDate)) continue;
+        const row = document.createElement("div");
+        row.className = "calendar__week";
+        row.setAttribute("role", "row");
+        gridEl.appendChild(row);
+        weekDays.forEach((d) => {
+          // Out-of-range days hold their column but stay blank.
+          if (d < minDate || d > maxDate) {
+            const gap = document.createElement("div");
+            gap.className = "calendar__day is-empty";
+            gap.setAttribute("aria-hidden", "true");
+            row.appendChild(gap);
+            return;
+          }
+          // Neighbouring-month days show their number but are inert (greyed).
+          if (d.getMonth() !== m) {
+            const out = document.createElement("div");
+            out.className = "calendar__day is-outside";
+            out.setAttribute("aria-hidden", "true");
+            out.textContent = String(d.getDate());
+            row.appendChild(out);
+            return;
+          }
+          const cell = document.createElement("div");
+          cell.className = "calendar__cell";
+          cell.setAttribute("role", "gridcell");
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "calendar__day";
+          btn.textContent = String(d.getDate());
+          btn.dataset.date = iso(d);
+          btn.setAttribute(
+            "aria-label",
+            d.toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" })
+          );
+          // No today marker in the range picker (matches the reference); the range
+          // band is the only day emphasis here.
+          btn.tabIndex = -1;
+          cell.appendChild(btn);
+          row.appendChild(cell);
+        });
+      }
+    }
+
+    // Paint the band: is-range on every gridcell in [lo, hi] (CSS caps each row);
+    // the two endpoints get the filled treatment on the button. previewEnd stands
+    // in for the end while hovering.
+    function applyRange() {
+      const a = start;
+      const b = previewEnd || end;
+      const lo = a && b ? (a <= b ? a : b) : a;
+      const hi = a && b ? (a <= b ? b : a) : a; // single day: lo === hi
+      root.querySelectorAll(".calendar__cell").forEach((cell) => {
+        const btn = cell.querySelector("button.calendar__day");
+        cell.classList.remove("is-range");
+        if (btn) btn.classList.remove("is-range-start", "is-range-end");
+        if (!btn || !lo) return;
+        const d = parse(btn.dataset.date);
+        if (d >= lo && d <= hi) cell.classList.add("is-range");
+        if (same(d, lo)) btn.classList.add("is-range-start");
+        if (same(d, hi)) btn.classList.add("is-range-end");
+      });
+      updateFooter();
+    }
+
+    // Apply needs a complete range; Clear needs something to clear.
+    function updateFooter() {
+      if (applyBtn) applyBtn.disabled = !(start && end);
+      if (clearBtn) clearBtn.disabled = !start;
+    }
+
+    function setTabbable() {
+      const all = [...root.querySelectorAll("button.calendar__day")];
+      all.forEach((b) => {
+        b.tabIndex = -1;
+      });
+      let target = focusIso && all.find((b) => b.dataset.date === focusIso);
+      if (!target && start) target = all.find((b) => b.dataset.date === iso(start));
+      if (!target) target = all.find((b) => parse(b.dataset.date).getMonth() === view.getMonth());
+      if (!target) target = all[0];
+      if (target) target.tabIndex = 0;
+    }
+
+    function render() {
+      const m0 = new Date(view.getFullYear(), view.getMonth(), 1);
+      const m1 = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+      monthGrid(m0, grids[0]);
+      monthGrid(m1, grids[1]);
+      const l0 = m0.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      const l1 = m1.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+      captions[0].textContent = l0;
+      captions[1].textContent = l1;
+      if (prev) prev.disabled = m0 <= minDate;
+      if (next) next.disabled = new Date(view.getFullYear(), view.getMonth() + 2, 1) > maxDate;
+      if (!firstRender) status.textContent = `${l0} to ${l1}`;
+      firstRender = false;
+      applyRange();
+      setTabbable();
+    }
+
+    function writeTargets() {
+      const ts = root.getAttribute("data-range-target-start");
+      const te = root.getAttribute("data-range-target-end");
+      const put = (sel, d) => {
+        if (!sel) return;
+        const el = document.querySelector(sel);
+        if (!el) return;
+        if (el.tagName === "INPUT") el.value = fmt(d);
+        else el.textContent = fmt(d);
+      };
+      put(ts, start);
+      put(te, end);
+      closePopover();
+    }
+
+    function closePopover() {
+      const pop = root.closest("[popover]");
+      if (pop && pop.hidePopover) pop.hidePopover();
+    }
+
+    function setRange(s, e) {
+      start = s;
+      end = e;
+      previewEnd = null;
+      root.setAttribute("data-range-start", start ? iso(start) : "");
+      root.setAttribute("data-range-end", end ? iso(end) : "");
+      applyRange();
+    }
+
+    function select(d) {
+      if (d < minDate || d > maxDate) return;
+      if (!start || (start && end)) {
+        start = d;
+        end = null;
+      } else if (d < start) {
+        end = start;
+        start = d;
+      } else {
+        end = d;
+      }
+      previewEnd = null;
+      focusIso = iso(d);
+      root.setAttribute("data-range-start", start ? iso(start) : "");
+      root.setAttribute("data-range-end", end ? iso(end) : "");
+      applyRange();
+      // Without a footer, a completed range auto-writes + closes. With one, Apply does.
+      if (end && !hasFooter) writeTargets();
+    }
+
+    function focusDate(d) {
+      if (d < minDate || d > maxDate) return;
+      focusIso = iso(d);
+      let btn = root.querySelector(`button.calendar__day[data-date="${iso(d)}"]`);
+      if (!btn) {
+        view = new Date(d.getFullYear(), d.getMonth(), 1);
+        render();
+        btn = root.querySelector(`button.calendar__day[data-date="${iso(d)}"]`);
+      }
+      if (!btn) return;
+      root.querySelectorAll("button.calendar__day").forEach((b) => {
+        b.tabIndex = -1;
+      });
+      btn.tabIndex = 0;
+      btn.focus();
+    }
+
+    const step = (months) => {
+      view = new Date(view.getFullYear(), view.getMonth() + months, 1);
+      render();
+    };
+    if (prev) prev.addEventListener("click", () => step(-1));
+    if (next) next.addEventListener("click", () => step(1));
+
+    // Clear empties the selection (stays open); Cancel reverts to the committed
+    // baseline and closes; Apply commits, writes targets, and closes.
+    if (clearBtn) clearBtn.addEventListener("click", () => setRange(null, null));
+    if (cancelBtn)
+      cancelBtn.addEventListener("click", () => {
+        setRange(committed.start, committed.end);
+        closePopover();
+      });
+    if (applyBtn)
+      applyBtn.addEventListener("click", () => {
+        if (!(start && end)) return;
+        committed = { start, end };
+        writeTargets();
+      });
+
+    root.addEventListener("click", (e) => {
+      const btn = e.target.closest(".calendar__day");
+      if (btn && btn.dataset.date) select(parse(btn.dataset.date));
+    });
+
+    // Hover preview while a start is set but the end isn't yet.
+    root.addEventListener("mouseover", (e) => {
+      if (!start || end) return;
+      const btn = e.target.closest(".calendar__day");
+      if (!btn || !btn.dataset.date) return;
+      previewEnd = parse(btn.dataset.date);
+      applyRange();
+    });
+    root.addEventListener("mouseleave", () => {
+      if (previewEnd === null) return;
+      previewEnd = null;
+      applyRange();
+    });
+
+    root.addEventListener("keydown", (e) => {
+      const btn = e.target.closest(".calendar__day");
+      if (!btn || !btn.dataset.date) return;
+      const cur = parse(btn.dataset.date);
+      const dow = (cur.getDay() + 6) % 7;
+      const moves = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+      const shift = (days) => {
+        const n = new Date(cur);
+        n.setDate(cur.getDate() + days);
+        focusDate(n);
+      };
+      if (e.key in moves) shift(moves[e.key]);
+      else if (e.key === "Home") shift(-dow);
+      else if (e.key === "End") shift(6 - dow);
+      else if (e.key === "PageUp")
+        focusDate(new Date(cur.getFullYear(), cur.getMonth() - 1, cur.getDate()));
+      else if (e.key === "PageDown")
+        focusDate(new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate()));
+      else if (e.key === "Enter" || e.key === " ") select(cur);
+      else return;
+      e.preventDefault();
     });
 
     render();
@@ -2561,6 +2902,63 @@ function initTables() {
   });
 }
 
+// Data table: sortable column headers + row selection, layered on a static
+// <table data-table> (it stays a working table with no JS). Clicking a sortable
+// header (a th[aria-sort] holding a .table__sort button) reorders the tbody rows
+// by that column and toggles ascending/descending; aria-sort carries the state
+// for both screen readers and the CSS arrow. A header checkbox in a
+// .table__select column selects/clears every row and reflects all/some/none as
+// checked/indeterminate.
+function initDataTables() {
+  document.querySelectorAll("table[data-table]").forEach((table) => {
+    const body = table.tBodies[0];
+    if (!body) return;
+
+    table.querySelectorAll("th[aria-sort] .table__sort").forEach((btn) => {
+      const th = btn.closest("th");
+      const col = th.cellIndex;
+      const numeric = th.dataset.type === "number";
+      const value = (row) => {
+        const text = row.cells[col]?.textContent.trim() ?? "";
+        return numeric ? parseFloat(text.replace(/[^0-9.-]/g, "")) || 0 : text;
+      };
+      btn.addEventListener("click", () => {
+        const asc = th.getAttribute("aria-sort") !== "ascending";
+        // One column sorts at a time: clear every header, then mark this one.
+        table.querySelectorAll("th[aria-sort]").forEach((h) => h.setAttribute("aria-sort", "none"));
+        th.setAttribute("aria-sort", asc ? "ascending" : "descending");
+        [...body.rows]
+          .sort((a, b) => {
+            const x = value(a);
+            const y = value(b);
+            const cmp = numeric ? x - y : String(x).localeCompare(String(y));
+            return asc ? cmp : -cmp;
+          })
+          .forEach((row) => body.appendChild(row)); // re-append in sorted order
+      });
+    });
+
+    // Row selection: header box drives all rows; row boxes drive the header's
+    // checked/indeterminate state.
+    const all = table.querySelector("thead .table__select input");
+    const boxes = [...body.querySelectorAll(".table__select input")];
+    if (all && boxes.length) {
+      const syncAll = () => {
+        const checked = boxes.filter((b) => b.checked).length;
+        all.checked = checked === boxes.length;
+        all.indeterminate = checked > 0 && checked < boxes.length;
+      };
+      all.addEventListener("change", () => {
+        boxes.forEach((b) => {
+          b.checked = all.checked;
+        });
+      });
+      boxes.forEach((b) => b.addEventListener("change", syncAll));
+      syncAll();
+    }
+  });
+}
+
 // NavMenu dropdowns reveal on :hover / :focus-within (CSS). Layer on the disclosure
 // semantics CSS can't express: the trigger link advertises its panel (aria-haspopup +
 // aria-controls) and reflects open state (aria-expanded), and Esc collapses an open
@@ -2834,6 +3232,8 @@ function init() {
   initDialogs();
   initDirtyForms();
   initTables();
+  initDataTables();
+  initDateRanges();
   initNavMenus();
   initTabs();
   initErrorSummary();

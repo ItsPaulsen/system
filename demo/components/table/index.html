@@ -136,6 +136,218 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Data table</h2>
+          <p class="section-note">
+            Add <code>data-table</code> and the behaviour is layered on (see JavaScript below); with
+            no JS it stays a plain table. Sortable columns are a
+            <code>th aria-sort="none"</code> holding a <code>.table__sort</code> button (add
+            <code>data-type="number"</code> for numeric sort). A <code>.table__select</code> column
+            with a header <a href="/demo/components/checkbox/">Checkbox</a> selects every row; for
+            empty or loading states drop an <a href="/demo/components/empty/">Empty</a> block or
+            <a href="/demo/components/skeleton/">Skeleton</a> rows in the <code>tbody</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="table-wrap" style="width: 100%">
+                <table class="table" data-table>
+                  <thead>
+                    <tr>
+                      <th scope="col" class="table__select">
+                        <label class="checkbox">
+                          <span class="checkbox__box">
+                            <input
+                              type="checkbox"
+                              class="checkbox__input"
+                              aria-label="Select all"
+                            />
+                            <svg
+                              class="checkbox__check"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M5 12l5 5l10 -10" pathLength="1" />
+                            </svg>
+                          </span>
+                        </label>
+                      </th>
+                      <th scope="col" aria-sort="none">
+                        <button type="button" class="table__sort">Name</button>
+                      </th>
+                      <th scope="col">Team</th>
+                      <th scope="col" aria-sort="none" data-type="number">
+                        <button type="button" class="table__sort">Commits</button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="table__select">
+                        <label class="checkbox">
+                          <span class="checkbox__box">
+                            <input
+                              type="checkbox"
+                              class="checkbox__input"
+                              aria-label="Select Ada Berg"
+                            />
+                            <svg
+                              class="checkbox__check"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M5 12l5 5l10 -10" pathLength="1" />
+                            </svg>
+                          </span>
+                        </label>
+                      </td>
+                      <td>Ada Berg</td>
+                      <td>Design</td>
+                      <td>128</td>
+                    </tr>
+                    <tr>
+                      <td class="table__select">
+                        <label class="checkbox">
+                          <span class="checkbox__box">
+                            <input
+                              type="checkbox"
+                              class="checkbox__input"
+                              aria-label="Select Jonas Voll"
+                            />
+                            <svg
+                              class="checkbox__check"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M5 12l5 5l10 -10" pathLength="1" />
+                            </svg>
+                          </span>
+                        </label>
+                      </td>
+                      <td>Jonas Voll</td>
+                      <td>Engineering</td>
+                      <td>342</td>
+                    </tr>
+                    <tr>
+                      <td class="table__select">
+                        <label class="checkbox">
+                          <span class="checkbox__box">
+                            <input
+                              type="checkbox"
+                              class="checkbox__input"
+                              aria-label="Select Priya Rao"
+                            />
+                            <svg
+                              class="checkbox__check"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M5 12l5 5l10 -10" pathLength="1" />
+                            </svg>
+                          </span>
+                        </label>
+                      </td>
+                      <td>Priya Rao</td>
+                      <td>Product</td>
+                      <td>87</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              // Sort + selection live in state; the classes and aria-sort match the CSS.
+              const rows = [
+                { name: "Ada Berg", team: "Design", commits: 128 },
+                { name: "Jonas Voll", team: "Engineering", commits: 342 },
+                { name: "Priya Rao", team: "Product", commits: 87 }
+              ];
+              const [sort, setSort] = useState({ col: "name", asc: true });
+              const [sel, setSel] = useState(() => new Set());
+
+              const sorted = [...rows].sort((a, b) => {
+                const cmp =
+                  typeof a[sort.col] === "number"
+                    ? a[sort.col] - b[sort.col]
+                    : String(a[sort.col]).localeCompare(String(b[sort.col]));
+                return sort.asc ? cmp : -cmp;
+              });
+              const sortBy = (col) => setSort((s) => ({ col, asc: s.col === col ? !s.asc : true }));
+              const ariaSort = (col) =>
+                sort.col === col ? (sort.asc ? "ascending" : "descending") : "none";
+
+              return (
+                <Table>
+                  <thead>
+                    <tr>
+                      <th className="table__select">
+                        <Checkbox
+                          aria-label="Select all"
+                          checked={sel.size === rows.length}
+                          onChange={(e) =>
+                            setSel(e.target.checked ? new Set(rows.map((r) => r.name)) : new Set())
+                          }
+                        />
+                      </th>
+                      <th aria-sort={ariaSort("name")}>
+                        <button className="table__sort" onClick={() => sortBy("name")}>
+                          Name
+                        </button>
+                      </th>
+                      <th>Team</th>
+                      <th aria-sort={ariaSort("commits")} data-type="number">
+                        <button className="table__sort" onClick={() => sortBy("commits")}>
+                          Commits
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorted.map((r) => (
+                      <tr key={r.name}>
+                        <td className="table__select">
+                          <Checkbox
+                            aria-label={`Select ${r.name}`}
+                            checked={sel.has(r.name)}
+                            onChange={(e) => {
+                              const next = new Set(sel);
+                              if (e.target.checked) next.add(r.name);
+                              else next.delete(r.name);
+                              setSel(next);
+                            }}
+                          />
+                        </td>
+                        <td>{r.name}</td>
+                        <td>{r.team}</td>
+                        <td>{r.commits}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              );
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
@@ -163,6 +375,16 @@
             tables that fit get no stray tab stop. React uses a <code>ResizeObserver</code>.
           </p>
           <div data-source="/assets/app.js" data-fn="initTables"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript (data table)</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Wires <code>data-table</code>: sortable headers reorder the
+            <code>tbody</code> and toggle <code>aria-sort</code>; the header checkbox drives row
+            selection and reflects all/some/none as checked/indeterminate.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initDataTables"></div>
         </section>
       </div>
     </main>

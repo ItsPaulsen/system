@@ -114,9 +114,13 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     (selected && days.find((d) => same(d, selected) && d.getMonth() === view.getMonth())) ||
     days.find((d) => d.getMonth() === view.getMonth());
 
-  // Chunk into weeks so each renders as a role="row" of 7 gridcells.
+  // Chunk into weeks so each renders as a role="row" of 7 gridcells, then drop any
+  // week with no in-month, in-range day (e.g. a trailing all-spillover row).
   const weeks = [];
   for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+  const shownWeeks = weeks.filter((week) =>
+    week.some((d) => d.getMonth() === view.getMonth() && d >= minDate && d <= maxDate)
+  );
   const gridLabel = view.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
   // Announce month/year changes via a live region (a grid's aria-label change
@@ -210,7 +214,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
             </span>
           ))}
         </div>
-        {weeks.map((week) => (
+        {shownWeeks.map((week) => (
           <div key={iso(week[0])} className="calendar__week" role="row">
             {week.map((d) => {
               // Leading days before the floor hold their column but stay blank.

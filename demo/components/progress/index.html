@@ -36,6 +36,11 @@
         max-width: 360px;
       }
 
+      .component-preview .steps {
+        width: 100%;
+        max-width: 460px;
+      }
+
       /* Demo-only: a longer, eased fill so the entrance animation reads. The
          component default is a quick 150ms for real value nudges. */
       .component-preview .progress::-webkit-progress-value {
@@ -126,6 +131,62 @@
           <h2 class="subhead">Component</h2>
           <pre><code><span class="tok-key">&lt;progress</span> <span class="tok-prop">class</span>=<span class="tok-str">"progress"</span> <span class="tok-prop">value</span>=<span class="tok-str">"70"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span>
           <span class="tok-prop">aria-label</span>=<span class="tok-str">"Upload"</span><span class="tok-key">&gt;&lt;/progress&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Steps</h2>
+          <p class="section-note">
+            Progress through a fixed, ordered flow. It's an <code>&lt;ol&gt;</code>, so the sequence
+            is announced; mark the active step <code>aria-current="step"</code> and finished steps
+            <code>.is-done</code> (which swaps the number for a check). Colours ride
+            <code>--accent</code>, so a <a href="/demo/theming/">data-color</a> region retints it.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <ol class="steps">
+                <li class="steps__step is-done">
+                  <span class="steps__indicator"><span class="steps__num">1</span></span>
+                  <span class="steps__label">Account</span>
+                </li>
+                <li class="steps__step is-done">
+                  <span class="steps__indicator"><span class="steps__num">2</span></span>
+                  <span class="steps__label">Profile</span>
+                </li>
+                <li class="steps__step is-current" aria-current="step">
+                  <span class="steps__indicator"><span class="steps__num">3</span></span>
+                  <span class="steps__label">Preferences</span>
+                </li>
+                <li class="steps__step">
+                  <span class="steps__indicator"><span class="steps__num">4</span></span>
+                  <span class="steps__label">Done</span>
+                </li>
+              </ol>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Steps steps={["Account", "Profile", "Preferences", "Done"]} current={2} />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Steps component</h2>
+          <p class="section-note">
+            Pass the labels and the active index (0-based); earlier steps render done, the active
+            one current, later ones plain.
+          </p>
+          <div data-source="/react/Steps.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Steps markup</h2>
+          <pre><code><span class="tok-key">&lt;ol</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__step is-done"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__indicator"</span><span class="tok-key">&gt;&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__num"</span><span class="tok-key">&gt;</span>1<span class="tok-key">&lt;/span&gt;&lt;/span&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__label"</span><span class="tok-key">&gt;</span>Account<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/li&gt;</span>
+  <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__step is-current"</span> <span class="tok-prop">aria-current</span>=<span class="tok-str">"step"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/li&gt;</span>
+  <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"steps__step"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/li&gt;</span>
+<span class="tok-key">&lt;/ol&gt;</span></code></pre>
         </section>
       </div>
     </main>

@@ -2766,6 +2766,41 @@ function wireSearch() {
   input.addEventListener("blur", () => setTimeout(close, 120));
 }
 
+// Opt-in "dirty guard" for a form: keeps its submit disabled until a field
+// differs from the value it opened with, and reverts + re-disables when the
+// surrounding dialog closes (Cancel, Esc, or backdrop). App-level UX, kept out
+// of the Dialog component itself; add data-dirty-guard to any form to use it.
+// The submit may live outside the form (associated via the form= attribute), so
+// it's found through form.elements rather than a descendant query.
+function initDirtyForms() {
+  document.querySelectorAll("form[data-dirty-guard]").forEach((form) => {
+    const submit = [...form.elements].find((el) => el.type === "submit");
+    if (!submit) return;
+
+    // Snapshot the opened-with value of each field. Comparing against a live
+    // snapshot (not defaultValue/defaultSelected) avoids false positives when a
+    // <select> has no explicit selected attribute but the browser still selects
+    // its first option.
+    const read = (el) => (el.type === "checkbox" || el.type === "radio" ? el.checked : el.value);
+    const fields = [...form.elements].filter(
+      (el) => el.name && el.type !== "submit" && el.type !== "button"
+    );
+    const baseline = new Map(fields.map((el) => [el, read(el)]));
+
+    const sync = () => {
+      submit.disabled = ![...baseline].some(([el, initial]) => read(el) !== initial);
+    };
+
+    sync();
+    form.addEventListener("input", sync);
+    form.addEventListener("change", sync);
+    form.closest("dialog")?.addEventListener("close", () => {
+      form.reset();
+      sync();
+    });
+  });
+}
+
 function init() {
   // iOS Safari only fires :active on tap when a touch listener exists somewhere
   // in the document. A no-op on the document enables every component's pressed
@@ -2797,6 +2832,7 @@ function init() {
   initSliders();
   initTooltips();
   initDialogs();
+  initDirtyForms();
   initTables();
   initNavMenus();
   initTabs();

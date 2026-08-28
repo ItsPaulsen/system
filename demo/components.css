@@ -637,8 +637,8 @@
    separate ring, no layout shift. Uses --focus (not raw primary) since this is
    a focus affordance, so it matches every other focus ring. */
   .input__container:focus-within {
-    border-color: var(--focus);
-    box-shadow: 0 0 0 1px var(--focus);
+    border-color: var(--primary-foreground);
+    box-shadow: 0 0 0 1px var(--primary-foreground);
   }
 
   .input__container--fill {
@@ -2090,7 +2090,7 @@
     width: min(92vw, 420px);
     padding: 0;
     border: 0;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background: var(--background-secondary);
     color: var(--ink-primary);
     box-shadow: var(--shadow-lg);
@@ -2136,8 +2136,23 @@
   .dialog__inner {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1.5rem;
     padding: 1.5rem;
+  }
+
+  /* Title + description, 1rem apart to match the dialog's vertical rhythm. */
+  .dialog__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Stacked form fields, 1rem between fields; the 1.5rem space above and below
+   the group comes from the .dialog__inner gap. */
+  .dialog__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .dialog__title {
@@ -2153,11 +2168,26 @@
     color: var(--ink-secondary);
   }
 
+  /* Plain footer: just a small lift above the buttons. The 1.5rem separation from
+   the content above comes from the .dialog__inner gap. */
   .dialog__actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-    margin-top: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  /* Opt-in footer surface: a full-bleed panel matching the dialog (opaque, so it
+   can sit sticky over scrolling content) with a top divider. The negative margins
+   cancel .dialog__inner's padding; the 1.5rem padding restores it inside, giving
+   the buttons room below the divider. */
+  .dialog__actions--surface {
+    margin: 0 -1.5rem -1.5rem;
+    padding: 1.5rem;
+    background: var(--background-secondary);
+    border-top: var(--border-width) solid var(--fill-tertiary);
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
   }
 
   /* ── Sheet ─────────────────────────────────────────────────────────────── */

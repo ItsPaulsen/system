@@ -72,20 +72,134 @@
           <h2 class="subhead">Default</h2>
           <p class="section-note">
             Native <code>&lt;dialog&gt;</code> handles the focus trap, Esc-to-close, and an inert
-            background. Click the backdrop or a button to dismiss.
+            background. <code>data-dirty-guard</code> on the form keeps Save disabled until a field
+            changes and reverts everything on close, app-level UX kept out of the component.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <button class="button button--secondary" type="button" data-dialog-open="demo-dialog">
-                Open dialog
+              <button class="button button--secondary" type="button" data-dialog-open="edit-dialog">
+                Edit project
               </button>
 
-              <dialog class="dialog" id="demo-dialog">
+              <dialog class="dialog" id="edit-dialog">
                 <div class="dialog__inner">
-                  <h2 class="dialog__title">Delete project?</h2>
-                  <p class="dialog__text">
-                    This permanently deletes the project and everything in it. You can't undo this.
-                  </p>
+                  <div class="dialog__header">
+                    <h2 class="dialog__title">Edit project</h2>
+                    <p class="dialog__text">Update the project name and visibility.</p>
+                  </div>
+                  <form class="dialog__form" id="edit-form" method="dialog" data-dirty-guard>
+                    <label class="input">
+                      <span class="input__label">Project name</span>
+                      <span class="input__container">
+                        <input
+                          name="project-name"
+                          class="input__element"
+                          type="text"
+                          value="Untitled"
+                        />
+                      </span>
+                    </label>
+                    <label class="input">
+                      <span class="input__label">Visibility</span>
+                      <span class="input__container input__container--select">
+                        <select name="visibility" class="input__element">
+                          <option>Private</option>
+                          <option>Team</option>
+                          <option>Public</option>
+                        </select>
+                      </span>
+                    </label>
+                  </form>
+                  <div class="dialog__actions">
+                    <button class="button button--secondary" type="button" data-dialog-close>
+                      Cancel
+                    </button>
+                    <button class="button button--primary" type="submit" form="edit-form" disabled>
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </dialog>
+            </div>
+            <script type="text/plain" class="example__react">
+              function EditProjectDialog() {
+                const initial = { name: "Untitled", visibility: "Private" };
+                const [values, setValues] = useState(initial);
+                // Save enabled only once a field differs from what it opened with.
+                const dirty = values.name !== initial.name || values.visibility !== initial.visibility;
+                const set = (key) => (e) => setValues((v) => ({ ...v, [key]: e.target.value }));
+
+                return (
+                  <Dialog>
+                    <DialogTrigger className="button button--secondary">Edit project</DialogTrigger>
+                    {/* onClose lands on the native <dialog>, so Cancel/Esc/backdrop all revert. */}
+                    <DialogContent onClose={() => setValues(initial)}>
+                      <div className="dialog__header">
+                        <DialogTitle>Edit project</DialogTitle>
+                        <DialogDescription>Update the project name and visibility.</DialogDescription>
+                      </div>
+                      <form className="dialog__form" id="edit-form" method="dialog">
+                        <Input label="Project name" value={values.name} onChange={set("name")} />
+                        <NativeSelect
+                          label="Visibility"
+                          value={values.visibility}
+                          onChange={set("visibility")}
+                        >
+                          <option>Private</option>
+                          <option>Team</option>
+                          <option>Public</option>
+                        </NativeSelect>
+                      </form>
+                      <DialogActions>
+                        <DialogClose className="button button--secondary">Cancel</DialogClose>
+                        <button
+                          className="button button--primary"
+                          type="submit"
+                          form="edit-form"
+                          disabled={!dirty}
+                        >
+                          Save
+                        </button>
+                      </DialogActions>
+                    </DialogContent>
+                  </Dialog>
+                );
+              }
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Destructive</h2>
+          <p class="section-note">
+            A confirm dialog takes <code>role="alertdialog"</code> and an
+            <code>aria-describedby</code> pointing at the consequence, so assistive tech announces
+            the warning, not just the title.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <button
+                class="button button--secondary"
+                type="button"
+                data-dialog-open="delete-dialog"
+              >
+                Delete project
+              </button>
+
+              <dialog
+                class="dialog"
+                id="delete-dialog"
+                role="alertdialog"
+                aria-describedby="delete-dialog-text"
+              >
+                <div class="dialog__inner">
+                  <div class="dialog__header">
+                    <h2 class="dialog__title">Delete project?</h2>
+                    <p class="dialog__text" id="delete-dialog-text">
+                      This permanently deletes the project and everything in it. You can't undo
+                      this.
+                    </p>
+                  </div>
                   <div class="dialog__actions">
                     <button class="button button--secondary" type="button" data-dialog-close>
                       Cancel
@@ -100,14 +214,16 @@
             <script type="text/plain" class="example__react">
               <Dialog>
                 <DialogTrigger className="button button--secondary">
-                  Open dialog
+                  Delete project
                 </DialogTrigger>
-                <DialogContent>
-                  <DialogTitle>Delete project?</DialogTitle>
-                  <DialogDescription>
-                    This permanently deletes the project and everything in it. You can't
-                    undo this.
-                  </DialogDescription>
+                <DialogContent role="alertdialog">
+                  <div className="dialog__header">
+                    <DialogTitle>Delete project?</DialogTitle>
+                    <DialogDescription>
+                      This permanently deletes the project and everything in it. You can't
+                      undo this.
+                    </DialogDescription>
+                  </div>
                   <DialogActions>
                     <DialogClose className="button button--secondary">Cancel</DialogClose>
                     <DialogClose className="button button--destructive">Delete</DialogClose>
@@ -151,6 +267,16 @@
             announce more than "dialog". Shared with <a href="/demo/components/sheet/">Sheet</a>.
           </p>
           <div data-source="/assets/app.js" data-fn="initDialogs"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            Optional dirty guard. Add <code>data-dirty-guard</code> to any form and its submit stays
+            disabled until a field differs from its default, then reverts on the dialog's close. The
+            submit can live outside the form (associated via <code>form=</code>).
+          </p>
+          <div data-source="/assets/app.js" data-fn="initDirtyForms"></div>
         </section>
       </div>
     </main>

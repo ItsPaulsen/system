@@ -488,12 +488,13 @@
     --accent-border: var(--accent);
   }
 
-  /* Repoint the accent per subtree. Three region contexts: brand (primary),
-   muted (neutral), destructive (red). primary/red just swap the anchor and let
-   the family re-derive; neutral is special (see below). The other color tokens
-   (--green, --blue, …) still exist for direct use, they're just not region
-   contexts. "primary" is the default, listed so an inner wrapper can reset a
-   nested region back. */
+  /* Repoint the accent per subtree. Region contexts: brand (primary), muted
+   (neutral), destructive (red), plus green/blue. All but neutral just swap the
+   anchor and let the family re-derive (anchors flip per theme, so dark is free);
+   neutral is special (see below). Names stay primitive (green/blue, not
+   success/info); other color tokens (--amber, …) still exist for direct use
+   without being region contexts. "primary" is the default, listed so an inner
+   wrapper can reset a nested region back. */
   [data-color="primary"] {
     --accent-anchor: var(--anchor-primary);
   }
@@ -525,6 +526,14 @@
 
   [data-color="red"] {
     --accent-anchor: var(--anchor-red);
+  }
+
+  [data-color="green"] {
+    --accent-anchor: var(--anchor-green);
+  }
+
+  [data-color="blue"] {
+    --accent-anchor: var(--anchor-blue);
   }
 
   /* Tablet ≥768 (md), grid jumps to 12 columns (px literals: media can't read vars) */

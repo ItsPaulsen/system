@@ -169,7 +169,7 @@ export default function Combobox({
         className={["input__container", "combobox__control", fill && "input__container--fill"]
           .filter(Boolean)
           .join(" ")}
-        // The whole field is a hit target (like shadcn): clicking the padding
+        // The whole field is a hit target: clicking the padding
         // around the input/chevron focuses the input rather than doing nothing.
         onMouseDown={(e) => {
           if (e.target === inputRef.current || e.target.closest(".combobox__chevron")) return;
@@ -201,7 +201,7 @@ export default function Combobox({
           onClick={() => setOpen(true)}
           onKeyDown={onKeyDown}
         />
-        {/* Chevron toggles the list too (like shadcn); it's a non-focusable,
+        {/* Chevron toggles the list too; it's a non-focusable,
             aria-hidden span, a mouse affordance only, since the input already
             exposes open state and choices to the keyboard and screen readers. */}
         <span

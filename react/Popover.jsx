@@ -43,7 +43,7 @@ export function PopoverContent({ panel = true, center, className, children, ...r
     .filter(Boolean)
     .join(" ");
   // role="dialog" (the trigger promises aria-haspopup="dialog"), so move focus in
-  // on open like shadcn; the native popover returns focus to the trigger on close.
+  // on open; the native popover returns focus to the trigger on close.
   // Name it with aria-label / aria-labelledby via ...rest.
   useEffect(() => {
     const el = ref.current;

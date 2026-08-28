@@ -622,9 +622,8 @@
     background: transparent;
     color: var(--ink-primary);
 
-    /* Whole field reads as a text field (like shadcn's bare input + the nav
-     search): text cursor over the container's strips, not just the input. Select
-     and file variants override to pointer. */
+    /* Whole field reads as a text field: text cursor over the container's
+     strips, not just the input. Select and file variants override to pointer. */
     cursor: text;
   }
 
@@ -2627,7 +2626,7 @@
   }
 
   /* The svg rotates via transform (not the `rotate` property, which SVG support
-   for is patchy); the arc animates its dash on top. Both a 1:1 port of Digdir. */
+   for is patchy); the arc animates its dash on top. */
   @keyframes spinner-rotate {
     0% {
       transform: rotate(0deg);
@@ -2657,7 +2656,7 @@
 
   /* A spinner conveys ongoing state, so it must not freeze like decorative
    motion: the global guard stops all animation after one near-instant cycle, so
-   re-enable an infinite (slowed, per Digdir) spin under reduced motion.
+   re-enable an infinite (slowed) spin under reduced motion.
    Overrides the guard's !important, hence !important here too. */
   @media (prefers-reduced-motion: reduce) {
     .spinner,
@@ -3507,7 +3506,7 @@
     align-items: center;
     gap: 0.25rem;
 
-    /* DOM/tab order is prev, next, month, year (like shadcn); order keeps the
+    /* DOM/tab order is prev, next, month, year; order keeps the
      visual as prev, month/year, next (see .calendar__nav + .calendar__nav). */
     order: 1;
   }

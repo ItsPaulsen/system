@@ -510,10 +510,10 @@
 
     /* Filled fill stays full ink in both themes: our dark colored fills are
      bright pastels, so a bright (near-white) neutral sits with them, where a
-     mid-gray would read dull and off-tone. Outline/soft text is the "subtle"
-     ink, not full ink, matching how the filled and outline neutrals split
-     (Digdir: base-default fill vs text-subtle outline). */
-    --accent-foreground: var(--ink-secondary);
+     mid-gray would read dull and off-tone. Soft-surface text is full ink too,
+     so it matches the fill (as the coloured regions do, where -foreground =
+     -accent) and its own hover/active, which already resolve to full ink. */
+    --accent-foreground: var(--ink-primary);
     --accent-soft: var(--fill-tertiary);
     --accent-soft-hover: var(--fill-tertiary-hover);
     --accent-soft-active: var(--fill-tertiary-active);

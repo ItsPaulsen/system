@@ -272,6 +272,7 @@ const PROJECT_PAGES = {
       links: [
         { label: "Introduction", href: "/demo/" },
         { label: "Colors", href: "/demo/colors/" },
+        { label: "Theming", href: "/demo/theming/", new: true },
         { label: "Typography", href: "/demo/typography/" },
         { label: "Layout", href: "/demo/layout/" },
         { label: "Radii", href: "/demo/radii/" },
@@ -1449,7 +1450,7 @@ function positionFloating(anchor, list, wasAbove, fixed = false) {
 }
 
 // Keep a list placed against its anchor on scroll/resize and visual-viewport
-// changes (mobile keyboard). Never closes on those, just re-places, like shadcn.
+// changes (mobile keyboard). Never closes on those, just re-places.
 // Default: portal to <body>, position:absolute in page coords (Select). fixed:
 // leave the list in the DOM and float it with position:fixed (Combobox), so a
 // screen reader can follow aria-activedescendant into it — a body portal breaks
@@ -1716,7 +1717,7 @@ function initComboboxes() {
       const vis = visible();
       if (empty) empty.hidden = vis.length > 0;
       status.textContent = vis.length === 0 ? "No results" : "";
-      // No row is pre-highlighted (matches shadcn): Enter on a fresh open closes
+      // No row is pre-highlighted: Enter on a fresh open closes
       // without picking; arrow keys move into the list.
       setActive(null);
       // Filtering changes the list height, so re-place it while open.
@@ -1746,7 +1747,7 @@ function initComboboxes() {
       }
     });
 
-    // Clicking the chevron toggles the list too (like shadcn); keep focus in the
+    // Clicking the chevron toggles the list too; keep focus in the
     // input so typing still filters.
     const chevron = root.querySelector(".combobox__chevron");
     if (chevron) {
@@ -1762,7 +1763,7 @@ function initComboboxes() {
       });
     }
 
-    // The whole field is a hit target (like shadcn): clicking its padding — the
+    // The whole field is a hit target: clicking its padding — the
     // dead space around the shorter input and by the chevron — focuses the input
     // instead of doing nothing. The input and chevron handle their own clicks.
     const control = root.querySelector(".combobox__control");
@@ -2190,8 +2191,8 @@ function initPopovers() {
       if (overlayIsDesktop.matches) placeThrottled();
       else if (!pop.contains(e.target)) pop.hidePopover();
     };
-    // A calendar panel or a role="dialog" popover moves focus inside on open (like
-    // shadcn), so keyboard/screen-reader users land in it. Calendar has controls to
+    // A calendar panel or a role="dialog" popover moves focus inside on open, so
+    // keyboard/screen-reader users land in it. Calendar has controls to
     // land on; a plain dialog with no focusable content takes focus on the panel
     // itself (it carries tabindex="-1"). The native popover returns focus to the
     // trigger on close, so no manual restore is needed.
@@ -2223,7 +2224,7 @@ function initPopovers() {
     // Native auto-popover light-dismisses on outside click / Esc. We also close
     // on a genuine Tab-away, but must NOT close when the user clicks the
     // popover's own non-interactive area (dead space, weekday row, inert
-    // outside days): that blurs focus to <body>, which shadcn keeps open.
+    // outside days): that blurs focus to <body>, which we keep open.
     // Defer so we read where focus actually settled, not the transient blur.
     const onFocusOut = () => {
       requestAnimationFrame(() => {

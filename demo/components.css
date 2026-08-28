@@ -1413,24 +1413,28 @@
     color: var(--accent-on);
   }
 
+  /* Hover/active mix the fill toward the surface (--background-secondary), NOT
+   toward white like the other solid skins. Because the surface flips per theme,
+   this darkens a light fill (the bright-lilac foreground in dark) and lightens a
+   dark fill (light theme) — contrast-aware feedback in both directions. */
   @media (hover: hover) and (pointer: fine) {
     .button--foreground:not(:disabled):hover {
-      background: var(--primary-foreground-hover);
+      background: color-mix(in oklab, var(--primary-foreground), var(--background-secondary) 15%);
     }
   }
 
   .button--foreground:not(:disabled):active {
-    background: var(--primary-foreground-active);
+    background: color-mix(in oklab, var(--primary-foreground), var(--background-secondary) 24%);
   }
 
   @media (hover: hover) and (pointer: fine) {
     [data-color] .button--foreground:not(:disabled):hover {
-      background: var(--accent-hover);
+      background: color-mix(in oklab, var(--accent), var(--background-secondary) 15%);
     }
   }
 
   [data-color] .button--foreground:not(:disabled):active {
-    background: var(--accent-active);
+    background: color-mix(in oklab, var(--accent), var(--background-secondary) 24%);
   }
 
   /* Disabled, fill-quaternary bg for filled skins, transparent for flat.

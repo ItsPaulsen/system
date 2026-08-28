@@ -3975,16 +3975,17 @@
   /* Soft band on every day in the range (endpoints included). is-range sits on the
    gridcell; each week row becomes one rounded pill, capped where the range starts/
    ends or where it meets the week edge, so a multi-week range reads as one pill per
-   row. Endpoints match the single calendar's selected day (neutral, not accent). */
+   row. The band is --accent-soft (the same soft surface as a secondary button), so
+   it's the brand tint by default, flips per theme, and retints inside a data-color
+   region for free. Endpoints stay on the solid --primary-foreground. */
   .calendar__cell.is-range {
-    background: var(--fill-tertiary);
+    background: var(--accent-soft);
   }
 
   /* Bridge the 2px column gap, but only between two adjacent in-range cells
-   (mid-band) so a cap never bleeds into the gap. (Left side is .is-range, not the
-   compound, to keep specificity below the data-color band override further down.) */
+   (mid-band) so a cap never bleeds into the gap. */
   .is-range + .calendar__cell.is-range {
-    box-shadow: -2px 0 0 0 var(--fill-tertiary);
+    box-shadow: -2px 0 0 0 var(--accent-soft);
   }
 
   /* Left cap: first in-range cell of a row (range start, or a week that opens
@@ -4018,10 +4019,10 @@
     }
   }
 
-  /* Neutral by default (above), but inside a data-color region the selected day
-   and range endpoints/band pick up the region's accent, like Button/Chip/Badge.
-   (In a neutral region --accent resolves to the same neutral ink/soft, so it
-   stays neutral there.) */
+  /* The soft band already retints per region (it rides --accent-soft). The solid
+   endpoints + the single calendar's selected day are on --primary-foreground, so
+   pull them onto --accent inside a data-color region to match. (In a neutral region
+   --accent resolves back to neutral ink, so it stays neutral there.) */
   [data-color] .calendar__day.is-selected,
   [data-color] .calendar__day.is-range-start,
   [data-color] .calendar__day.is-range-end {
@@ -4034,16 +4035,6 @@
     [data-color] .calendar__day.is-range-end:hover {
       background: var(--accent);
     }
-  }
-
-  /* .calendar__week (always the cell's parent) is in the selector only to keep
-   specificity above the row-cap rules above, satisfying no-descending-specificity. */
-  [data-color] .calendar__week .calendar__cell.is-range {
-    background: var(--accent-soft);
-  }
-
-  [data-color] .calendar__week .calendar__cell.is-range + .calendar__cell.is-range {
-    box-shadow: -2px 0 0 0 var(--accent-soft);
   }
 
   /* Calendar in a Popover = date picker. The popover is just the surface (shadow

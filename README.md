@@ -34,9 +34,9 @@ The CSS ships inside [cascade layers](https://developer.mozilla.org/en-US/docs/W
 @layer base, tokens, components;
 ```
 
-- **base** — the reset + foundation a project ships on (`demo/globals.css`), plus the docs-site chrome (`assets/base.css`)
-- **tokens** — the `:root` custom properties (`demo/globals.css`)
-- **components** — the component library (`demo/components.css`)
+- **base**: the reset + foundation a project ships on (`demo/globals.css`), plus the docs-site chrome (`assets/base.css`)
+- **tokens**: the `:root` custom properties (`demo/globals.css`)
+- **components**: the component library (`demo/components.css`)
 
 ### How to override
 

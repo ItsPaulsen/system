@@ -334,7 +334,7 @@
    more compatible than :has(). The radios are visually hidden and out of flow,
    so the flex track lays out only the labels.
 
-   Structure (a single-choice segmented control — a radiogroup, not tabs):
+   Structure (a single-choice segmented control, a radiogroup, not tabs):
    <div class="toggle-group" role="radiogroup" aria-label="View">
      <input type="radio" name="group" id="t1" class="toggle-group__radio" checked />
      <label class="toggle-group__tab" for="t1"><span class="toggle-group__label">Overview</span></label>
@@ -442,7 +442,7 @@
 
   /* Tabbed panels: a tablist with an underline over the active tab, and one panel
    shown below. Real ARIA tabs (tablist/tab/tabpanel), so keyboard nav and panel
-   toggling need initTabs() (or the React Tabs) — unlike Toggle group, which is a
+   toggling need initTabs() (or the React Tabs), unlike Toggle group, which is a
    CSS-only radiogroup. The list carries a bottom hairline; the active tab paints a
    --primary bar over it via ::after so the indicator sits on that line.
 
@@ -1732,7 +1732,7 @@
 
    Structure:
      <label class="chip chip--as-checkbox">
-       <input type="checkbox" class="chip__input" /> Bus
+       <input type="checkbox" class="chip__input" /> Today
      </label>
 
      <label class="chip chip--as-radio">
@@ -2730,8 +2730,8 @@
    Mechanism: an <svg> of two concentric <circle>s. The svg spins; the arc
    circle animates stroke-dasharray (the visible dash grows 1→100 then back)
    and stroke-dashoffset (drifts negatively). Because dashoffset walks along the
-   path it wraps continuously past the top, so the arc never appears to reverse
-   — the reason this can't be faked with a conic-gradient, whose sweep can't run
+   path it wraps continuously past the top, so the arc never appears to reverse.
+   That is the reason this can't be faked with a conic-gradient, whose sweep can't run
    past 360deg and back seamlessly.
 
    Structure:
@@ -4176,8 +4176,8 @@
       outline-offset: 1px;
     }
 
-    /* Active/selected states — active option, focused menu item, selected tab,
-     current page, selected day — show only by a background tint the forced palette
+    /* Active/selected states (active option, focused menu item, selected tab,
+     current page, selected day) show only by a background tint the forced palette
      strips; restate each as a system selection so the choice stays distinguishable
      (this also restores menu-item keyboard focus). (Chip is separate below: its
      hover/active variants need pinning too.) */

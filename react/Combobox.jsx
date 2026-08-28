@@ -90,7 +90,7 @@ export default function Combobox({
       );
     }
     // Capturing scroll also catches the list's own internal scroll (the active-row
-    // scrollIntoView below), so ignore scrolls that originate inside the list —
+    // scrollIntoView below), so ignore scrolls that originate inside the list:
     // re-placing on those rewrites inline styles and makes VoiceOver re-read.
     const onScroll = (e) => {
       if (e.target instanceof Node && list.contains(e.target)) return;

@@ -4097,13 +4097,17 @@
     gap: 0.5rem;
   }
 
-  /* Clear is a low-priority action, so soften its flat hover one tier below the
-   default (--accent-soft-hover, 0.23 which reads heavy in neutral grey) to the
-   existing --fill-quaternary-hover (0.17); active keeps the standard flat press. */
+  /* Clear is a low-priority action, so soften its flat states one tier below the
+   default (--accent-soft, 0.23/0.27 which reads heavy in neutral grey) to the
+   quaternary tier: hover 0.17, active 0.21. */
   @media (hover: hover) and (pointer: fine) {
     .calendar__footer .button--flat:not(:disabled):hover {
       background: var(--fill-quaternary-hover);
     }
+  }
+
+  .calendar__footer .button--flat:not(:disabled):active {
+    background: var(--fill-quaternary-active);
   }
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────

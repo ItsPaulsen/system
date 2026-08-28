@@ -54,6 +54,8 @@ Your own CSS does not live in any of these layers, and **unlayered CSS beats eve
 }
 ```
 
+To retint a single region instead of the whole system, wrap it in `data-color="primary|neutral|red"`. Every accent-aware component inside (Button, Badge, Chip, Alert) re-skins from that one context, and it flips with the theme for free. The **Theming** page on the live site walks through the full model: anchors feed derived roles, components read only the roles, so changing one anchor retints everything downstream.
+
 The one exception: an `!important` declaration inside the library still wins over a non-important override. The library uses `!important` only in the `base` layer, for reduced-motion and theme-swap guards, so this rarely matters in practice.
 
 If you use your own `@layer`s, put them after these in your layer statement (or leave them unlayered) to stay on top.

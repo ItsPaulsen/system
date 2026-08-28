@@ -591,11 +591,21 @@
     --primary-foreground: oklch(
       from color-mix(in oklab, var(--primary), white 60%) l calc(c * 1.5) h
     );
-    --primary-foreground-hover: oklch(
-      from color-mix(in oklab, var(--primary-hover), white 60%) l calc(c * 1.5) h
+
+    /* Hover/active DARKEN here (mix toward the surface) rather than lighten like
+     the light theme, because the dark-theme foreground is already a bright lilac,
+     so pushing it lighter would wash out. Direction flips per theme; the light
+     block above lightens via --primary-hover/-active. Used by the link hover and
+     the button--foreground fill. */
+    --primary-foreground-hover: color-mix(
+      in oklab,
+      var(--primary-foreground),
+      var(--background-secondary) 15%
     );
-    --primary-foreground-active: oklch(
-      from color-mix(in oklab, var(--primary-active), white 60%) l calc(c * 1.5) h
+    --primary-foreground-active: color-mix(
+      in oklab,
+      var(--primary-foreground),
+      var(--background-secondary) 24%
     );
 
     /* Soft variants, higher alpha for visibility against dark surfaces.

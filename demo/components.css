@@ -1413,28 +1413,28 @@
     color: var(--accent-on);
   }
 
-  /* Hover/active mix the fill toward the surface (--background-secondary), NOT
-   toward white like the other solid skins. Because the surface flips per theme,
-   this darkens a light fill (the bright-lilac foreground in dark) and lightens a
-   dark fill (light theme) — contrast-aware feedback in both directions. */
+  /* Hover/active come straight from the foreground tokens, which are theme-aware:
+   they lighten in light and darken in dark (see --primary-foreground-hover in
+   globals.css). In a data-color region the fill is --accent (mid-tone), so its
+   own hover/active lighten as usual. */
   @media (hover: hover) and (pointer: fine) {
     .button--foreground:not(:disabled):hover {
-      background: color-mix(in oklab, var(--primary-foreground), var(--background-secondary) 15%);
+      background: var(--primary-foreground-hover);
     }
   }
 
   .button--foreground:not(:disabled):active {
-    background: color-mix(in oklab, var(--primary-foreground), var(--background-secondary) 24%);
+    background: var(--primary-foreground-active);
   }
 
   @media (hover: hover) and (pointer: fine) {
     [data-color] .button--foreground:not(:disabled):hover {
-      background: color-mix(in oklab, var(--accent), var(--background-secondary) 15%);
+      background: var(--accent-hover);
     }
   }
 
   [data-color] .button--foreground:not(:disabled):active {
-    background: color-mix(in oklab, var(--accent), var(--background-secondary) 24%);
+    background: var(--accent-active);
   }
 
   /* Disabled, fill-quaternary bg for filled skins, transparent for flat.

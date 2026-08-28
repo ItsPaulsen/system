@@ -700,12 +700,13 @@
     --accent-foreground: oklch(
       from color-mix(in oklab, var(--accent), white 60%) l calc(c * 1.5) h
     );
-    --accent-foreground-hover: oklch(
-      from color-mix(in oklab, var(--accent-hover), white 60%) l calc(c * 1.5) h
-    );
-    --accent-foreground-active: oklch(
-      from color-mix(in oklab, var(--accent-active), white 60%) l calc(c * 1.5) h
-    );
+
+    /* Hover/active DARKEN (oklch L drop, hue+chroma held), mirroring
+     --primary-foreground-* in dark: the foreground is a light tint here, so
+     lightening would wash out. Keeps accent-foreground* === primary-foreground*
+     at root. */
+    --accent-foreground-hover: oklch(from var(--accent-foreground) calc(l - 0.06) c h);
+    --accent-foreground-active: oklch(from var(--accent-foreground) calc(l - 0.1) c h);
     --accent-soft: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.28);
     --accent-soft-hover: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.39);
     --accent-soft-active: rgb(from color-mix(in oklab, var(--accent), white 30%) r g b / 0.43);

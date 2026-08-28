@@ -293,8 +293,8 @@ const PROJECT_PAGES = {
         { label: "Card", href: "/demo/components/card/" },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
-        { label: "Date picker", href: "/demo/components/date-picker/" },
-        { label: "Date range", href: "/demo/components/date-range/" },
+        { label: "Date Picker", href: "/demo/components/date-picker/" },
+        { label: "Date Range", href: "/demo/components/date-range/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
         { label: "Empty", href: "/demo/components/empty/" },
@@ -321,7 +321,7 @@ const PROJECT_PAGES = {
         { label: "Tabs", href: "/demo/components/tabs/" },
         { label: "Textarea", href: "/demo/components/textarea/" },
         { label: "Toast", href: "/demo/components/toast/" },
-        { label: "Toggle group", href: "/demo/components/toggle-group/" },
+        { label: "Toggle Group", href: "/demo/components/toggle-group/" },
         { label: "Tooltip", href: "/demo/components/tooltip/" }
       ]
     }

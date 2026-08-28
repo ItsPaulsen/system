@@ -294,7 +294,7 @@ const PROJECT_PAGES = {
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
         { label: "Date picker", href: "/demo/components/date-picker/" },
-        { label: "Date range", href: "/demo/components/date-range/", new: true },
+        { label: "Date range", href: "/demo/components/date-range/" },
         { label: "Dialog", href: "/demo/components/dialog/" },
         { label: "Dropdown Menu", href: "/demo/components/dropdown/" },
         { label: "Empty", href: "/demo/components/empty/" },

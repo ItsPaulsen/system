@@ -72,15 +72,15 @@
           <h2 class="subhead">Default</h2>
           <p class="section-note">
             Click a start, then an end (clicking earlier swaps them); hovering previews the band.
-            The footer stages the pick: Clear empties it, Cancel reverts, Apply commits. Colours are
-            neutral unless wrapped in a <a href="/demo/theming/">data-color</a> region (shown here
-            in <code>primary</code>). Stacks to one column when cramped.
+            The footer stages the pick: Clear empties it, Cancel reverts, Apply commits. Endpoints
+            are neutral (like <a href="/demo/components/date-picker/">Date picker</a>); wrap it in a
+            <a href="/demo/theming/">data-color</a> region to retint. Stacks to one column when
+            cramped.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
               <div
                 class="calendar calendar--range"
-                data-color="primary"
                 data-daterange
                 data-range-start="2026-08-04"
                 data-range-end="2026-08-12"
@@ -158,9 +158,7 @@
               </div>
             </div>
             <script type="text/plain" class="example__react">
-              <div data-color="primary">
-                <DateRange defaultStart="2026-08-04" defaultEnd="2026-08-12" />
-              </div>
+              <DateRange defaultStart="2026-08-04" defaultEnd="2026-08-12" />
             </script>
           </div>
         </section>

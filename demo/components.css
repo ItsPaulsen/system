@@ -1398,6 +1398,41 @@
     background: var(--red-soft-active);
   }
 
+  /* Foreground: the solid emphasis fill the calendar's selected day + range
+   endpoints use (brand --primary-foreground, a brighter lilac in dark) with the
+   background as its text, retinting to the region accent inside [data-color]. Used
+   on the date-range Apply button so it ties to the selected dates. Deliberately
+   not on the Button page: in light it's identical to --primary. */
+  .button--foreground {
+    background: var(--primary-foreground);
+    color: var(--background-secondary);
+  }
+
+  [data-color] .button--foreground {
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .button--foreground:not(:disabled):hover {
+      background: var(--primary-foreground-hover);
+    }
+  }
+
+  .button--foreground:not(:disabled):active {
+    background: var(--primary-foreground-active);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    [data-color] .button--foreground:not(:disabled):hover {
+      background: var(--accent-hover);
+    }
+  }
+
+  [data-color] .button--foreground:not(:disabled):active {
+    background: var(--accent-active);
+  }
+
   /* Disabled, fill-quaternary bg for filled skins, transparent for flat.
    Text/icon drop to fill-secondary. Higher specificity via double class. */
 
@@ -4060,6 +4095,19 @@
   .calendar__footer-actions {
     display: flex;
     gap: 0.5rem;
+  }
+
+  /* Clear is a low-priority action, so soften its flat hover one tier below the
+   default (--accent-soft-hover / fill-tertiary 0.23, which reads heavy in neutral
+   grey): quaternary 0.17 on hover, the old 0.23 kept for the firmer press. */
+  @media (hover: hover) and (pointer: fine) {
+    .calendar__footer .button--flat:not(:disabled):hover {
+      background: var(--fill-quaternary-hover);
+    }
+  }
+
+  .calendar__footer .button--flat:not(:disabled):active {
+    background: var(--fill-tertiary-hover);
   }
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────

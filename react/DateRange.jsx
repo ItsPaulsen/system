@@ -207,7 +207,7 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
             Cancel
           </button>
           <button
-            className="button button--primary"
+            className="button button--foreground"
             type="button"
             disabled={!(value.start && value.end)}
             onClick={apply}

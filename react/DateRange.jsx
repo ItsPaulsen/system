@@ -255,17 +255,25 @@ function MonthGrid({ month, minDate, maxDate, lo, hi, tabbable }) {
       {shownWeeks.map((week) => (
         <div key={iso(week[0])} className="calendar__week" role="row">
           {week.map((d) => {
+            const top = hi || lo;
             // Out-of-range days hold their column but stay blank.
             if (d < minDate || d > maxDate)
               return <div key={iso(d)} className="calendar__day is-empty" aria-hidden="true" />;
-            // Neighbouring-month days show their number but are inert (greyed).
-            if (d.getMonth() !== m)
+            // Neighbouring-month days show their number but are inert (greyed). They
+            // still carry the band when the range spans the month edge, but never
+            // become an endpoint.
+            if (d.getMonth() !== m) {
+              const inRange = lo && d >= lo && d <= top;
               return (
-                <div key={iso(d)} className="calendar__day is-outside" aria-hidden="true">
-                  {d.getDate()}
+                <div
+                  key={iso(d)}
+                  className={["calendar__cell", inRange && "is-range"].filter(Boolean).join(" ")}
+                  aria-hidden="true"
+                >
+                  <div className="calendar__day is-outside">{d.getDate()}</div>
                 </div>
               );
-            const top = hi || lo;
+            }
             const isStart = lo && same(d, lo);
             const isEnd = top && same(d, top);
             const inRange = lo && d >= lo && d <= top;

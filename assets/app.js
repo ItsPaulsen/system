@@ -2261,13 +2261,20 @@ function initDateRanges() {
             row.appendChild(gap);
             return;
           }
-          // Neighbouring-month days show their number but are inert (greyed).
+          // Neighbouring-month days show their number but are inert (greyed). They
+          // sit in a .calendar__cell (carrying data-date) so the range band runs
+          // over them when the range spans the month edge, like the reference; they
+          // never become an endpoint (that stays on the in-month button).
           if (d.getMonth() !== m) {
+            const cell = document.createElement("div");
+            cell.className = "calendar__cell";
+            cell.setAttribute("aria-hidden", "true");
             const out = document.createElement("div");
             out.className = "calendar__day is-outside";
-            out.setAttribute("aria-hidden", "true");
             out.textContent = String(d.getDate());
-            row.appendChild(out);
+            out.dataset.date = iso(d);
+            cell.appendChild(out);
+            row.appendChild(cell);
             return;
           }
           const cell = document.createElement("div");
@@ -2300,14 +2307,19 @@ function initDateRanges() {
       const lo = a && b ? (a <= b ? a : b) : a;
       const hi = a && b ? (a <= b ? b : a) : a; // single day: lo === hi
       root.querySelectorAll(".calendar__cell").forEach((cell) => {
-        const btn = cell.querySelector("button.calendar__day");
+        // The day is a <button> in-month, an inert <div> for neighbouring-month
+        // days; both carry data-date so the band can cover either.
+        const dayEl = cell.querySelector(".calendar__day");
         cell.classList.remove("is-range");
-        if (btn) btn.classList.remove("is-range-start", "is-range-end");
-        if (!btn || !lo) return;
-        const d = parse(btn.dataset.date);
+        if (dayEl) dayEl.classList.remove("is-range-start", "is-range-end");
+        if (!dayEl || !dayEl.dataset.date || !lo) return;
+        const d = parse(dayEl.dataset.date);
         if (d >= lo && d <= hi) cell.classList.add("is-range");
-        if (same(d, lo)) btn.classList.add("is-range-start");
-        if (same(d, hi)) btn.classList.add("is-range-end");
+        // Endpoints only mark the real in-month day, never a spillover cell.
+        if (dayEl.tagName === "BUTTON") {
+          if (same(d, lo)) dayEl.classList.add("is-range-start");
+          if (same(d, hi)) dayEl.classList.add("is-range-end");
+        }
       });
       updateFooter();
     }

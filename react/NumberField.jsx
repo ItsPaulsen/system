@@ -31,10 +31,8 @@ export default function NumberField({
     commit(clamp(base + dir * step));
   };
 
-  // Press-and-hold repeat; the trailing click is swallowed via the ref flag.
+  // click does the single step; a held pointer layers repeat on top after a delay.
   const press = (dir) => {
-    hold.current.via = true;
-    nudge(dir);
     hold.current.t = setTimeout(() => {
       hold.current.i = setInterval(() => nudge(dir), 60);
     }, 400);
@@ -42,13 +40,6 @@ export default function NumberField({
   const release = () => {
     clearTimeout(hold.current.t);
     clearInterval(hold.current.i);
-  };
-  const click = (dir) => {
-    if (hold.current.via) {
-      hold.current.via = false;
-      return;
-    }
-    nudge(dir);
   };
 
   const onKeyDown = (e) => {
@@ -74,7 +65,7 @@ export default function NumberField({
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
-          onClick={() => click(-1)}
+          onClick={() => nudge(-1)}
         >
           <IconMinus />
         </button>
@@ -101,7 +92,7 @@ export default function NumberField({
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
-          onClick={() => click(1)}
+          onClick={() => nudge(1)}
         >
           <IconPlus />
         </button>

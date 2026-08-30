@@ -2813,8 +2813,9 @@ function initNumberFields() {
       input.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
-    // click covers mouse and keyboard (Enter/Space); pointer adds press-and-hold
-    // repeat and steps immediately, with a flag so it doesn't double via click.
+    // click does the single step (covers mouse and keyboard Enter/Space); a held
+    // pointer layers repeat on top after a delay. No shared flag, so a stepper
+    // that disables mid-press can't leave anything stuck.
     [
       [dec, -1],
       [inc, 1]
@@ -2822,15 +2823,13 @@ function initNumberFields() {
       if (!btn) return;
       let holdT;
       let repT;
-      let viaPointer = false;
       const stop = () => {
         clearTimeout(holdT);
         clearInterval(repT);
       };
+      btn.addEventListener("click", () => nudge(dir));
       btn.addEventListener("pointerdown", (e) => {
         if (e.pointerType === "mouse" && e.button !== 0) return;
-        viaPointer = true;
-        nudge(dir);
         holdT = setTimeout(() => {
           repT = setInterval(() => (btn.disabled ? stop() : nudge(dir)), 60);
         }, 400);
@@ -2838,13 +2837,6 @@ function initNumberFields() {
       ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
         btn.addEventListener(ev, stop)
       );
-      btn.addEventListener("click", () => {
-        if (viaPointer) {
-          viaPointer = false;
-          return;
-        }
-        nudge(dir);
-      });
     });
 
     input.addEventListener("keydown", (e) => {

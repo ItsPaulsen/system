@@ -160,10 +160,13 @@
     --red: rgb(var(--anchor-red));
     --red-hover: color-mix(in oklab, var(--red) 88%, white);
     --red-active: color-mix(in oklab, var(--red) 82%, white);
-    --amber: rgb(var(--anchor-amber));
+    /* Amber and green are nudged 6% darker than their anchors so the caption-size
+     badge text (color on -soft) clears AA 4.5 in light; dark keeps the pure anchors
+     (see the dark block) since darkening would cut its contrast on the dark stage. */
+    --amber: color-mix(in oklab, rgb(var(--anchor-amber)) 94%, black);
     --amber-hover: color-mix(in oklab, var(--amber) 88%, white);
     --amber-active: color-mix(in oklab, var(--amber) 82%, white);
-    --green: rgb(var(--anchor-green));
+    --green: color-mix(in oklab, rgb(var(--anchor-green)) 94%, black);
     --green-hover: color-mix(in oklab, var(--green) 88%, white);
     --green-active: color-mix(in oklab, var(--green) 82%, white);
     --blue: rgb(var(--anchor-blue));
@@ -582,6 +585,11 @@
     --anchor-green: 84 203 153;
     --anchor-blue: 140 190 255;
     --anchor-fuchsia: 235 157 239;
+
+    /* Use the anchors directly here; the light theme darkens amber/green for AA on
+     -soft badge text, but on the dark stage that would reduce contrast, not help. */
+    --amber: rgb(var(--anchor-amber));
+    --green: rgb(var(--anchor-green));
 
     /* Foreground: only primary has one. Lightened for dark-theme
      legibility on soft bg. Mixed 60% because a violet primary sits dark,

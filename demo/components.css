@@ -4200,7 +4200,7 @@
      steppers; it grows past this as digits are added. */
     min-width: 3rem;
     max-width: 12ch;
-    padding-inline: 0.75rem;
+    padding-inline: 1rem;
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;

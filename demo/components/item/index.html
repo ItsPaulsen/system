@@ -27,16 +27,22 @@
       })();
     </script>
     <style>
+      /* Recessed stage so the elevated rows read, like the Card page. */
       .component-preview {
         flex-direction: column;
-        align-items: stretch;
+        align-items: center;
         gap: 0.75rem;
+        background: var(--background-primary);
+      }
+
+      /* The muted row is a light fill, so keep its stage white to read against it. */
+      .component-preview--surface {
+        background: var(--background-secondary);
       }
 
       .component-preview .item,
       .component-preview .item-group {
-        width: 100%;
-        max-width: 420px;
+        width: min(100%, 420px);
       }
     </style>
   </head>
@@ -87,13 +93,13 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            Link rows: <code>item__media</code> + <code>item__content</code> (title and description)
-            + a trailing chevron in <code>item__actions</code>. Use <code>item--outline</code> for a
-            standalone, bordered row.
+            Link rows on an elevated surface: <code>item__media</code> +
+            <code>item__content</code> (title and description) + a trailing chevron in
+            <code>item__actions</code>.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <a class="item item--outline" href="#" onclick="event.preventDefault()">
+              <a class="item" href="#" onclick="event.preventDefault()">
                 <span
                   class="item__media"
                   style="background: var(--green-soft); color: var(--green)"
@@ -134,7 +140,7 @@
                 </span>
               </a>
 
-              <a class="item item--outline" href="#" onclick="event.preventDefault()">
+              <a class="item" href="#" onclick="event.preventDefault()">
                 <span class="item__media" style="background: var(--blue-soft); color: var(--blue)">
                   <svg
                     viewBox="0 0 24 24"
@@ -174,7 +180,7 @@
               </a>
             </div>
             <script type="text/plain" class="example__react">
-              <Item variant="outline" href="/getting-started">
+              <Item href="/getting-started">
                 <ItemMedia style={{ background: "var(--green-soft)", color: "var(--green)" }}>
                   <IconAffiliate />
                 </ItemMedia>
@@ -193,13 +199,12 @@
         <section class="preview-block">
           <h2 class="subhead">Grouped list</h2>
           <p class="section-note">
-            Wrap rows in <code>item-group item-group--outline</code> and put
-            <code>item-separator</code> between them: one border frames the list, hairlines divide
-            the rows.
+            Wrap rows in <code>item-group</code> and put <code>item-separator</code> between them:
+            the group is one surface, hairlines divide the rows.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <div class="item-group item-group--outline">
+              <div class="item-group">
                 <a class="item" href="#" onclick="event.preventDefault()">
                   <span
                     class="item__media"
@@ -222,7 +227,6 @@
                   </span>
                   <span class="item__content">
                     <span class="item__title">General</span>
-                    <span class="item__description">Language, time zone, appearance</span>
                   </span>
                   <span class="item__actions">
                     <svg
@@ -261,7 +265,6 @@
                   </span>
                   <span class="item__content">
                     <span class="item__title">Notifications</span>
-                    <span class="item__description">Email and in-app alerts</span>
                   </span>
                   <span class="item__actions">
                     <svg
@@ -302,7 +305,6 @@
                   </span>
                   <span class="item__content">
                     <span class="item__title">Billing</span>
-                    <span class="item__description">Plan, payment method, invoices</span>
                   </span>
                   <span class="item__actions">
                     <svg
@@ -321,14 +323,13 @@
               </div>
             </div>
             <script type="text/plain" class="example__react">
-              <ItemGroup variant="outline">
+              <ItemGroup>
                 <Item href="/settings/general">
                   <ItemMedia style={{ background: "var(--fill-quaternary)", color: "var(--ink-secondary)" }}>
                     <IconSettings />
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>General</ItemTitle>
-                    <ItemDescription>Language, time zone, appearance</ItemDescription>
                   </ItemContent>
                   <ItemActions>
                     <IconChevronRight />
@@ -341,7 +342,6 @@
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>Notifications</ItemTitle>
-                    <ItemDescription>Email and in-app alerts</ItemDescription>
                   </ItemContent>
                   <ItemActions>
                     <IconChevronRight />
@@ -360,7 +360,7 @@
             <code>&lt;div&gt;</code>.
           </p>
           <div class="example" data-example>
-            <div class="component-preview">
+            <div class="component-preview component-preview--surface">
               <div class="item item--muted">
                 <span
                   class="item__media"
@@ -406,7 +406,7 @@
           <p class="section-note">
             Slots as compound parts. <code>Item</code> renders an <code>&lt;a&gt;</code> with
             <code>href</code>, a <code>&lt;button&gt;</code> with <code>onClick</code>, else a
-            <code>&lt;div&gt;</code>. Variants: <code>outline</code>, <code>muted</code>.
+            <code>&lt;div&gt;</code>. Variant: <code>muted</code>.
           </p>
           <div data-source="/react/Item.jsx"></div>
         </section>
@@ -417,7 +417,7 @@
             An interactive row is an <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with
             <code>class="item"</code>; the slots are plain spans.
           </p>
-          <pre><code><span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"item item--outline"</span> <span class="tok-prop">href</span>=<span class="tok-str">"…"</span><span class="tok-key">&gt;</span>
+          <pre><code><span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"item"</span> <span class="tok-prop">href</span>=<span class="tok-str">"…"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__media"</span><span class="tok-key">&gt;</span>…icon…<span class="tok-key">&lt;/span&gt;</span>
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__content"</span><span class="tok-key">&gt;</span>
     <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__title"</span><span class="tok-key">&gt;</span>Getting started<span class="tok-key">&lt;/span&gt;</span>
@@ -426,7 +426,7 @@
   <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__actions"</span><span class="tok-key">&gt;</span>…chevron…<span class="tok-key">&lt;/span&gt;</span>
 <span class="tok-key">&lt;/a&gt;</span>
 
-<span class="tok-com">&lt;!-- Stack rows: .item-group.item-group--outline with .item-separator between --&gt;</span></code></pre>
+<span class="tok-com">&lt;!-- Stack rows: .item-group with .item-separator between --&gt;</span></code></pre>
         </section>
       </div>
     </main>

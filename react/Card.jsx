@@ -1,5 +1,5 @@
 // Interactive surface. Renders an <a> when given href, else a <button>; always pair it
-// with an image, illustration, or icon. Modifiers: --horizontal --alternate --stretch-image.
+// with an image, illustration, or icon. Modifiers: --horizontal --stretch-image.
 export function Card({ href, className, children, ...rest }) {
   const cls = ["card", className].filter(Boolean).join(" ");
   const Tag = href ? "a" : "button";

@@ -1597,7 +1597,6 @@
 
    Modifiers:
      --horizontal      grid layout with a 6rem image column on the left
-     --alternate       recessed surface (background-primary) instead of white
      --stretch-image   image fills remaining space (vertical card, fixed height) */
 
   .card {
@@ -1607,10 +1606,6 @@
     color: var(--ink-primary);
     overflow: hidden;
     transition: background var(--motion-default);
-  }
-
-  .card--alternate {
-    background: var(--background-primary);
   }
 
   /* Interactive: `<a>` and `<button>` get pointer + hover/active/focus.
@@ -1651,18 +1646,6 @@
   a.card:active,
   button.card:not(:disabled):active {
     background: var(--background-secondary-active);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    a.card--alternate:hover,
-    button.card--alternate:not(:disabled):hover {
-      background: var(--background-primary-hover);
-    }
-  }
-
-  a.card--alternate:active,
-  button.card--alternate:not(:disabled):active {
-    background: var(--background-primary-active);
   }
 
   /* ── Slots ── */
@@ -4120,13 +4103,13 @@
 
   /* ── Item ──────────────────────────────────────────────────────────────── */
 
-  /* A compact horizontal row: media + content (title/description) + actions.
-   Where Card is a standalone surface, Item is the repeating line you stack into a
-   list (settings, files, nav, results). Make the whole row a link/button by using
-   <a class="item"> / <button class="item">. Stack rows with .item-group, dividing
-   them with .item-separator; .item-group--outline wraps the list in one border.
+  /* A compact horizontal row on an elevated surface: media + content
+   (title/description) + actions. Where Card is a standalone surface, Item is the
+   repeating line you stack into a list (settings, files, nav, results). Make the
+   whole row a link/button by using <a class="item"> / <button class="item">. Stack
+   rows in one .item-group surface, dividing them with .item-separator.
 
-   <a class="item item--outline" href="…">
+   <a class="item" href="…">
      <span class="item__media">…icon…</span>
      <span class="item__content">
        <span class="item__title">Getting started</span>
@@ -4138,14 +4121,12 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1rem;
+    padding: 1rem;
     border-radius: var(--radius-md);
+    background: var(--background-secondary);
     color: var(--ink-primary);
     text-decoration: none;
-  }
-
-  .item--outline {
-    border: var(--border-width) solid var(--fill-tertiary);
+    transition: background var(--motion-default);
   }
 
   .item--muted {
@@ -4191,7 +4172,6 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 2px;
     min-width: 0;
   }
 
@@ -4221,21 +4201,19 @@
     height: 20px;
   }
 
-  /* Stack rows into one list. With --outline a single border wraps the list and
-   .item-separator hairlines divide the rows, so inner rows drop their own radius. */
+  /* Stack rows into one surface: the group owns the background and rounding, so
+   nested rows go transparent and square, and .item-separator hairlines divide them. */
   .item-group {
     display: flex;
-    flex-direction: column;
-  }
-
-  .item-group--outline {
     overflow: hidden;
-    border: var(--border-width) solid var(--fill-tertiary);
+    flex-direction: column;
     border-radius: var(--radius-md);
+    background: var(--background-secondary);
   }
 
-  .item-group--outline .item {
+  .item-group .item {
     border-radius: 0;
+    background: transparent;
   }
 
   .item-separator {

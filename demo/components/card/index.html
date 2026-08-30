@@ -32,13 +32,9 @@
         flex-wrap: wrap;
         align-items: flex-start;
       }
-      /* Cards need a recessed stage so the elevated white surface reads.
-         The alternate-skin block opts back into the white stage. */
+      /* Cards need a recessed stage so the elevated white surface reads. */
       .component-preview {
         background: var(--background-primary);
-      }
-      .component-preview--elevated {
-        background: var(--background-secondary);
       }
       .component-preview .card {
         width: 380px;
@@ -170,35 +166,6 @@
           </div>
         </section>
 
-        <section class="preview-block">
-          <h2 class="subhead">Alternate skin</h2>
-          <p class="section-note">Recessed surface, for cards sitting on an elevated one.</p>
-          <div class="example" data-example>
-            <div class="component-preview component-preview--elevated">
-              <a class="card card--alternate" href="#" onclick="event.preventDefault()">
-                <div class="card__illustration">
-                  <img src="/assets/illustrations/wfh.svg" alt="" />
-                </div>
-                <div class="card__content">
-                  <h2 class="card__title">Working from home</h2>
-                  <p>The recessed skin for cards sitting on an elevated surface.</p>
-                </div>
-              </a>
-            </div>
-            <script type="text/plain" class="example__react">
-              <Card href="/wfh" className="card--alternate">
-                <CardIllustration>
-                  <img src="/assets/illustrations/wfh.svg" alt="" />
-                </CardIllustration>
-                <CardContent>
-                  <CardTitle>Working from home</CardTitle>
-                  <p>The recessed skin for cards sitting on an elevated surface.</p>
-                </CardContent>
-              </Card>
-            </script>
-          </div>
-        </section>
-
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
@@ -218,7 +185,7 @@
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"card__content"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/a&gt;</span>
 
-<span class="tok-com">&lt;!-- Modifiers: --horizontal --alternate --stretch-image --&gt;</span>
+<span class="tok-com">&lt;!-- Modifiers: --horizontal --stretch-image --&gt;</span>
 <span class="tok-com">&lt;!-- Slots:     card__image  card__illustration  card__content --&gt;</span></code></pre>
         </section>
       </div>

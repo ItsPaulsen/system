@@ -160,6 +160,7 @@
     --red: rgb(var(--anchor-red));
     --red-hover: color-mix(in oklab, var(--red) 88%, white);
     --red-active: color-mix(in oklab, var(--red) 82%, white);
+
     /* Amber and green are nudged 6% darker than their anchors so the caption-size
      badge text (color on -soft) clears AA 4.5 in light; dark keeps the pure anchors
      (see the dark block) since darkening would cut its contrast on the dark stage. */

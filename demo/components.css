@@ -3007,6 +3007,7 @@
 
   .steps__label {
     font-size: var(--font-body-small-size);
+
     /* Upcoming steps: ink-secondary (not tertiary) so the label clears AA in light. */
     color: var(--ink-secondary);
   }

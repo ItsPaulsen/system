@@ -213,59 +213,6 @@
                 </span>
               </div>
 
-              <div class="input number-field" data-number-field>
-                <label class="input__label" for="nf-md">Default</label>
-                <span class="input__container number-field__control">
-                  <button
-                    class="number-field__step"
-                    type="button"
-                    data-step="-1"
-                    aria-label="Decrease"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l14 0" />
-                    </svg>
-                  </button>
-                  <input
-                    class="input__element number-field__input"
-                    id="nf-md"
-                    type="text"
-                    inputmode="numeric"
-                    value="1"
-                    data-min="0"
-                    data-max="999"
-                    data-step="1"
-                  />
-                  <button
-                    class="number-field__step"
-                    type="button"
-                    data-step="1"
-                    aria-label="Increase"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M12 5l0 14" />
-                      <path d="M5 12l14 0" />
-                    </svg>
-                  </button>
-                </span>
-              </div>
-
               <div class="input number-field number-field--lg" data-number-field>
                 <label class="input__label" for="nf-lg">Large</label>
                 <span class="input__container number-field__control">
@@ -321,7 +268,6 @@
             </div>
             <script type="text/plain" class="example__react">
               <NumberField label="Small" size="sm" defaultValue={1} min={0} max={999} />
-              <NumberField label="Default" defaultValue={1} min={0} max={999} />
               <NumberField label="Large" size="lg" defaultValue={1} min={0} max={999} />
             </script>
           </div>

@@ -4167,12 +4167,12 @@
     border-inline-start: var(--border-width) solid var(--ink-tertiary);
   }
 
-  /* This field focuses per control, not as one box: cancel the inherited
-   whole-container focus-within border so only the focused control shows state. */
-  .number-field__control:focus-within {
+  /* Focusing the value uses the standard input field border (inherited from
+   .input__container:focus-within). Only suppress it while a stepper is focused,
+   so the stepper shows just its own ring, not the whole field lighting up. */
+  .number-field__control:has(.number-field__step:focus-visible) {
     border-color: var(--ink-tertiary);
     box-shadow: none;
-    transition: none;
   }
 
   /* Steppers get the standard outside focus ring, like any button. */
@@ -4217,15 +4217,6 @@
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;
-  }
-
-  /* The value cell focuses like an input field: primary-foreground border, inset
-   so it sits within the cell between the dividers. No transition (the field's
-   border animation shouldn't play when tabbing onto the value). */
-  .number-field__input:focus-visible {
-    outline: var(--focus-ring-width) solid var(--primary-foreground);
-    outline-offset: calc(-1 * var(--focus-ring-width));
-    transition: none;
   }
 
   /* Larger 48px variant: body-medium text and a wider value floor. */

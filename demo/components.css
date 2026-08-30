@@ -4164,14 +4164,14 @@
   /* Round the outer corners so the hover fill follows the container radius (the
    container can't clip with overflow:hidden, it would cut the focus box-shadow). */
   .number-field__step:first-child {
-    border-start-start-radius: var(--radius-sm);
-    border-end-start-radius: var(--radius-sm);
+    border-start-start-radius: calc(var(--radius-sm) - var(--border-width));
+    border-end-start-radius: calc(var(--radius-sm) - var(--border-width));
     border-inline-end: var(--border-width) solid var(--ink-tertiary);
   }
 
   .number-field__step:last-child {
-    border-start-end-radius: var(--radius-sm);
-    border-end-end-radius: var(--radius-sm);
+    border-start-end-radius: calc(var(--radius-sm) - var(--border-width));
+    border-end-end-radius: calc(var(--radius-sm) - var(--border-width));
     border-inline-start: var(--border-width) solid var(--ink-tertiary);
   }
 
@@ -4182,11 +4182,12 @@
     box-shadow: none;
   }
 
-  /* Inset 2px ring, no converge animation, matching the value cell. Inset because an
-   outset ring would extend into the divider gap on the inner side and look lopsided. */
+  /* Inset 2px ring via box-shadow so it follows each button's border-radius exactly
+   (an inset outline shrinks its own corner radius and no longer matches the field).
+   The transparent outline keeps a visible ring in forced-colors mode. */
   .number-field__step:focus-visible {
-    outline: calc(var(--border-width) * 2) solid var(--focus);
-    outline-offset: calc(var(--border-width) * -2);
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--focus);
+    outline: calc(var(--border-width) * 2) solid transparent;
     animation: none;
   }
 
@@ -4232,8 +4233,8 @@
    whole-field border is cancelled above). animation:none opts out of the global
    focus-ring-converge so it appears instantly, like the container-focused inputs. */
   .number-field__input:focus-visible {
-    outline: calc(var(--border-width) * 2) solid var(--primary-foreground);
-    outline-offset: calc(var(--border-width) * -2);
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--primary-foreground);
+    outline: calc(var(--border-width) * 2) solid transparent;
     animation: none;
   }
 

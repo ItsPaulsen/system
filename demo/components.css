@@ -4128,7 +4128,7 @@
     align-items: center;
     justify-content: center;
     align-self: stretch;
-    width: 44px;
+    width: 3rem;
     padding: 0;
     border: 0;
     background: transparent;
@@ -4195,7 +4195,10 @@
   .number-field__input {
     flex: 0 1 auto;
     width: auto;
-    min-width: 3ch;
+
+    /* Matches the field height so the value cell is a square minimum, like the
+     steppers; it grows past this as digits are added. */
+    min-width: 3rem;
     max-width: 12ch;
     padding-inline: 0.5rem;
     field-sizing: content;

@@ -4180,7 +4180,6 @@
   .number-field__control:focus-within {
     border-color: var(--ink-tertiary);
     box-shadow: none;
-    transition: none;
   }
 
   /* Steppers get the standard outside focus ring, like any button. */
@@ -4225,15 +4224,15 @@
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;
-    transition: none;
   }
 
   /* The value cell alone shows the standard input field border on focus (the
-   whole-field border is cancelled above). No transition, so it appears instantly. */
+   whole-field border is cancelled above). animation:none opts out of the global
+   focus-ring-converge so it appears instantly, like the container-focused inputs. */
   .number-field__input:focus-visible {
     outline: var(--focus-ring-width) solid var(--primary-foreground);
     outline-offset: calc(-1 * var(--focus-ring-width));
-    transition: none;
+    animation: none;
   }
 
   /* Smaller 32px variant: tighter value floor and side padding. */

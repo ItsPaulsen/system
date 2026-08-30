@@ -304,10 +304,11 @@ const PROJECT_PAGES = {
         { label: "Filter Chips", href: "/demo/components/chip/" },
         { label: "Input", href: "/demo/components/input/" },
         { label: "Input Group", href: "/demo/components/input-group/" },
-        { label: "Item", href: "/demo/components/item/", new: true },
+        { label: "Item", href: "/demo/components/item/" },
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Navigation Menu", href: "/demo/components/navigation-menu/" },
+        { label: "Number Field", href: "/demo/components/number-field/", new: true },
         { label: "Pagination", href: "/demo/components/pagination/" },
         { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },
@@ -2779,6 +2780,93 @@ function initSliders() {
   });
 }
 
+// Number field: −/+ steppers around an editable input. Reads min/max/step off the
+// input, steps on click and Arrow Up/Down, press-and-hold repeats, clamps on blur,
+// and disables a stepper at its bound. The input stays type=text (inputmode numeric)
+// so we control formatting; stepping fires a change event for listeners.
+function initNumberFields() {
+  document.querySelectorAll("[data-number-field]").forEach((root) => {
+    const input = root.querySelector(".number-field__input");
+    const dec = root.querySelector('[data-step="-1"]');
+    const inc = root.querySelector('[data-step="1"]');
+    if (!input) return;
+
+    // Bounds live in data-* (min/max/step aren't valid on a type=text input).
+    const min = input.dataset.min === undefined ? -Infinity : Number(input.dataset.min);
+    const max = input.dataset.max === undefined ? Infinity : Number(input.dataset.max);
+    const step = Number(input.dataset.step) || 1;
+    const parse = () => {
+      const n = parseFloat(input.value);
+      return Number.isNaN(n) ? null : n;
+    };
+    const clamp = (n) => Math.min(max, Math.max(min, n));
+
+    const sync = () => {
+      const n = parse();
+      if (dec) dec.disabled = n !== null && n <= min;
+      if (inc) inc.disabled = n !== null && n >= max;
+    };
+    const nudge = (dir) => {
+      const base = parse() ?? (min > -Infinity ? min : 0);
+      input.value = String(clamp(base + dir * step));
+      sync();
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    // click covers mouse and keyboard (Enter/Space); pointer adds press-and-hold
+    // repeat and steps immediately, with a flag so it doesn't double via click.
+    [
+      [dec, -1],
+      [inc, 1]
+    ].forEach(([btn, dir]) => {
+      if (!btn) return;
+      let holdT;
+      let repT;
+      let viaPointer = false;
+      const stop = () => {
+        clearTimeout(holdT);
+        clearInterval(repT);
+      };
+      btn.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" && e.button !== 0) return;
+        viaPointer = true;
+        nudge(dir);
+        holdT = setTimeout(() => {
+          repT = setInterval(() => (btn.disabled ? stop() : nudge(dir)), 60);
+        }, 400);
+      });
+      ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
+        btn.addEventListener(ev, stop)
+      );
+      btn.addEventListener("click", () => {
+        if (viaPointer) {
+          viaPointer = false;
+          return;
+        }
+        nudge(dir);
+      });
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        nudge(1);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        nudge(-1);
+      }
+    });
+    input.addEventListener("input", sync);
+    input.addEventListener("blur", () => {
+      const n = parse();
+      if (n === null) input.value = min > -Infinity ? String(min) : "";
+      else input.value = String(clamp(n));
+      sync();
+    });
+    sync();
+  });
+}
+
 // Carousel: a transform-driven slider (like Embla, no native scroll underneath, so
 // the two coordinate systems can't fight). JS owns `pos`, the track's translateX in
 // [−maxScroll, 0]. The pointer drags it (mouse and touch) with a rubber-band past the
@@ -3388,6 +3476,7 @@ function init() {
   initNavMenus();
   initTabs();
   initCarousel();
+  initNumberFields();
   initErrorSummary();
   initCharCount();
   refreshResponsive();

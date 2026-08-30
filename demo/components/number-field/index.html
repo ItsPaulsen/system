@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Number Field - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview .input {
+        max-width: 220px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Number Field</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Number field"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">A number input with −/+ steppers.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            Click a stepper (press and hold to repeat) or type a value. Arrow Up/Down step it too.
+            Needs <code>initNumberFields()</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="input number-field" data-number-field>
+                <label class="input__label" for="nf-quantity">Quantity</label>
+                <span class="input__container number-field__control">
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="-1"
+                    aria-label="Decrease"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                  <input
+                    class="input__element number-field__input"
+                    id="nf-quantity"
+                    type="text"
+                    inputmode="numeric"
+                    value="1"
+                    data-min="0"
+                    data-max="10"
+                    data-step="1"
+                  />
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="1"
+                    aria-label="Increase"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NumberField label="Quantity" defaultValue={1} min={0} max={10} />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Bounded</h2>
+          <p class="section-note">
+            Bounds (min/max/step) disable a stepper at its edge and clamp a typed value on blur.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="input number-field" data-number-field>
+                <label class="input__label" for="nf-seats">Seats</label>
+                <span class="input__container number-field__control">
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="-1"
+                    aria-label="Decrease"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                  <input
+                    class="input__element number-field__input"
+                    id="nf-seats"
+                    type="text"
+                    inputmode="numeric"
+                    value="5"
+                    data-min="1"
+                    data-max="5"
+                    data-step="1"
+                  />
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="1"
+                    aria-label="Increase"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <NumberField label="Seats" defaultValue={5} min={1} max={5} />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            Uncontrolled via <code>defaultValue</code>, or pass <code>value</code> +
+            <code>onChange</code>. <code>min</code>/<code>max</code>/<code>step</code> bound and
+            quantise it; stepping and clamping are built in.
+          </p>
+          <div data-source="/react/NumberField.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            Reuses the Input field markup; <code>data-number-field</code> wires the steppers, and
+            the bounds go in <code>data-min</code>/<code>data-max</code>/<code>data-step</code> on
+            the <code>&lt;input&gt;</code> (min/max/step aren't valid on a text input).
+          </p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"input number-field"</span> <span class="tok-prop">data-number-field</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;label</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__label"</span> <span class="tok-prop">for</span>=<span class="tok-str">"qty"</span><span class="tok-key">&gt;</span>Quantity<span class="tok-key">&lt;/label&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__container number-field__control"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"number-field__step"</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">data-step</span>=<span class="tok-str">"-1"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Decrease"</span><span class="tok-key">&gt;</span>−<span class="tok-key">&lt;/button&gt;</span>
+    <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"input__element number-field__input"</span> <span class="tok-prop">id</span>=<span class="tok-str">"qty"</span> <span class="tok-prop">type</span>=<span class="tok-str">"text"</span> <span class="tok-prop">inputmode</span>=<span class="tok-str">"numeric"</span>
+           <span class="tok-prop">value</span>=<span class="tok-str">"1"</span> <span class="tok-prop">data-min</span>=<span class="tok-str">"0"</span> <span class="tok-prop">data-max</span>=<span class="tok-str">"10"</span> <span class="tok-prop">data-step</span>=<span class="tok-str">"1"</span> <span class="tok-key">/&gt;</span>
+    <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"number-field__step"</span> <span class="tok-prop">type</span>=<span class="tok-str">"button"</span> <span class="tok-prop">data-step</span>=<span class="tok-str">"1"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Increase"</span><span class="tok-key">&gt;</span>+<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

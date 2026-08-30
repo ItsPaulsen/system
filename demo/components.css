@@ -4101,6 +4101,115 @@
     background: var(--fill-quaternary-active);
   }
 
+  /* ── Number field ──────────────────────────────────────────────────────── */
+
+  /* An <input> flanked by −/+ steppers: type a value directly or step it. Built on
+   the Input field, so it inherits the label/hint/error slots and the focus border.
+   JS (initNumberFields) reads min/max/step off the input, steps on click and
+   Arrow Up/Down, press-and-hold repeats, clamps on blur, and disables a stepper
+   once its bound is reached.
+
+   <label class="input number-field" data-number-field>
+     <span class="input__label">Quantity</span>
+     <span class="input__container number-field__control">
+       <button class="number-field__step" type="button" data-step="-1" aria-label="Decrease">−</button>
+       <input class="input__element number-field__input" type="text" inputmode="numeric"
+              value="1" min="0" max="10" step="1" />
+       <button class="number-field__step" type="button" data-step="1" aria-label="Increase">+</button>
+     </span>
+   </label> */
+  .number-field__control {
+    padding: 0;
+  }
+
+  .number-field__step {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    width: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink-primary);
+    cursor: pointer;
+    transition: background var(--motion-default);
+  }
+
+  .number-field__step svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Round the outer corners so the hover fill follows the container radius (the
+   container can't clip with overflow:hidden, it would cut the focus box-shadow). */
+  .number-field__step:first-child {
+    border-start-start-radius: var(--radius-sm);
+    border-end-start-radius: var(--radius-sm);
+    border-inline-end: var(--border-width) solid var(--ink-tertiary);
+  }
+
+  .number-field__step:last-child {
+    border-start-end-radius: var(--radius-sm);
+    border-end-end-radius: var(--radius-sm);
+    border-inline-start: var(--border-width) solid var(--ink-tertiary);
+  }
+
+  /* This field focuses per control, not as one box: cancel the inherited
+   whole-container focus-within border so only the focused control shows state. */
+  .number-field__control:focus-within {
+    border-color: var(--ink-tertiary);
+    box-shadow: none;
+  }
+
+  /* Steppers get the standard outside focus ring, like any button. */
+  .number-field__step:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .number-field__step:disabled {
+    color: var(--fill-secondary);
+    cursor: not-allowed;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .number-field__step:not(:disabled):hover {
+      background: var(--fill-quaternary-hover);
+    }
+  }
+
+  .number-field__step:not(:disabled):active {
+    background: var(--fill-quaternary-active);
+  }
+
+  /* The field hugs its content rather than filling a fixed width. */
+  .number-field {
+    width: fit-content;
+  }
+
+  /* Value reads centred, tabular so digits don't jitter. field-sizing lets it grow
+   with the number (supported browsers); min-width keeps a button-width floor so it
+   starts aligned, and a max-width stops runaway growth. */
+  .number-field__input {
+    flex: 0 1 auto;
+    width: auto;
+    min-width: 3ch;
+    max-width: 12ch;
+    padding-inline: 0.5rem;
+    field-sizing: content;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The value cell focuses like an input field: primary-foreground border, inset
+   so it sits within the cell between the dividers. */
+  .number-field__input:focus-visible {
+    outline: var(--focus-ring-width) solid var(--primary-foreground);
+    outline-offset: calc(-1 * var(--focus-ring-width));
+  }
+
   /* ── Item ──────────────────────────────────────────────────────────────── */
 
   /* A compact horizontal row on an elevated surface: media + content

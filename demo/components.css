@@ -4182,11 +4182,12 @@
     box-shadow: none;
   }
 
-  /* Inset focus ring so it hugs the button evenly; an outset ring would extend into
-   the divider gap on the inner (square) side and look lopsided. */
+  /* Inset 2px ring, no converge animation, matching the value cell. Inset because an
+   outset ring would extend into the divider gap on the inner side and look lopsided. */
   .number-field__step:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: calc(-1 * var(--focus-ring-width));
+    outline: calc(var(--border-width) * 2) solid var(--focus);
+    outline-offset: calc(var(--border-width) * -2);
+    animation: none;
   }
 
   .number-field__step:disabled {

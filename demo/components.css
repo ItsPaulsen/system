@@ -4119,10 +4119,14 @@
      </span>
    </label> */
 
-  /* Base size is compact (32px); .number-field--lg is the larger 48px variant. */
+  /* Size scale: default 40px, .number-field--sm 32px, .number-field--lg 48px. */
   .number-field__control {
-    min-height: 32px;
+    min-height: 40px;
     padding: 0;
+  }
+
+  .number-field--sm .number-field__control {
+    min-height: 32px;
   }
 
   .number-field--lg .number-field__control {
@@ -4135,13 +4139,17 @@
     align-items: center;
     justify-content: center;
     align-self: stretch;
-    width: 2rem;
+    width: 2.5rem;
     padding: 0;
     border: 0;
     background: transparent;
     color: var(--ink-primary);
     cursor: pointer;
     transition: background var(--motion-default);
+  }
+
+  .number-field--sm .number-field__step {
+    width: 2rem;
   }
 
   .number-field--lg .number-field__step {
@@ -4167,12 +4175,12 @@
     border-inline-start: var(--border-width) solid var(--ink-tertiary);
   }
 
-  /* Focusing the value uses the standard input field border (inherited from
-   .input__container:focus-within). Only suppress it while a stepper is focused,
-   so the stepper shows just its own ring, not the whole field lighting up. */
-  .number-field__control:has(.number-field__step:focus-visible) {
+  /* Focus is per control, never the whole field: cancel the inherited
+   container focus-within so only the focused control shows state. */
+  .number-field__control:focus-within {
     border-color: var(--ink-tertiary);
     box-shadow: none;
+    transition: none;
   }
 
   /* Steppers get the standard outside focus ring, like any button. */
@@ -4211,12 +4219,27 @@
     /* Matches the field height so the value cell is a square minimum, like the
      steppers; it grows past this as digits are added. Padding leaves room for two
      digits, so growth kicks in at the third. */
-    min-width: 2rem;
+    min-width: 2.5rem;
     max-width: 12ch;
-    padding-inline: 0.25rem;
+    padding-inline: 0.5rem;
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;
+    transition: none;
+  }
+
+  /* The value cell alone shows the standard input field border on focus (the
+   whole-field border is cancelled above). No transition, so it appears instantly. */
+  .number-field__input:focus-visible {
+    outline: var(--focus-ring-width) solid var(--primary-foreground);
+    outline-offset: calc(-1 * var(--focus-ring-width));
+    transition: none;
+  }
+
+  /* Smaller 32px variant: tighter value floor and side padding. */
+  .number-field--sm .number-field__input {
+    min-width: 2rem;
+    padding-inline: 0.25rem;
   }
 
   /* Larger 48px variant: body-medium text and a wider value floor. */

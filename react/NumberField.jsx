@@ -3,7 +3,7 @@ import { useId, useRef, useState } from "react";
 // An <input> flanked by −/+ steppers: type a value or step it. Steps on click and
 // Arrow Up/Down, press-and-hold repeats, clamps on blur, and disables a stepper at
 // its bound. Uncontrolled via defaultValue, or pass value + onChange to control it.
-// size="lg" is the larger 48px variant (default is the compact 32px).
+// size is "sm" (32px) or "lg" (48px); default is 40px.
 export default function NumberField({
   label,
   hint,
@@ -22,7 +22,7 @@ export default function NumberField({
   const current = value ?? uncontrolled;
   const hold = useRef({});
   const clamp = (n) => Math.min(max, Math.max(min, n));
-  const cls = ["input", "number-field", size === "lg" && "number-field--lg", className]
+  const cls = ["input", "number-field", size && `number-field--${size}`, className]
     .filter(Boolean)
     .join(" ");
 

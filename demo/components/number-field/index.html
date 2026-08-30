@@ -30,6 +30,18 @@
       .component-preview .input {
         max-width: 220px;
       }
+
+      /* Sizes example: lay the three fields in a row, aligned along their bottoms. */
+      .component-preview--sizes {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: end;
+      }
+
+      .component-preview--sizes .input {
+        width: auto;
+      }
     </style>
   </head>
   <body>
@@ -76,8 +88,8 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            Compact 32px size. Click a stepper (press and hold to repeat) or type a value. Arrow
-            Up/Down step it too. Needs <code>initNumberFields()</code>.
+            Click a stepper (press and hold to repeat) or type a value; Arrow Up/Down step it too.
+            Needs <code>initNumberFields()</code>.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -141,15 +153,15 @@
         </section>
 
         <section class="preview-block">
-          <h2 class="subhead">Large</h2>
+          <h2 class="subhead">Sizes</h2>
           <p class="section-note">
-            <code>number-field--lg</code>: 48px with body-medium text. The value cell holds two
-            digits, then grows from the third.
+            Three heights: <code>number-field--sm</code> (32px), default (40px), and
+            <code>number-field--lg</code> (48px, body-medium text).
           </p>
           <div class="example" data-example>
-            <div class="component-preview">
-              <div class="input number-field number-field--lg" data-number-field>
-                <label class="input__label" for="nf-amount">Amount</label>
+            <div class="component-preview component-preview--sizes">
+              <div class="input number-field number-field--sm" data-number-field>
+                <label class="input__label" for="nf-sm">Small</label>
                 <span class="input__container number-field__control">
                   <button
                     class="number-field__step"
@@ -171,7 +183,113 @@
                   </button>
                   <input
                     class="input__element number-field__input"
-                    id="nf-amount"
+                    id="nf-sm"
+                    type="text"
+                    inputmode="numeric"
+                    value="1"
+                    data-min="0"
+                    data-max="999"
+                    data-step="1"
+                  />
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="1"
+                    aria-label="Increase"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+
+              <div class="input number-field" data-number-field>
+                <label class="input__label" for="nf-md">Default</label>
+                <span class="input__container number-field__control">
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="-1"
+                    aria-label="Decrease"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                  <input
+                    class="input__element number-field__input"
+                    id="nf-md"
+                    type="text"
+                    inputmode="numeric"
+                    value="1"
+                    data-min="0"
+                    data-max="999"
+                    data-step="1"
+                  />
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="1"
+                    aria-label="Increase"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                </span>
+              </div>
+
+              <div class="input number-field number-field--lg" data-number-field>
+                <label class="input__label" for="nf-lg">Large</label>
+                <span class="input__container number-field__control">
+                  <button
+                    class="number-field__step"
+                    type="button"
+                    data-step="-1"
+                    aria-label="Decrease"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l14 0" />
+                    </svg>
+                  </button>
+                  <input
+                    class="input__element number-field__input"
+                    id="nf-lg"
                     type="text"
                     inputmode="numeric"
                     value="1"
@@ -202,7 +320,9 @@
               </div>
             </div>
             <script type="text/plain" class="example__react">
-              <NumberField label="Amount" size="lg" defaultValue={1} min={0} max={999} />
+              <NumberField label="Small" size="sm" defaultValue={1} min={0} max={999} />
+              <NumberField label="Default" defaultValue={1} min={0} max={999} />
+              <NumberField label="Large" size="lg" defaultValue={1} min={0} max={999} />
             </script>
           </div>
         </section>

@@ -1130,11 +1130,12 @@
     background: var(--background-primary);
   }
 
+  /* Field-styled trigger, so its focus/open border matches Input and Select. */
   .menu__trigger:focus-visible,
   .menu__trigger[aria-expanded="true"] {
     outline: none;
-    border-color: var(--focus);
-    box-shadow: 0 0 0 1px var(--focus);
+    border-color: var(--primary-foreground);
+    box-shadow: 0 0 0 1px var(--primary-foreground);
   }
 
   .menu__chevron {

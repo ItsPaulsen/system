@@ -4228,6 +4228,12 @@
     height: 20px;
   }
 
+  /* A bare trailing chevron (direct svg, not a button) is nudged past the padding
+   so its visible stroke optically lands on the content edge, iOS-style. */
+  .item__actions > svg {
+    margin-right: -4px;
+  }
+
   /* Stack rows into one surface: the group owns the background and rounding, so
    nested rows go transparent and square, and .item-separator hairlines divide them. */
   .item-group {
@@ -4243,9 +4249,11 @@
     background: transparent;
   }
 
+  /* Inset to line up with the row text: left clears the padding + media + gap,
+   right stops one padding-width in. (Media is the --sm 32px used in groups.) */
   .item-separator {
     height: var(--border-width);
-    margin: 0;
+    margin: 0 1rem 0 calc(1rem + 32px + 0.75rem);
     border: 0;
     background: var(--fill-tertiary);
   }

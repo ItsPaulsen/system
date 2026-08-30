@@ -4173,12 +4173,23 @@
     display: grid;
     place-items: center;
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-full);
   }
 
   .item__media svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Smaller media for denser rows (e.g. grouped lists). */
+  .item__media--sm {
+    width: 32px;
+    height: 32px;
+  }
+
+  .item__media--sm svg {
     width: 20px;
     height: 20px;
   }

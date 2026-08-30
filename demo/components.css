@@ -4129,8 +4129,10 @@
     transition: background var(--motion-default);
   }
 
+  /* Recessed skin for a row sitting on a secondary (elevated) surface, where the
+   default white row wouldn't read. Fills with the page's recessed background. */
   .item--muted {
-    background: var(--fill-quaternary);
+    background: var(--background-primary);
   }
 
   /* Interactive rows (<a>/<button>) get hover/active surfaces and a focus ring. */
@@ -4146,18 +4148,18 @@
     background: var(--background-secondary-active);
   }
 
-  /* A muted row that's interactive stays in the muted (quaternary) family on hover
-   rather than jumping to the plain surface hover. */
+  /* An interactive muted row stays in the recessed (background-primary) family on
+   hover rather than jumping to the plain surface hover. */
   @media (hover: hover) and (pointer: fine) {
     a.item--muted:hover,
     button.item--muted:hover {
-      background: var(--fill-quaternary-hover);
+      background: var(--background-primary-hover);
     }
   }
 
   a.item--muted:active,
   button.item--muted:active {
-    background: var(--fill-quaternary-active);
+    background: var(--background-primary-active);
   }
 
   a.item:focus-visible,

@@ -361,7 +361,7 @@
           </p>
           <div class="example" data-example>
             <div class="component-preview component-preview--surface">
-              <div class="item item--muted">
+              <a class="item item--muted" href="#" onclick="event.preventDefault()">
                 <span
                   class="item__media"
                   style="background: var(--fuchsia-soft); color: var(--fuchsia)"
@@ -385,10 +385,10 @@
                   <span class="item__title">4 members</span>
                   <span class="item__description">Everyone with access to this workspace</span>
                 </span>
-              </div>
+              </a>
             </div>
             <script type="text/plain" class="example__react">
-              <Item variant="muted">
+              <Item variant="muted" href="/members">
                 <ItemMedia style={{ background: "var(--fuchsia-soft)", color: "var(--fuchsia)" }}>
                   <IconUsers />
                 </ItemMedia>

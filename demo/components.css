@@ -4182,10 +4182,11 @@
     box-shadow: none;
   }
 
-  /* Steppers get the standard outside focus ring, like any button. */
+  /* Inset focus ring so it hugs the button evenly; an outset ring would extend into
+   the divider gap on the inner (square) side and look lopsided. */
   .number-field__step:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
+    outline-offset: calc(-1 * var(--focus-ring-width));
   }
 
   .number-field__step:disabled {

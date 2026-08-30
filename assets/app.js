@@ -291,6 +291,7 @@ const PROJECT_PAGES = {
         { label: "Button", href: "/demo/components/button/" },
         { label: "Calendar", href: "/demo/components/calendar/" },
         { label: "Card", href: "/demo/components/card/" },
+        { label: "Carousel", href: "/demo/components/carousel/", new: true },
         { label: "Checkbox", href: "/demo/components/checkbox/" },
         { label: "Combobox", href: "/demo/components/combobox/" },
         { label: "Date Picker", href: "/demo/components/date-picker/" },
@@ -2777,6 +2778,143 @@ function initSliders() {
   });
 }
 
+// Carousel: a transform-driven slider (like Embla, no native scroll underneath, so
+// the two coordinate systems can't fight). JS owns `pos`, the track's translateX in
+// [−maxScroll, 0]. The pointer drags it (mouse and touch) with a rubber-band past the
+// ends; release settles to the nearest item. Buttons/keys step one item; a live region
+// announces the current one.
+function initCarousel() {
+  document.querySelectorAll("[data-carousel]").forEach((root) => {
+    const viewport = root.querySelector(".carousel__viewport");
+    const track = root.querySelector(".carousel__track");
+    const prev = root.querySelector(".carousel__control--prev");
+    const next = root.querySelector(".carousel__control--next");
+    const status = root.querySelector("[data-carousel-status]");
+    if (!viewport || !track) return;
+    const items = Array.from(track.children);
+    if (!items.length) return;
+
+    const RESIST = 0.3; // fraction of the drag that shows past an end
+    const EASE = "transform 350ms var(--motion-ease-out)";
+    let pos = 0;
+
+    // How far the track can travel, and each item's aligned scroll offset (its
+    // offsetLeft, clamped so the last items settle at the end rather than beyond it).
+    const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+    const points = () => {
+      const m = maxScroll();
+      const base = items[0].offsetLeft;
+      return items.map((it) => Math.min(it.offsetLeft - base, m));
+    };
+    const nearestIndex = (scroll) => {
+      const pts = points();
+      let bi = 0;
+      let bd = Infinity;
+      pts.forEach((p, i) => {
+        if (Math.abs(p - scroll) < bd) {
+          bd = Math.abs(p - scroll);
+          bi = i;
+        }
+      });
+      return bi;
+    };
+
+    const render = (animate) => {
+      track.style.transition = animate ? EASE : "none";
+      track.style.transform = `translate3d(${pos}px, 0, 0)`;
+    };
+
+    const sync = () => {
+      const scroll = -pos;
+      const m = maxScroll();
+      if (prev) prev.disabled = scroll <= 0.5;
+      if (next) next.disabled = scroll >= m - 0.5;
+      if (status) {
+        const i = nearestIndex(scroll);
+        status.textContent = `Slide ${i + 1} of ${items.length}`;
+      }
+    };
+
+    const settle = (scroll) => {
+      pos = -Math.max(0, Math.min(maxScroll(), scroll));
+      render(true);
+      sync();
+    };
+    const goTo = (i) => {
+      const pts = points();
+      settle(pts[Math.max(0, Math.min(pts.length - 1, i))]);
+    };
+    const current = () => nearestIndex(-pos);
+
+    prev?.addEventListener("click", () => goTo(current() - 1));
+    next?.addEventListener("click", () => goTo(current() + 1));
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goTo(current() - 1);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goTo(current() + 1);
+      }
+    });
+
+    // Pointer drag for mouse and touch alike. Past an end the extra travel is
+    // resisted (rubber-band); release snaps to the nearest item. A real drag
+    // swallows the trailing click so a slide link isn't followed.
+    let down = false;
+    let startX = 0;
+    let startPos = 0;
+    let moved = false;
+    viewport.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      if (e.pointerType === "mouse") e.preventDefault(); // stop native text/image drag
+      down = true;
+      moved = false;
+      startX = e.clientX;
+      startPos = pos;
+      viewport.setPointerCapture(e.pointerId);
+      viewport.classList.add("is-dragging");
+    });
+    viewport.addEventListener("pointermove", (e) => {
+      if (!down) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 3) moved = true;
+      const min = -maxScroll();
+      let p = startPos + dx;
+      if (p > 0) p *= RESIST;
+      else if (p < min) p = min + (p - min) * RESIST;
+      pos = p;
+      render(false);
+    });
+    const endDrag = (e) => {
+      if (!down) return;
+      down = false;
+      viewport.releasePointerCapture?.(e.pointerId);
+      viewport.classList.remove("is-dragging");
+      goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos))));
+      if (moved) {
+        const swallow = (c) => c.preventDefault();
+        viewport.addEventListener("click", swallow, { capture: true });
+        requestAnimationFrame(() =>
+          viewport.removeEventListener("click", swallow, { capture: true })
+        );
+      }
+    };
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+    viewport.addEventListener("lostpointercapture", endDrag);
+
+    // Re-snap to the current item after a resize (widths and maxScroll change).
+    let frame;
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => goTo(current()));
+    });
+    render(false);
+    sync();
+  });
+}
+
 // Tooltip positioning: flip above/below by available space and clamp to the
 // viewport, keeping the arrow pointed at the trigger. CSS handles the fade.
 function initTooltips() {
@@ -3248,6 +3386,7 @@ function init() {
   initDateRanges();
   initNavMenus();
   initTabs();
+  initCarousel();
   initErrorSummary();
   initCharCount();
   refreshResponsive();

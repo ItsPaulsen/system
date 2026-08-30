@@ -4118,6 +4118,114 @@
     background: var(--fill-quaternary-active);
   }
 
+  /* ── Carousel ──────────────────────────────────────────────────────────── */
+
+  /* A horizontal, snapping slider of items with prev/next controls. app.js
+   (initCarousel) owns the position: it translates the track, drags it with the
+   pointer (mouse and touch) with a rubber-band past the ends, snaps to the nearest
+   item on release, wires the buttons + keyboard (←/→), disables a control at each
+   end, and announces the current slide.
+
+   --carousel-cols sets how many items show at once (default 1); --carousel-gap
+   the space between them. The item flex-basis subtracts the gaps so N items fit
+   exactly. Override the vars on the root (or per breakpoint) for a multi-up view.
+
+   <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="…">
+     <button class="carousel__control carousel__control--prev" …>…</button>
+     <div class="carousel__viewport">
+       <ul class="carousel__track">
+         <li class="carousel__item" role="group" aria-roledescription="slide">…</li>
+       </ul>
+     </div>
+     <button class="carousel__control carousel__control--next" …>…</button>
+   </div> */
+  .carousel {
+    --carousel-gap: 1rem;
+    --carousel-cols: 1;
+
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* The window. The track inside is moved by JS (initCarousel) via a translate3d
+   transform, so overflow is simply clipped. touch-action pan-y lets the page still
+   scroll vertically while horizontal drags belong to the carousel. */
+  .carousel__viewport {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  /* Suppress text/image selection during a drag. */
+  .carousel__viewport.is-dragging {
+    user-select: none;
+  }
+
+  .carousel__track {
+    display: flex;
+    gap: var(--carousel-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+  }
+
+  /* Basis subtracts the shared gaps so exactly --carousel-cols items span the
+   viewport. grow/shrink 0 so each keeps its width and the track can overflow. */
+  .carousel__item {
+    flex: 0 0 calc((100% - (var(--carousel-cols) - 1) * var(--carousel-gap)) / var(--carousel-cols));
+    min-width: 0;
+  }
+
+  /* Round icon buttons flanking the viewport, vertically centred by the flex row. */
+  .carousel__control {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: var(--border-width) solid var(--fill-tertiary);
+    border-radius: var(--radius-full);
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    cursor: pointer;
+    transition:
+      background var(--motion-default),
+      border-color var(--motion-default);
+  }
+
+  .carousel__control svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .carousel__control:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .carousel__control:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Reached the end on that side. Keeps the resting surface so it doesn't read as
+   a filled CTA; only the icon + border fade. No hover feedback. */
+  .carousel__control:disabled {
+    border-color: var(--fill-tertiary);
+    color: var(--fill-secondary);
+    cursor: not-allowed;
+  }
+
+  .carousel__control:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
+
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    The forced palette strips backgrounds, shadows and masks, so any state or
    surface shown only by a fill/shadow disappears. Restore it with system colors
@@ -4404,6 +4512,12 @@
 
     .spinner__track {
       stroke: GrayText;
+    }
+
+    /* Carousel: a reached-the-end control drops to GrayText so it still reads. */
+    .carousel__control:disabled {
+      color: GrayText;
+      border-color: GrayText;
     }
   }
 }

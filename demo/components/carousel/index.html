@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Carousel - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .component-preview .carousel {
+        width: 100%;
+        max-width: 520px;
+      }
+
+      /* Demo-only slide: a plain surface with a centred number so the snapping
+         and the item sizing are what stand out, not the content. */
+      .demo-slide {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        border: var(--border-width) solid var(--fill-tertiary);
+        border-radius: var(--radius-lg);
+        font-size: var(--font-headline-small-size);
+        font-weight: 600;
+      }
+
+      /* The multi-up example: 2 slides on phones, 3 on desktop (never fewer than 2). */
+      .carousel--demo-multi {
+        --carousel-cols: 2;
+      }
+
+      @media (min-width: 960px) {
+        .carousel--demo-multi {
+          --carousel-cols: 3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Carousel</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Carousel"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">A swipeable row of items, one or more in view.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            One item per view. A control disables itself at each end; the live region announces the
+            current slide. Needs <code>initCarousel()</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="carousel"
+                data-carousel
+                role="group"
+                aria-roledescription="carousel"
+                aria-label="Highlights"
+              >
+                <button
+                  class="carousel__control carousel__control--prev"
+                  type="button"
+                  aria-label="Previous slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 6l-6 6l6 6" />
+                  </svg>
+                </button>
+                <div class="carousel__viewport">
+                  <ul class="carousel__track">
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      1
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      2
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      3
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      4
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      5
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="carousel__control carousel__control--next"
+                  type="button"
+                  aria-label="Next slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </button>
+                <span class="sr-only" aria-live="polite" data-carousel-status></span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Carousel
+                aria-label="Highlights"
+                items={[1, 2, 3, 4, 5].map((n) => (
+                  <div className="demo-slide">{n}</div>
+                ))}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Multiple items</h2>
+          <p class="section-note">
+            Set <code>--carousel-cols</code> to show more than one at a time, usually per breakpoint
+            (2 on phones, 3 on desktop here). <code>--carousel-gap</code> sets the space between.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="carousel carousel--demo-multi"
+                data-carousel
+                role="group"
+                aria-roledescription="carousel"
+                aria-label="Catalogue"
+              >
+                <button
+                  class="carousel__control carousel__control--prev"
+                  type="button"
+                  aria-label="Previous slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 6l-6 6l6 6" />
+                  </svg>
+                </button>
+                <div class="carousel__viewport">
+                  <ul class="carousel__track">
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      1
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      2
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      3
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      4
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      5
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      6
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="carousel__control carousel__control--next"
+                  type="button"
+                  aria-label="Next slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </button>
+                <span class="sr-only" aria-live="polite" data-carousel-status></span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Carousel
+                aria-label="Catalogue"
+                cols={3}
+                items={[1, 2, 3, 4, 5, 6].map((n) => (
+                  <div className="demo-slide">{n}</div>
+                ))}
+              />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>items</code> are the slide nodes; <code>cols</code> and <code>gap</code> drive the
+            CSS custom props. Prev/next, arrow keys, the disabled ends and the live count are built
+            in.
+          </p>
+          <div data-source="/react/Carousel.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>initCarousel()</code> translates the track: pointer drag (mouse and touch) with a
+            rubber-band past the ends, snap-to-item on release, plus the buttons, arrow keys, and
+            the "Slide N of M" region.
+          </p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">data-carousel</span> <span class="tok-prop">role</span>=<span class="tok-str">"group"</span> <span class="tok-prop">aria-roledescription</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__control carousel__control--prev"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Previous slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__viewport"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;ul</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__track"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;li</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__item"</span> <span class="tok-prop">role</span>=<span class="tok-str">"group"</span> <span class="tok-prop">aria-roledescription</span>=<span class="tok-str">"slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/li&gt;</span>
+      <span class="tok-com">&lt;!-- …more slides --&gt;</span>
+    <span class="tok-key">&lt;/ul&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__control carousel__control--next"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Next slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"sr-only"</span> <span class="tok-prop">aria-live</span>=<span class="tok-str">"polite"</span> <span class="tok-prop">data-carousel-status</span><span class="tok-key">&gt;&lt;/span&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span>
+
+<span class="tok-com">/* Show more than one at a time by overriding the col count, per breakpoint: */</span>
+<span class="tok-key">.carousel</span> <span class="tok-key">{</span> <span class="tok-prop">--carousel-cols</span>: <span class="tok-str">3</span>; <span class="tok-key">}</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

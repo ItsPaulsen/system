@@ -4186,7 +4186,7 @@
    (an inset outline shrinks its own corner radius and no longer matches the field).
    The transparent outline keeps a visible ring in forced-colors mode. */
   .number-field__step:focus-visible {
-    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--focus);
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--primary-foreground);
     outline: calc(var(--border-width) * 2) solid transparent;
     animation: none;
   }

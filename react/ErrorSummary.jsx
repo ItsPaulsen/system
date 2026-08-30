@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from "react";
 
 // Post-submit summary of form errors: a labelled danger box listing each error as a link to its
-// field. Focuses itself on mount (tabindex=-1 + aria-labelledby the heading) so a screen reader
+// field. Focuses itself when it appears (tabindex=-1 + aria-labelledby the heading) so a screen reader
 // announces it the moment it appears after a failed submit; each link moves focus to the field it
 // names. `errors` are { id, message } where id is the target field's id. Renders nothing when
 // there are no errors, so you can mount it unconditionally with the current error list.
@@ -9,9 +9,10 @@ export default function ErrorSummary({ errors, heading = "There is a problem", c
   const ref = useRef(null);
   const headingId = useId();
 
+  // Focus whenever the error set appears or changes, so a resubmit re-announces it.
   useEffect(() => {
-    ref.current?.focus();
-  }, []);
+    if (errors?.length) ref.current?.focus();
+  }, [errors?.length]);
 
   if (!errors?.length) return null;
 

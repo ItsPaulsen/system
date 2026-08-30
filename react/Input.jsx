@@ -24,7 +24,10 @@ export default function Input({
   ...rest
 }) {
   const id = useId();
-  const [count, setCount] = useState(String(value ?? defaultValue ?? "").length);
+  // Counter derives from `value` when controlled, else tracks uncontrolled edits.
+  const isControlled = value !== undefined;
+  const [innerCount, setInnerCount] = useState(String(defaultValue ?? "").length);
+  const count = isControlled ? String(value ?? "").length : innerCount;
   const overLimit = maxCount != null && count > maxCount;
   const isInvalid = invalid || Boolean(error) || overLimit;
   const containerCls = [
@@ -44,7 +47,7 @@ export default function Input({
       .join(" ") || undefined;
 
   const handleChange = (e) => {
-    if (maxCount != null) setCount(e.target.value.length);
+    if (maxCount != null && !isControlled) setInnerCount(e.target.value.length);
     onChange?.(e);
   };
 
@@ -70,8 +73,7 @@ export default function Input({
           className={elementCls}
           type={type}
           required={required}
-          value={value}
-          defaultValue={defaultValue}
+          {...(isControlled ? { value } : { defaultValue })}
           onChange={handleChange}
           aria-invalid={isInvalid || undefined}
           aria-describedby={describedBy}

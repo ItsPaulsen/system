@@ -99,6 +99,14 @@ export default function Select({
     };
   }, [open]);
 
+  // Keep the active row visible on arrow/type-ahead nav (focus sits on the list, not the option).
+  useEffect(() => {
+    if (!open || active < 0) return;
+    listRef.current
+      ?.querySelector(".select__option.is-active")
+      ?.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
+
   // Close and hand focus back to the trigger (keyboard close / selection).
   const closeToTrigger = () => {
     setOpen(false);

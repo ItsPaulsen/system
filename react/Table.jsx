@@ -17,6 +17,7 @@ export default function Table({ children, className, ariaLabel, ...rest }) {
       } else {
         wrap.removeAttribute("role");
         wrap.removeAttribute("tabindex");
+        wrap.removeAttribute("aria-label");
       }
     };
     sync();

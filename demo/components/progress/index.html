@@ -129,7 +129,7 @@
 
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
-          <pre><code><span class="tok-key">&lt;progress</span> <span class="tok-prop">class</span>=<span class="tok-str">"progress"</span> <span class="tok-prop">value</span>=<span class="tok-str">"70"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span>
+          <pre><code><span class="tok-key">&lt;progress</span> <span class="tok-prop">class</span>=<span class="tok-str">"progress"</span> <span class="tok-prop">value</span>=<span class="tok-str">"75"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span>
           <span class="tok-prop">aria-label</span>=<span class="tok-str">"Upload"</span><span class="tok-key">&gt;&lt;/progress&gt;</span></code></pre>
         </section>
 
@@ -138,7 +138,7 @@
           <p class="section-note">
             Progress through a fixed, ordered flow. It's an <code>&lt;ol&gt;</code>, so the sequence
             is announced; mark the active step <code>aria-current="step"</code> and finished steps
-            <code>.is-done</code> (which swaps the number for a check). Colours ride
+            <code>.is-done</code> (which swaps the number for a check). Colors ride
             <code>--accent</code>, so a <a href="/demo/theming/">data-color</a> region retints it.
           </p>
           <div class="example" data-example>
@@ -147,10 +147,12 @@
                 <li class="steps__step is-done">
                   <span class="steps__indicator"><span class="steps__num">1</span></span>
                   <span class="steps__label">Account</span>
+                  <span class="sr-only">Completed</span>
                 </li>
                 <li class="steps__step is-done">
                   <span class="steps__indicator"><span class="steps__num">2</span></span>
                   <span class="steps__label">Profile</span>
+                  <span class="sr-only">Completed</span>
                 </li>
                 <li class="steps__step is-current" aria-current="step">
                   <span class="steps__indicator"><span class="steps__num">3</span></span>

@@ -632,10 +632,10 @@
     cursor: pointer;
   }
 
-  /* Active state is the border itself (MD3 outlined field): it turns the focus
-   colour and a 1px outset shadow doubles it to ~2px on the outside, no
-   separate ring, no layout shift. Uses --focus (not raw primary) since this is
-   a focus affordance, so it matches every other focus ring. */
+  /* Active state is the border itself (MD3 outlined field): it turns
+   --primary-foreground and a 1px outset shadow doubles it to ~2px on the
+   outside, no separate ring, no layout shift. The custom Select trigger mirrors
+   this exactly so every field reads the same on focus. */
   .input__container:focus-within {
     border-color: var(--primary-foreground);
     box-shadow: 0 0 0 1px var(--primary-foreground);
@@ -905,12 +905,13 @@
   }
 
   /* Active border on keyboard focus and while open (focus moves to the list on
-   open, so key off aria-expanded to keep the border lit); mirrors the input. */
+   open, so key off aria-expanded to keep the border lit); mirrors the input's
+   focus-within, so it uses --primary-foreground to match every other field. */
   .select__trigger:focus-visible,
   .select__trigger[aria-expanded="true"] {
     outline: none;
-    border-color: var(--focus);
-    box-shadow: 0 0 0 1px var(--focus);
+    border-color: var(--primary-foreground);
+    box-shadow: 0 0 0 1px var(--primary-foreground);
   }
 
   .select__trigger:disabled {

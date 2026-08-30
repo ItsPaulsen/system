@@ -20,9 +20,9 @@ const parse = (s) => {
 };
 const mondayIndex = (d) => (d.getDay() + 6) % 7;
 
-// Two-month range picker. Uncontrolled via defaultStart/defaultEnd; pass start + end +
-// onChange (all ISO "yyyy-mm-dd") to control it. First click sets the start, the next the
-// end (swapping if earlier); a click after a full range starts over. Hover previews the band.
+// Two-month range picker. Uncontrolled via defaultStart/defaultEnd; picks are staged, and Apply
+// commits the range (fires onChange + onApply, ISO "yyyy-mm-dd") while Cancel discards it (onCancel).
+// First click sets the start, the next the end (swapping if earlier); a click after a full range starts over.
 export default function DateRange({ defaultStart, defaultEnd, onChange, onApply, onCancel }) {
   const today = useMemo(() => {
     const d = new Date();

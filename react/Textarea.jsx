@@ -19,7 +19,10 @@ export default function Textarea({
   ...rest
 }) {
   const id = useId();
-  const [count, setCount] = useState(String(value ?? defaultValue ?? "").length);
+  // Counter derives from `value` when controlled, else tracks uncontrolled edits.
+  const isControlled = value !== undefined;
+  const [innerCount, setInnerCount] = useState(String(defaultValue ?? "").length);
+  const count = isControlled ? String(value ?? "").length : innerCount;
   const overLimit = maxCount != null && count > maxCount;
   const isInvalid = invalid || Boolean(error) || overLimit;
   const containerCls = [
@@ -35,7 +38,7 @@ export default function Textarea({
       .join(" ") || undefined;
 
   const handleChange = (e) => {
-    if (maxCount != null) setCount(e.target.value.length);
+    if (maxCount != null && !isControlled) setInnerCount(e.target.value.length);
     onChange?.(e);
   };
 
@@ -55,8 +58,7 @@ export default function Textarea({
         <textarea
           className="input__element"
           required={required}
-          value={value}
-          defaultValue={defaultValue}
+          {...(isControlled ? { value } : { defaultValue })}
           onChange={handleChange}
           aria-invalid={isInvalid || undefined}
           aria-describedby={describedBy}

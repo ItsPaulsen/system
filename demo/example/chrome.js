@@ -119,7 +119,7 @@
             <details class="ex-footer__col" open>
               <summary class="ex-footer__col-head">Foundations</summary>
               <ul class="ex-footer__col-list">
-                <li><a href="#">Colours</a></li>
+                <li><a href="#">Colors</a></li>
                 <li><a href="#">Typography</a></li>
                 <li><a href="#">Radii</a></li>
               </ul>
@@ -271,7 +271,7 @@
           <hr class="separator ex-menu__divider" />
 
           <div class="ex-menu__links">
-            <a href="#">Colours</a>
+            <a href="#">Colors</a>
             <a href="#">Typography</a>
             <a href="#">Radii</a>
             <a href="#">Buttons</a>

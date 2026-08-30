@@ -1998,7 +1998,7 @@
 
   /* Ring spinner matching the Spinner component (which lives in components.css,
    not loaded site-wide, so the toast keeps a self-contained copy of the same
-   SVG grow/shrink spinner here — keep in sync with .spinner in components.css).
+   SVG grow/shrink spinner here, kept in sync with .spinner in components.css).
    Rendered as <svg class="toast__spinner"><circle .-track/><circle .-arc/></svg>. */
   .toast__spinner {
     /* ~75% of the icon slot so it optically matches the other glyphs' inset
@@ -2194,7 +2194,7 @@
     }
 
     /* Radius / shadow previews: don't force the brand surface (that fights the
-     mode). Show a plain outlined box instead — the radius reads via the border's
+     mode). Show a plain outlined box instead: the radius reads via the border's
      corners; shadow depth can't be shown in high contrast at all, so those tiles
      read uniform, which is honest for a mode with no depth. */
     .preview-card__chip[data-shadow-demo],

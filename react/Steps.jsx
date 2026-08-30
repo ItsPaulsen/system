@@ -15,6 +15,7 @@ export default function Steps({ steps, current = 0, className }) {
               <span className="steps__num">{i + 1}</span>
             </span>
             <span className="steps__label">{label}</span>
+            {state === "is-done" && <span className="sr-only">Completed</span>}
           </li>
         );
       })}

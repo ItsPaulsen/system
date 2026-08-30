@@ -4244,7 +4244,10 @@
     background: var(--background-secondary);
   }
 
+  /* Denser rows in a list: 12px top/bottom with the 32px media gives a 56px row. */
   .item-group .item {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
     border-radius: 0;
     background: transparent;
   }

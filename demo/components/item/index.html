@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Item - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      .component-preview {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .component-preview .item,
+      .component-preview .item-group {
+        width: 100%;
+        max-width: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Item</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Item"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">
+            A row of media, content, and actions. For a standalone surface, use
+            <a href="/demo/components/card/">Card</a>.
+          </p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            Link rows: <code>item__media</code> + <code>item__content</code> (title and description)
+            + a trailing chevron in <code>item__actions</code>. Use <code>item--outline</code> for a
+            standalone, bordered row.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="item item--outline" href="#" onclick="event.preventDefault()">
+                <span
+                  class="item__media"
+                  style="background: var(--green-soft); color: var(--green)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5.931 6.936l1.275 4.249m5.607 5.609l4.251 1.275" />
+                    <path d="M11.683 12.317l5.759 -5.759" />
+                    <path d="M4 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" />
+                    <path d="M17 5.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" />
+                    <path d="M17 18.5a1.5 1.5 0 1 0 3 0a1.5 1.5 0 1 0 -3 0" />
+                    <path d="M4 15.5a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0 -9 0" />
+                  </svg>
+                </span>
+                <span class="item__content">
+                  <span class="item__title">Getting started</span>
+                  <span class="item__description">Set up your workspace in a few steps</span>
+                </span>
+                <span class="item__actions">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </span>
+              </a>
+
+              <a class="item item--outline" href="#" onclick="event.preventDefault()">
+                <span class="item__media" style="background: var(--blue-soft); color: var(--blue)">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                    <path
+                      d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"
+                    />
+                    <path d="M9 9l1 0" />
+                    <path d="M9 13l6 0" />
+                    <path d="M9 17l6 0" />
+                  </svg>
+                </span>
+                <span class="item__content">
+                  <span class="item__title">Documentation</span>
+                  <span class="item__description">Guides and the full API reference</span>
+                </span>
+                <span class="item__actions">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Item variant="outline" href="/getting-started">
+                <ItemMedia style={{ background: "var(--green-soft)", color: "var(--green)" }}>
+                  <IconAffiliate />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Getting started</ItemTitle>
+                  <ItemDescription>Set up your workspace in a few steps</ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <IconChevronRight />
+                </ItemActions>
+              </Item>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Grouped list</h2>
+          <p class="section-note">
+            Wrap rows in <code>item-group item-group--outline</code> and put
+            <code>item-separator</code> between them: one border frames the list, hairlines divide
+            the rows.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="item-group item-group--outline">
+                <a class="item" href="#" onclick="event.preventDefault()">
+                  <span
+                    class="item__media"
+                    style="background: var(--fill-quaternary); color: var(--ink-secondary)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"
+                      />
+                      <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                    </svg>
+                  </span>
+                  <span class="item__content">
+                    <span class="item__title">General</span>
+                    <span class="item__description">Language, time zone, appearance</span>
+                  </span>
+                  <span class="item__actions">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6l-6 6" />
+                    </svg>
+                  </span>
+                </a>
+                <hr class="item-separator" />
+                <a class="item" href="#" onclick="event.preventDefault()">
+                  <span
+                    class="item__media"
+                    style="background: var(--fill-quaternary); color: var(--ink-secondary)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"
+                      />
+                      <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+                    </svg>
+                  </span>
+                  <span class="item__content">
+                    <span class="item__title">Notifications</span>
+                    <span class="item__description">Email and in-app alerts</span>
+                  </span>
+                  <span class="item__actions">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6l-6 6" />
+                    </svg>
+                  </span>
+                </a>
+                <hr class="item-separator" />
+                <a class="item" href="#" onclick="event.preventDefault()">
+                  <span
+                    class="item__media"
+                    style="background: var(--fill-quaternary); color: var(--ink-secondary)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"
+                      />
+                      <path d="M3 10l18 0" />
+                      <path d="M7 15l.01 0" />
+                      <path d="M11 15l2 0" />
+                    </svg>
+                  </span>
+                  <span class="item__content">
+                    <span class="item__title">Billing</span>
+                    <span class="item__description">Plan, payment method, invoices</span>
+                  </span>
+                  <span class="item__actions">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6l-6 6" />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ItemGroup variant="outline">
+                <Item href="/settings/general">
+                  <ItemMedia style={{ background: "var(--fill-quaternary)", color: "var(--ink-secondary)" }}>
+                    <IconSettings />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>General</ItemTitle>
+                    <ItemDescription>Language, time zone, appearance</ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <IconChevronRight />
+                  </ItemActions>
+                </Item>
+                <ItemSeparator />
+                <Item href="/settings/notifications">
+                  <ItemMedia style={{ background: "var(--fill-quaternary)", color: "var(--ink-secondary)" }}>
+                    <IconBell />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>Notifications</ItemTitle>
+                    <ItemDescription>Email and in-app alerts</ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <IconChevronRight />
+                  </ItemActions>
+                </Item>
+              </ItemGroup>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Muted</h2>
+          <p class="section-note">
+            <code>item--muted</code> gives a filled, non-interactive row, handy for a summary or an
+            inline notice. A row with no <code>href</code>/<code>onClick</code> renders as a plain
+            <code>&lt;div&gt;</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="item item--muted">
+                <span
+                  class="item__media"
+                  style="background: var(--fuchsia-soft); color: var(--fuchsia)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                  </svg>
+                </span>
+                <span class="item__content">
+                  <span class="item__title">4 members</span>
+                  <span class="item__description">Everyone with access to this workspace</span>
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Item variant="muted">
+                <ItemMedia style={{ background: "var(--fuchsia-soft)", color: "var(--fuchsia)" }}>
+                  <IconUsers />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>4 members</ItemTitle>
+                  <ItemDescription>Everyone with access to this workspace</ItemDescription>
+                </ItemContent>
+              </Item>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            Slots as compound parts. <code>Item</code> renders an <code>&lt;a&gt;</code> with
+            <code>href</code>, a <code>&lt;button&gt;</code> with <code>onClick</code>, else a
+            <code>&lt;div&gt;</code>. Variants: <code>outline</code>, <code>muted</code>.
+          </p>
+          <div data-source="/react/Item.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            An interactive row is an <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with
+            <code>class="item"</code>; the slots are plain spans.
+          </p>
+          <pre><code><span class="tok-key">&lt;a</span> <span class="tok-prop">class</span>=<span class="tok-str">"item item--outline"</span> <span class="tok-prop">href</span>=<span class="tok-str">"…"</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__media"</span><span class="tok-key">&gt;</span>…icon…<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__content"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__title"</span><span class="tok-key">&gt;</span>Getting started<span class="tok-key">&lt;/span&gt;</span>
+    <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__description"</span><span class="tok-key">&gt;</span>Set up your workspace<span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;/span&gt;</span>
+  <span class="tok-key">&lt;span</span> <span class="tok-prop">class</span>=<span class="tok-str">"item__actions"</span><span class="tok-key">&gt;</span>…chevron…<span class="tok-key">&lt;/span&gt;</span>
+<span class="tok-key">&lt;/a&gt;</span>
+
+<span class="tok-com">&lt;!-- Stack rows: .item-group.item-group--outline with .item-separator between --&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

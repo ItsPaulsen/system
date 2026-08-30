@@ -4118,6 +4118,133 @@
     background: var(--fill-quaternary-active);
   }
 
+  /* ── Item ──────────────────────────────────────────────────────────────── */
+
+  /* A compact horizontal row: media + content (title/description) + actions.
+   Where Card is a standalone surface, Item is the repeating line you stack into a
+   list (settings, files, nav, results). Make the whole row a link/button by using
+   <a class="item"> / <button class="item">. Stack rows with .item-group, dividing
+   them with .item-separator; .item-group--outline wraps the list in one border.
+
+   <a class="item item--outline" href="…">
+     <span class="item__media">…icon…</span>
+     <span class="item__content">
+       <span class="item__title">Getting started</span>
+       <span class="item__description">Set up the project</span>
+     </span>
+     <span class="item__actions">…chevron…</span>
+   </a> */
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  .item--outline {
+    border: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .item--muted {
+    background: var(--fill-quaternary);
+  }
+
+  /* Interactive rows (<a>/<button>) get hover/active surfaces and a focus ring. */
+  @media (hover: hover) and (pointer: fine) {
+    a.item:hover,
+    button.item:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  a.item:active,
+  button.item:active {
+    background: var(--background-secondary-active);
+  }
+
+  a.item:focus-visible,
+  button.item:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Leading slot. The icon circle takes its tint from inline soft/accent vars. */
+  .item__media {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+  }
+
+  .item__media svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Title + optional description, taking the free space. */
+  .item__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .item__title {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  /* Secondary line, so ink-secondary (not tertiary) to clear AA in light. */
+  .item__description {
+    font-size: var(--font-body-small-size);
+    color: var(--ink-secondary);
+  }
+
+  /* Trailing controls (button, chevron); ink-tertiary tints a bare chevron. */
+  .item__actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-tertiary);
+  }
+
+  .item__actions svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Stack rows into one list. With --outline a single border wraps the list and
+   .item-separator hairlines divide the rows, so inner rows drop their own radius. */
+  .item-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item-group--outline {
+    overflow: hidden;
+    border: var(--border-width) solid var(--fill-tertiary);
+    border-radius: var(--radius-md);
+  }
+
+  .item-group--outline .item {
+    border-radius: 0;
+  }
+
+  .item-separator {
+    height: var(--border-width);
+    margin: 0;
+    border: 0;
+    background: var(--fill-tertiary);
+  }
+
   /* ── Carousel ──────────────────────────────────────────────────────────── */
 
   /* A horizontal, snapping slider of items with prev/next controls. app.js

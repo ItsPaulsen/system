@@ -3,6 +3,7 @@ import { useId, useRef, useState } from "react";
 // An <input> flanked by −/+ steppers: type a value or step it. Steps on click and
 // Arrow Up/Down, press-and-hold repeats, clamps on blur, and disables a stepper at
 // its bound. Uncontrolled via defaultValue, or pass value + onChange to control it.
+// size="lg" is the larger 48px variant (default is the compact 32px).
 export default function NumberField({
   label,
   hint,
@@ -11,6 +12,7 @@ export default function NumberField({
   min = -Infinity,
   max = Infinity,
   step = 1,
+  size,
   onChange,
   className,
   ...rest
@@ -20,7 +22,9 @@ export default function NumberField({
   const current = value ?? uncontrolled;
   const hold = useRef({});
   const clamp = (n) => Math.min(max, Math.max(min, n));
-  const cls = ["input", "number-field", className].filter(Boolean).join(" ");
+  const cls = ["input", "number-field", size === "lg" && "number-field--lg", className]
+    .filter(Boolean)
+    .join(" ");
 
   const commit = (n) => {
     if (value === undefined) setUncontrolled(n);
@@ -75,7 +79,11 @@ export default function NumberField({
           type="text"
           inputMode="numeric"
           value={current}
-          onChange={(e) => commit(e.target.value)}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v !== "" && Number(v) > max) return; // reject typing past max
+            commit(v);
+          }}
           onBlur={() => {
             const n = parseFloat(current);
             commit(Number.isNaN(n) ? (min > -Infinity ? min : "") : clamp(n));

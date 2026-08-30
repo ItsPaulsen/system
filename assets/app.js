@@ -2850,7 +2850,16 @@ function initNumberFields() {
         nudge(-1);
       }
     });
-    input.addEventListener("input", sync);
+    // Reject a typed value that would exceed max (revert to the last good value);
+    // don't enforce min here so partial entry below min is still typeable.
+    let lastValid = input.value;
+    input.addEventListener("input", () => {
+      if (input.value !== "" && Number(input.value) > max) {
+        input.value = lastValid;
+      }
+      lastValid = input.value;
+      sync();
+    });
     input.addEventListener("blur", () => {
       const n = parse();
       if (n === null) input.value = min > -Infinity ? String(min) : "";

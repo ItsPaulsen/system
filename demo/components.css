@@ -4118,8 +4118,15 @@
        <button class="number-field__step" type="button" data-step="1" aria-label="Increase">+</button>
      </span>
    </label> */
+
+  /* Base size is compact (32px); .number-field--lg is the larger 48px variant. */
   .number-field__control {
+    min-height: 32px;
     padding: 0;
+  }
+
+  .number-field--lg .number-field__control {
+    min-height: 48px;
   }
 
   .number-field__step {
@@ -4128,13 +4135,17 @@
     align-items: center;
     justify-content: center;
     align-self: stretch;
-    width: 3rem;
+    width: 2rem;
     padding: 0;
     border: 0;
     background: transparent;
     color: var(--ink-primary);
     cursor: pointer;
     transition: background var(--motion-default);
+  }
+
+  .number-field--lg .number-field__step {
+    width: 3rem;
   }
 
   .number-field__step svg {
@@ -4161,6 +4172,7 @@
   .number-field__control:focus-within {
     border-color: var(--ink-tertiary);
     box-shadow: none;
+    transition: none;
   }
 
   /* Steppers get the standard outside focus ring, like any button. */
@@ -4197,20 +4209,31 @@
     width: auto;
 
     /* Matches the field height so the value cell is a square minimum, like the
-     steppers; it grows past this as digits are added. */
-    min-width: 3rem;
+     steppers; it grows past this as digits are added. Padding leaves room for two
+     digits, so growth kicks in at the third. */
+    min-width: 2rem;
     max-width: 12ch;
-    padding-inline: 1rem;
+    padding-inline: 0.25rem;
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;
   }
 
   /* The value cell focuses like an input field: primary-foreground border, inset
-   so it sits within the cell between the dividers. */
+   so it sits within the cell between the dividers. No transition (the field's
+   border animation shouldn't play when tabbing onto the value). */
   .number-field__input:focus-visible {
     outline: var(--focus-ring-width) solid var(--primary-foreground);
     outline-offset: calc(-1 * var(--focus-ring-width));
+    transition: none;
+  }
+
+  /* Larger 48px variant: body-medium text and a wider value floor. */
+  .number-field--lg .number-field__input {
+    min-width: 3rem;
+    padding-inline: 0.75rem;
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
   }
 
   /* ── Item ──────────────────────────────────────────────────────────────── */

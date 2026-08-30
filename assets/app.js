@@ -2787,8 +2787,10 @@ function initSliders() {
 function initNumberFields() {
   document.querySelectorAll("[data-number-field]").forEach((root) => {
     const input = root.querySelector(".number-field__input");
-    const dec = root.querySelector('[data-step="-1"]');
-    const inc = root.querySelector('[data-step="1"]');
+    // Scope to the buttons: the input also carries data-step (its step size), so a
+    // bare [data-step="1"] would match the input, not the + button.
+    const dec = root.querySelector('.number-field__step[data-step="-1"]');
+    const inc = root.querySelector('.number-field__step[data-step="1"]');
     if (!input) return;
 
     // Bounds live in data-* (min/max/step aren't valid on a type=text input).

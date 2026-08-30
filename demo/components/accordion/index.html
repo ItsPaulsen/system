@@ -145,6 +145,69 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">One open at a time</h2>
+          <p class="section-note">
+            Give every <code>&lt;details&gt;</code> the same <code>name</code> and the browser keeps
+            only one open, closing the rest. Still no JavaScript.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="accordion" style="width: 100%; max-width: 460px; margin-inline: auto">
+                <details class="accordion__item" name="account" open>
+                  <summary class="accordion__summary">
+                    Where is my data stored?
+                    <span class="accordion__toggle" aria-hidden="true"></span>
+                  </summary>
+                  <div class="accordion__body">
+                    <p>In your region's data center, encrypted at rest.</p>
+                  </div>
+                </details>
+                <details class="accordion__item" name="account">
+                  <summary class="accordion__summary">
+                    Can I export everything?
+                    <span class="accordion__toggle" aria-hidden="true"></span>
+                  </summary>
+                  <div class="accordion__body">
+                    <p>Yes, download a full archive any time from settings.</p>
+                  </div>
+                </details>
+                <details class="accordion__item" name="account">
+                  <summary class="accordion__summary">
+                    How do I close my account?
+                    <span class="accordion__toggle" aria-hidden="true"></span>
+                  </summary>
+                  <div class="accordion__body">
+                    <p>Ask support to remove it; your data is deleted within 30 days.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Accordion>
+                <AccordionItem name="account" open>
+                  <AccordionTrigger>Where is my data stored?</AccordionTrigger>
+                  <AccordionContent>
+                    <p>In your region's data center, encrypted at rest.</p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem name="account">
+                  <AccordionTrigger>Can I export everything?</AccordionTrigger>
+                  <AccordionContent>
+                    <p>Yes, download a full archive any time from settings.</p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem name="account">
+                  <AccordionTrigger>How do I close my account?</AccordionTrigger>
+                  <AccordionContent>
+                    <p>Ask support to remove it; your data is deleted within 30 days.</p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">

@@ -158,7 +158,7 @@
   }
 
   /* ── Body band (recessed) ────────────────────────────────────────────────
-     Rounded top, runs flush into the footer at the bottom (same colour), so
+     Rounded top, runs flush into the footer at the bottom (same color), so
      there's no seam. */
   .article-band {
     margin-top: var(--space-96);

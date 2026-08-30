@@ -1,6 +1,6 @@
 /* system.kristianpaulsen.com, the docs SITE's chrome only (nav, sidebar, code
    blocks, tabs, palette tables). The consumer-facing baseline (reset, focus
-   ring, colour-scheme) and the tokens live in the project's globals.css, which
+   ring, color-scheme) and the tokens live in the project's globals.css, which
    every page also loads (the root landing @imports it). A project handoff is
    globals.css + a component's CSS, never this file. The chrome references the
    project tokens directly, so every page IS a live demo of its project.
@@ -16,7 +16,7 @@
 @layer base, tokens, components;
 
 @layer base {
-  /* Chrome layout tokens. The consumer baseline (reset, colour-scheme,
+  /* Chrome layout tokens. The consumer baseline (reset, color-scheme,
    --flip) lives in globals.css, loaded on every page. */
   :root {
     --radius: 10px;
@@ -71,7 +71,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Applied briefly during a theme swap so no element animates its colour change. */
+  /* Applied briefly during a theme swap so no element animates its color change. */
   .no-transitions,
   .no-transitions *,
   .no-transitions *::before,
@@ -985,7 +985,7 @@
 
   /* Syntax tokens for the code samples, mapped to our palette (GitHub-flavoured hue
    families, but on-system and centrally contrast-controlled). Each --token is themed
-   per color-scheme, so one rule covers both; the light-dark() fallback keeps colours
+   per color-scheme, so one rule covers both; the light-dark() fallback keeps colors
    right if a page ever loads base.css without the tokens. All clear AA on the code
    surface in both themes (light 5.4–7.0, dark 6.5–7.1). key=red, prop=amber,
    selector=green, fn=fuchsia, str/var=blue (both blue-family, as before). */
@@ -1048,7 +1048,7 @@
     display: none;
   }
 
-  /* Palette table, one card per colour family, rows for base tokens, columns
+  /* Palette table, one card per color family, rows for base tokens, columns
    for states (default / hover / active). Content-driven min-width triggers
    horizontal scroll on narrow viewports instead of squeezing swatches. */
   .palette-table {
@@ -2100,9 +2100,9 @@
       border: var(--border-width) solid CanvasText;
     }
 
-    /* Keep the typed toast icon's semantic colour (like the Alert icons). The
-     colour is set on this wrapper span, so the forced palette would remap it to a
-     system colour and the SVG would inherit that; opt out to preserve it. */
+    /* Keep the typed toast icon's semantic color (like the Alert icons). The
+     color is set on this wrapper span, so the forced palette would remap it to a
+     system color and the SVG would inherit that; opt out to preserve it. */
     .toast__icon {
       forced-color-adjust: none;
     }
@@ -2141,7 +2141,7 @@
     }
 
     /* Swatches convey meaning via background alone; opt out of the forced palette
-     so the real colours still render, with a border so the grid keeps its cells. */
+     so the real colors still render, with a border so the grid keeps its cells. */
     .palette-swatch {
       forced-color-adjust: none;
       border: var(--border-width) solid ButtonBorder;
@@ -2154,14 +2154,14 @@
     }
 
     /* Landing picker rows are link-cards on a plain background fill (no border), so
-     they vanish; outline each with its link colour so the selectable row is
+     they vanish; outline each with its link color so the selectable row is
      bounded and reads as interactive. */
     .token-list--flush a.token-list__row {
       border: var(--border-width) solid currentcolor;
     }
 
-    /* The row chevron sets its own faint --ink-tertiary colour, which dims to an
-     invisible GrayText; pin it to LinkText so it matches the row's link colour. */
+    /* The row chevron sets its own faint --ink-tertiary color, which dims to an
+     invisible GrayText; pin it to LinkText so it matches the row's link color. */
     .token-list--flush a.token-list__row::after {
       forced-color-adjust: none;
       color: LinkText;
@@ -2181,7 +2181,7 @@
 
     /* The search clear (X) is a mask tinted faint --ink-secondary that dims in the
      forced palette; paint it CanvasText so the clear affordance stays visible. Its
-     hover (normally --ink-primary) maps to an invisible colour, so pin that too. */
+     hover (normally --ink-primary) maps to an invisible color, so pin that too. */
     .site-nav__search::-webkit-search-cancel-button,
     .site-nav__search::-webkit-search-cancel-button:hover {
       background: CanvasText;

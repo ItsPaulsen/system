@@ -42,9 +42,9 @@
   padding-block: 5rem 0;
   background-color: var(--background-secondary);
 
-  /* Dots, with a top wash of the surface colour fading them in from the top so
+  /* Dots, with a top wash of the surface color fading them in from the top so
      they don't start on a hard line under the header. Fades to a transparent
-     version of the *same* colour to avoid a gray tinge mid-fade. */
+     version of the *same* color to avoid a gray tinge mid-fade. */
   background-image:
     linear-gradient(
       to bottom,

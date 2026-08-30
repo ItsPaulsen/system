@@ -7,7 +7,7 @@
 @layer base, tokens, components;
 
 /* ── Foundation. The baseline a project needs alongside the tokens: reset,
-   colour-scheme (dark mode), the focus ring, the reduced-motion guard, and the
+   color-scheme (dark mode), the focus ring, the reduced-motion guard, and the
    modal scroll-lock hook. Drop this file + a component's CSS into any project.
    (Also present in base.css, which the demo site loads for its own chrome.) */
 @layer base {
@@ -182,7 +182,7 @@
     --focus-hover: color-mix(in oklab, var(--focus) 88%, white);
     --focus-active: color-mix(in oklab, var(--focus) 82%, white);
 
-    /* Focus-ring geometry, the ring's colour is --focus; these are its shape.
+    /* Focus-ring geometry, the ring's color is --focus; these are its shape.
      Every focus-visible outline in base.css/components.css reads these, so the
      ring's thickness and gap are tuned here in one place, not per component.
      Components with a bespoke offset (a tight inline control, a pill) keep their
@@ -236,7 +236,7 @@
 
     /* ── Accent role ─────────────────────────────────────────────────────
      A contextual accent that defaults to the brand. Components read --accent*
-     instead of a named colour; wrapping any subtree in
+     instead of a named color; wrapping any subtree in
      [data-color="primary|red|green|blue"] repoints --accent-anchor and the whole
      family re-derives from it. Only the anchor default lives here; the
      derivation is in the `:root, [data-color]` rule below, so it re-runs at the
@@ -406,7 +406,7 @@
      overrides live at the end of the file. */
     --ds-font-size-addition: 0rem;
 
-    /* Shadows (Tailwind scale, layered for realistic depth). Colour is
+    /* Shadows (Tailwind scale, layered for realistic depth). Color is
      mixed from --neutral-black so shadows follow any future tint of the
      neutrals (and stay dark in both themes, --ink flips, --neutral-black
      doesn't unless --anchor-neutral itself is changed). Each ends with a soft,
@@ -480,8 +480,8 @@
     --accent-soft-hover: rgb(from var(--accent-tint) r g b / 0.23);
     --accent-soft-active: rgb(from var(--accent-tint) r g b / 0.27);
 
-    /* Border for outline controls in a region: the region's own colour, so an
-     outlined button/input inside [data-color] reads in that colour and flips
+    /* Border for outline controls in a region: the region's own color, so an
+     outlined button/input inside [data-color] reads in that color and flips
      per theme with --accent. Neutral repoints it to the standard control border
      (--ink-tertiary) below. Not consumed by a component here yet, it's the role
      primitive for outline treatments (kept per the full-API principle). */
@@ -663,7 +663,7 @@
     --neutral-gray-4-active: color-mix(in oklab, var(--neutral-black) 70%, white);
 
     /* Same shape as light, offsets, alphas, and the ambient edge layer all
-     match. The only difference is colour: pure black instead of the neutral
+     match. The only difference is color: pure black instead of the neutral
      tint, so the shadow still reads on a dark surface (a one-off: dark shadows
      don't follow the neutral tint). */
     --shadow-sm:

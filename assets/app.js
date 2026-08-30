@@ -7,7 +7,7 @@
 
 // toast(msg) / toast.success|info|warning|error(msg) / toast.promise(p, msgs).
 // One reused pill; typed toasts get a Tabler icon in the matching semantic
-// colour (same icons as the Alert component).
+// color (same icons as the Alert component).
 const toast = (() => {
   const ICONS = {
     success: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12l2 2l4 -4" />',
@@ -148,7 +148,7 @@ function currentTheme() {
 
 function setTheme(theme) {
   // Suppress transitions across the swap, otherwise every element with a
-  // colour transition (buttons, pagination, cards) animates its background
+  // color transition (buttons, pagination, cards) animates its background
   // change and reads as a flash.
   const root = document.documentElement;
   root.classList.add("no-transitions");
@@ -651,7 +651,7 @@ function tokenToHex(token) {
   return hex.toUpperCase();
 }
 
-// Fill each swatch's colour from its :root token; copy target is the resolved
+// Fill each swatch's color from its :root token; copy target is the resolved
 // hex (falls back to the raw value if a browser won't serialise it as rgb).
 function hydratePalette() {
   const rootStyle = getComputedStyle(document.documentElement);

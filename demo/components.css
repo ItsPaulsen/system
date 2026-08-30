@@ -173,7 +173,7 @@
    native stroke-width 2 (≈1.67px at this size). No padding: the Tabler path's
    own 5→20 bounds give the inset (a path that ran edge-to-edge would need
    padding, ours doesn't). Presentation lives on the <svg> like the other
-   inline icons; stroke="currentColor" reads this colour. */
+   inline icons; stroke="currentColor" reads this color. */
   .checkbox__check {
     color: var(--neutral-white);
     pointer-events: none;
@@ -1190,7 +1190,7 @@
     }
   }
 
-  /* Leading glyph; inherits the row colour so a danger row tints its icon too. */
+  /* Leading glyph; inherits the row color so a danger row tints its icon too. */
   .menu__item-icon {
     flex-shrink: 0;
     width: 20px;
@@ -1452,7 +1452,7 @@
   }
 
   /* Loading, the real Spinner (a nested <svg class="spinner">) overlays the label
-   while the button holds its width and keeps its skin colour (not the gray
+   while the button holds its width and keeps its skin color (not the gray
    :disabled look). Using the actual Spinner element (not a pseudo-element) is
    why the in-button loader matches the standalone one exactly. Interaction is
    blocked with aria-disabled + pointer-events, not the disabled attribute, so
@@ -1789,7 +1789,7 @@
 
   /* Material 3 leading checkmark on multi-select chips. A CSS mask tints a
    currentColor background into the (Tabler) checkmark shape, so it inherits the
-   chip's text colour across skins and themes.
+   chip's text color across skins and themes.
 
    Always rendered so it can animate: collapsed to zero width and faded out
    until checked, with a negative margin cancelling the flex gap so there's no
@@ -2029,7 +2029,7 @@
   /* ── Alert ─────────────────────────────────────────────────────────────── */
 
   /* Inline status message. The variant sets a soft surface + matching icon
-   colour; text stays ink for legibility. Title is optional: icon + text alone
+   color; text stays ink for legibility. Title is optional: icon + text alone
    reads fine for a one-liner.
 
    Structure:
@@ -2109,7 +2109,7 @@
   }
 
   /* Non-semantic callout: reads --accent, so it follows a data-color region
-   (brand by default). Unlike the status variants, its colour carries no meaning. */
+   (brand by default). Unlike the status variants, its color carries no meaning. */
   .alert--accent {
     background: var(--accent-soft);
   }
@@ -2724,7 +2724,7 @@
   /* ── Spinner ───────────────────────────────────────────────────────────────
    Indeterminate loading indicator. A faint full-circle track with a solid arc
    on top; the arc grows and shrinks while the whole thing rotates, so the fill
-   reads as travelling around the track in one direction. Arc colour is
+   reads as travelling around the track in one direction. Arc color is
    currentColor, so it inherits its context (button text, ink, etc.); pair with
    a visually-hidden label.
 
@@ -2896,7 +2896,7 @@
   /* ── Steps ───────────────────────────────────────────────────────────────────
    Numbered progress through a linear, multi-step flow (checkout, wizard). An
    <ol> so the sequence is semantic; the active step carries aria-current="step"
-   and finished steps get .is-done. Colours ride --accent, so a [data-color]
+   and finished steps get .is-done. Colors ride --accent, so a [data-color]
    region retints the whole track.
 
    The connector is split into two halves per step (an outgoing ::after and an
@@ -4117,10 +4117,10 @@
 
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    The forced palette strips backgrounds, shadows and masks, so any state or
-   surface shown only by a fill/shadow disappears. Restore it with system colours
+   surface shown only by a fill/shadow disappears. Restore it with system colors
    and real borders/outlines. `forced-color-adjust: none` is used where a painted
    fill must survive (checked controls, the slider/progress bars); it's always
-   paired with system colours so the user's palette is still respected. This block
+   paired with system colors so the user's palette is still respected. This block
    sits at the end of the layer so its overrides win over each component's rules. */
   @media (forced-colors: active) {
     /* Switch: outline the track, fill it on when checked, keep the knob solid. */
@@ -4159,7 +4159,7 @@
       border-color: Highlight;
     }
 
-    /* Alert + toast icons keep their semantic colour (the colour is set on the SVG
+    /* Alert + toast icons keep their semantic color (the color is set on the SVG
      for alerts / the wrapper span for toasts; opt out so the forced palette
      doesn't remap it). */
     .alert__icon {
@@ -4215,7 +4215,7 @@
     }
 
     /* Steps: rings and accent fills are stripped, so outline every indicator and
-     pin the current/done states to system colours; keep the connectors visible. */
+     pin the current/done states to system colors; keep the connectors visible. */
     .steps__indicator {
       forced-color-adjust: none;
       border: 2px solid ButtonBorder;
@@ -4258,7 +4258,7 @@
     }
 
     /* Controls and pills lose their painted fill/border, so outline each with its
-     own text colour (currentColor) so the border agrees with the label: buttons
+     own text color (currentColor) so the border agrees with the label: buttons
      (incl. dialog/empty actions), badges (meaning is the text, not the tint), and
      pagination page/prev/next buttons (transparent otherwise, so they'd float). */
     .button,
@@ -4268,7 +4268,7 @@
 
     /* Pagination page/prev/next: currentColor doesn't reliably render as a border
      on these transparent <button>s in the forced palette, so use the explicit
-     ButtonBorder system colour. */
+     ButtonBorder system color. */
     .pagination__link {
       border: var(--border-width) solid ButtonBorder;
     }
@@ -4288,7 +4288,7 @@
     }
 
     /* Separators (standalone, the menu/dropdown divider, and the breadcrumb chevron)
-     draw with a background fill the forced palette strips; use a text-colour line
+     draw with a background fill the forced palette strips; use a text-color line
      so they stay visible. Force full opacity since the menu divider is a faint 0.4,
      and the breadcrumb chevron is otherwise a dim GrayText. */
     .separator,

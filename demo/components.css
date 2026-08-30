@@ -4146,6 +4146,20 @@
     background: var(--background-secondary-active);
   }
 
+  /* A muted row that's interactive stays in the muted (quaternary) family on hover
+   rather than jumping to the plain surface hover. */
+  @media (hover: hover) and (pointer: fine) {
+    a.item--muted:hover,
+    button.item--muted:hover {
+      background: var(--fill-quaternary-hover);
+    }
+  }
+
+  a.item--muted:active,
+  button.item--muted:active {
+    background: var(--fill-quaternary-active);
+  }
+
   a.item:focus-visible,
   button.item:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);

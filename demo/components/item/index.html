@@ -400,6 +400,75 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Block</h2>
+          <p class="section-note">
+            The description spans the full width on a second line, below the media and chevron.
+            Title steps up a size and padding grows to 24. Same markup as the default row.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <a class="item item--block" href="#" onclick="event.preventDefault()">
+                <span
+                  class="item__media"
+                  style="background: var(--primary-soft); color: var(--primary-foreground)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"
+                    />
+                    <path d="M11 11a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                    <path d="M12 12l0 2.5" />
+                  </svg>
+                </span>
+                <span class="item__content">
+                  <span class="item__title">Privacy and security</span>
+                  <span class="item__description"
+                    >Manage passwords, login, and connected devices</span
+                  >
+                </span>
+                <span class="item__actions">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Item variant="block" href="/settings/privacy">
+                <ItemMedia
+                  style={{ background: "var(--primary-soft)", color: "var(--primary-foreground)" }}
+                >
+                  <IconShieldLock />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Privacy and security</ItemTitle>
+                  <ItemDescription>Manage passwords, login, and connected devices</ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <IconChevronRight />
+                </ItemActions>
+              </Item>
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">

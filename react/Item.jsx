@@ -1,6 +1,6 @@
 // Compact horizontal row: media + content (title/description) + actions. Where Card is a
 // standalone surface, Item is the repeating line you stack into a list. Renders an <a> when
-// given href, a <button> with onClick, else a <div>. Variant: "muted".
+// given href, a <button> with onClick, else a <div>. Variants: "muted", "block".
 export function Item({ href, onClick, variant, className, children, ...rest }) {
   const cls = ["item", variant && `item--${variant}`, className].filter(Boolean).join(" ");
   const Tag = href ? "a" : onClick ? "button" : "div";

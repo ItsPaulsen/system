@@ -137,62 +137,8 @@ body {
   }
 }
 
-/* ── Section card ─────────────────────────────────────────────────────────
-   Icon badge + title + trailing chevron on the first row; description spans the
-   full width beneath. Fixed rows keep every card the same height regardless of
-   how far the description wraps. */
-.settings-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px 12px;
-  padding: 24px;
-}
-
-.settings-card__icon {
-  grid-column: 1;
-  grid-row: 1;
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--primary-soft);
-  color: var(--primary-foreground);
-}
-
-.settings-card__icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.settings-card__title {
-  grid-column: 2;
-  grid-row: 1;
-  margin: 0;
-  font-size: var(--font-body-medium-emphasized-size);
-  line-height: var(--font-body-medium-emphasized-lh);
-  font-weight: var(--font-body-medium-emphasized-weight);
-  color: var(--ink-primary);
-}
-
-.settings-card__chevron {
-  grid-column: 3;
-  grid-row: 1;
-  width: 20px;
-  height: 20px;
-  color: var(--ink-tertiary);
-}
-
-.settings-card__desc {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  margin: 0;
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-  color: var(--ink-secondary);
-}
+/* The section cards are the shared Item component in its block variant
+   (.item.item--block); see demo/components/item/. */
 
 /* ── Sub-page column + card ─────────────────────────────────────────────────
    Detail pages (About, Communication, Privacy) share one scaffolding: the same

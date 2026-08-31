@@ -4354,6 +4354,7 @@
   }
 
   .item__title {
+    margin: 0; /* reset in case the slot is a heading/<p> rather than a span */
     font-size: var(--font-body-small-emphasized-size);
     font-weight: var(--font-body-small-emphasized-weight);
     color: var(--ink-primary);
@@ -4361,6 +4362,7 @@
 
   /* Secondary line, so ink-secondary (not tertiary) to clear AA in light. */
   .item__description {
+    margin: 0;
     font-size: var(--font-body-small-size);
     color: var(--ink-secondary);
   }
@@ -4383,6 +4385,40 @@
    so its visible stroke optically lands on the content edge, iOS-style. */
   .item__actions > svg {
     margin-right: -4px;
+  }
+
+  /* Roomier row where the description spans the full width on a second line,
+   below both the media and the trailing chevron (not tucked under the title).
+   Switches to a grid and promotes .item__content's children into it with
+   display:contents, so the same markup as a plain .item works unchanged. */
+  .item--block {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px 12px;
+    padding: 24px;
+  }
+
+  .item--block .item__content {
+    display: contents;
+  }
+
+  .item--block .item__title {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: var(--font-body-medium-emphasized-size);
+    line-height: var(--font-body-medium-emphasized-lh);
+    font-weight: var(--font-body-medium-emphasized-weight);
+  }
+
+  .item--block .item__actions {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .item--block .item__description {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 
   /* Stack rows into one surface: the group owns the background and rounding, so

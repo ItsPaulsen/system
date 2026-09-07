@@ -7,13 +7,26 @@
 /* Layered so component CSS stays overridable by specificity, not by an
    unlayered sheet outranking every layer. Same as post.css. */
 @layer components {
+  /* Header height, shared by the sticky topbar, the open menu's header row, and
+   the skip-link scroll offset, so the three can't drift apart. 64 on mobile,
+   72 from md. */
+  :root {
+    --ex-topbar-h: 64px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --ex-topbar-h: 72px;
+    }
+  }
+
   /* The example <main> is the "Skip to content" target (tabindex=-1, focused
      programmatically), not a tabbable control, kill the focus ring so the skip
      link doesn't outline the whole page surface. Mirrors .wrap in base.css.
-     scroll-margin-top clears the sticky 72px topbar (see .ex-topbar) so skipping
-     lands the content just below the bar instead of scrolling it underneath. */
+     scroll-margin-top clears the sticky topbar so skipping lands the content
+     just below the bar instead of scrolling it underneath. */
   #ex-main {
-    scroll-margin-top: 72px;
+    scroll-margin-top: var(--ex-topbar-h);
   }
 
   #ex-main:focus-visible {
@@ -570,7 +583,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 72px;
+    height: var(--ex-topbar-h);
     padding-inline: 16px;
     background: var(--background-secondary);
   }
@@ -704,7 +717,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 72px;
+    height: var(--ex-topbar-h);
 
     /* 16px gutter (matches the topbar). Close moves to 24 at sm (logo hidden). */
     padding-inline: 16px;

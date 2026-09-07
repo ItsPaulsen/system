@@ -75,6 +75,23 @@
     background: var(--background-secondary-active);
   }
 
+  /* The Scroll Area viewport is a scroll container at every width, so it clips
+     at its padding edge even in the sheet where nothing actually scrolls. This
+     6 is the room the checkbox and radio focus rings need; the desktop rail
+     cancels it with a negative margin (below), while in the sheet a 6 inset sits
+     inside the sheet's own padding and doesn't read. */
+  .blog-filter > .scroll-area__viewport {
+    padding-inline: 6px;
+  }
+
+  /* No converge animation on anything in the rail. It starts the ring at
+     outline-offset 6, so it reaches 9 outside the control before settling at 5 —
+     past the 6 of padding the scroll container clips at, so the first frames get
+     shaved. The ring still appears, just at its resting offset. */
+  .blog-filter :focus-visible {
+    animation: none;
+  }
+
   .blog-filter__title {
     margin: 0 0 1rem; /* 16 down to the first divider */
     font-size: var(--font-title-small-size);
@@ -87,6 +104,11 @@
      that flips when open. Interactive at every width, unlike the footer columns. */
   .blog-filter__group {
     border-top: var(--border-width) solid var(--fill-tertiary);
+
+    /* 4 either side of the heading row, so a collapsed group reads as centred
+       between its two dividers. On the GROUP, not the body, so the bottom 4 is
+       there whether the group is open or closed. */
+    padding-block: var(--space-4);
   }
 
   .blog-filter__head {
@@ -94,7 +116,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 16px;
+    height: 48px;
     border-radius: var(--radius-sm);
     cursor: pointer;
     list-style: none;
@@ -128,8 +150,23 @@
 
   .blog-filter__body {
     display: grid;
-    gap: 12px;
-    padding-bottom: 20px;
+
+    /* 4 below the heading row, matching the 4 above it. On the body rather than
+       the heading so a collapsed group doesn't carry the gap. */
+    padding-top: var(--space-4);
+
+    /* 12 here plus the group's own 4 gives 16 down to the next divider. */
+    padding-bottom: var(--space-12);
+  }
+
+  /* Options are full-width rows that touch, rather than inline labels with gaps
+     between them: no dead space in the list, and each row is a 40 tall target
+     rather than just the box and its label. No hover surface — the checkbox and
+     radio carry their own hover on the control. */
+  .blog-filter__body .checkbox,
+  .blog-filter__body .radio {
+    width: 100%;
+    padding-block: var(--space-8);
   }
 
   /* Same open/close ease as the accordion + footer, but with `overflow: clip` +
@@ -307,9 +344,37 @@
       padding-top: 4rem;
     }
 
+    /* Sticky rail: it scrolls up with the posts until it reaches its offset under
+       the sticky topbar, then holds while the grid keeps going. The rail only
+       *bounds* the height — the Scroll Area viewport inside it does the
+       scrolling and owns the bar (see the Scroll Area block in components.css).
+
+       No `overscroll-behavior: contain`, deliberately: it stops the rail's scroll
+       chaining to the page, so bottoming out the rail before it has reached its
+       sticky offset leaves the page unable to scroll and the rest of the rail
+       parked below the viewport, unreachable. */
     .blog-filter {
+      --blog-rail-top: calc(var(--ex-topbar-h) + var(--space-32));
+
       display: block;
-      margin-top: -8px; /* nudge the rail up to align with the posts */
+      position: sticky;
+      top: var(--blog-rail-top);
+
+      /* Pull the start edge back by the viewport's padding, so the options still
+         line up with the hero above. */
+      margin-inline-start: -6px;
+    }
+
+    /* The height bound goes on the VIEWPORT, not the rail: it's the scroll
+       container, and a max-height on the rail alone leaves it with nothing to
+       scroll against. 24 on the end side clears the 10 bar and leaves 16 between
+       the nearest option and the pill; the bottom padding is what lets the last
+       option scroll clear of the container's edge. */
+    .blog-filter > .scroll-area__viewport {
+      max-height: calc(100dvh - var(--blog-rail-top));
+      padding-inline: 6px var(--space-24);
+      padding-block-end: var(--space-24);
+      scroll-padding-block-end: var(--space-24);
     }
 
     .blog__bar {
@@ -317,7 +382,9 @@
     }
 
     .blog__inner {
-      grid-template-columns: 216px 1fr;
+      /* 244 = 220 of usable option width, plus the rail's 6 + 24 of padding,
+         less the 6 it borrows back with its negative start margin. */
+      grid-template-columns: 244px 1fr;
       align-items: start;
 
       /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */

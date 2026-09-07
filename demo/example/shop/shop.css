@@ -283,14 +283,15 @@
     margin-bottom: var(--space-24);
   }
 
-  /* Recessed field rather than a raised one: it reads as a well cut into the
-     rail instead of another card, which is what the media tiles and the Show
-     more button are. Off the gray ramp, so it tracks the theme. Border stays
-     transparent until focus, where the base .input__container:focus-within
-     lights it. */
+  /* Raised field, the same primary→secondary tonal step the media tiles and the
+     Show more button take, so every raised thing on this surface matches. Border
+     stays transparent until focus, where the base .input__container:focus-within
+     lights it. Compact 40 rather than the field default 48: it's a
+     find-as-you-type, not a form field. */
   .shop__search-field {
+    min-height: 40px;
     border-color: transparent;
-    background: var(--neutral-gray-3);
+    background: var(--background-secondary);
   }
 
   /* Filter trigger, shown ≤1024 where the rail is hidden (hidden again ≥1024 in

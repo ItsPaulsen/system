@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Scroll Area - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <style>
+      /* The component sets no height of its own, so every example here bounds
+         its own viewport. */
+      .demo-scroll {
+        width: 100%;
+        max-width: 320px;
+      }
+
+      .demo-scroll .scroll-area__viewport {
+        max-height: 220px;
+
+        /* Room for the bar, plus the 6 the focus rings need not to be clipped by
+           the scroll container's edge. */
+        padding-inline: 6px 24px;
+        padding-block-end: 1rem;
+      }
+
+      .demo-scroll p {
+        margin: 0 0 1rem;
+        color: var(--ink-secondary);
+        font-size: var(--font-body-small-size);
+        line-height: var(--font-body-small-lh);
+      }
+
+      .demo-scroll p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Fits-inside example: same component, content short enough that the bar
+         stays out. */
+      .demo-scroll--short .scroll-area__viewport {
+        max-height: none;
+      }
+
+      .demo-rows {
+        display: grid;
+      }
+
+      .demo-rows .checkbox {
+        width: 100%;
+        padding-block: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="site-head">
+        <div class="site-head__body">
+          <div class="site-head__title">
+            <h1>Scroll Area</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Scroll area"
+            >
+              Copy CSS
+            </button>
+          </div>
+          <p class="lede">A scroll container with a styled scrollbar of its own.</p>
+        </div>
+      </header>
+
+      <div class="docs-tabs" role="tablist" data-code-tabs>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="react"
+          aria-selected="true"
+        >
+          React
+        </button>
+        <button
+          class="docs-tabs__tab"
+          type="button"
+          role="tab"
+          data-code-lang="html"
+          aria-selected="false"
+        >
+          HTML
+        </button>
+      </div>
+
+      <div class="preview-grid">
+        <section class="preview-block">
+          <h2 class="subhead">Default</h2>
+          <p class="section-note">
+            Hover it: the thumb fades in, darkens under the pointer, and darkens again while
+            dragged. Bound the <code>__viewport</code>, not the outer element — it's the scroll
+            container, and a height on the wrapper alone leaves it nothing to scroll against. Needs
+            <code>initScrollAreas()</code>.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="scroll-area demo-scroll" data-scroll-area>
+                <div class="scroll-area__viewport">
+                  <p>
+                    The viewport stays a real scroll container, so the wheel, keyboard, touch
+                    momentum, find-in-page and scroll anchoring all keep working.
+                  </p>
+                  <p>
+                    Only the bar is ours: the platform's is hidden, and a thumb element is sized and
+                    placed over it.
+                  </p>
+                  <p>
+                    Why not just style the native bar? Scrollbars are composited separately, and
+                    Chrome won't reliably repaint a styled thumb when the container's hover state
+                    flips — so reveal-on-hover fails intermittently and lingers after the pointer
+                    leaves.
+                  </p>
+                  <p>
+                    Dragging maps pointer movement to scroll position by the track-to-content ratio,
+                    so the thumb tracks the cursor exactly rather than drifting away from it.
+                  </p>
+                  <p>A click on the track pages toward the click, the way a native bar does.</p>
+                </div>
+                <div class="scroll-area__bar" aria-hidden="true">
+                  <div class="scroll-area__thumb"></div>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ScrollArea className="demo-scroll">
+                <p>The viewport stays a real scroll container…</p>
+                <p>Only the bar is ours…</p>
+              </ScrollArea>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Content that fits</h2>
+          <p class="section-note">
+            Nothing to scroll, so the bar stays out: the script marks the area
+            <code>data-scrollable="false"</code>. It re-checks on resize and via a
+            <code>ResizeObserver</code>, so a disclosure opening or rows filtering out brings the
+            bar back on its own.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="scroll-area demo-scroll demo-scroll--short" data-scroll-area>
+                <div class="scroll-area__viewport">
+                  <p>Short enough to fit. No bar, and no gap where one would have been.</p>
+                </div>
+                <div class="scroll-area__bar" aria-hidden="true">
+                  <div class="scroll-area__thumb"></div>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ScrollArea className="demo-scroll demo-scroll--short">
+                <p>Short enough to fit.</p>
+              </ScrollArea>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">A list of controls</h2>
+          <p class="section-note">
+            What a filter rail looks like. The viewport needs inline padding: it clips at its
+            padding edge, and a focus ring sits 5 outside its control (3 ring + 2 offset). Kill the
+            ring's converge animation inside one, too — it starts at
+            <code>outline-offset: 6px</code>, so the first frames reach 9 out and get shaved.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="scroll-area demo-scroll" data-scroll-area>
+                <div class="scroll-area__viewport">
+                  <div class="demo-rows">
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-1" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Oak</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-2" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Walnut</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-3" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Beech</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-4" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Birch</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-5" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Pine</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-6" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Ash</span>
+                    </label>
+                    <label class="checkbox">
+                      <span class="checkbox__box">
+                        <input name="sa-7" type="checkbox" class="checkbox__input" />
+                        <svg
+                          class="checkbox__check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l5 5l10 -10" pathLength="1" />
+                        </svg>
+                      </span>
+                      <span class="checkbox__label">Cherry</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="scroll-area__bar" aria-hidden="true">
+                  <div class="scroll-area__thumb"></div>
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <ScrollArea className="demo-scroll">
+                <div className="demo-rows">
+                  <Checkbox label="Oak" />
+                  <Checkbox label="Walnut" />
+                </div>
+              </ScrollArea>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            Height goes on the viewport via <code>viewportClassName</code> (or a rule targeting
+            <code>.scroll-area__viewport</code>). A <code>ResizeObserver</code> tracks content that
+            changes height on its own, so nothing needs to tell it to re-measure.
+          </p>
+          <div data-source="/react/ScrollArea.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Component</h2>
+          <p class="section-note">
+            <code>data-scroll-area</code> wires it. The viewport takes the height; the bar is
+            absolutely positioned, so revealing it never reflows the content. It needs no
+            <code>tabindex</code> — the content's own focusable controls are tab-reachable, and
+            focusing one scrolls it into view.
+          </p>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area"</span> <span class="tok-prop">data-scroll-area</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__viewport"</span><span class="tok-key">&gt;</span>…content…<span class="tok-key">&lt;/div&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__bar"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__thumb"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
+  <span class="tok-key">&lt;/div&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+      </div>
+    </main>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>

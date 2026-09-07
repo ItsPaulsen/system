@@ -502,8 +502,11 @@
     color: var(--ink-primary);
   }
 
+  /* --primary-foreground, not --primary: identical in light, but a brighter
+   resaturated lilac in dark, where the flat brand purple reads too dark
+   against the surface. */
   .tabs__tab[aria-selected="true"]::after {
-    background: var(--primary);
+    background: var(--primary-foreground);
   }
 
   .tabs__tab:disabled {

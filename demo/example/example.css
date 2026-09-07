@@ -613,11 +613,21 @@
      The Settings hover dropdown stays body-small (16) at all widths. */
   .ex-topbar__nav .nav-menu__link {
     font-size: var(--font-body-small-size);
+    transition: background var(--motion-default);
   }
 
   @media (min-width: 1024px) {
     .ex-topbar__nav .nav-menu__link {
       font-size: var(--font-body-medium-size);
+    }
+  }
+
+  /* Surface on hover. The Nav Menu component ships no hover fill by design, so
+   this is scoped to the example topbar; it sits on --background-secondary, so
+   the hover step of that pair is the matching surface. */
+  @media (hover: hover) {
+    .ex-topbar__nav .nav-menu__link:hover {
+      background: var(--background-secondary-hover);
     }
   }
 

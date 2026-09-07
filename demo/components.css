@@ -3114,8 +3114,8 @@
   /* ── Navigation Menu ───────────────────────────────────────────────────────
    Primary navigation between destinations, e.g. in a header. Unlike Tabs (which
    swap panels within one page), each item is a link to another page, marked
-   with aria-current="page". Fixed-height pills with a hover surface; no active
-   or pressed state, since a nav link navigates away rather than toggling.
+   with aria-current="page". Fixed-height pills with hover and pressed surfaces,
+   like a text button; the current page carries no surface of its own.
 
    Optional dropdown: give an item a .nav-menu__menu panel and it reveals on
    hover or keyboard focus. The item's own link stays clickable (link-first, no
@@ -3165,12 +3165,6 @@
     transition: background var(--motion-default);
   }
 
-  /* Current page carries a persistent surface, one step past hover, so the page
-   you are on reads stronger than the one you are pointing at. */
-  .nav-menu__link[aria-current="page"] {
-    background: var(--background-secondary-active);
-  }
-
   /* Driven off the ITEM, not the link. The panel's 4px hover bridge (::before,
    below) slides across the link's bottom edge while the panel animates open or
    closed, which steals :hover from the link and flickers the surface off and
@@ -3181,13 +3175,13 @@
     .nav-menu__item:hover > .nav-menu__link {
       background: var(--background-secondary-hover);
     }
+  }
 
-    /* Re-assert it on the current item: it's where you already are, not a
-     target, so the surface must not drop back to hover under the pointer.
-     Same reasoning as the pagination current page. */
-    .nav-menu__item:hover > .nav-menu__link[aria-current="page"] {
-      background: var(--background-secondary-active);
-    }
+  /* Pressed feedback, like a text button's. Outside the hover query so touch
+   gets it too. Ties with the hover rule on specificity, so it has to stay after
+   it in source order. */
+  .nav-menu__item > .nav-menu__link:active {
+    background: var(--background-secondary-active);
   }
 
   /* Item wraps the link + its optional dropdown; the panel anchors to it. */
@@ -4672,7 +4666,6 @@
     .toggle-group__radio:checked + .toggle-group__tab,
     .pagination__link[aria-current="page"],
     .pagination__link[aria-current="page"]:hover,
-    .nav-menu__link[aria-current="page"],
     .calendar__day.is-selected,
     .calendar__day.is-range-start,
     .calendar__day.is-range-end {

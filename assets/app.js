@@ -1054,21 +1054,154 @@ function dedent(text) {
     .replace(/^\n+|\n+$/g, "");
 }
 
-// A component's CSS is the run between its "── Name ──" banner in components.css
-// and the next banner, no per-component markers needed.
-function extractSection(text, name) {
+const FORCED_COLORS_SECTION = "Forced colors (Windows High Contrast)";
+
+// Sections in components.css are separated by "── Name ──" banner comments.
+function isCssBanner(line) {
+  return line.includes("── ") && line.includes(" ─");
+}
+
+// The classes a selector actually styles: its subject (the last compound), not
+// its ancestors, so ".popover .calendar" styles .calendar and not .popover.
+function subjectClasses(sel) {
+  const subject =
+    sel
+      .replace(/\([^)]*\)/g, "")
+      .split(/[\s>+~]+/)
+      .filter(Boolean)
+      .pop() || "";
+  return [...subject.matchAll(/\.([a-zA-Z][\w-]*)/g)].map((m) => m[1]);
+}
+
+// Every class a chunk of CSS styles, so we can tell whose rules are whose.
+function styledClasses(css) {
+  const out = new Set();
+  for (const line of css.split("\n")) {
+    if (/^\s*[a-z-]+\s*:/i.test(line) || !line.includes(".")) continue; // declaration
+    for (const sel of line.replace(/\{$/, "").split(",")) {
+      subjectClasses(sel).forEach((c) => out.add(c));
+    }
+  }
+  return out;
+}
+
+// The rules inside the forced-colors @media, as { comment, sels, decls } with the
+// comment that sits above each one. The block is prettier-formatted, so a rule's
+// selectors run until the line ending in "{" and its body until the closing brace
+// one level in.
+function forcedColorsRules(text) {
+  const lines = rawSection(text, FORCED_COLORS_SECTION).split("\n");
+  const open = lines.findIndex((l) => l.includes("@media (forced-colors: active)"));
+  if (open === -1) return [];
+  const rules = [];
+  let comment = [];
+  let sels = [];
+  let decls = null;
+  let inComment = false;
+  for (let i = open + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (decls) {
+      if (/^\s{4}\}\s*$/.test(line)) {
+        rules.push({ comment, sels, decls });
+        comment = [];
+        sels = [];
+        decls = null;
+      } else decls.push(line.trim());
+    } else if (inComment) {
+      comment.push(line);
+      if (line.includes("*/")) inComment = false;
+    } else if (/^\s*\/\*/.test(line)) {
+      comment = [line];
+      inComment = !line.includes("*/");
+    } else if (!line.trim()) {
+      comment = [];
+    } else if (/^\s{2}\}\s*$/.test(line)) {
+      break; // end of the @media block
+    } else {
+      sels.push(
+        ...line
+          .replace(/\s*\{$/, "")
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+      );
+      if (line.trimEnd().endsWith("{")) decls = [];
+    }
+  }
+  return rules;
+}
+
+// Re-emit one rule at two-space indent.
+function formatRule(rule) {
+  const out = [];
+  if (rule.comment.length) {
+    dedent(rule.comment.join("\n"))
+      .split("\n")
+      .forEach((c) => out.push("  " + c));
+  }
+  rule.sels.forEach((sel, i) => out.push("  " + sel + (i === rule.sels.length - 1 ? " {" : ",")));
+  rule.decls.forEach((d) => out.push(d ? "    " + d : ""));
+  out.push("  }");
+  return out;
+}
+
+// The forced-colors work lives in one trailing block (it has to: those rules beat
+// a component's own by source order, not specificity), so a copied section would
+// otherwise hand over a component with no high-contrast support. Rebuild just this
+// component's slice of it, narrowing the grouped selectors to the ones it styles.
+function forcedColorsFor(text, sectionCss) {
+  const own = styledClasses(sectionCss);
+  const kept = [];
+  for (const rule of forcedColorsRules(text)) {
+    const mine = rule.sels.filter((sel) => subjectClasses(sel).some((c) => own.has(c)));
+    if (!mine.length) continue;
+    // Keep the comment only for a whole rule; on a narrowed one it would mislead.
+    const comment = mine.length === rule.sels.length ? rule.comment : [];
+    kept.push({ comment, sels: mine, decls: rule.decls });
+  }
+  if (!kept.length) return "";
+  return [
+    "/* Forced colors (Windows High Contrast): this component's overrides. Keep them",
+    "   after the rules above, since they win on source order, not specificity. */",
+    "@media (forced-colors: active) {",
+    ...kept.flatMap((rule, i) => (i ? ["", ...formatRule(rule)] : formatRule(rule))),
+    "}"
+  ].join("\n");
+}
+
+// The run between a "── Name ──" banner in components.css and the next banner.
+function rawSection(text, name) {
   const lines = text.split("\n");
-  const isBanner = (l) => l.includes("── ") && l.includes(" ─");
-  const start = lines.findIndex((l) => isBanner(l) && l.includes(`── ${name} ─`));
+  const start = lines.findIndex((l) => isCssBanner(l) && l.includes(`── ${name} ─`));
   if (start === -1) return "";
   let end = lines.length;
   for (let i = start + 1; i < lines.length; i++) {
-    if (isBanner(lines[i])) {
+    if (isCssBanner(lines[i])) {
       end = i;
       break;
     }
   }
-  return dedent(lines.slice(start + 1, end).join("\n"));
+  return lines.slice(start + 1, end).join("\n");
+}
+
+// A component's CSS is its own section plus its forced-colors overrides, so what
+// you copy is the whole component and not just its normal-mode rules. A page that
+// documents two components (Progress + Steps) names both, comma-separated, and
+// hands over each in turn.
+function extractSection(text, names) {
+  return names
+    .split(",")
+    .map((n) => n.trim())
+    .filter(Boolean)
+    .map((name) => {
+      const body = rawSection(text, name);
+      if (!body) return "";
+      if (name === FORCED_COLORS_SECTION) return dedent(body);
+      const forced = forcedColorsFor(text, body);
+      return dedent(body) + (forced ? "\n\n" + forced : "");
+    })
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 // A component's behaviour is a top-level init function in app.js: from its

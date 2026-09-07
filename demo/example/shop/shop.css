@@ -1,0 +1,610 @@
+/* Shop listing, the product sibling of the blog listing: the same recessed 2xl
+   band, the same filter rail (rail above 1024, left sheet below), and the same
+   example shell (topbar, hero, footer). What's new here is the product card (a
+   white media tile on the band, badge, clamped title, price) and the toolbar
+   holding search, the result count, and one Select on a bare skin.
+
+   The page opts into the 2xl width via data-width="2xl" on <html>, which is
+   what puts five products across at the widest tier. */
+
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as blog.css. */
+@layer components {
+  /* Hero → band gap, and the flat hero surface: drop the .ex dot grid and its
+     top gradient wash, keep the solid --background-secondary from .ex. */
+  .shop-page {
+    gap: 5rem;
+    padding-top: var(--space-24); /* topbar → breadcrumb, mirrors settings */
+    background-image: none;
+  }
+
+  @media (min-width: 768px) {
+    .shop-page {
+      gap: 6rem;
+    }
+  }
+
+  /* ── Hero ─────────────────────────────────────────────────────────────────
+     Left-aligned, sharing the band's content column (content = --container-max,
+     margins outside) so breadcrumb, title and products all align to the same
+     left edge. Same recipe as the settings hero. */
+  .shop-hero {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+  }
+
+  .shop-hero__title {
+    /* 48 down from the breadcrumb, mirrors the settings hero. */
+    margin: var(--space-48) 0 0;
+
+    /* Base (mobile, < md): headline-small 38px, up to headline-medium 48 at md. */
+    font-size: var(--font-headline-small-size);
+    line-height: var(--font-headline-small-lh);
+    font-weight: var(--font-headline-small-weight);
+    color: var(--ink-primary);
+  }
+
+  .shop-hero__intro {
+    margin: var(--space-24) 0 0;
+    max-width: 36rem;
+    color: var(--ink-secondary);
+
+    /* Base (mobile): body-medium 18px, up to body-large 20 at md. */
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
+  }
+
+  @media (min-width: 768px) {
+    .shop-hero__title {
+      font-size: var(--font-headline-medium-size);
+      line-height: var(--font-headline-medium-lh);
+      font-weight: var(--font-headline-medium-weight);
+    }
+
+    .shop-hero__intro {
+      font-size: var(--font-body-large-size);
+      line-height: var(--font-body-large-lh);
+      font-weight: var(--font-body-large-weight);
+    }
+  }
+
+  /* ── Listing band ─────────────────────────────────────────────────────────
+     Recessed band with a rounded top (24 on mobile, 32 from md), sitting flush
+     above the footer. Same treatment as the blog listing and the front-page
+     card band. */
+  .shop {
+    background: var(--background-primary);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+
+    /* 32 top down to the toolbar (→ 64 above 1024), 96 bottom gray gap before
+       the footer (→ 128 at md). */
+    padding-block: 2rem 6rem;
+  }
+
+  .shop__inner {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  /* ── Filter rail ─────────────────────────────────────────────────────────
+     Hidden at/below 1024, where the Filter button + left sheet replace it.
+     Shown beside the products above 1024 (see the responsive block). */
+  .shop-filter {
+    display: none;
+  }
+
+  .shop-filter__title {
+    margin: 0 0 1rem; /* 16 down to the first divider */
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+    color: var(--ink-primary);
+  }
+
+  /* Collapsible groups (native <details>) with a hairline above and a chevron
+     that flips when open. Interactive at every width. */
+  .shop-filter__group {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .shop-filter__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    list-style: none;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .shop-filter__head::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Chevron drawn on the summary itself, so the <summary> holds only its label
+     (an SVG child trips the "interactive content in <summary>" audit). */
+  .shop-filter__head::after {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--ink-tertiary);
+    background: currentcolor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: rotate var(--motion-default);
+  }
+
+  .shop-filter__group[open] .shop-filter__head::after {
+    rotate: 180deg;
+  }
+
+  .shop-filter__body {
+    display: grid;
+    gap: 12px;
+    padding-bottom: 20px;
+  }
+
+  /* Same open/close ease as the accordion + footer, but with `overflow: clip` +
+     `overflow-clip-margin` instead of `overflow: hidden`: the height animation
+     still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
+     through the 6px margin instead of being cut at the rail edge. */
+  @media (prefers-reduced-motion: no-preference) {
+    .shop-filter__group {
+      interpolate-size: allow-keywords;
+    }
+  }
+
+  .shop-filter__group::details-content {
+    overflow: clip;
+    overflow-clip-margin: 6px;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      content-visibility allow-discrete var(--motion-default),
+      opacity var(--motion-default),
+      block-size var(--motion-default);
+  }
+
+  .shop-filter__group[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  /* ── Toolbar ─────────────────────────────────────────────────────────────
+     Two rows: search (+ the mobile Filter trigger), then the result count and
+     the sort control. */
+  .shop__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Search caps out well short of the grid: a 1200px-wide field on the widest
+     tier would read as a page header, not a control. */
+  .shop__search {
+    max-width: 22.5rem; /* 360 */
+  }
+
+  /* White field on the band, the same primary→secondary tonal step the media
+     tiles and the Show more button take, so every raised thing on this surface
+     matches. Border stays transparent until focus, where the base
+     .input__container:focus-within lights it. */
+  .shop__search-field {
+    border-color: transparent;
+    background: var(--background-secondary);
+  }
+
+  /* Filter trigger, shown ≤1024 where the rail is hidden (hidden again ≥1024 in
+     the responsive block). Card-surface button, same recipe as the search
+     field, taking the card hover/active steps. */
+  .shop__filter-toggle {
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop__filter-toggle:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .shop__filter-toggle:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
+
+  .shop__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .shop__count {
+    margin: 0;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+  }
+
+  .shop__count strong {
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  /* Sort: the Select component on a bare skin, the one page-local restyle on
+     this screen. No border and no fill, so it reads as the label it is; the
+     chevron carries the affordance. The trigger keeps a real 32px hit target
+     (::before, over the 24px WCAG 2.5.8 floor) while staying text-height in the
+     row, and swaps Select's focus border for the shared focus ring, since
+     there's no border left to light. */
+  .shop__sort {
+    flex: none;
+  }
+
+  .shop__sort .select__trigger {
+    position: relative;
+    width: auto;
+    min-height: 0;
+    padding: 0;
+    gap: 0.25rem;
+    border-color: transparent;
+    background: transparent;
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .shop__sort .select__trigger::before {
+    content: "";
+    position: absolute;
+    inset-block: -4px;
+    inset-inline: -8px;
+  }
+
+  .shop__sort .select__trigger:focus-visible,
+  .shop__sort .select__trigger[aria-expanded="true"] {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .shop__sort .select__trigger:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ── Product grid ────────────────────────────────────────────────────────
+     Two-up on mobile, up to five across at the 2xl tier (see the responsive
+     block), which is what the widest layout is drawn as. */
+  .shop__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gutter, 1rem);
+  }
+
+  /* Cards are the anchor itself: a white media tile, then the text on the band
+     (no card surface behind it). 12 between tile, title and meta; 4 inside the
+     meta block, between price and store count. */
+  .shop-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  /* display:flex/grid beat the [hidden] UA rule, so the filter's show/hide is a
+     no-op without these: restore display:none when shop.js hides a card, the
+     whole grid, or the footer. */
+  .shop-card[hidden],
+  .shop__grid[hidden],
+  .shop__foot[hidden],
+  .shop__more[hidden] {
+    display: none;
+  }
+
+  .shop-card:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Square white tile with the product inset, the raised surface on the band.
+     Padding is what makes the artwork read as a product shot rather than a
+     photo card. */
+  .shop-card__media {
+    position: relative;
+    display: block;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    transition: background var(--motion-default);
+  }
+
+  /* Link-like card: hover tints the tile (the card component's surface step),
+     nothing else moves. */
+  @media (hover: hover) and (pointer: fine) {
+    .shop-card:hover .shop-card__media {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .shop-card__badge {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    inset-inline-start: 12px;
+  }
+
+  /* <picture> is inline by default, so block it out for the img's width: 100%
+     to resolve against the padded tile rather than an inline box. */
+  .shop-card__media picture {
+    display: block;
+  }
+
+  /* .ex-ph supplies the muted loading fill and object-fit: cover; only the
+     ratio and the inner rounding are new. */
+  .shop-card__img {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Clamped to two lines with an ellipsis, and held at two lines' height even
+     when the title is one line, so price and store count line up across a row
+     regardless of name length. (-webkit-box is still the only reliable way to
+     get the clamp; the standard `line-clamp` isn't there yet.) */
+  .shop-card__title {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    min-height: calc(2 * 1.5 * var(--font-body-medium-emphasized-size));
+    overflow: hidden;
+    font-size: var(--font-body-medium-emphasized-size);
+    line-height: var(--font-body-medium-emphasized-lh);
+    font-weight: var(--font-body-medium-emphasized-weight);
+  }
+
+  .shop-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .shop-card__price {
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    white-space: nowrap;
+  }
+
+  .shop-card__stores {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  /* ── Footer row ──────────────────────────────────────────────────────────
+     How many of the matching products are on screen, and the button that
+     reveals the next batch. Centred, the way the drawing has it. */
+  .shop__foot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .shop__showing {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+  }
+
+  .shop__showing strong {
+    color: var(--ink-primary);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  /* Card-surface pill, same step as the search field and the media tiles. Wide
+     enough to read as the band's one action. */
+  .shop__more {
+    min-width: 15rem;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop__more:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .shop__more:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
+
+  /* ── Empty state ────────────────────────────────────────────────────────
+     Shown when the filters + search match nothing (shop.js toggles [hidden] and
+     hides the grid + footer). Card-surface panel matching the band's
+     primary→secondary tonal step, centred column of icon, title, text, action. */
+  .shop-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 4rem 1.5rem;
+    background: var(--background-secondary);
+    border-radius: var(--radius-lg);
+  }
+
+  .shop-empty[hidden] {
+    display: none;
+  }
+
+  .shop-empty__icon {
+    width: 48px;
+    height: 48px;
+    stroke-width: 1.25;
+    color: var(--ink-secondary);
+  }
+
+  .shop-empty__title {
+    margin: 0;
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+    color: var(--ink-primary);
+  }
+
+  .shop-empty__text {
+    margin: 0;
+    max-width: 36ch;
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    color: var(--ink-secondary);
+  }
+
+  /* Sit the action a touch below the copy, a little more breathing room than
+     the 1rem column gap gives. */
+  .shop-empty .button {
+    margin-top: 0.5rem;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────────────────────── */
+
+  /* md ≥768, three products across, a deeper gray gap above the footer
+     (front-page band parity), and the rounded top steps up from 24 to 32. */
+  @media (min-width: 768px) {
+    .shop {
+      padding-bottom: 8rem;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .shop__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .shop__foot {
+      margin-top: 5rem;
+    }
+  }
+
+  /* >1024, the filter rail returns beside the products, the band's top gap
+     opens to 64, and the grid reaches four across. */
+  @media (min-width: 1025px) {
+    .shop {
+      padding-top: 4rem;
+    }
+
+    .shop-filter {
+      display: block;
+      margin-top: -8px; /* nudge the rail up to align with the toolbar */
+    }
+
+    .shop__filter-toggle-wrap {
+      display: none;
+    }
+
+    .shop__inner {
+      grid-template-columns: 216px 1fr;
+      align-items: start;
+
+      /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
+      gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
+    }
+
+    .shop__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* >1440, five across: at the 2xl cap (1536 content) that lands each product
+     on the 226px column the layout is drawn on. */
+  @media (min-width: 1441px) {
+    .shop__grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  /* When JS relocates the filter into the left sheet (≤1024), show it there
+     (overriding the rail's default hide) and drop its heading, the sheet header
+     already reads "Filter". Placed last so specificity stays ascending. */
+  .sheet .shop-filter {
+    display: block;
+  }
+
+  .sheet .shop-filter__title {
+    display: none;
+  }
+
+  /* Filter sheet header: same height as the topbar and the main menu's header
+     (--ex-topbar-h, 64 on mobile / 72 from md), so every header row on the
+     example site matches. No divider, the first filter group's hairline reads as
+     the top edge. */
+  .shop__sheet .sheet__header {
+    height: var(--ex-topbar-h);
+    padding-block: 0;
+    border-bottom: 0;
+  }
+
+  .shop__sheet .sheet__title {
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  .shop__sheet .sheet__body {
+    padding-top: 0;
+  }
+
+  /* Close button: a generous 48 hit target (::before) with a compact, centred 36
+     hover surface (::after). The header sets its own height now, so the 40 box
+     just centres in it; the base 40 hover fill is disabled in favour of the 36. */
+  .shop__sheet .sheet__close {
+    position: relative;
+  }
+
+  .shop__sheet .sheet__close::before {
+    content: "";
+    position: absolute;
+    inset: -4px; /* 40 → 48 hit target */
+  }
+
+  .shop__sheet .sheet__close::after {
+    content: "";
+    position: absolute;
+    inset: 2px; /* 40 → 36 visible surface */
+    border-radius: var(--radius-full);
+    transition: background var(--motion-default);
+  }
+
+  .shop__sheet .sheet__close svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (hover: hover) {
+    .shop__sheet .sheet__close:hover {
+      background: transparent;
+    }
+
+    .shop__sheet .sheet__close:hover::after {
+      background: var(--background-secondary-hover);
+    }
+  }
+}

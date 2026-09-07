@@ -1712,6 +1712,15 @@ function initSelects() {
       }
       activeIndex = i;
       close();
+      // The custom listbox has no native change event, so pages that act on a
+      // selection (the shop's sort control) get one here. Bubbles, so a listener
+      // can sit on the root and read the chosen option off the detail.
+      root.dispatchEvent(
+        new CustomEvent("select:change", {
+          bubbles: true,
+          detail: { index: i, option: options[i], value: options[i].textContent.trim() }
+        })
+      );
     };
 
     // Type-ahead: jump to the next option whose label starts with the typed

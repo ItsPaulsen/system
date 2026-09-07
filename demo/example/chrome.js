@@ -11,6 +11,9 @@
       <nav class="nav-menu ex-topbar__nav" aria-label="Primary">
         <ul class="nav-menu__list">
           <li class="nav-menu__item">
+            <a class="nav-menu__link" href="/demo/example/shop/">Shop</a>
+          </li>
+          <li class="nav-menu__item">
             <a class="nav-menu__link" href="/demo/example/blog/">Blog</a>
           </li>
           <li class="nav-menu__item">
@@ -263,6 +266,7 @@
 
         <div class="ex-menu__scroll">
           <nav class="ex-menu__nav" aria-label="Pages">
+            <a href="/demo/example/shop/">Shop</a>
             <a href="/demo/example/blog/">Blog</a>
             <a href="/demo/example/blog/post/">Article</a>
             <a href="/demo/example/settings/">Settings</a>

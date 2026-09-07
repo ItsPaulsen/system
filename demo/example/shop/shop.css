@@ -108,8 +108,8 @@
   }
 
   .shop-price__value {
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
     color: var(--ink-primary);
   }
 

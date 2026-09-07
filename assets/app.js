@@ -70,9 +70,11 @@ const toast = (() => {
     let iconMarkup = "";
     if (type === "loading")
       iconMarkup =
-        '<svg class="toast__spinner" viewBox="0 0 50 50" aria-hidden="true">' +
+        // data-motion-essential keeps it turning under reduced motion (it
+        // reports an in-flight promise); the guard in globals.css exempts it.
+        '<svg class="toast__spinner" viewBox="0 0 50 50" aria-hidden="true" data-motion-essential>' +
         '<circle class="toast__spinner-track" cx="25" cy="25" r="20" fill="none" stroke-width="5"/>' +
-        '<circle class="toast__spinner-arc" cx="25" cy="25" r="20" fill="none" stroke-width="5"/>' +
+        '<circle class="toast__spinner-arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" data-motion-essential/>' +
         "</svg>";
     else if (ICONS[type]) iconMarkup = svg(type);
     iconEl.innerHTML = iconMarkup;

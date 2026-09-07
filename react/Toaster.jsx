@@ -78,7 +78,12 @@ export function Toaster() {
       >
         <span className="toast__icon">
           {type === "loading" ? (
-            <svg className="toast__spinner" viewBox="0 0 50 50" aria-hidden="true">
+            <svg
+              className="toast__spinner"
+              viewBox="0 0 50 50"
+              aria-hidden="true"
+              data-motion-essential
+            >
               <circle
                 className="toast__spinner-track"
                 cx="25"
@@ -94,6 +99,7 @@ export function Toaster() {
                 r="20"
                 fill="none"
                 strokeWidth="5"
+                data-motion-essential
               />
             </svg>
           ) : Icon ? (

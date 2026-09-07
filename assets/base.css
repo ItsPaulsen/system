@@ -2018,6 +2018,16 @@
     animation: toast-spin-dash 2s ease-in-out infinite;
   }
 
+  /* Both elements carry data-motion-essential, so the reduced-motion guard in
+   globals.css leaves them running: an in-flight promise still needs to read as
+   in flight. Slow them the way the Spinner component does. */
+  @media (prefers-reduced-motion: reduce) {
+    .toast__spinner,
+    .toast__spinner-arc {
+      animation-duration: 6s;
+    }
+  }
+
   @keyframes toast-spin {
     0% {
       transform: rotate(0deg);

@@ -63,12 +63,15 @@
       scroll-behavior: auto !important;
     }
 
-    /* The spinner is exempt: it conveys ongoing state, so it must keep turning
-     (slowed, in components.css) rather than freeze mid-cycle. The exemption has
-     to live here, in the same rule that clamps everything else, because for
-     !important declarations the cascade reverses layer order, so a later layer
-     can never win. */
-    *:not(.spinner, .spinner__arc),
+    /* Two exemptions: motion that conveys ongoing state must keep turning
+     (slowed, where the component sets it) rather than freeze mid-cycle. The
+     spinner is named because its markup needs no opt-in;
+     [data-motion-essential] is the hook for anything else, including your own
+     elements. Put it on the animating element itself, not an ancestor.
+     Both have to live here, in the same rule that clamps everything else,
+     because for !important declarations the cascade reverses layer order, so a
+     later layer can never win. */
+    *:not(.spinner, .spinner__arc, [data-motion-essential]),
     *::before,
     *::after {
       animation-duration: 0.01ms !important;

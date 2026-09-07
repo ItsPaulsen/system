@@ -1030,6 +1030,26 @@
     text-decoration: none;
   }
 
+  /* Hit area and focus-ring room around the mark, taken back with an equal
+     negative margin so the outer box, and everything laid out around it, is
+     exactly where it was. 8 on a phone where the bar is tighter, 12 from md.
+     content-box because width/height above describe the MARK: under the global
+     border-box the padding would eat into it instead. */
+  .ex-topbar__brand,
+  .ex-footer__brand {
+    box-sizing: content-box;
+    padding: var(--space-8);
+    margin: calc(var(--space-8) * -1);
+  }
+
+  @media (min-width: 768px) {
+    .ex-topbar__brand,
+    .ex-footer__brand {
+      padding: var(--space-12);
+      margin: calc(var(--space-12) * -1);
+    }
+  }
+
   /* The mark itself: theme ink masked to the logo shape, flipping light/dark. On
      ::before so the anchor's border-radius (and focus ring) never clip it. */
   .ex-topbar__brand::before,

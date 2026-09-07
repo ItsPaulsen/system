@@ -151,7 +151,7 @@
         <hr class="separator ex-footer__divider" />
 
         <div class="ex-footer__bottom">
-          <p class="ex-footer__copy">© 2026 Kristian Paulsen</p>
+          <p class="ex-footer__copy">© ${new Date().getFullYear()} Kristian Paulsen</p>
           <div class="ex-footer__legal">
             <a href="#">Privacy</a>
             <span class="ex-footer__dot" aria-hidden="true">·</span>

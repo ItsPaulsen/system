@@ -134,7 +134,9 @@
   }
 
   .ex-filter__title {
-    margin: 0 0 1rem; /* 16 down to the first divider */
+    /* 24 down to the first divider, which lines that hairline up with the top of
+       the items beside it. */
+    margin: 0 0 var(--space-24);
     font-size: var(--font-title-small-size);
     line-height: var(--font-title-small-lh);
     font-weight: var(--font-title-small-weight);
@@ -152,8 +154,11 @@
     padding-block: var(--space-4);
   }
 
+  /* No hover surface: the whole row is the toggle, so a surface on the chevron
+     alone would trace the wrong target, and one on the row reads like a menu
+     item on a quiet rail. The rotating chevron reports the state, and the cursor
+     and focus ring carry the rest. */
   .ex-filter__head {
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -172,31 +177,6 @@
     display: none;
   }
 
-  /* Compact 36 hover surface behind the chevron, the same treatment the sheet's
-     close button gets: the whole row is the target, but only the chevron shows
-     it, so the row doesn't light up like a menu item.
-
-     An alpha fill rather than a background step, because this row appears on two
-     different surfaces: the band's gray on the rail, and the sheet's own when
-     the filter is relocated there. One value reads on both. */
-  .ex-filter__head::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    inset-inline-end: -8px; /* 36 surface around the 20 glyph */
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-full);
-    translate: 0 -50%;
-    transition: background var(--motion-default);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .ex-filter__head:hover::before {
-      background: var(--fill-quaternary);
-    }
-  }
-
   /* Chevron drawn on the summary itself, so the <summary> holds only its label
      (an SVG child trips the "interactive content in <summary>" audit). */
   .ex-filter__head::after {
@@ -204,7 +184,11 @@
     flex: none;
     width: 20px;
     height: 20px;
-    color: var(--ink-tertiary);
+
+    /* Secondary, not tertiary: it's the control's state indicator, so it wants
+       3:1 against the surface (WCAG 1.4.11), and tertiary's 55% ink lands under
+       that on the band. Matches the Select's own chevron. */
+    color: var(--ink-secondary);
     background: currentcolor;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
       center / contain no-repeat;

@@ -132,7 +132,7 @@
     height: 20px;
     margin: 0;
     background: transparent;
-    border: 2px solid var(--ink-tertiary);
+    border: 1.5px solid var(--ink-tertiary);
     cursor: pointer;
     transition:
       background var(--motion-default),

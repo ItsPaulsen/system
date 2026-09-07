@@ -407,8 +407,10 @@
     line-height: var(--font-body-small-lh);
   }
 
+  /* Flat 400 across the line. The <strong> stays for meaning but inherits it,
+     or the browser's own `bolder` would pick the numbers out. */
   .shop__showing strong {
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-weight: inherit;
   }
 
   /* Card-surface pill, same step as the search field and the media tiles. Wide

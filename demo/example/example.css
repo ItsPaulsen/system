@@ -313,9 +313,15 @@
     margin-bottom: var(--space-16);
   }
 
+  /* The <strong> around the number stays for meaning but inherits the line's
+     weight; left alone, the browser's own `bolder` would push it to 700 while
+     the rest of the line sits at 500. */
+  .ex-listing__count strong {
+    font-weight: inherit;
+  }
+
   /* Whole line at 500, so the number and its noun read as one label rather than
-     a figure with a caption. The <strong> around the number stays for meaning;
-     it just carries no extra weight of its own now. */
+     a figure with a caption. */
   .ex-listing__count {
     margin: 0;
     color: var(--ink-primary);

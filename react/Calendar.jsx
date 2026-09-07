@@ -31,9 +31,9 @@ const addMonths = (d, n) => {
 };
 
 // Month grid for choosing a date, capped at 31 Dec of the current year. Uncontrolled via
-// defaultValue; pass value + onSelect (both ISO "yyyy-mm-dd") to control it. Keyboard nav:
+// defaultValue; pass value + onChange (both ISO "yyyy-mm-dd") to control it. Keyboard nav:
 // arrows, Home/End, PageUp/PageDown, Enter/Space.
-export default function Calendar({ value, defaultValue, onSelect }) {
+export default function Calendar({ value, defaultValue, onChange }) {
   const today = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -71,7 +71,7 @@ export default function Calendar({ value, defaultValue, onSelect }) {
   const pick = (d) => {
     if (d > maxDate) return;
     if (value === undefined) setUncontrolled(d);
-    onSelect?.(iso(d));
+    onChange?.(iso(d));
   };
 
   const roam = (d) => {

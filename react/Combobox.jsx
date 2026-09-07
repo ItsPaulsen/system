@@ -51,9 +51,11 @@ function positionFloating(anchor, list, wasAbove) {
 }
 
 // Text field that filters a listbox as you type; Select with type-to-filter. `options` is an
-// array of strings, `onChange(value)` fires on pick, `fill` swaps the outline for a solid skin.
+// array of strings and `onChange(value)` fires on pick. Uncontrolled via defaultValue, or pass
+// value + onChange to control it. `fill` swaps the outline for a solid skin.
 export default function Combobox({
   options,
+  value,
   defaultValue = "",
   onChange,
   fill,
@@ -61,8 +63,11 @@ export default function Combobox({
   disabled,
   "aria-label": ariaLabel
 }) {
-  const [query, setQuery] = useState(defaultValue);
-  const [selected, setSelected] = useState(defaultValue || null);
+  const [uncontrolled, setUncontrolled] = useState(defaultValue || null);
+  const selected = value !== undefined ? value : uncontrolled;
+  // The input text is its own state: it diverges from the committed value while
+  // the user types, then snaps back on a pick.
+  const [query, setQuery] = useState(value ?? defaultValue);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1); // no row pre-highlighted
   const rootRef = useRef(null);
@@ -142,13 +147,23 @@ export default function Combobox({
 
   const choose = (opt) => {
     setQuery(opt);
-    setSelected(opt);
+    if (value === undefined) setUncontrolled(opt);
     onChange?.(opt);
     setOpen(false);
   };
 
+  useEffect(() => {
+    if (value !== undefined) setQuery(value);
+  }, [value]);
+
   const onKeyDown = (e) => {
-    if (e.key === "Escape" || e.key === "Tab") {
+    if (e.key === "Escape") {
+      // Swallow it so an enclosing dialog/popover doesn't close too; Tab below
+      // is left to bubble so focus still moves on normally.
+      e.preventDefault();
+      e.stopPropagation();
+      setOpen(false);
+    } else if (e.key === "Tab") {
       setOpen(false);
     } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();

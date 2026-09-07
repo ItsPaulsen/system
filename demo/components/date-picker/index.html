@@ -163,7 +163,7 @@
               </button>
               <div className="popover popover--calendar" id="date-popover" popover="auto">
                 <Calendar
-                  onSelect={(iso) => {
+                  onChange={(iso) => {
                     setDate(iso);
                     document.getElementById("date-popover").hidePopover();
                   }}
@@ -177,7 +177,7 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             The picker is <a href="/demo/components/calendar/">Calendar</a> in a Popover;
-            <code>onSelect</code> (ISO date) updates the trigger label and closes it. Capped at 31
+            <code>onChange</code> (ISO date) updates the trigger label and closes it. Capped at 31
             Dec of the current year.
           </p>
           <div data-source="/react/Calendar.jsx"></div>

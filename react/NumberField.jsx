@@ -27,6 +27,17 @@ export default function NumberField({
   const latest = useRef(current);
   latest.current = current;
   const clamp = (n) => Math.min(max, Math.max(min, n));
+  // Binary floats make a decimal step drift (0.1 + 0.2 = 0.30000000000000004),
+  // so round the result back to the decimals actually in play. Exponential
+  // notation has no meaningful decimal count, so leave those alone.
+  const decimals = (n) => {
+    const str = String(n);
+    return str.includes("e") ? 0 : (str.split(".")[1] || "").length;
+  };
+  const round = (n, base) => {
+    const places = Math.max(decimals(step), decimals(base));
+    return places ? Number(n.toFixed(places)) : n;
+  };
   const cls = ["input", "number-field", size && `number-field--${size}`, className]
     .filter(Boolean)
     .join(" ");
@@ -38,7 +49,7 @@ export default function NumberField({
   const nudge = (dir) => {
     const n = parseFloat(latest.current);
     const base = Number.isNaN(n) ? (min > -Infinity ? min : 0) : n;
-    const next = clamp(base + dir * step);
+    const next = clamp(round(base + dir * step, base));
     latest.current = next;
     commit(next);
     return next;
@@ -47,9 +58,11 @@ export default function NumberField({
   // click does the single step; a held pointer layers repeat on top after a delay.
   const press = (dir, e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    hold.current.repeated = false;
     hold.current.t = setTimeout(() => {
       // Stop at the bound instead of spinning on a stepper that just disabled.
       hold.current.i = setInterval(() => {
+        hold.current.repeated = true;
         const next = nudge(dir);
         if (dir < 0 ? next <= min : next >= max) release();
       }, 60);
@@ -58,6 +71,15 @@ export default function NumberField({
   const release = () => {
     clearTimeout(hold.current.t);
     clearInterval(hold.current.i);
+  };
+  // A hold that has already stepped swallows the click that follows the release,
+  // which would otherwise land one step past where the user let go.
+  const onStepClick = (dir) => {
+    if (hold.current.repeated) {
+      hold.current.repeated = false;
+      return;
+    }
+    nudge(dir);
   };
   // A pointer released outside the button (or an unmount mid-press) would
   // otherwise leave the repeat running.
@@ -90,7 +112,7 @@ export default function NumberField({
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
-          onClick={() => nudge(-1)}
+          onClick={() => onStepClick(-1)}
         >
           <IconMinus />
         </button>
@@ -121,7 +143,7 @@ export default function NumberField({
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
-          onClick={() => nudge(1)}
+          onClick={() => onStepClick(1)}
         >
           <IconPlus />
         </button>

@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 // Rows and columns of data. Wraps the native table in .table-wrap so wide tables scroll.
 // Children are the usual thead/tbody markup; props pass through to the table.
 // When the wrap actually overflows it becomes a focusable region so keyboard users can
-// pan it; a table that fits gets no tab stop. Pass ariaLabel to name the scroll region.
-export default function Table({ children, className, ariaLabel, ...rest }) {
+// pan it; a table that fits gets no tab stop. Pass aria-label to name the scroll region.
+export default function Table({ children, className, "aria-label": ariaLabel, ...rest }) {
   const wrapRef = useRef(null);
   useEffect(() => {
     const wrap = wrapRef.current;

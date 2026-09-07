@@ -1792,7 +1792,15 @@ function initComboboxes() {
     });
 
     input.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" || e.key === "Tab") {
+      if (e.key === "Escape") {
+        // Swallow it so an enclosing dialog/popover doesn't close too; Tab below
+        // is left to bubble so focus still moves on normally.
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+        return;
+      }
+      if (e.key === "Tab") {
         close();
         return;
       }
@@ -2839,6 +2847,17 @@ function initNumberFields() {
       return Number.isNaN(n) ? null : n;
     };
     const clamp = (n) => Math.min(max, Math.max(min, n));
+    // Binary floats make a decimal step drift (0.1 + 0.2 = 0.30000000000000004),
+    // so round the result back to the decimals actually in play. Exponential
+    // notation has no meaningful decimal count, so leave those alone.
+    const decimals = (n) => {
+      const str = String(n);
+      return str.includes("e") ? 0 : (str.split(".")[1] || "").length;
+    };
+    const round = (n, base) => {
+      const places = Math.max(decimals(step), decimals(base));
+      return places ? Number(n.toFixed(places)) : n;
+    };
 
     const sync = () => {
       const n = parse();
@@ -2847,13 +2866,13 @@ function initNumberFields() {
     };
     const nudge = (dir) => {
       const base = parse() ?? (min > -Infinity ? min : 0);
-      input.value = String(clamp(base + dir * step));
+      input.value = String(clamp(round(base + dir * step, base)));
       sync();
       input.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
     // click does the single step (covers mouse and keyboard Enter/Space); a held
-    // pointer layers repeat on top after a delay. No shared flag, so a stepper
+    // pointer layers repeat on top after a delay. Per-button state, so a stepper
     // that disables mid-press can't leave anything stuck.
     [
       [dec, -1],
@@ -2862,15 +2881,32 @@ function initNumberFields() {
       if (!btn) return;
       let holdT;
       let repT;
+      // A hold that has already stepped swallows the click that follows the
+      // release, which would otherwise land one step past where the user let go.
+      let repeated = false;
       const stop = () => {
         clearTimeout(holdT);
         clearInterval(repT);
       };
-      btn.addEventListener("click", () => nudge(dir));
+      btn.addEventListener("click", () => {
+        if (repeated) {
+          repeated = false;
+          return;
+        }
+        nudge(dir);
+      });
       btn.addEventListener("pointerdown", (e) => {
         if (e.pointerType === "mouse" && e.button !== 0) return;
+        repeated = false;
         holdT = setTimeout(() => {
-          repT = setInterval(() => (btn.disabled ? stop() : nudge(dir)), 60);
+          repT = setInterval(() => {
+            if (btn.disabled) {
+              stop();
+              return;
+            }
+            repeated = true;
+            nudge(dir);
+          }, 60);
         }, 400);
       });
       ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
@@ -3558,9 +3594,9 @@ function init() {
       setTheme(currentTheme() === "dark" ? "light" : "dark");
       // Re-read all token-driven previews so their swatches, values, and copy
       // targets match the new theme.
+      // refreshResponsive() already re-hydrates the previews.
       refreshResponsive();
       hydratePalette();
-      hydratePreviews();
       return;
     }
     const gridBtn = event.target.closest("[data-grid-toggle]");

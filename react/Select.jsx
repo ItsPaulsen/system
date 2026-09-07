@@ -79,6 +79,12 @@ export default function Select({
 
   useEffect(() => setMounted(true), []);
 
+  // Opening highlights whatever is selected now (a controlled value may have
+  // changed since); while the list is up, arrow keys own the highlight.
+  useEffect(() => {
+    if (open) setActive(Math.max(0, options.indexOf(selected)));
+  }, [open]);
+
   // The list is portaled to <body> so it escapes clipping ancestors, positioned
   // in page coordinates (glued to the trigger); keep it placed while open.
   useEffect(() => {

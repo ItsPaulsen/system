@@ -27,10 +27,19 @@ const addMonths = (d, n) => {
   return new Date(d.getFullYear(), m, Math.min(d.getDate(), last));
 };
 
-// Two-month range picker. Uncontrolled via defaultStart/defaultEnd; picks are staged, and Apply
-// commits the range (fires onChange + onApply, ISO "yyyy-mm-dd") while Cancel discards it (onCancel).
+// Two-month range picker. Uncontrolled via defaultStart/defaultEnd, or pass start + end (ISO
+// "yyyy-mm-dd") with onChange to control the committed range. Picks are staged: Apply commits
+// (fires onChange + onApply) and Cancel discards (onCancel).
 // First click sets the start, the next the end (swapping if earlier); a click after a full range starts over.
-export default function DateRange({ defaultStart, defaultEnd, onChange, onApply, onCancel }) {
+export default function DateRange({
+  start,
+  end,
+  defaultStart,
+  defaultEnd,
+  onChange,
+  onApply,
+  onCancel
+}) {
   const today = useMemo(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -41,14 +50,24 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
   const minDate = useMemo(() => new Date(maxYear - 10, 0, 1), [maxYear]);
 
   // Selection is staged: picks update `range`, Apply commits it (fires onChange),
-  // Cancel reverts to `committed`, Clear empties it.
-  const [range, setRange] = useState(() => ({
+  // Cancel reverts to `committed`, Clear empties it. Only the committed range is
+  // controllable; the in-progress pick is this component's own business.
+  const controlled = start !== undefined || end !== undefined;
+  const [internalCommitted, setInternalCommitted] = useState(() => ({
     start: parse(defaultStart),
     end: parse(defaultEnd)
   }));
-  const [committed, setCommitted] = useState(range);
+  const committed = controlled ? { start: parse(start), end: parse(end) } : internalCommitted;
+  const [range, setRange] = useState(committed);
   const value = range;
   const [previewEnd, setPreviewEnd] = useState(null);
+
+  // A controlled range changed from outside replaces the staged pick.
+  useEffect(() => {
+    if (!controlled) return;
+    setPreviewEnd(null);
+    setRange({ start: parse(start), end: parse(end) });
+  }, [controlled, start, end]);
 
   // The view is the LEFT month and the right grid is view + 1, so a December
   // view would put the right one past maxDate and render it blank. Back off a
@@ -64,7 +83,7 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
   );
 
   const [view, setView] = useState(() => {
-    const b = value.start || today;
+    const b = committed.start || today;
     const v = new Date(b.getFullYear(), b.getMonth(), 1);
     return new Date(v.getFullYear(), v.getMonth() + 1, 1) > maxDate
       ? new Date(v.getFullYear(), v.getMonth() - 1, 1)
@@ -98,7 +117,7 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
   };
   const apply = () => {
     if (!(value.start && value.end)) return;
-    setCommitted(value);
+    if (!controlled) setInternalCommitted(value);
     onChange?.({ start: iso(value.start), end: iso(value.end) });
     onApply?.();
   };

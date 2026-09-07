@@ -155,6 +155,48 @@
     padding-bottom: 20px;
   }
 
+  /* ── Long filter groups ───────────────────────────────────────────────────
+     A group with more options than fit comfortably gets its own find field and
+     a capped list (see shop.js). Both are hidden until the group outgrows the
+     cap, so a short group looks exactly as it did before. */
+
+  /* White field on the recessed rail, the same surface step the page's other
+     raised controls take. The 4 of bottom margin sits on top of the body's 12
+     gap, putting 16 between the field and the first option. */
+  .shop-filter__search {
+    margin-bottom: var(--space-4);
+  }
+
+  .shop-filter__search-field {
+    min-height: 40px; /* compact: this is a find-as-you-type, not a form field */
+    border-color: transparent;
+    background: var(--background-secondary);
+  }
+
+  .shop-filter__search[hidden] {
+    display: none;
+  }
+
+  /* Text-link affordance on a <button>, since it reveals rows rather than
+     navigating. Sits a touch below the last option. */
+  .shop-filter__more {
+    justify-self: start;
+    margin-top: var(--space-4);
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    cursor: pointer;
+  }
+
+  /* display:flex on .checkbox beats the [hidden] UA rule, so restore it for the
+     options the cap or the find field takes out. */
+  .shop-filter__body .checkbox[hidden] {
+    display: none;
+  }
+
   /* Same open/close ease as the accordion + footer, but with `overflow: clip` +
      `overflow-clip-margin` instead of `overflow: hidden`: the height animation
      still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
@@ -236,7 +278,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-16);
   }
 
   .shop__count {
@@ -251,41 +293,65 @@
   }
 
   /* Sort: the Select component on a bare skin, the one page-local restyle on
-     this screen. No border and no fill, so it reads as the label it is; the
-     chevron carries the affordance. The trigger keeps a real 32px hit target
-     (::before, over the 24px WCAG 2.5.8 floor) while staying text-height in the
-     row, and swaps Select's focus border for the shared focus ring, since
+     this screen. No border and no fill at rest, so it reads as the label it is;
+     the chevron carries the affordance. On hover and while open it takes a pill
+     surface, the same treatment the nav menu's links get — a step up from the
+     surface it sits on, which here is the band's own gray rather than the white
+     the nav sits on. Focus swaps Select's border for the shared ring, since
      there's no border left to light. */
   .shop__sort {
     flex: none;
   }
 
   .shop__sort .select__trigger {
-    position: relative;
     width: auto;
     min-height: 0;
-    padding: 0;
-    gap: 0.25rem;
+    height: 40px;
+    padding-inline: var(--space-16);
+
+    /* The chevron side derives the tighter padding the same way the button and
+       badge do: --px minus 4. No negative margin, so it's the hover surface that
+       lines up with the content edge, not the chevron. */
+    padding-inline-end: calc(var(--space-16) - 4px);
+    gap: var(--space-4);
     border-color: transparent;
+    border-radius: var(--radius-full);
     background: transparent;
     font-size: var(--font-body-small-emphasized-size);
-    line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1.2;
+    transition: background var(--motion-default);
   }
 
-  .shop__sort .select__trigger::before {
-    content: "";
-    position: absolute;
-    inset-block: -4px;
-    inset-inline: -8px;
+  .shop__sort .select__trigger:focus-visible,
+  .shop__sort .select__trigger[aria-expanded="true"] {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Lit while the list is open as well as on hover: the trigger should stay
+     marked for as long as its panel is showing. */
+  .shop__sort .select__trigger[aria-expanded="true"] {
+    background: var(--background-primary-hover);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop__sort .select__trigger:hover {
+      background: var(--background-primary-hover);
+    }
+  }
+
+  .shop__sort .select__trigger:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-full);
   }
 
   /* The trigger hugs its label, so the list can't inherit that width without
-     wrapping "Price: low to high" onto two lines. nowrap on the options is what
-     actually forbids the break; min-width beats the inline width app.js sets, so
-     the list grows to its widest option instead of overflowing it. The
-     right-edge clamp in positionFloating measures the list, so a widened list
-     still can't run off-screen.
+     wrapping "Price low-high" onto two lines. nowrap on the options is what
+     actually forbids the break; min-width grows the list to its widest option
+     instead of overflowing it. The right-edge clamp in positionFloating measures
+     the list, so a widened list still can't run off-screen.
 
      The hook has to sit on the <ul> itself: app.js portals an open list to
      <body>, so a `.shop__sort .select__list` descendant selector stops matching
@@ -298,16 +364,77 @@
     white-space: nowrap;
   }
 
-  .shop__sort .select__trigger:focus-visible,
-  .shop__sort .select__trigger[aria-expanded="true"] {
-    border-color: transparent;
-    box-shadow: none;
+  /* ── Active filter chips ──────────────────────────────────────────────────
+     A summary of what's currently filtering the grid, each chip removing its own
+     filter. Sits between the toolbar and the products. */
+  .shop__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8);
+
+    /* The hairline above the row belongs to the chips, not the toolbar, so it
+       leaves with them when nothing is filtered. Same rule the filter groups
+       use, with 16 either side: the toolbar's bottom margin above, this padding
+       below. */
+    padding-top: var(--space-16);
+    border-top: var(--border-width) solid var(--fill-tertiary);
+    margin-bottom: var(--space-16);
   }
 
-  .shop__sort .select__trigger:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
-    border-radius: var(--radius-sm);
+  .shop__chips[hidden] {
+    display: none;
+  }
+
+  /* The Chip component's own checked skin, applied directly: these chips have no
+     input to key `:has(input:checked)` off, because the chip *is* the remove
+     control — the state it reports lives in the rail.
+
+     Scoped through .shop__chips so it outranks [data-size="sm"] .chip, which is
+     what sets the compact padding these start from. */
+  .shop__chips .shop-chip {
+    /* 12 on the label side; the icon side derives the tighter padding the same
+       way the button and badge do: --px minus 4. */
+    --chip-px: var(--space-12);
+
+    padding-inline-end: calc(var(--chip-px) - 4px);
+    border-radius: var(--radius-full); /* pill, like the buttons and fields here */
+    background: var(--accent-soft);
+    border-color: transparent;
+    color: var(--accent-foreground);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop__chips .shop-chip:hover {
+      background: var(--accent-soft-hover);
+    }
+  }
+
+  .shop__chips .shop-chip:active {
+    background: var(--accent-soft-active);
+  }
+
+  /* Text-link affordance on a <button>: it resets the rail, it doesn't navigate.
+     The underline is the whole affordance, so it holds its ink on hover the way
+     the footer's legal links do, instead of taking .link's colour shift. */
+  @media (hover: hover) and (pointer: fine) {
+    .shop__chips-clear:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .shop__chips-clear {
+    /* On top of the row's 8 gap, so it sits 16 clear of the last chip and reads
+       as a separate action rather than one more chip. */
+    margin-inline-start: var(--space-8);
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    cursor: pointer;
   }
 
   /* ── Product grid ────────────────────────────────────────────────────────
@@ -452,7 +579,14 @@
     padding-inline: var(--space-8);
   }
 
-  /* Title and its variant are one block sharing the subgrid's title row, rather
+  /* Leading inside a product card is tuned in px rather than left on the type
+     tokens' 1.5 ratio: 22 on the title, 20 on the variant, the price and the
+     store count. The card is a dense stack of short lines where the exact line
+     box matters — the title is clamped, so its value *is* the reserved block
+     height (two lines = 44) — and a shared 20 keeps every line under it on one
+     rhythm. Font sizes stay on the tokens; only the leading is tuned.
+
+     Title and its variant are one block sharing the subgrid's title row, rather
      than the variant taking a row of its own. That keeps the card at `span 3`,
      so a product with no variant needs no different card, and the row still
      equalises on whichever card's block is tallest. Consecutive lines, no gap:
@@ -473,15 +607,15 @@
     -webkit-line-clamp: 2;
     overflow: hidden;
     font-size: var(--font-body-small-emphasized-size);
-    line-height: var(--font-body-small-emphasized-lh);
     font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 22px;
   }
 
   /* The variant (colour, material, size) reads as the caption to the title, but
      keeps the card's primary ink: it's product detail, not supporting text. */
   .shop-card__variant {
     font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
+    line-height: 18px;
   }
 
   /* Price and store count are consecutive lines of one block, no gap: their
@@ -493,15 +627,16 @@
   }
 
   .shop-card__price {
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 20px;
     white-space: nowrap;
   }
 
   .shop-card__stores {
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
+    line-height: 20px;
   }
 
   /* ── Footer row ──────────────────────────────────────────────────────────

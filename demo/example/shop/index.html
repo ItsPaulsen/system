@@ -75,7 +75,7 @@
                 </label>
                 <label class="radio">
                   <input type="radio" name="shop-price" class="radio__input" value="under" />
-                  <span class="radio__label">Under 1 000 kr</span>
+                  <span class="radio__label">Under 6 000 kr</span>
                 </label>
               </div>
             </details>
@@ -85,7 +85,7 @@
               <div class="shop-filter__body" data-filter="category">
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-cat-lighting" type="checkbox" class="checkbox__input" />
+                    <input name="shop-cat-chairs" type="checkbox" class="checkbox__input" />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -99,91 +99,51 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Lighting</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-cat-seating" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Seating</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-cat-storage" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Storage</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-cat-tableware" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Tableware</span>
+                  <span class="checkbox__label">Chairs</span>
                 </label>
               </div>
             </details>
 
-            <!-- Wood, the finish of the piece rather than a paint colour. "Wood"
-                 not "Tree": the tree is the plant, the material is the wood. -->
+            <!-- Brand. The card's title *is* the brand, so the filter matches on
+                 that text rather than a data attribute: one source of truth, and
+                 a product can't be tagged with a brand it doesn't display. Only
+                 the real products carry one so far. -->
             <details class="shop-filter__group" open>
-              <summary class="shop-filter__head">Wood</summary>
-              <div class="shop-filter__body" data-filter="wood">
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-wood-oak" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
+              <summary class="shop-filter__head">Brand</summary>
+              <div class="shop-filter__body" data-filter="brand" data-filter-long>
+                <label class="input shop-filter__search">
+                  <span class="input__label sr-only">Find brand</span>
+                  <span
+                    class="input__container input__container--rounded shop-filter__search-field"
+                  >
+                    <span class="input__leading">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                        <path d="M21 21l-6 -6" />
+                      </svg>
+                    </span>
+                    <input
+                      name="shop-brand-find"
+                      class="input__element"
+                      type="search"
+                      placeholder="Find brand"
+                      autocomplete="off"
+                    />
                   </span>
-                  <span class="checkbox__label">Oak</span>
                 </label>
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-wood-ash" type="checkbox" class="checkbox__input" />
+                    <input name="shop-brand-muuto" type="checkbox" class="checkbox__input" />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -197,11 +157,56 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Ash</span>
+                  <span class="checkbox__label">Muuto</span>
+                </label>
+                <button type="button" class="link shop-filter__more" hidden></button>
+              </div>
+            </details>
+
+            <!-- Color, whose options are families rather than single values.
+                 Each checkbox declares the colors it covers in data-colors, so
+                 the filter's own markup is the one place that says which values
+                 belong to it — adding a wood is one word here, next to the
+                 label it belongs to.
+
+                 data-color on a card is the facet token (oak, black), never the
+                 copy shown to the reader: the variant line carries that, and it
+                 can be as specific as the product needs ("refine leather
+                 black/black") without the filter having to know about it. -->
+            <details class="shop-filter__group" open>
+              <summary class="shop-filter__head">Color</summary>
+              <div class="shop-filter__body" data-filter="color">
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input
+                      name="shop-color-tree"
+                      type="checkbox"
+                      class="checkbox__input"
+                      data-colors="oak ash beech birch pine walnut"
+                    />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Tree</span>
                 </label>
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-wood-beech" type="checkbox" class="checkbox__input" />
+                    <input
+                      name="shop-color-black"
+                      type="checkbox"
+                      class="checkbox__input"
+                      data-colors="black"
+                    />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -215,11 +220,16 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Beech</span>
+                  <span class="checkbox__label">Black</span>
                 </label>
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-wood-birch" type="checkbox" class="checkbox__input" />
+                    <input
+                      name="shop-color-brown"
+                      type="checkbox"
+                      class="checkbox__input"
+                      data-colors="brown cognac"
+                    />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -233,11 +243,16 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Birch</span>
+                  <span class="checkbox__label">Brown</span>
                 </label>
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-wood-pine" type="checkbox" class="checkbox__input" />
+                    <input
+                      name="shop-color-beige"
+                      type="checkbox"
+                      class="checkbox__input"
+                      data-colors="beige"
+                    />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -251,11 +266,16 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Pine</span>
+                  <span class="checkbox__label">Beige</span>
                 </label>
                 <label class="checkbox">
                   <span class="checkbox__box">
-                    <input name="shop-wood-walnut" type="checkbox" class="checkbox__input" />
+                    <input
+                      name="shop-color-green"
+                      type="checkbox"
+                      class="checkbox__input"
+                      data-colors="green"
+                    />
                     <svg
                       class="checkbox__check"
                       viewBox="0 0 24 24"
@@ -269,7 +289,7 @@
                       <path d="M5 12l5 5l10 -10" pathLength="1" />
                     </svg>
                   </span>
-                  <span class="checkbox__label">Walnut</span>
+                  <span class="checkbox__label">Green</span>
                 </label>
               </div>
             </details>
@@ -348,7 +368,7 @@
                  only page-local restyle on this screen. -->
             <div class="shop__toolbar">
               <p class="shop__count" role="status">
-                <strong data-shop-count>33</strong> <span data-shop-noun>products</span>
+                <strong data-shop-count>11</strong> <span data-shop-noun>products</span>
               </p>
 
               <div class="select shop__sort" data-select>
@@ -397,16 +417,21 @@
             <!-- Store counts cap at nine: ten or more prints as "9+ stores", so
                  no card ever shows an exact double-digit figure. One card sits at
                  "1 store" to keep the singular honest. -->
+            <!-- Active filters, one removable chip each plus a clear-all.
+                 shop.js builds the row from whatever is checked, so it can't
+                 disagree with the rail, and the row stays out when nothing is
+                 filtered. -->
+            <div class="shop__chips" data-size="sm" hidden></div>
+
             <div class="shop__grid">
               <a
                 class="shop-card"
                 href="#"
-                data-category="seating"
-                data-wood="oak"
+                data-category="chairs"
+                data-color="oak"
                 data-price="5249"
                 data-added="33"
               >
-                <span class="badge badge--blue shop-card__badge">New</span>
                 <span class="shop-card__media">
                   <picture>
                     <source
@@ -439,61 +464,24 @@
               <a
                 class="shop-card"
                 href="#"
-                data-category="lighting"
-                data-price="2490"
-                data-added="30"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_2-400.webp 400w,
-                        /assets/images/abstract_2-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_2-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Arc Floor Lamp</h3>
-                  <span class="shop-card__variant">Brushed steel</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">2 490 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-wood="oak"
-                data-price="7335"
-                data-added="11"
+                data-category="chairs"
+                data-color="black"
+                data-price="7449"
+                data-added="34"
               >
                 <span class="shop-card__media">
                   <picture>
                     <source
                       type="image/webp"
                       srcset="
-                        /assets/images/abstract_3-400.webp 400w,
-                        /assets/images/abstract_3-640.webp 640w
+                        /assets/images/products/cover-armchair-black-leather-400.webp 400w,
+                        /assets/images/products/cover-armchair-black-leather-640.webp 640w
                       "
                       sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
                     />
                     <img
                       class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_3-800.jpg"
+                      src="/assets/images/products/cover-armchair-black-leather-640.jpg"
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -501,983 +489,11 @@
                   </picture>
                 </span>
                 <div class="shop-card__head">
-                  <h3 class="shop-card__title">Linen Lounge Chair</h3>
-                  <span class="shop-card__variant">Oat, oak legs</span>
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Armchair, refine leather black/black</span>
                 </div>
                 <span class="shop-card__meta">
-                  <span class="shop-card__price">7 335 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="storage"
-                data-wood="oak"
-                data-price="4190"
-                data-added="31"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_4-400.webp 400w,
-                        /assets/images/abstract_4-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_4-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Oak Shelf Unit</h3>
-                  <span class="shop-card__variant">Oak, 4 shelves</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">4 190 kr</span>
-                  <span class="shop-card__stores">6 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-price="690"
-                data-added="7"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_5-400.webp 400w,
-                        /assets/images/abstract_5-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_5-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Stoneware Bowl Set</h3>
-                  <span class="shop-card__variant">Set of 4, sand</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">690 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="1240"
-                data-added="12"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_6-400.webp 400w,
-                        /assets/images/abstract_6-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_6-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Pendant Shade</h3>
-                  <span class="shop-card__variant">Off-white, 40 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 240 kr</span>
-                  <span class="shop-card__stores">8 stores</span>
-                </span>
-              </a>
-
-              <a class="shop-card" href="#" data-category="storage" data-price="450" data-added="4">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_7-400.webp 400w,
-                        /assets/images/abstract_7-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_7-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Woven Storage Basket</h3>
-                  <span class="shop-card__variant">Natural, large</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">450 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-price="1890"
-                data-added="29"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_8-400.webp 400w,
-                        /assets/images/abstract_8-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_8-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Counter Stool</h3>
-                  <span class="shop-card__variant">Black, 65 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 890 kr</span>
-                  <span class="shop-card__stores">5 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-price="840"
-                data-added="9"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_9-400.webp 400w,
-                        /assets/images/abstract_9-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_9-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Matte Dinner Plates</h3>
-                  <span class="shop-card__variant">Set of 4, chalk</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">840 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="990"
-                data-added="8"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_1-400.webp 400w,
-                        /assets/images/abstract_1-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_1-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Reading Lamp</h3>
-                  <span class="shop-card__variant">Matte black</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">990 kr</span>
-                  <span class="shop-card__stores">9 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-price="12400"
-                data-added="6"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_2-400.webp 400w,
-                        /assets/images/abstract_2-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_2-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Modular Sofa Module</h3>
-                  <span class="shop-card__variant">Slate, 2-seat</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">12 400 kr</span>
-                  <span class="shop-card__stores">3 stores</span>
-                </span>
-              </a>
-
-              <a class="shop-card" href="#" data-category="storage" data-price="320" data-added="2">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_3-400.webp 400w,
-                        /assets/images/abstract_3-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_3-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Lidded Crate</h3>
-                  <span class="shop-card__variant">Grey, 30 L</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">320 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-price="380"
-                data-added="32"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_4-400.webp 400w,
-                        /assets/images/abstract_4-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_4-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Glass Carafe</h3>
-                  <span class="shop-card__variant">Clear, 1 L</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">380 kr</span>
-                  <span class="shop-card__stores">7 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="1590"
-                data-added="10"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_5-400.webp 400w,
-                        /assets/images/abstract_5-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_5-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Track Spotlight</h3>
-                  <span class="shop-card__variant">White, 3-head</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 590 kr</span>
-                  <span class="shop-card__stores">7 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-wood="birch"
-                data-price="1150"
-                data-added="5"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_6-400.webp 400w,
-                        /assets/images/abstract_6-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_6-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Folding Side Chair</h3>
-                  <span class="shop-card__variant">Birch</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 150 kr</span>
-                  <span class="shop-card__stores">6 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="storage"
-                data-price="3250"
-                data-added="3"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_7-400.webp 400w,
-                        /assets/images/abstract_7-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_7-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Wall Cabinet</h3>
-                  <span class="shop-card__variant">White, 2 doors</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">3 250 kr</span>
-                  <span class="shop-card__stores">4 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-price="540"
-                data-added="13"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_8-400.webp 400w,
-                        /assets/images/abstract_8-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_8-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Espresso Cups</h3>
-                  <span class="shop-card__variant">Set of 4, 80 ml</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">540 kr</span>
-                  <span class="shop-card__stores">2 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="760"
-                data-added="1"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_9-400.webp 400w,
-                        /assets/images/abstract_9-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_9-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Paper Table Lamp</h3>
-                  <span class="shop-card__variant">White, 30 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">760 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-price="8900"
-                data-added="14"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_1-400.webp 400w,
-                        /assets/images/abstract_1-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_1-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Deep Armchair</h3>
-                  <span class="shop-card__variant">Bouclé, ivory</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">8 900 kr</span>
-                  <span class="shop-card__stores">1 store</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="storage"
-                data-price="2780"
-                data-added="15"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_2-400.webp 400w,
-                        /assets/images/abstract_2-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_2-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Rolling Drawer Unit</h3>
-                  <span class="shop-card__variant">White, 3 drawers</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">2 780 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-wood="ash"
-                data-price="460"
-                data-added="26"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_3-400.webp 400w,
-                        /assets/images/abstract_3-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_3-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Serving Platter</h3>
-                  <span class="shop-card__variant">Ash, 40 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">460 kr</span>
-                  <span class="shop-card__stores">8 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="540"
-                data-added="22"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_4-400.webp 400w,
-                        /assets/images/abstract_4-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_4-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Clip Task Light</h3>
-                  <span class="shop-card__variant">Black</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">540 kr</span>
-                  <span class="shop-card__stores">6 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-wood="oak"
-                data-price="2260"
-                data-added="21"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_5-400.webp 400w,
-                        /assets/images/abstract_5-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_5-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Woven Dining Chair</h3>
-                  <span class="shop-card__variant">Natural, oak frame</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">2 260 kr</span>
-                  <span class="shop-card__stores">7 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="storage"
-                data-wood="pine"
-                data-price="1690"
-                data-added="23"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_6-400.webp 400w,
-                        /assets/images/abstract_6-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_6-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Open Cube Shelf</h3>
-                  <span class="shop-card__variant">Pine, 4 cubes</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 690 kr</span>
-                  <span class="shop-card__stores">5 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-price="290"
-                data-added="17"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_7-400.webp 400w,
-                        /assets/images/abstract_7-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_7-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Enamel Mugs</h3>
-                  <span class="shop-card__variant">Set of 2, 300 ml</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">290 kr</span>
-                  <span class="shop-card__stores">9+ stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="1180"
-                data-added="28"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_8-400.webp 400w,
-                        /assets/images/abstract_8-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_8-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Frosted Wall Sconce</h3>
-                  <span class="shop-card__variant">Opal glass</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 180 kr</span>
-                  <span class="shop-card__stores">4 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="seating"
-                data-price="3480"
-                data-added="24"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_9-400.webp 400w,
-                        /assets/images/abstract_9-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_9-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Low Ottoman</h3>
-                  <span class="shop-card__variant">Sage, round</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">3 480 kr</span>
-                  <span class="shop-card__stores">4 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="storage"
-                data-wood="walnut"
-                data-price="3940"
-                data-added="27"
-              >
-                <span class="badge badge--blue shop-card__badge">New</span>
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_1-400.webp 400w,
-                        /assets/images/abstract_1-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_1-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Hallway Console</h3>
-                  <span class="shop-card__variant">Walnut, 90 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">3 940 kr</span>
-                  <span class="shop-card__stores">2 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="tableware"
-                data-wood="beech"
-                data-price="620"
-                data-added="20"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_2-400.webp 400w,
-                        /assets/images/abstract_2-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_2-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Wooden Serving Board</h3>
-                  <span class="shop-card__variant">Beech, 45 cm</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">620 kr</span>
-                  <span class="shop-card__stores">5 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="lighting"
-                data-price="1950"
-                data-added="16"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/abstract_3-400.webp 400w,
-                        /assets/images/abstract_3-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_3-800.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Brass Picture Light</h3>
-                  <span class="shop-card__variant">Antique brass</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">1 950 kr</span>
+                  <span class="shop-card__price">7 449 kr</span>
                   <span class="shop-card__stores">3 stores</span>
                 </span>
               </a>
@@ -1485,24 +501,24 @@
               <a
                 class="shop-card"
                 href="#"
-                data-category="seating"
-                data-wood="oak"
-                data-price="4150"
-                data-added="18"
+                data-category="chairs"
+                data-color="oak cognac"
+                data-price="7449"
+                data-added="35"
               >
                 <span class="shop-card__media">
                   <picture>
                     <source
                       type="image/webp"
                       srcset="
-                        /assets/images/abstract_4-400.webp 400w,
-                        /assets/images/abstract_4-640.webp 640w
+                        /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
+                        /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
                       "
                       sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
                     />
                     <img
                       class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_4-800.jpg"
+                      src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -1510,11 +526,163 @@
                   </picture>
                 </span>
                 <div class="shop-card__head">
-                  <h3 class="shop-card__title">Slatted Bench</h3>
-                  <span class="shop-card__variant">Oak, 120 cm</span>
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Armchair, refine leather cognac/oak</span>
                 </div>
                 <span class="shop-card__meta">
-                  <span class="shop-card__price">4 150 kr</span>
+                  <span class="shop-card__price">7 449 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="black"
+                data-price="5249"
+                data-added="36"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-black-400.webp 400w,
+                        /assets/images/products/cover-armchair-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Armchair, black</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 249 kr</span>
+                  <span class="shop-card__stores">6 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="black"
+                data-price="5295"
+                data-added="37"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-black-400.webp 400w,
+                        /assets/images/products/cover-side-chair-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Side Chair, black</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="oak cognac"
+                data-price="7349"
+                data-added="38"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-cognac-oak-400.webp 400w,
+                        /assets/images/products/cover-side-chair-cognac-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-cognac-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant"
+                    >Cover Side Chair, refine leather cognac/oak</span
+                  >
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 349 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="black"
+                data-price="7349"
+                data-added="39"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-black-leather-400.webp 400w,
+                        /assets/images/products/cover-side-chair-black-leather-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-black-leather-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant"
+                    >Cover Side Chair, refine leather black/black</span
+                  >
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 349 kr</span>
                   <span class="shop-card__stores">2 stores</span>
                 </span>
               </a>
@@ -1522,23 +690,24 @@
               <a
                 class="shop-card"
                 href="#"
-                data-category="storage"
-                data-price="380"
-                data-added="19"
+                data-category="chairs"
+                data-color="brown"
+                data-price="5295"
+                data-added="40"
               >
                 <span class="shop-card__media">
                   <picture>
                     <source
                       type="image/webp"
                       srcset="
-                        /assets/images/abstract_5-400.webp 400w,
-                        /assets/images/abstract_5-640.webp 640w
+                        /assets/images/products/cover-side-chair-dark-brown-400.webp 400w,
+                        /assets/images/products/cover-side-chair-dark-brown-640.webp 640w
                       "
                       sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
                     />
                     <img
                       class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_5-800.jpg"
+                      src="/assets/images/products/cover-side-chair-dark-brown-640.jpg"
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -1546,35 +715,36 @@
                   </picture>
                 </span>
                 <div class="shop-card__head">
-                  <h3 class="shop-card__title">Stacking Bins</h3>
-                  <span class="shop-card__variant">Clear, set of 3</span>
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Side Chair, stained dark brown</span>
                 </div>
                 <span class="shop-card__meta">
-                  <span class="shop-card__price">380 kr</span>
-                  <span class="shop-card__stores">8 stores</span>
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
                 </span>
               </a>
 
               <a
                 class="shop-card"
                 href="#"
-                data-category="tableware"
-                data-price="340"
-                data-added="25"
+                data-category="chairs"
+                data-color="oak"
+                data-price="5295"
+                data-added="41"
               >
                 <span class="shop-card__media">
                   <picture>
                     <source
                       type="image/webp"
                       srcset="
-                        /assets/images/abstract_6-400.webp 400w,
-                        /assets/images/abstract_6-640.webp 640w
+                        /assets/images/products/cover-side-chair-oak-400.webp 400w,
+                        /assets/images/products/cover-side-chair-oak-640.webp 640w
                       "
                       sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
                     />
                     <img
                       class="ex-ph shop-card__img"
-                      src="/assets/images/abstract_6-800.jpg"
+                      src="/assets/images/products/cover-side-chair-oak-640.jpg"
                       alt=""
                       loading="lazy"
                       decoding="async"
@@ -1582,12 +752,88 @@
                   </picture>
                 </span>
                 <div class="shop-card__head">
-                  <h3 class="shop-card__title">Ribbed Tumblers</h3>
-                  <span class="shop-card__variant">Set of 4, 350 ml</span>
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Side Chair, oak</span>
                 </div>
                 <span class="shop-card__meta">
-                  <span class="shop-card__price">340 kr</span>
-                  <span class="shop-card__stores">6 stores</span>
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="green"
+                data-price="5295"
+                data-added="42"
+              >
+                <span class="badge badge--blue shop-card__badge">New</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-green-400.webp 400w,
+                        /assets/images/products/cover-side-chair-green-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-green-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Side Chair, green</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="#"
+                data-category="chairs"
+                data-color="beige"
+                data-price="5295"
+                data-added="43"
+              >
+                <span class="badge badge--blue shop-card__badge">New</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-dark-beige-400.webp 400w,
+                        /assets/images/products/cover-side-chair-dark-beige-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-dark-beige-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Side Chair, dark beige</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
                 </span>
               </a>
             </div>
@@ -1625,7 +871,7 @@
                  and hides itself once everything matching is on screen. -->
             <div class="shop__foot">
               <p class="shop__showing">
-                Showing <strong data-shop-shown>24</strong> of <strong data-shop-total>33</strong>
+                Showing <strong data-shop-shown>11</strong> of <strong data-shop-total>11</strong>
                 <span data-shop-noun>products</span>
               </p>
               <button type="button" class="button shop__more" data-shop-more>Show more</button>

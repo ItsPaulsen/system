@@ -61,14 +61,15 @@
 // A result that fits on one page has nothing to page, so the whole footer —
 // count line and button both — stays out until the set is bigger than a page.
 //
-// Categories, prices and the recency order come off data attributes rather than
-// the visible text: unlike the blog's tag, none of them are printed on the card,
-// so there's no second source of truth to drift. The one .shop-filter node is
-// relocated between rail and sheet (see above) rather than recreated, so a
-// change listener bound to it survives the move.
+// Each facet reads from wherever it already lives, so nothing is stored twice:
+// the brand off the card's own title (it *is* the brand), the category, colors,
+// price and recency off data attributes, since none of those are printed on the
+// card. The one .shop-filter node is relocated between rail and sheet (see
+// above) rather than recreated, so a change listener bound to it survives the
+// move.
 (function () {
   const PAGE_SIZE = 24;
-  const UNDER = 1000; // the "Under 1 000 kr" band in the Price group
+  const UNDER = 6000; // the "Under 6 000 kr" band in the Price group
 
   const grid = document.querySelector(".shop__grid");
   const filter = document.querySelector(".shop-filter");
@@ -77,6 +78,7 @@
   const search = document.querySelector("[data-shop-search]");
   const sort = document.querySelector(".shop__sort");
   const more = document.querySelector("[data-shop-more]");
+  const chips = document.querySelector(".shop__chips");
   const countEl = document.querySelector("[data-shop-count]");
   const nouns = document.querySelectorAll("[data-shop-noun]");
   const shownEl = document.querySelector("[data-shop-shown]");
@@ -92,6 +94,10 @@
   // Name + variant, so a search for a material or a size ("oak", "set of 4")
   // finds the products whose qualifier says so, not just their titles.
   const textOf = (card) => card.querySelector(".shop-card__head")?.textContent || "";
+  // The title is the brand, so the brand filter reads it straight off the card
+  // rather than a parallel attribute that could disagree with what's on screen.
+  const brandOf = (card) =>
+    card.querySelector(".shop-card__title")?.textContent.trim().toLowerCase() || "";
 
   const SORTS = {
     popular: (a, b) => popularity.get(a) - popularity.get(b),
@@ -104,34 +110,44 @@
   let shown = PAGE_SIZE;
   let order = "popular";
 
-  // The checked labels of one filter group, lowercased to match the cards' data
-  // attributes. Scoped per group (data-filter on the group body), so adding a
-  // group can't quietly widen an existing one's set.
-  const checkedIn = (group) =>
-    new Set(
-      [...filter.querySelectorAll(`[data-filter="${group}"] input[type="checkbox"]`)]
-        .filter((b) => b.checked)
-        .map((b) =>
-          b
-            .closest(".checkbox")
-            ?.querySelector(".checkbox__label")
-            ?.textContent.trim()
-            .toLowerCase()
-        )
-    );
+  // A space-separated attribute read as a set of tokens, used for both a
+  // checkbox's data-colors and a card's data-color.
+  const tokens = (value) => (value || "").split(/\s+/).filter(Boolean);
+
+  // Scoped per group (data-filter on the group body), so adding a group can't
+  // quietly widen an existing one's set.
+  const checkedBoxes = (group) => [
+    ...filter.querySelectorAll(`[data-filter="${group}"] input[type="checkbox"]:checked`)
+  ];
+
+  const labelOf = (input) =>
+    input.closest(".checkbox")?.querySelector(".checkbox__label")?.textContent.trim() || "";
+
+  // Group labels, lowercased to match the cards' data attributes.
+  const checkedIn = (group) => new Set(checkedBoxes(group).map((b) => labelOf(b).toLowerCase()));
+
+  // Color options are families, not single values: each checkbox declares the
+  // colors it covers in data-colors (Tree covers every wood), so a checked box
+  // contributes its whole set. Keeping that list in the markup means adding a
+  // wood is one word beside the label, with no table here to keep in step.
+  const activeColors = () =>
+    new Set(checkedBoxes("color").flatMap((b) => tokens(b.dataset.colors)));
 
   const priceBand = () => filter.querySelector('input[name="shop-price"]:checked')?.value || "any";
 
   const apply = () => {
     const query = (search?.value || "").trim().toLowerCase();
     const categories = checkedIn("category");
-    const woods = checkedIn("wood");
+    const brands = checkedIn("brand");
+    const colors = activeColors();
     const band = priceBand();
 
     const matches = cards.filter((card) => {
       if (categories.size && !categories.has(card.dataset.category)) return false;
-      // Pieces with no wood at all drop out as soon as a wood is asked for.
-      if (woods.size && !woods.has(card.dataset.wood)) return false;
+      if (brands.size && !brands.has(brandOf(card))) return false;
+      // A piece can be more than one color ("oak cognac"), and matches if any of
+      // them is asked for. No color of its own and it drops out.
+      if (colors.size && !tokens(card.dataset.color).some((c) => colors.has(c))) return false;
       if (band === "under" && num(card, "price") >= UNDER) return false;
       if (query && !`${textOf(card)} ${card.dataset.category}`.toLowerCase().includes(query)) {
         return false;
@@ -158,6 +174,8 @@
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 
+    renderChips();
+
     const isEmpty = matches.length === 0;
     empty.hidden = !isEmpty;
     grid.hidden = isEmpty;
@@ -171,6 +189,67 @@
   const reset = () => {
     shown = PAGE_SIZE;
     apply();
+  };
+
+  const clearAll = () => {
+    filter.querySelectorAll('input[type="checkbox"]').forEach((b) => {
+      b.checked = false;
+    });
+    const any = filter.querySelector('input[name="shop-price"][value="any"]');
+    if (any) any.checked = true;
+    if (search) search.value = "";
+    reset();
+  };
+
+  // The chip row is a view of the rail, rebuilt from it on every apply(), so the
+  // two can't drift. Each chip owns the input it came from and unchecks it; the
+  // price radio resets to "Any price" instead, since a radio group is never off.
+  const X_ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>';
+
+  const activeFilters = () => {
+    const out = [];
+    filter.querySelectorAll('input[type="checkbox"]:checked').forEach((input) => {
+      const label = labelOf(input);
+      if (label) out.push({ label, off: () => (input.checked = false) });
+    });
+    const price = filter.querySelector('input[name="shop-price"]:checked');
+    if (price && price.value !== "any") {
+      const label = price.closest(".radio")?.querySelector(".radio__label")?.textContent.trim();
+      const any = filter.querySelector('input[name="shop-price"][value="any"]');
+      if (label && any) out.push({ label, off: () => (any.checked = true) });
+    }
+    return out;
+  };
+
+  const renderChips = () => {
+    if (!chips) return;
+    const active = activeFilters();
+    chips.hidden = active.length === 0;
+    chips.textContent = "";
+    active.forEach(({ label, off }) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip shop-chip";
+      chip.innerHTML = X_ICON;
+      chip.prepend(label);
+      chip.setAttribute("aria-label", `Remove filter: ${label}`);
+      chip.addEventListener("click", () => {
+        off();
+        reset();
+      });
+      chips.append(chip);
+    });
+    if (active.length) {
+      const clear = document.createElement("button");
+      clear.type = "button";
+      clear.className = "link shop__chips-clear";
+      clear.textContent = "Clear all filters";
+      clear.addEventListener("click", clearAll);
+      chips.append(clear);
+    }
   };
 
   filter.addEventListener("change", reset);
@@ -192,15 +271,69 @@
     apply();
   });
 
-  empty.querySelector("[data-shop-clear]")?.addEventListener("click", () => {
-    filter.querySelectorAll('input[type="checkbox"]').forEach((b) => {
-      b.checked = false;
-    });
-    const any = filter.querySelector('input[name="shop-price"][value="any"]');
-    if (any) any.checked = true;
-    if (search) search.value = "";
-    reset();
-  });
+  empty.querySelector("[data-shop-clear]")?.addEventListener("click", clearAll);
 
   apply();
+})();
+
+// Long filter groups: find-as-you-type plus a capped list.
+//
+// A group marked [data-filter-long] shows at most VISIBLE options and offers
+// "Show all (n)" to reveal the rest; its own search field narrows the options by
+// label. Both affordances stay hidden while the group is short enough not to
+// need them, so a group grows into the behaviour instead of being built twice.
+//
+// This is about *finding a filter*, not filtering products, so it never touches
+// apply(): hiding an option leaves it checked, and a checked option always shows
+// so it can be unchecked again.
+(function () {
+  const VISIBLE = 6;
+  const groups = document.querySelectorAll("[data-filter-long]");
+
+  groups.forEach((group) => {
+    const boxes = [...group.querySelectorAll(".checkbox")];
+    const search = group.querySelector('input[type="search"]');
+    const more = group.querySelector(".shop-filter__more");
+    const field = group.querySelector(".shop-filter__search");
+    let expanded = false;
+
+    const labelOf = (box) =>
+      box.querySelector(".checkbox__label")?.textContent.trim().toLowerCase() || "";
+
+    const render = () => {
+      const query = (search?.value || "").trim().toLowerCase();
+      const matches = boxes.filter((b) => labelOf(b).includes(query));
+      // A checked option is never hidden by the cap: it has to stay reachable to
+      // be turned off.
+      const cap = expanded || query ? matches.length : VISIBLE;
+      let shown = 0;
+      matches.forEach((b) => {
+        const checked = b.querySelector("input")?.checked;
+        const within = shown < cap;
+        b.hidden = !(within || checked);
+        if (within) shown += 1;
+      });
+      boxes
+        .filter((b) => !matches.includes(b))
+        .forEach((b) => {
+          b.hidden = !b.querySelector("input")?.checked;
+        });
+
+      const hidden = matches.length - Math.min(cap, matches.length);
+      if (more) {
+        more.hidden = hidden <= 0;
+        more.textContent = `Show all (${matches.length})`;
+      }
+      // Nothing to search through until the list outgrows the cap.
+      if (field) field.hidden = boxes.length <= VISIBLE;
+    };
+
+    search?.addEventListener("input", render);
+    group.addEventListener("change", render);
+    more?.addEventListener("click", () => {
+      expanded = true;
+      render();
+    });
+    render();
+  });
 })();

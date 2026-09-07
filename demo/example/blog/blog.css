@@ -30,9 +30,9 @@
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
-    /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
+    /* Matches the front-page band: 24 top down to the items (→ 48 above 1024),
        96 bottom gray gap before the footer (→ 128 at md). */
-    padding-block: 2rem 6rem;
+    padding-block: var(--space-24) 6rem;
   }
 
   .blog__inner {
@@ -45,238 +45,9 @@
 
   /* ── Filter rail ─────────────────────────────────────────────────────────── */
 
-  /* Hidden at/below 1024 for now, a sheet trigger will replace it there. Shown
-     beside the posts above 1024 (see the responsive block). */
-  .blog-filter {
-    display: none;
-  }
-
-  /* ── Toolbar ─────────────────────────────────────────────────────────────
-     One row: the post count, then the controls. Below 1024 the Filter trigger
-     joins the sort control there, since the rail it replaces is hidden. Same
-     arrangement as the shop listing. */
-  .blog__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: var(--space-16);
-  }
-
-  /* Whole line at 500, so the number and its noun read as one label rather than
-     a figure with a caption. */
-  .blog__count {
-    margin: 0;
-    color: var(--ink-primary);
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
-    line-height: var(--font-body-small-emphasized-lh);
-  }
-
-  /* No gap: both controls carry their own inline padding, so their pill hover
-     surfaces sit side by side without a dead strip between them. */
-  .blog__toolbar-actions {
-    display: flex;
-    align-items: center;
-  }
-
-  /* Bare then pill, the same treatment the sort control beside it takes: no
-     surface at rest, a pill of the band's own hover step under the pointer. */
-  .blog__filter-toggle {
-    height: 40px;
-    padding-inline: var(--space-16);
-    padding-inline-start: calc(var(--space-16) - 4px);
-    background: transparent;
-    color: var(--ink-primary);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .blog__filter-toggle:not(:disabled):hover {
-      background: var(--background-primary-hover);
-    }
-  }
-
-  /* Sort: the Select component on a bare skin. No border and no fill at rest, so
-     it reads as the label it is; the chevron carries the affordance. On hover and
-     while open it takes a pill of the band's own hover step. Focus swaps Select's
-     border for the shared ring, since there's no border left to light. */
-  .blog__sort {
-    flex: none;
-  }
-
-  .blog__sort .select__trigger {
-    width: auto;
-    min-height: 0;
-    height: 40px;
-    padding-inline: var(--space-16);
-
-    /* The chevron side derives the tighter padding the same way the button and
-       badge do: --px minus 4. */
-    padding-inline-end: calc(var(--space-16) - 4px);
-    gap: var(--space-4);
-    border-color: transparent;
-    border-radius: var(--radius-full);
-    background: transparent;
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
-    line-height: 1.2;
-    transition: background var(--motion-default);
-  }
-
-  .blog__sort .select__trigger:focus-visible,
-  .blog__sort .select__trigger[aria-expanded="true"] {
-    border-color: transparent;
-    box-shadow: none;
-  }
-
-  /* Lit while the list is open as well as on hover: the trigger should stay
-     marked for as long as its panel is showing. */
-  .blog__sort .select__trigger[aria-expanded="true"] {
-    background: var(--background-primary-hover);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .blog__sort .select__trigger:hover {
-      background: var(--background-primary-hover);
-    }
-  }
-
-  .blog__sort .select__trigger:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
-    border-radius: var(--radius-full);
-  }
-
-  /* The hook sits on the <ul> itself: app.js portals an open list to <body>, so a
-     `.blog__sort .select__list` descendant selector stops matching the moment it
-     opens. */
-  .blog__sort-list {
-    min-width: max-content;
-  }
-
-  .blog__sort-list .select__option {
-    white-space: nowrap;
-  }
-
-  /* The Scroll Area viewport is a scroll container at every width, so it clips
-     at its padding edge even in the sheet where nothing actually scrolls. This
-     6 is the room the checkbox and radio focus rings need; the desktop rail
-     cancels it with a negative margin (below), while in the sheet a 6 inset sits
-     inside the sheet's own padding and doesn't read. */
-  .blog-filter > .scroll-area__viewport {
-    padding-inline: 6px;
-  }
-
-  /* No converge animation on anything in the rail. It starts the ring at
-     outline-offset 6, so it reaches 9 outside the control before settling at 5,
-     past the 6 of padding the scroll container clips at, so the first frames get
-     shaved. The ring still appears, just at its resting offset. */
-  .blog-filter :focus-visible {
-    animation: none;
-  }
-
-  .blog-filter__title {
-    margin: 0 0 1rem; /* 16 down to the first divider */
-    font-size: var(--font-title-small-size);
-    line-height: var(--font-title-small-lh);
-    font-weight: var(--font-title-small-weight);
-    color: var(--ink-primary);
-  }
-
-  /* Collapsible groups (native <details>) with a hairline above and a chevron
-     that flips when open. Interactive at every width, unlike the footer columns. */
-  .blog-filter__group {
-    border-top: var(--border-width) solid var(--fill-tertiary);
-
-    /* 4 either side of the heading row, so a collapsed group reads as centred
-       between its two dividers. On the GROUP, not the body, so the bottom 4 is
-       there whether the group is open or closed. */
-    padding-block: var(--space-4);
-  }
-
-  .blog-filter__head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 48px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    list-style: none;
-    color: var(--ink-primary);
-    font-size: var(--font-body-small-emphasized-size);
-    line-height: var(--font-body-small-emphasized-lh);
-    font-weight: var(--font-body-small-emphasized-weight);
-  }
-
-  .blog-filter__head::-webkit-details-marker {
-    display: none;
-  }
-
-  /* Chevron drawn on the summary itself, so the <summary> holds only its label
-     (an SVG child trips the "interactive content in <summary>" audit). */
-  .blog-filter__head::after {
-    content: "";
-    flex: none;
-    width: 20px;
-    height: 20px;
-    color: var(--ink-tertiary);
-    background: currentcolor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-      center / contain no-repeat;
-    transition: rotate var(--motion-default);
-  }
-
-  .blog-filter__group[open] .blog-filter__head::after {
-    rotate: 180deg;
-  }
-
-  .blog-filter__body {
-    display: grid;
-
-    /* 4 below the heading row, matching the 4 above it. On the body rather than
-       the heading so a collapsed group doesn't carry the gap. */
-    padding-top: var(--space-4);
-
-    /* 12 here plus the group's own 4 gives 16 down to the next divider. */
-    padding-bottom: var(--space-12);
-  }
-
-  /* Options are full-width rows that touch, rather than inline labels with gaps
-     between them: no dead space in the list, and each row is a 40 tall target
-     rather than just the box and its label. No hover surface: the checkbox and
-     radio carry their own hover on the control. */
-  .blog-filter__body .checkbox,
-  .blog-filter__body .radio {
-    width: 100%;
-    padding-block: var(--space-8);
-  }
-
-  /* Same open/close ease as the accordion + footer, but with `overflow: clip` +
-     `overflow-clip-margin` instead of `overflow: hidden`, the height animation
-     still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
-     through the 6px margin instead of being cut at the rail edge. */
-  @media (prefers-reduced-motion: no-preference) {
-    .blog-filter__group {
-      interpolate-size: allow-keywords;
-    }
-  }
-
-  .blog-filter__group::details-content {
-    overflow: clip;
-    overflow-clip-margin: 6px;
-    block-size: 0;
-    opacity: 0;
-    transition:
-      content-visibility allow-discrete var(--motion-default),
-      opacity var(--motion-default),
-      block-size var(--motion-default);
-  }
-
-  .blog-filter__group[open]::details-content {
-    block-size: auto;
-    opacity: 1;
-  }
+  /* ── Filter rail and toolbar ──────────────────────────────────────────────
+     Shared styling lives on .ex-filter / .ex-listing__* in example.css; only
+     what is this page's own is here. */
 
   /* ── Post grid ───────────────────────────────────────────────────────────── */
 
@@ -424,45 +195,7 @@
      pagination moves from centre to the right. */
   @media (min-width: 1025px) {
     .blog {
-      padding-top: 4rem;
-    }
-
-    /* Sticky rail: it scrolls up with the posts until it reaches its offset under
-       the sticky topbar, then holds while the grid keeps going. The rail only
-       *bounds* the height: the Scroll Area viewport inside it does the
-       scrolling and owns the bar (see the Scroll Area block in components.css).
-
-       No `overscroll-behavior: contain`, deliberately: it stops the rail's scroll
-       chaining to the page, so bottoming out the rail before it has reached its
-       sticky offset leaves the page unable to scroll and the rest of the rail
-       parked below the viewport, unreachable. */
-    .blog-filter {
-      --blog-rail-top: calc(var(--ex-topbar-h) + var(--space-32));
-
-      display: block;
-      position: sticky;
-      top: var(--blog-rail-top);
-
-      /* Pull the start edge back by the viewport's padding, so the options still
-         line up with the hero above. */
-      margin-inline-start: -6px;
-    }
-
-    /* The height bound goes on the VIEWPORT, not the rail: it's the scroll
-       container, and a max-height on the rail alone leaves it with nothing to
-       scroll against. 24 on the end side clears the 10 bar and leaves 16 between
-       the nearest option and the pill; the bottom padding is what lets the last
-       option scroll clear of the container's edge. */
-    .blog-filter > .scroll-area__viewport {
-      max-height: calc(100dvh - var(--blog-rail-top));
-      padding-inline: 6px var(--space-24);
-      padding-block-end: var(--space-24);
-      scroll-padding-block-end: var(--space-24);
-    }
-
-    /* The rail is back, so the Filter trigger has nothing left to open for. */
-    .blog__filter-toggle {
-      display: none;
+      padding-top: var(--space-48);
     }
 
     .blog__inner {
@@ -485,17 +218,6 @@
     .blog__grid {
       grid-template-columns: repeat(3, 1fr);
     }
-  }
-
-  /* When JS relocates the filter into the left sheet (≤1024), show it there
-     (overriding the rail's default hide) and drop its heading, the sheet header
-     already reads "Filter". Placed last so specificity stays ascending. */
-  .sheet .blog-filter {
-    display: block;
-  }
-
-  .sheet .blog-filter__title {
-    display: none;
   }
 
   /* Filter sheet header: same height as the topbar and the main menu's header

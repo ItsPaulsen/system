@@ -47,13 +47,17 @@
       <section class="blog" aria-label="Posts">
         <div class="blog__inner">
           <!-- Filter rail, collapsible Sort / Category groups. -->
-          <aside class="scroll-area blog-filter" aria-label="Filter and sort" data-scroll-area>
+          <aside
+            class="scroll-area ex-filter blog-filter"
+            aria-label="Filter and sort"
+            data-scroll-area
+          >
             <div class="scroll-area__viewport">
-              <h2 class="blog-filter__title">Filter</h2>
+              <h2 class="ex-filter__title">Filter</h2>
 
-              <details class="blog-filter__group" open>
-                <summary class="blog-filter__head">Category</summary>
-                <div class="blog-filter__body">
+              <details class="ex-filter__group" open>
+                <summary class="ex-filter__head">Category</summary>
+                <div class="ex-filter__body">
                   <label class="checkbox">
                     <span class="checkbox__box">
                       <input name="check" type="checkbox" class="checkbox__input" />
@@ -158,15 +162,15 @@
                  filtering is announced without moving focus. Below 1024 the
                  Filter trigger joins the sort control here, since the rail it
                  opens is hidden there. -->
-            <div class="blog__toolbar">
-              <p class="blog__count" role="status">
+            <div class="ex-listing__toolbar">
+              <p class="ex-listing__count" role="status">
                 <strong data-blog-count>9</strong> <span data-blog-noun>posts</span>
               </p>
 
-              <div class="blog__toolbar-actions" data-size="sm">
+              <div class="ex-listing__actions" data-size="sm">
                 <button
                   type="button"
-                  class="button button--with-start-icon blog__filter-toggle"
+                  class="button button--with-start-icon ex-filter-toggle"
                   data-dialog-open="blog-filter-sheet"
                 >
                   <svg
@@ -191,7 +195,7 @@
                   Filter
                 </button>
 
-                <div class="select blog__sort" data-select>
+                <div class="select ex-sort" data-select>
                   <button
                     class="select__trigger"
                     type="button"
@@ -215,7 +219,7 @@
                   </button>
                   <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
                   <ul
-                    class="select__list blog__sort-list"
+                    class="select__list ex-sort-list"
                     role="listbox"
                     tabindex="-1"
                     aria-label="Sort by"

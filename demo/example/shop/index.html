@@ -63,13 +63,13 @@
           <!-- Filter rail, collapsible Price / Category groups. Same rail as the
                blog listing: above 1024 it sits here, below it moves into the
                left sheet (shop.js), so its state survives the move. -->
-          <aside class="scroll-area shop-filter" aria-label="Filter" data-scroll-area>
+          <aside class="scroll-area ex-filter shop-filter" aria-label="Filter" data-scroll-area>
             <div class="scroll-area__viewport">
-              <h2 class="shop-filter__title">Filter</h2>
+              <h2 class="ex-filter__title">Filter</h2>
 
-              <details class="shop-filter__group" open>
-                <summary class="shop-filter__head">Price</summary>
-                <div class="shop-filter__body" role="radiogroup" aria-label="Price">
+              <details class="ex-filter__group" open>
+                <summary class="ex-filter__head">Price</summary>
+                <div class="ex-filter__body" role="radiogroup" aria-label="Price">
                   <label class="radio">
                     <input
                       type="radio"
@@ -87,9 +87,9 @@
                 </div>
               </details>
 
-              <details class="shop-filter__group" open>
-                <summary class="shop-filter__head">Category</summary>
-                <div class="shop-filter__body" data-filter="category">
+              <details class="ex-filter__group" open>
+                <summary class="ex-filter__head">Category</summary>
+                <div class="ex-filter__body" data-filter="category">
                   <label class="checkbox">
                     <span class="checkbox__box">
                       <input name="shop-cat-chairs" type="checkbox" class="checkbox__input" />
@@ -115,13 +115,13 @@
                    that text rather than a data attribute: one source of truth, and
                    a product can't be tagged with a brand it doesn't display. Only
                    the real products carry one so far. -->
-              <details class="shop-filter__group" open>
-                <summary class="shop-filter__head">Brand</summary>
-                <div class="shop-filter__body" data-filter="brand" data-filter-long>
-                  <label class="input shop-filter__search">
+              <details class="ex-filter__group" open>
+                <summary class="ex-filter__head">Brand</summary>
+                <div class="ex-filter__body" data-filter="brand" data-filter-long>
+                  <label class="input ex-filter__search">
                     <span class="input__label sr-only">Find brand</span>
                     <span
-                      class="input__container input__container--rounded shop-filter__search-field"
+                      class="input__container input__container--rounded ex-filter__search-field"
                     >
                       <span class="input__leading">
                         <svg
@@ -188,7 +188,7 @@
                     </span>
                     <span class="checkbox__label">Carl Hansen &amp; Søn</span>
                   </label>
-                  <button type="button" class="link shop-filter__more" hidden></button>
+                  <button type="button" class="link ex-filter__more" hidden></button>
                 </div>
               </details>
 
@@ -202,9 +202,9 @@
                    copy shown to the reader: the variant line carries that, and it
                    can be as specific as the product needs ("refine leather
                    black/black") without the filter having to know about it. -->
-              <details class="shop-filter__group" open>
-                <summary class="shop-filter__head">Color</summary>
-                <div class="shop-filter__body" data-filter="color">
+              <details class="ex-filter__group" open>
+                <summary class="ex-filter__head">Color</summary>
+                <div class="ex-filter__body" data-filter="color">
                   <label class="checkbox">
                     <span class="checkbox__box">
                       <input
@@ -471,15 +471,15 @@
                  searching is announced without moving focus. The sort control is
                  the Select component on a bare skin (no border, no fill), the
                  only page-local restyle on this screen. -->
-            <div class="shop__toolbar">
-              <p class="shop__count" role="status">
+            <div class="ex-listing__toolbar">
+              <p class="ex-listing__count" role="status">
                 <strong data-shop-count>34</strong> <span data-shop-noun>products</span>
               </p>
 
-              <div class="shop__toolbar-actions" data-size="sm">
+              <div class="ex-listing__actions" data-size="sm">
                 <button
                   type="button"
-                  class="button button--with-start-icon shop__filter-toggle"
+                  class="button button--with-start-icon ex-filter-toggle"
                   data-dialog-open="shop-filter-sheet"
                 >
                   <svg
@@ -504,7 +504,7 @@
                   Filter
                 </button>
 
-                <div class="select shop__sort" data-select>
+                <div class="select ex-sort" data-select>
                   <button
                     class="select__trigger"
                     type="button"
@@ -528,7 +528,7 @@
                   </button>
                   <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
                   <ul
-                    class="select__list shop__sort-list"
+                    class="select__list ex-sort-list"
                     role="listbox"
                     tabindex="-1"
                     aria-label="Sort by"

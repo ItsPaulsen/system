@@ -255,8 +255,8 @@
   groups.forEach((group) => {
     const boxes = [...group.querySelectorAll(".checkbox")];
     const search = group.querySelector('input[type="search"]');
-    const more = group.querySelector(".shop-filter__more");
-    const field = group.querySelector(".shop-filter__search");
+    const more = group.querySelector(".ex-filter__more");
+    const field = group.querySelector(".ex-filter__search");
     let expanded = false;
 
     const labelOf = (box) =>

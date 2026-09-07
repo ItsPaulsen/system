@@ -47,7 +47,7 @@
   const grid = document.querySelector(".blog__grid");
   const empty = document.querySelector(".blog-empty");
   const pagination = document.querySelector(".blog__pagination");
-  const sort = document.querySelector(".blog__sort");
+  const sort = document.querySelector(".ex-sort");
   const countEl = document.querySelector("[data-blog-count]");
   const nouns = document.querySelectorAll("[data-blog-noun]");
   if (!filter || !grid || !empty) return;

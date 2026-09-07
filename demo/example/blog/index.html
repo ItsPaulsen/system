@@ -56,6 +56,24 @@
               <h2 class="ex-filter__title">Filter</h2>
 
               <details class="ex-filter__group" name="blog-filter">
+                <summary class="ex-filter__head">Reading time</summary>
+                <div class="ex-filter__body" role="radiogroup" aria-label="Reading time">
+                  <label class="radio">
+                    <input type="radio" name="blog-read" class="radio__input" value="any" checked />
+                    <span class="radio__label">Any length</span>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="blog-read" class="radio__input" value="short" />
+                    <span class="radio__label">Under 5 min</span>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="blog-read" class="radio__input" value="long" />
+                    <span class="radio__label">5 min or more</span>
+                  </label>
+                </div>
+              </details>
+
+              <details class="ex-filter__group" name="blog-filter">
                 <summary class="ex-filter__head">Category</summary>
                 <div class="ex-filter__body">
                   <label class="checkbox">
@@ -240,7 +258,12 @@
             </div>
 
             <div class="blog__grid">
-              <a class="card blog-card" data-date="2026-07-23" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-07-23"
+                data-minutes="6"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -261,7 +284,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">23 Jul 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">6 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">
                     Design tokens, from anchor to component
                   </h3>
@@ -284,7 +311,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-07-09" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-07-09"
+                data-minutes="4"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -305,7 +337,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">9 Jul 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">9 Jul 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">4 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">
                     Theming: light and dark from one swap
                   </h3>
@@ -331,7 +367,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-06-18" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-06-18"
+                data-minutes="9"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -352,7 +393,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">18 Jun 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">18 Jun 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">9 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">Density as a single knob</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -373,7 +418,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-06-02" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-06-02"
+                data-minutes="3"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -394,7 +444,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">2 Jun 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">2 Jun 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">3 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">What shipped in the July release</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -416,7 +470,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-05-14" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-05-14"
+                data-minutes="7"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -437,7 +496,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">14 May 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">14 May 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">7 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">Meet the team behind the system</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -458,7 +521,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-04-28" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-04-28"
+                data-minutes="12"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -479,7 +547,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">28 Apr 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">28 Apr 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">12 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">Writing components that compose</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -501,7 +573,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-04-07" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-04-07"
+                data-minutes="5"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -522,7 +599,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">7 Apr 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">7 Apr 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">5 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">Accessible by default, not by audit</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -543,7 +624,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-03-19" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-03-19"
+                data-minutes="2"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -564,7 +650,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">19 Mar 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">19 Mar 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">2 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">Our first community design day</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -585,7 +675,12 @@
                 </div>
               </a>
 
-              <a class="card blog-card" data-date="2026-02-26" href="/demo/example/blog/post/">
+              <a
+                class="card blog-card"
+                data-date="2026-02-26"
+                data-minutes="8"
+                href="/demo/example/blog/post/"
+              >
                 <picture>
                   <source
                     type="image/webp"
@@ -606,7 +701,11 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">26 Feb 2026</span>
+                  <span class="blog-card__meta"
+                    ><span class="blog-card__date">26 Feb 2026</span
+                    ><span class="blog-card__dot" aria-hidden="true">·</span
+                    ><span class="blog-card__read">8 min read</span></span
+                  >
                   <h3 class="card__title blog-card__title">The new 2xl grid tier</h3>
                   <span class="blog-card__tag"
                     ><svg

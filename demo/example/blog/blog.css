@@ -79,14 +79,24 @@
     flex-direction: column;
   }
 
-  .blog-card__date {
+  /* Date and reading time on one line, separated by a dot: two facts about the
+     post that belong together, and the pair is what the Reading time filter
+     narrows on. */
+  .blog-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
   }
 
+  .blog-card__dot {
+    color: var(--ink-tertiary);
+  }
+
   .blog-card__title {
-    /* Both card gaps live here on the middle element: 12 above (date → title),
+    /* Both card gaps live here on the middle element: 12 above (meta → title),
      24 below (title → category). The category itself carries no spacing (its
      margin-top:auto is a pin, not a gap) so the two distances read cleanly as
      "the title has 12 over it and 24 under it". */

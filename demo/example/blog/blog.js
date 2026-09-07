@@ -31,7 +31,8 @@
 // Category filter and sort, plus the count that reports the result.
 //
 // Checking one or more Category boxes narrows the grid to posts whose tag
-// matches; with none checked, everything shows. When nothing matches, the grid
+// matches; with none checked, everything shows. The Reading time band narrows on
+// data-minutes alongside it, both having to pass. When nothing matches, the grid
 // gives way to the empty state, whose "Clear all filters" button unchecks every
 // box and restores the full grid. Pagination is a full-listing affordance, so it
 // shows only when every post is visible and hides the moment a filter narrows
@@ -52,6 +53,8 @@
   const nouns = document.querySelectorAll("[data-blog-noun]");
   if (!filter || !grid || !empty) return;
 
+  const SHORT = 5; // the "Under 5 min" band in the Reading time group
+
   const boxes = [...filter.querySelectorAll('input[type="checkbox"]')];
   const cards = [...grid.querySelectorAll(".blog-card")];
 
@@ -61,6 +64,8 @@
     card.querySelector(".blog-card__tag")?.textContent.trim().toLowerCase();
   // ISO dates, so a string compare is a date compare.
   const dateOf = (card) => card.dataset.date || "";
+  const minutesOf = (card) => Number(card.dataset.minutes) || 0;
+  const readBand = () => filter.querySelector('input[name="blog-read"]:checked')?.value || "any";
 
   const SORTS = {
     newest: (a, b) => dateOf(b).localeCompare(dateOf(a)),
@@ -70,9 +75,12 @@
 
   const apply = () => {
     const active = new Set(boxes.filter((b) => b.checked).map(labelOf));
+    const band = readBand();
     let shown = 0;
     cards.forEach((card) => {
-      const match = active.size === 0 || active.has(categoryOf(card));
+      const match =
+        (active.size === 0 || active.has(categoryOf(card))) &&
+        (band === "any" || (band === "short" ? minutesOf(card) < SHORT : minutesOf(card) >= SHORT));
       card.hidden = !match;
       if (match) shown += 1;
     });
@@ -93,9 +101,7 @@
     if (pagination) pagination.hidden = shown < cards.length;
   };
 
-  filter.addEventListener("change", (e) => {
-    if (e.target.matches('input[type="checkbox"]')) apply();
-  });
+  filter.addEventListener("change", apply);
 
   sort?.addEventListener("select:change", (e) => {
     order = e.detail.option.dataset.sort || "newest";
@@ -106,6 +112,8 @@
     boxes.forEach((b) => {
       b.checked = false;
     });
+    const any = filter.querySelector('input[name="blog-read"][value="any"]');
+    if (any) any.checked = true;
     apply();
   });
 

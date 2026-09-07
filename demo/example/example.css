@@ -751,6 +751,15 @@
     text-decoration: none;
   }
 
+  /* Underline on hover, matching the footer link lists. */
+  @media (hover: hover) {
+    .ex-menu__nav a:hover,
+    .ex-menu__links a:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+
   /* Theme toggle fills the footer width. */
   .ex-menu__theme.toggle-group {
     display: flex;

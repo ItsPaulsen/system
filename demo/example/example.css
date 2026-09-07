@@ -636,10 +636,16 @@
     }
   }
 
-  .ex-topbar__menu {
-    /* 40px to match the nav pills; the Button default is 48. */
+  /* 40px to match the nav pills (the Button default is 48), and 16px inline
+   padding, which the --with-end-icon modifier tightens to 12 on the icon side
+   by itself. Both buttons are the same control, so they scale together. */
+  .ex-topbar__menu,
+  .ex-menu__close {
     --button-size: 40px;
+    --button-px: 16px;
+  }
 
+  .ex-topbar__menu {
     justify-self: end;
   }
 

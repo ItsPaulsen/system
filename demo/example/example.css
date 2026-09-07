@@ -637,6 +637,9 @@
   }
 
   .ex-topbar__menu {
+    /* 40px to match the nav pills; the Button default is 48. */
+    --button-size: 40px;
+
     justify-self: end;
   }
 

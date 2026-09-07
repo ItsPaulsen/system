@@ -633,32 +633,20 @@
     display: none;
   }
 
-  /* The three header nav links: a fixed-height pill, so the box is the same for
-     all three whatever the type metrics do, rather than padding + line-height
-     deciding it. Type steps down to body-small at ≤1024, back to body-medium
-     above, and the box steps with it via --ex-control-*. Scoped to the example
-     topbar, not the shared component. The Settings hover dropdown stays
-     body-small (16) at all widths. */
+  /* The pill box, hover surface and transition come from the component; this
+     only rescales it. Type steps down to body-small at ≤1024, back to
+     body-medium above, and the box steps with it via --ex-control-*. The
+     Settings hover dropdown stays body-small (16) at all widths. */
   .ex-topbar__nav .nav-menu__link {
-    height: var(--ex-control-h);
-    padding: 0 var(--ex-control-px);
-    border-radius: var(--radius-full);
+    --nav-link-size: var(--ex-control-h);
+    --nav-link-px: var(--ex-control-px);
+
     font-size: var(--font-body-small-size);
-    transition: background var(--motion-default);
   }
 
   @media (min-width: 1024px) {
     .ex-topbar__nav .nav-menu__link {
       font-size: var(--font-body-medium-size);
-    }
-  }
-
-  /* Surface on hover. The Nav Menu component ships no hover fill by design, so
-   this is scoped to the example topbar; it sits on --background-secondary, so
-   the hover step of that pair is the matching surface. */
-  @media (hover: hover) {
-    .ex-topbar__nav .nav-menu__link:hover {
-      background: var(--background-secondary-hover);
     }
   }
 

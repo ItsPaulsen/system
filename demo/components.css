@@ -3145,18 +3145,30 @@
     list-style: none;
   }
 
+  /* Fixed-height pill. The height is set rather than left to padding +
+   line-height, so every link in a bar is the same box whatever the type metrics
+   do; --nav-link-size / --nav-link-px are the two knobs, like the button's. */
   .nav-menu__link {
+    --nav-link-size: 48px;
+    --nav-link-px: 20px;
+
     display: inline-flex;
     align-items: center;
-    padding: 0.625rem 1.25rem;
+    height: var(--nav-link-size);
+    padding-inline: var(--nav-link-px);
+    border-radius: var(--radius-full);
     font-size: var(--font-body-medium-size);
     font-weight: 500;
     line-height: 1.2;
     color: var(--ink-primary);
     text-decoration: none;
+    transition: background var(--motion-default);
+  }
 
-    /* Rounds the keyboard focus ring only, no hover/active fill. */
-    border-radius: var(--radius-sm);
+  @media (hover: hover) and (pointer: fine) {
+    .nav-menu__link:hover {
+      background: var(--background-secondary-hover);
+    }
   }
 
   /* Item wraps the link + its optional dropdown; the panel anchors to it. */

@@ -4,99 +4,103 @@
    settings.css; this file owns the card and its two modes only. Surface,
    inputs and buttons are the shared components, dark mode is a token swap. */
 
-/* Column + card are shared (.settings-column / .settings-subcard in
-   settings.css). This file owns the head row and the view/edit modes. */
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as post.css. */
+@layer components {
+  /* Column + card are shared (.settings-column / .settings-subcard in
+     settings.css). This file owns the head row and the view/edit modes. */
 
-/* Head, title with the edit button trailing (view only). Top-aligned so the
-   button stays put on the first line when the title wraps to two. */
-.about-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-16);
-  margin-bottom: var(--space-24);
-}
-
-/* Title borrows the shared type from .settings-subcard__title; the head owns
-   the spacing beneath, so reset the standalone title's margin here. */
-.about-card__title {
-  margin: 0;
-}
-
-.about-card__edit {
-  flex: none;
-}
-
-/* ── View: definition list ────────────────────────────────────────────────
-   Label over value, 16 between fields. */
-.about-list {
-  display: grid;
-  gap: var(--space-16);
-  margin: 0;
-}
-
-.about-list[hidden] {
-  display: none;
-}
-
-.about-field__label {
-  margin: 0;
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-  color: var(--ink-secondary);
-}
-
-/* body-small on mobile, stepping up to body-medium from md (see block below). */
-.about-field__value {
-  margin: 0; /* reset the browser's default <dd> indent */
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-  color: var(--ink-primary);
-}
-
-@media (min-width: 768px) {
-  .about-field__value {
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
-    font-weight: var(--font-body-medium-weight);
+  /* Head, title with the edit button trailing (view only). Top-aligned so the
+     button stays put on the first line when the title wraps to two. */
+  .about-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-16);
+    margin-bottom: var(--space-24);
   }
-}
 
-/* ── Edit: form ─────────────────────────────────────────────────────────────
-   Inputs stack with 24 between them; the action row sits 32 below. */
-.about-form {
-  display: grid;
-  gap: var(--space-24);
-}
+  /* Title borrows the shared type from .settings-subcard__title; the head owns
+     the spacing beneath, so reset the standalone title's margin here. */
+  .about-card__title {
+    margin: 0;
+  }
 
-.about-form[hidden] {
-  display: none;
-}
+  .about-card__edit {
+    flex: none;
+  }
 
-/* The form is a programmatic focus target on open (see about.js); it's a
-   container, not a control, so it shows no ring, the first Tab moves to the
-   first input, which does. */
-.about-form:focus {
-  outline: none;
-}
+  /* ── View: definition list ────────────────────────────────────────────────
+     Label over value, 16 between fields. */
+  .about-list {
+    display: grid;
+    gap: var(--space-16);
+    margin: 0;
+  }
 
-/* Email error message. The shared .input__error is always visible (paired with
-   an explicit --invalid on the component page); here we let the browser drive
-   timing instead, hide it until the field reports :user-invalid, i.e. after
-   the user has left a mistyped address. It reappears/clears live on each edit,
-   and the red border comes from the component's own :user-invalid rule. */
-.about-form .input__error {
-  display: none;
-}
+  .about-list[hidden] {
+    display: none;
+  }
 
-.about-form .input:has(:user-invalid) .input__error {
-  display: inline-flex;
-}
+  .about-field__label {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+    color: var(--ink-secondary);
+  }
 
-.about-form__actions {
-  display: flex;
-  gap: var(--space-8);
-  margin-top: var(--space-8); /* 24 (grid gap) + 8 = 32 down to the buttons */
+  /* body-small on mobile, stepping up to body-medium from md (see block below). */
+  .about-field__value {
+    margin: 0; /* reset the browser's default <dd> indent */
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+    color: var(--ink-primary);
+  }
+
+  @media (min-width: 768px) {
+    .about-field__value {
+      font-size: var(--font-body-medium-size);
+      line-height: var(--font-body-medium-lh);
+      font-weight: var(--font-body-medium-weight);
+    }
+  }
+
+  /* ── Edit: form ─────────────────────────────────────────────────────────────
+     Inputs stack with 24 between them; the action row sits 32 below. */
+  .about-form {
+    display: grid;
+    gap: var(--space-24);
+  }
+
+  .about-form[hidden] {
+    display: none;
+  }
+
+  /* The form is a programmatic focus target on open (see about.js); it's a
+     container, not a control, so it shows no ring, the first Tab moves to the
+     first input, which does. */
+  .about-form:focus {
+    outline: none;
+  }
+
+  /* Email error message. The shared .input__error is always visible (paired with
+     an explicit --invalid on the component page); here we let the browser drive
+     timing instead, hide it until the field reports :user-invalid, i.e. after
+     the user has left a mistyped address. It reappears/clears live on each edit,
+     and the red border comes from the component's own :user-invalid rule. */
+  .about-form .input__error {
+    display: none;
+  }
+
+  .about-form .input:has(:user-invalid) .input__error {
+    display: inline-flex;
+  }
+
+  .about-form__actions {
+    display: flex;
+    gap: var(--space-8);
+    margin-top: var(--space-8); /* 24 (grid gap) + 8 = 32 down to the buttons */
+  }
 }

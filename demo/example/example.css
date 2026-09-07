@@ -4,1325 +4,1329 @@
    nothing to redraw. All type uses the --font-* tokens; supporting text is
    --ink-secondary (not tertiary). */
 
-/* The example <main> is the "Skip to content" target (tabindex=-1, focused
-   programmatically), not a tabbable control, kill the focus ring so the skip
-   link doesn't outline the whole page surface. Mirrors .wrap in base.css.
-   scroll-margin-top clears the sticky 72px topbar (see .ex-topbar) so skipping
-   lands the content just below the bar instead of scrolling it underneath. */
-#ex-main {
-  scroll-margin-top: 72px;
-}
-
-#ex-main:focus-visible {
-  outline: none;
-}
-
-.ex {
-  /* Dot-grid background so white (secondary) cards separate from the near-white
-     surface on light theme. Dots derive from --ink-base, so they auto-invert in
-     dark theme (light dots on dark). */
-  --ex-dot: rgb(from var(--ink-base) r g b / 0.1);
-
-  /* Deep soft lift for the floating marquee cards. Follows the system's shadow
-     logic: light tints with --neutral-black (~40 40 40); the --surface-rim
-     prepend is transparent on light but a faint top-edge highlight on dark
-     (see dark override below). */
-  --ex-shadow:
-    var(--surface-rim), 0 16px 48px 0 color-mix(in oklab, var(--neutral-black) 12%, transparent);
-
-  /* Sections stack with the container owning the rhythm: padding-block = space
-     above the hero + below the slider; gap = space between hero and slider.
-     Base (mobile) values; both grow at md. */
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-
-  /* No bottom padding: the card band is the last child, so its gray runs flush
-     into the (gray) body behind the footer, no white gap before the footer. */
-  padding-block: 5rem 0;
-  background-color: var(--background-secondary);
-
-  /* Dots, with a top wash of the surface color fading them in from the top so
-     they don't start on a hard line under the header. Fades to a transparent
-     version of the *same* color to avoid a gray tinge mid-fade. */
-  background-image:
-    linear-gradient(
-      to bottom,
-      var(--background-secondary),
-      rgb(from var(--background-secondary) r g b / 0) 8rem
-    ),
-    radial-gradient(var(--ex-dot) 1.5px, transparent 1.5px);
-  background-repeat: no-repeat, repeat;
-  background-size:
-    100% 8rem,
-    22px 22px;
-}
-
-@media (min-width: 768px) {
-  .ex {
-    gap: 6rem; /* 96 (hero → slider) */
-    padding-block: 8rem 0; /* 128 top, 0 bottom (footer follows the gray) */
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as post.css. */
+@layer components {
+  /* The example <main> is the "Skip to content" target (tabindex=-1, focused
+     programmatically), not a tabbable control, kill the focus ring so the skip
+     link doesn't outline the whole page surface. Mirrors .wrap in base.css.
+     scroll-margin-top clears the sticky 72px topbar (see .ex-topbar) so skipping
+     lands the content just below the bar instead of scrolling it underneath. */
+  #ex-main {
+    scroll-margin-top: 72px;
   }
-}
 
-/* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
-   plus the top-rim highlight, the dark counterpart to a drop shadow's top edge. */
-:root[data-theme="dark"] .ex {
-  --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
-}
+  #ex-main:focus-visible {
+    outline: none;
+  }
 
-/* ── Hero ─────────────────────────────────────────────────────────────── */
+  .ex {
+    /* Dot-grid background so white (secondary) cards separate from the near-white
+       surface on light theme. Dots derive from --ink-base, so they auto-invert in
+       dark theme (light dots on dark). */
+    --ex-dot: rgb(from var(--ink-base) r g b / 0.1);
 
-.ex-hero {
-  max-width: 48rem;
-  margin-inline: auto;
-  padding-inline: var(--grid-margin, 1rem);
-  text-align: center;
-}
+    /* Deep soft lift for the floating marquee cards. Follows the system's shadow
+       logic: light tints with --neutral-black (~40 40 40); the --surface-rim
+       prepend is transparent on light but a faint top-edge highlight on dark
+       (see dark override below). */
+    --ex-shadow:
+      var(--surface-rim), 0 16px 48px 0 color-mix(in oklab, var(--neutral-black) 12%, transparent);
 
-.ex-hero__title {
-  margin: 0;
+    /* Sections stack with the container owning the rhythm: padding-block = space
+       above the hero + below the slider; gap = space between hero and slider.
+       Base (mobile) values; both grow at md. */
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
 
-  /* Base (mobile, < md): headline-small 38px. Bumps to headline-medium 48px at md. */
-  font-size: var(--font-headline-small-size);
-  line-height: var(--font-headline-small-lh);
-  font-weight: var(--font-headline-small-weight);
-  color: var(--ink-primary);
-}
+    /* No bottom padding: the card band is the last child, so its gray runs flush
+       into the (gray) body behind the footer, no white gap before the footer. */
+    padding-block: 5rem 0;
+    background-color: var(--background-secondary);
 
-.ex-hero__intro {
-  margin: 1rem auto 0;
-  max-width: 36rem;
-  color: var(--ink-secondary);
+    /* Dots, with a top wash of the surface color fading them in from the top so
+       they don't start on a hard line under the header. Fades to a transparent
+       version of the *same* color to avoid a gray tinge mid-fade. */
+    background-image:
+      linear-gradient(
+        to bottom,
+        var(--background-secondary),
+        rgb(from var(--background-secondary) r g b / 0) 8rem
+      ),
+      radial-gradient(var(--ex-dot) 1.5px, transparent 1.5px);
+    background-repeat: no-repeat, repeat;
+    background-size:
+      100% 8rem,
+      22px 22px;
+  }
 
-  /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */
-  font-size: var(--font-body-medium-size);
-  line-height: var(--font-body-medium-lh);
-  font-weight: var(--font-body-medium-weight);
-}
+  @media (min-width: 768px) {
+    .ex {
+      gap: 6rem; /* 96 (hero → slider) */
+      padding-block: 8rem 0; /* 128 top, 0 bottom (footer follows the gray) */
+    }
+  }
 
-@media (min-width: 768px) {
+  /* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
+     plus the top-rim highlight, the dark counterpart to a drop shadow's top edge. */
+  :root[data-theme="dark"] .ex {
+    --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
+  }
+
+  /* ── Hero ─────────────────────────────────────────────────────────────── */
+
+  .ex-hero {
+    max-width: 48rem;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+    text-align: center;
+  }
+
   .ex-hero__title {
-    font-size: var(--font-headline-medium-size);
-    line-height: var(--font-headline-medium-lh);
-    font-weight: var(--font-headline-medium-weight);
+    margin: 0;
+
+    /* Base (mobile, < md): headline-small 38px. Bumps to headline-medium 48px at md. */
+    font-size: var(--font-headline-small-size);
+    line-height: var(--font-headline-small-lh);
+    font-weight: var(--font-headline-small-weight);
+    color: var(--ink-primary);
   }
 
   .ex-hero__intro {
-    font-size: var(--font-body-large-size);
-    line-height: var(--font-body-large-lh);
-    font-weight: var(--font-body-large-weight);
-  }
-}
-
-/* lg ≥1024: title steps up to headline-large (small → medium → large). */
-@media (min-width: 1024px) {
-  .ex-hero__title {
-    font-size: var(--font-headline-large-size);
-    line-height: var(--font-headline-large-lh);
-    font-weight: var(--font-headline-large-weight);
-  }
-}
-
-.ex-hero__actions {
-  margin-top: 1.75rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem; /* 8 on mobile; 12 at md */
-}
-
-/* Base (mobile): render the lg-marked hero buttons at md scale (48/16). They
-   go back to lg (56/18) at md. Overrides the button size vars directly so it
-   beats the [data-size="lg"] .button rule. */
-.ex-hero__actions[data-size="lg"] .button {
-  --button-size: 48px;
-  --button-font: var(--font-body-small-emphasized-size);
-}
-
-@media (min-width: 768px) {
-  .ex-hero__actions {
-    gap: 0.75rem;
-  }
-
-  .ex-hero__actions[data-size="lg"] .button {
-    --button-size: 56px;
-    --button-font: var(--font-body-medium-emphasized-size);
-  }
-}
-
-/* Example only: the secondary button's tint is translucent, so over the dot
-   grid it reads as see-through. A wrapper paints an opaque surface behind it;
-   the real button sits on top with its normal, theme-correct --primary-soft
-   (which still transitions on hover). Works on light and dark. */
-.ex-secondary-solid {
-  display: inline-flex;
-  border-radius: var(--radius-full);
-  background: var(--background-secondary);
-}
-
-/* ── Marquee ──────────────────────────────────────────────────────────────
-   One band on two levels, scrolling forever. Tall cards ride the top line;
-   short items (`--low`) drop to a lower line and tuck into the gaps, matching
-   the Sketch frame. The track holds the sequence twice; translating by exactly
-   -50% lands the second copy where the first began, so the loop point is
-   invisible. Each item carries its own trailing gap (margin, not flex `gap`) so
-   the half-width is exact. `inert` (set in the HTML) makes the track show-only:
-   no clicks, no focus, out of the a11y tree. The block padding gives the
-   dropped items and card shadows room inside the clip so the edge mask and
-   overflow don't shave them. */
-.ex-marquee {
-  --ex-stride: 2920px;
-
-  position: relative;
-
-  /* Height fits the tallest card (illustration at y=32, bottom ≈347) + the full
-     64px shadow reach ≈ 411. Base is the mobile value, the whole slider scales
-     to 75% below md (see track), so the height scales with it (420 × 0.75). */
-  height: 315px;
-  overflow: hidden;
-}
-
-/* Cards are absolutely placed at their Sketch x/y (via inline --x/--y) so a
-   low card can sit horizontally beneath a top card, a flex row can't. The
-   sequence is laid out once, then copy 2 repeats it shifted right by one stride;
-   translating the track by -stride lands copy 2 where copy 1 was, so the loop
-   is seamless. `inert` (in the HTML) keeps it show-only. */
-.ex-marquee__track {
-  position: absolute;
-  inset: 0;
-  width: calc(var(--ex-stride) * 2);
-
-  /* Base (mobile): whole slider at 75%. `scale` is its own property, so it
-     composes with the animation's `transform: translateX` and the loop stays
-     seamless (positions, stride and translate all scale together). Full size at md. */
-  scale: 0.75;
-  transform-origin: 0 0;
-  animation: ex-marquee-scroll 55s linear infinite;
-}
-
-.ex-marquee__item {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-}
-
-@keyframes ex-marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(calc(var(--ex-stride) * -1));
-  }
-}
-
-/* md ≥768: slider at full size. */
-@media (min-width: 768px) {
-  .ex-marquee {
-    height: 420px;
-  }
-
-  .ex-marquee__track {
-    scale: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ex-marquee__track {
-    animation: none;
-  }
-}
-
-/* ── Composed card surface ────────────────────────────────────────────────
-   For cards that aren't a single component (settings, profile, device). Same
-   recipe as .card: elevated secondary surface, medium radius, soft shadow. */
-.ex-card {
-  box-sizing: border-box;
-  background: var(--background-secondary);
-  border-radius: var(--radius-md);
-  box-shadow: var(--ex-shadow);
-  padding: 20px;
-}
-
-/* Settings, stacked switch rows with hairline dividers between them. */
-.ex-settings {
-  width: 460px;
-}
-
-.ex-settings__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 16px;
-}
-
-.ex-settings__row:first-child {
-  padding-top: 0;
-}
-
-.ex-settings__row:last-child {
-  padding-bottom: 0;
-}
-
-.ex-settings__row + .ex-settings__row {
-  border-top: var(--border-width) solid var(--fill-tertiary);
-}
-
-.ex-settings__text {
-  display: grid;
-  gap: 2px;
-}
-
-.ex-settings__title {
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  line-height: var(--font-body-small-emphasized-lh);
-  color: var(--ink-primary);
-}
-
-.ex-settings__note {
-  font-size: var(--font-caption-medium-size);
-  line-height: var(--font-caption-medium-lh);
-  color: var(--ink-secondary);
-}
-
-/* Filter-chips card, wide enough to wrap 3 + 2 like the frame. */
-.ex-chips {
-  width: 390px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-/* Theme toggle uses the Toggle group component (.toggle-group--pill with icons).
-   This is just the white surface it floats on in the marquee, 4px around the track. */
-.ex-theme-wrap {
-  display: inline-flex;
-  padding: 8px;
-  border-radius: var(--radius-full);
-}
-
-.ex-theme-wrap .toggle-group {
-  width: 368px;
-}
-
-/* Profile row card. */
-.ex-profile {
-  width: 280px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ex-profile__text {
-  flex: 1;
-  display: grid;
-  gap: 0;
-}
-
-.ex-profile__name {
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  line-height: 1.35;
-  color: var(--ink-primary);
-}
-
-.ex-profile__role {
-  font-size: var(--font-body-small-size);
-  line-height: 1.35;
-  color: var(--ink-secondary);
-}
-
-.ex-profile__chevron {
-  width: 18px;
-  height: 18px;
-  color: var(--ink-tertiary);
-}
-
-/* Privacy card, icon + title + chevron over a supporting line. No component
-   for this composition yet; built from tokens. */
-.ex-privacy {
-  width: 387px;
-  display: grid;
-  gap: 10px;
-}
-
-.ex-privacy__head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ex-privacy__icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background: var(--primary-soft);
-  color: var(--primary-foreground);
-}
-
-.ex-privacy__icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.ex-privacy__title {
-  flex: 1;
-  font-size: var(--font-body-medium-emphasized-size);
-  font-weight: var(--font-body-medium-emphasized-weight);
-  color: var(--ink-primary);
-}
-
-.ex-privacy__chevron {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  color: var(--ink-tertiary);
-}
-
-.ex-privacy__note {
-  margin: 0;
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  color: var(--ink-secondary);
-}
-
-/* Illustration card, the vertical .card with the artwork left-aligned (not
-   centered) and sitting ABOVE the text, plus a text CTA. */
-.ex-illus {
-  width: 380px;
-  box-shadow: var(--ex-shadow);
-}
-
-/* The marquee is a fixed desktop element, so pin the card padding to the ≥640
-   (desktop) values, otherwise the component's 640px breakpoint retightens it. */
-.ex-illus .card__illustration {
-  padding: 24px 24px 0;
-}
-
-.ex-illus .card__illustration > * {
-  margin-inline: auto;
-  width: 176px;
-}
-
-.ex-illus .card__title {
-  font-size: var(--font-title-small-size);
-  font-weight: var(--font-title-small-weight);
-  line-height: var(--font-title-small-lh);
-}
-
-/* Centered composition: illustration, title and CTA all centre-aligned.
-   24px below the CTA to the card bottom. */
-.ex-illus .card__content {
-  padding: 24px;
-  text-align: center;
-}
-
-/* The CTA is the real .link--cta component; here it sits in a 40px tap target,
-   8px below the title. */
-.ex-illus .link--cta {
-  margin-top: 8px;
-  min-height: 40px;
-}
-
-/* Device / session card. */
-.ex-device {
-  width: 460px;
-  padding: 24px;
-  display: grid;
-  gap: 8px;
-}
-
-.ex-device__head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.ex-device__title {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--font-body-medium-emphasized-size);
-  font-weight: var(--font-body-medium-emphasized-weight);
-  color: var(--ink-primary);
-}
-
-.ex-device__title svg {
-  width: 18px;
-  height: 18px;
-  color: var(--ink-secondary);
-}
-
-.ex-device__logout {
-  margin-inline-start: auto;
-}
-
-.ex-device__meta {
-  display: grid;
-  gap: 4px;
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  color: var(--ink-secondary);
-}
-
-.ex-device__meta > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Location + timestamp in primary ink (OS line stays secondary). */
-.ex-device__meta > span:nth-child(2),
-.ex-device__meta > span:nth-child(3) {
-  color: var(--ink-primary);
-}
-
-/* Log out, a small (36px) soft-destructive button. No soft-destructive variant
-   in the button component yet, so built from tokens. */
-.ex-logout {
-  display: inline-flex;
-  align-items: center;
-  height: 36px;
-  padding-inline: 14px;
-  border: 0;
-  border-radius: var(--radius-full);
-  font: inherit;
-  font-size: var(--font-caption-medium-emphasized-size);
-  font-weight: var(--font-caption-medium-emphasized-weight);
-  color: var(--red);
-  background: rgb(from var(--red) r g b / 0.12);
-}
-
-/* Info icon: 18px glyph in a 24px target area. */
-.ex-device__info {
-  display: inline-grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  color: var(--ink-primary);
-}
-
-.ex-device__info svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* Volume slider card. The round icon button is a separate marquee item, not
-   part of this card. */
-.ex-slider {
-  width: 355px;
-}
-
-/* Round icon button (FAB), its own element in the strip. */
-.ex-fab {
-  width: 56px;
-  height: 56px;
-  padding: 0;
-}
-
-/* FAQ, the real .accordion (already a stack of separate rounded boxes). Give
-   each item the same soft shadow as the other cards so it reads as elevated. */
-.ex-faq {
-  width: 387px;
-}
-
-.ex-faq .accordion__item {
-  box-shadow: var(--ex-shadow);
-}
-
-/* Small pill badge used in the device card. */
-.ex-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding-inline: 10px;
-  border-radius: var(--radius-full);
-  font-size: var(--font-caption-medium-size);
-  font-weight: var(--font-caption-medium-weight);
-  line-height: 1;
-}
-
-.ex-badge--success {
-  background: var(--green-soft);
-  color: var(--green);
-}
-
-/* ── Top bar ──────────────────────────────────────────────────────────────
-   80px header: brand left, nav centered, Menu button right. Sticky and opaque
-   so it stays above the dotted surface while scrolling. */
-
-/* Base = mobile: compact flex header, nav hidden (hamburger). Builds up to the
-   full grid header at lg. */
-.ex-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 72px;
-  padding-inline: 16px;
-  background: var(--background-secondary);
-}
-
-.ex-topbar__brand {
-  justify-self: start;
-
-  /* Wordmark. The mark is painted on ::before (see below), so the anchor is free
-     to carry the focus ring: border-radius rounds that ring to the footer link's
-     8px, and since the anchor has no fill of its own the radius clips nothing.
-     "Demo" stays as the link's accessible name. 90:25 aspect, 20px tall (24 at
-     lg, mirroring the old text brand's step-up). */
-  width: calc(20px * 90 / 25);
-  height: 20px;
-  border-radius: var(--radius-sm);
-  font-size: 0;
-  text-decoration: none;
-}
-
-/* The mark itself: theme ink masked to the logo shape, flipping light/dark. On
-   ::before so the anchor's border-radius (and focus ring) never clip it. */
-.ex-topbar__brand::before,
-.ex-footer__brand::before {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-color: var(--ink-primary);
-  -webkit-mask: url("/assets/images/logo.svg") center / contain no-repeat;
-  mask: url("/assets/images/logo.svg") center / contain no-repeat;
-}
-
-.ex-topbar__nav {
-  justify-self: center;
-  display: none;
-}
-
-/* The three header nav links step down to body-small at ≤1024, back to
-   body-medium above. Scoped to the example topbar, not the shared component.
-   The Settings hover dropdown stays body-small (16) at all widths. */
-.ex-topbar__nav .nav-menu__link {
-  font-size: var(--font-body-small-size);
-}
-
-@media (min-width: 1024px) {
-  .ex-topbar__nav .nav-menu__link {
-    font-size: var(--font-body-medium-size);
-  }
-}
-
-.ex-topbar__menu {
-  justify-self: end;
-}
-
-.ex-topbar__menu svg,
-.ex-menu__close svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* Header buttons (topbar Menu + sheet Close) step up to body-medium at ≥1024,
-   matching the nav links. Overrides the button's own --button-font size var. */
-@media (min-width: 1024px) {
-  .ex-topbar__menu,
-  .ex-menu__close {
-    --button-font: var(--font-body-medium-emphasized-size);
-  }
-}
-
-/* ── Menu ───────────────────────────────────────────────────────────────────
-   The real Sheet component (.sheet) provides the panel, slide-in animation,
-   ::backdrop, Esc + focus trap, and open/close wiring (app.js, via
-   data-dialog-open/close). Only the menu-specific layout lives here. */
-
-.ex-menu {
-  /* Base (small phones): fullscreen, no radius. Becomes a floating 400px rounded
-   panel from sm up. */
-  width: 100vw;
-  max-width: none;
-  border-radius: 0;
-
-  /* The dialog clips; the single scroll container is .sheet__inner below. */
-  overflow: hidden;
-}
-
-/* Fixed column: head and foot are non-scrolling flex items (genuinely pinned);
-   only the middle scrolls. The page is scroll-locked while the menu is open
-   (app.js), so no chaining to worry about, the inner just clips. */
-.ex-menu .sheet__inner {
-  /* No padding here, head, scroll and foot each own their gutter, so the scroll
-   can pad its own edges (giving the focus ring room without being clipped). */
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Header row, close button right. Pinned at the top (doesn't scroll). */
-.ex-menu__head {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 72px;
-
-  /* 16px gutter (matches the topbar). Close moves to 24 at sm (logo hidden). */
-  padding-inline: 16px;
-}
-
-/* Demo logo in the fullscreen menu head so it reads like the topbar. Hidden from
-   sm up, where the real topbar shows beside the floating panel. */
-.ex-menu__brand {
-  display: inline-flex;
-  align-items: center;
-}
-
-/* The only scrolling region, nav + links. Scrollbar hidden (the page is
-   scroll-locked while open, so no chaining to contain). */
-.ex-menu__scroll {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: none;
-
-  /* Owns the gutter (16px sides, sm+ bumps to 32) so links sit inside it and
-   their focus ring draws into the padding instead of being clipped. 8px block
-   gives the first/last item's ring room. */
-  padding: 8px 16px;
-}
-
-.ex-menu__scroll::-webkit-scrollbar {
-  display: none;
-}
-
-/* Footer, pinned at the bottom (doesn't scroll), a full-width panel surface;
-   16px padding insets the toggle from the edges. */
-.ex-menu__foot {
-  flex-shrink: 0;
-  padding: 16px;
-  background: var(--background-secondary);
-}
-
-/* Big primary links. */
-.ex-menu__nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.ex-menu__nav a {
-  display: flex;
-  align-items: center;
-  height: 56px;
-  border-radius: 8px;
-  font-size: var(--font-title-small-size);
-  font-weight: var(--font-title-small-weight);
-  line-height: var(--font-title-small-lh);
-  color: var(--ink-primary);
-  text-decoration: none;
-}
-
-/* Hairline comes from .separator; this only sets the menu's spacing. */
-.ex-menu__divider {
-  margin: 24px 0;
-}
-
-/* Smaller secondary link list. */
-.ex-menu__links {
-  display: flex;
-  flex-direction: column;
-}
-
-.ex-menu__links a {
-  display: flex;
-  align-items: center;
-  height: 48px;
-  border-radius: 8px;
-  font-size: var(--font-body-small-emphasized-size);
-  font-weight: var(--font-body-small-emphasized-weight);
-  color: var(--ink-primary);
-  text-decoration: none;
-}
-
-/* Theme toggle fills the footer width. */
-.ex-menu__theme.toggle-group {
-  display: flex;
-}
-
-/* ── Responsive (mobile-first: min-width overrides build up from the base) ──── */
-
-/* md ≥768, nav takes over from the hamburger, the header goes to the 3-col
-   grid with roomier padding, and the menu panel becomes the floating 400px
-   rounded sheet. Below md it's the fullscreen hamburger menu. */
-@media (min-width: 768px) {
-  .ex-topbar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    padding-inline: 24px;
-  }
-
-  .ex-topbar__nav {
-    display: flex;
-  }
-
-  /* Real topbar shows beside the panel, so drop the menu's own logo and go to a
-     close-only head (button 24px from the edge). */
-  .ex-menu__brand {
-    display: none;
-  }
-
-  .ex-menu__head {
-    justify-content: flex-end;
-    padding-inline-end: 24px;
-  }
-
-  /* Gutter bumps to 32 (foot keeps its 16px toggle inset). */
-  .ex-menu__scroll {
-    padding-inline: 32px;
-  }
-
-  /* Floating 400px rounded panel (fullscreen below md). */
-  .ex-menu {
-    width: min(100vw - 32px, 400px);
-    border-radius: 32px 0 0 32px;
-  }
-}
-
-/* lg ≥1024, taller header with more gutter and the larger brand. */
-@media (min-width: 1024px) {
-  .ex-topbar {
-    height: 80px;
-    padding-inline: 32px;
-  }
-
-  .ex-topbar__brand {
-    width: calc(24px * 90 / 25);
-    height: 24px;
-  }
-
-  .ex-menu__head {
-    height: 80px;
-  }
-}
-
-/* ── Card grid ("From the system") ────────────────────────────────────────
-   The shared .card component in three rhythms. A full-bleed recessed band
-   holds a centred column capped at the real --container-max (not the 1200
-   the Sketch guide stops at); horizontal gutters use --grid-gutter, row gaps
-   are a fixed 40. Featured is a bespoke split; the six cards are plain .card. */
-
-.ex-work {
-  background: var(--background-primary);
-
-  /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-
-  /* Top padding is the gray gap down to the first (featured) card; bottom is the
-     gray gap between the last cards and the footer (96 on mobile, 128 at md). */
-  padding-block: 2rem 6rem;
-}
-
-.ex-work__inner {
-  /* Same recipe as .wrap and the grid overlay: --container-max is the CONTENT
-     width (1280); the margins sit OUTSIDE it, so the cap is content + 2·margin
-     and the padding is one margin each side. Columns land on exactly 1280. */
-  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
-  margin-inline: auto;
-  padding-inline: var(--grid-margin, 1rem);
-  display: grid;
-  gap: 2.5rem; /* 40 between rows */
-}
-
-.ex-work__row {
-  display: grid;
-  row-gap: 2.5rem; /* 40 between stacked or wrapped cards */
-  column-gap: var(--grid-gutter, 1rem); /* tighter gutter when they're side by side */
-}
-
-/* The 2-up/3-up post cards hold title-small at every width, override the base
-   card's <640 body-large-emphasized start and its ≥640 step so nothing changes
-   across breakpoints. */
-.ex-work__row .card__title {
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-}
-
-/* Placeholder image blocks, muted fill mixed against the card surface (not
-   transparent) so it stays opaque like a real <img> and doesn't pick up the
-   card's hover/active background. 16/9 is the default (3-up, and the 2-up while
-   it's also two-per-row below lg, so the states match); the 2-up widens to 21/9
-   once it's the only wide row at lg. */
-.ex-ph {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-
-  /* object-fit crops the photo to whatever ratio the slot sets; the muted fill
-     shows through while the image loads (and behind any transparency). */
-  object-fit: cover;
-  background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
-}
-
-.ex-ph--3-2 {
-  aspect-ratio: 3 / 2;
-}
-
-@media (min-width: 1024px) {
-  .ex-ph--wide {
-    aspect-ratio: 21 / 9;
-  }
-}
-
-/* Featured, stacks on mobile (image over body), splits 1:1 at md. Same recipe
-   as the "with button" card: the whole card is the <a> (so a.card:hover/active
-   drives the surface), and the Read more is a decorative .button span that only
-   reacts to a direct hover. The opaque image still doesn't react. */
-.ex-featured {
-  display: grid;
-}
-
-.ex-featured__body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--space-32);
-  text-align: center;
-}
-
-.ex-featured__title {
-  margin: 0;
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-  color: var(--ink-primary);
-}
-
-.ex-featured__text {
-  margin: 0.75rem 0 0;
-  color: var(--ink-secondary);
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-}
-
-.ex-featured__cta {
-  margin-top: 1.5rem;
-}
-
-/* sm ≥640, the 3-up splits to two columns (40 row-gap, gutter column-gap). */
-@media (min-width: 640px) {
-  .ex-work__row--3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* md ≥768, 2-up and featured take their side-by-side form. */
-@media (min-width: 768px) {
-  .ex-work {
-    padding-bottom: 8rem; /* 128 gray gap above the footer */
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  }
-
-  .ex-work__row--2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .ex-featured {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .ex-featured__img {
-    aspect-ratio: auto;
-    height: 100%;
-  }
-
-  .ex-featured__body {
-    justify-content: center;
-    align-items: center;
-    padding: 48px 64px;
-    text-align: center;
-  }
-}
-
-/* lg ≥1024, the 3-up reaches full three columns, and the featured (one-per-row)
-   title steps up from title-small to title-large. */
-@media (min-width: 1024px) {
-  .ex-work {
-    padding-top: 4rem; /* 64 gray gap down to the featured card */
-  }
-
-  .ex-work__row--3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .ex-featured__title {
-    font-size: var(--font-title-large-size);
-    line-height: var(--font-title-large-lh);
-    font-weight: var(--font-title-large-weight);
-  }
-
-  .ex-featured__text {
+    margin: 1rem auto 0;
+    max-width: 36rem;
+    color: var(--ink-secondary);
+
+    /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */
     font-size: var(--font-body-medium-size);
     line-height: var(--font-body-medium-lh);
     font-weight: var(--font-body-medium-weight);
   }
-}
 
-/* ── Footer ────────────────────────────────────────────────────────────────
-   Brand + language on the left, three link columns on the right. On mobile the
-   columns are <details> accordions (initFooterAccordion opens the first, closes
-   the rest); at md they're forced open and static (chevron hidden, summary inert)
-   and the bottom bar spreads copyright / legal / socials across the width. */
-
-/* White panel with a 32px rounded top, sitting on the (gray) body so the gray
-   shows through the corner notches, the card band above runs flush into it. */
-.ex-footer {
-  position: relative;
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-
-.ex-footer__inner {
-  /* Same content column as the card grid (content = --container-max, margins
-     outside), so the footer lines up with the rest of the page. */
-  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
-  margin-inline: auto;
-  padding: 3rem var(--grid-margin) 2rem;
-}
-
-/* Every footer link/summary shares the 8px focus-ring rounding by default. */
-.ex-footer :where(a, summary) {
-  border-radius: var(--radius-sm);
-}
-
-.ex-footer__top {
-  display: grid;
-  gap: 2.5rem;
-}
-
-.ex-footer__brand-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.5rem; /* logo → language, 24 on every breakpoint */
-}
-
-/* Same masked wordmark as the header: 20px tall, stepping to 24 at lg so it
-   reads the same size top and bottom at every breakpoint. */
-.ex-footer__brand {
-  display: inline-block;
-  width: calc(20px * 90 / 25);
-  height: 20px;
-  border-radius: var(--radius-sm); /* rounds the focus ring; shares the mark ::before */
-  font-size: 0;
-  text-decoration: none;
-}
-
-@media (min-width: 1024px) {
-  .ex-footer__brand {
-    width: calc(24px * 90 / 25);
-    height: 24px;
-  }
-}
-
-/* Language picker, the Select component, sized to the footer (fixed 240 like the
-   old button) and holding a flag + label in both the trigger value and options. */
-.ex-footer__lang {
-  width: 240px;
-  max-width: 100%;
-}
-
-.ex-footer__lang .select__value {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ex-lang-flag {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-full);
-}
-
-/* Flag + label sit together on the left; the selected-row check keeps its place
-   on the right (base .select__option is space-between, which would otherwise
-   spread the flag, label and check apart). */
-.ex-footer__lang .select__option {
-  justify-content: flex-start;
-}
-
-.ex-footer__lang .select__option[aria-selected="true"]::after {
-  margin-inline-start: auto;
-}
-
-/* Nav columns, accordions on mobile: 56px header rows, 8px apart, no dividers. */
-.ex-footer__nav {
-  display: grid;
-  gap: 8px;
-}
-
-.ex-footer__col-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 56px;
-
-  /* Matches the links' start padding below so heads and links stay aligned. */
-  padding-inline-start: 4px;
-  cursor: pointer;
-  list-style: none;
-  color: var(--ink-primary);
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-}
-
-.ex-footer__col-head::-webkit-details-marker {
-  display: none;
-}
-
-/* Chevron drawn on the summary itself, so the <summary> holds only its label
-   (an SVG child trips the "interactive content in <summary>" audit). */
-.ex-footer__col-head::after {
-  content: "";
-  flex: none;
-  width: 20px;
-  height: 20px;
-  color: var(--ink-tertiary);
-  background: currentcolor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  transition: rotate var(--motion-default);
-}
-
-.ex-footer__col[open] .ex-footer__col-head::after {
-  rotate: 180deg;
-}
-
-.ex-footer__col-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-}
-
-.ex-footer__col-list a {
-  display: flex;
-  align-items: center;
-
-  /* Roomier tap rows in the mobile accordion; tightened to a list rhythm at md. */
-  padding-block: 12px;
-
-  /* Start padding sets the label in from the box edge, so the inset focus ring
-     below has ~4px of breathing room to the left of the text. */
-  padding-inline-start: 4px;
-  color: var(--ink-primary);
-  text-decoration: none;
-  font-size: var(--font-body-small-size);
-
-  /* Links run flush to the head, so the focus ring draws inset: a positive
-     offset would be shaved by the accordion's clip box (overflow below). Skip
-     the global converge animation, which would sweep the ring in from outside. */
-  outline-offset: calc(-1 * var(--focus-ring-width));
-  animation: none;
-}
-
-.ex-footer__col::details-content {
-  overflow: hidden;
-}
-
-/* Ease the accordion open/close on mobile, same recipe as .accordion. Gated on
-   interpolate-size (animating block-size to auto), which is Chromium-only today:
-   browsers without it (e.g. iOS Safari) fall back to the native instant toggle
-   instead of half-running the opacity fade against a snapped height, the jank
-   you'd otherwise see there. The md override below keeps it mobile-only. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (interpolate-size: allow-keywords) {
-    .ex-footer__col {
-      interpolate-size: allow-keywords;
+  @media (min-width: 768px) {
+    .ex-hero__title {
+      font-size: var(--font-headline-medium-size);
+      line-height: var(--font-headline-medium-lh);
+      font-weight: var(--font-headline-medium-weight);
     }
 
-    .ex-footer__col::details-content {
-      block-size: 0;
-      opacity: 0;
-      transition:
-        content-visibility allow-discrete var(--motion-default),
-        opacity var(--motion-default),
-        block-size var(--motion-default);
-    }
-
-    .ex-footer__col[open]::details-content {
-      block-size: auto;
-      opacity: 1;
+    .ex-hero__intro {
+      font-size: var(--font-body-large-size);
+      line-height: var(--font-body-large-lh);
+      font-weight: var(--font-body-large-weight);
     }
   }
-}
 
-/* Hairline comes from .separator; this only sets the footer's spacing. */
-.ex-footer__divider {
-  margin: 4rem 0 2rem;
-}
-
-.ex-footer__bottom {
-  display: grid;
-  gap: 1.5rem;
-  justify-items: center;
-  text-align: center;
-}
-
-.ex-footer__copy {
-  margin: 0;
-  color: var(--ink-secondary);
-  font-size: var(--font-caption-medium-size);
-}
-
-.ex-footer__legal {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ex-footer__legal a {
-  color: var(--ink-primary);
-  text-decoration: underline;
-  font-size: var(--font-caption-medium-size);
-}
-
-.ex-footer__dot {
-  color: var(--ink-tertiary);
-}
-
-.ex-footer__social {
-  display: flex;
-  gap: 0.75rem;
-  margin: 0;
-  margin-inline-end: -6px; /* offset the target padding so the last icon aligns to the edge */
-  padding: 0;
-  list-style: none;
-}
-
-/* 32×32 tap/focus target (8px radius shows on focus-visible); icon centred. */
-.ex-footer__social a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  color: var(--ink-secondary);
-}
-
-.ex-footer__social svg {
-  display: block;
-  width: 20px;
-  height: 20px;
-  stroke-width: 1.5;
-}
-
-@media (hover: hover) {
-  /* Links: primary already; underline appears on hover. Legal (Privacy/Terms)
-     stays underlined with no hover change. Socials brighten to primary. */
-  .ex-footer__col-list a:hover {
-    text-decoration: underline;
+  /* lg ≥1024: title steps up to headline-large (small → medium → large). */
+  @media (min-width: 1024px) {
+    .ex-hero__title {
+      font-size: var(--font-headline-large-size);
+      line-height: var(--font-headline-large-lh);
+      font-weight: var(--font-headline-large-weight);
+    }
   }
 
-  .ex-footer__social a:hover {
+  .ex-hero__actions {
+    margin-top: 1.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem; /* 8 on mobile; 12 at md */
+  }
+
+  /* Base (mobile): render the lg-marked hero buttons at md scale (48/16). They
+     go back to lg (56/18) at md. Overrides the button size vars directly so it
+     beats the [data-size="lg"] .button rule. */
+  .ex-hero__actions[data-size="lg"] .button {
+    --button-size: 48px;
+    --button-font: var(--font-body-small-emphasized-size);
+  }
+
+  @media (min-width: 768px) {
+    .ex-hero__actions {
+      gap: 0.75rem;
+    }
+
+    .ex-hero__actions[data-size="lg"] .button {
+      --button-size: 56px;
+      --button-font: var(--font-body-medium-emphasized-size);
+    }
+  }
+
+  /* Example only: the secondary button's tint is translucent, so over the dot
+     grid it reads as see-through. A wrapper paints an opaque surface behind it;
+     the real button sits on top with its normal, theme-correct --primary-soft
+     (which still transitions on hover). Works on light and dark. */
+  .ex-secondary-solid {
+    display: inline-flex;
+    border-radius: var(--radius-full);
+    background: var(--background-secondary);
+  }
+
+  /* ── Marquee ──────────────────────────────────────────────────────────────
+     One band on two levels, scrolling forever. Tall cards ride the top line;
+     short items (`--low`) drop to a lower line and tuck into the gaps, matching
+     the Sketch frame. The track holds the sequence twice; translating by exactly
+     -50% lands the second copy where the first began, so the loop point is
+     invisible. Each item carries its own trailing gap (margin, not flex `gap`) so
+     the half-width is exact. `inert` (set in the HTML) makes the track show-only:
+     no clicks, no focus, out of the a11y tree. The block padding gives the
+     dropped items and card shadows room inside the clip so the edge mask and
+     overflow don't shave them. */
+  .ex-marquee {
+    --ex-stride: 2920px;
+
+    position: relative;
+
+    /* Height fits the tallest card (illustration at y=32, bottom ≈347) + the full
+       64px shadow reach ≈ 411. Base is the mobile value, the whole slider scales
+       to 75% below md (see track), so the height scales with it (420 × 0.75). */
+    height: 315px;
+    overflow: hidden;
+  }
+
+  /* Cards are absolutely placed at their Sketch x/y (via inline --x/--y) so a
+     low card can sit horizontally beneath a top card, a flex row can't. The
+     sequence is laid out once, then copy 2 repeats it shifted right by one stride;
+     translating the track by -stride lands copy 2 where copy 1 was, so the loop
+     is seamless. `inert` (in the HTML) keeps it show-only. */
+  .ex-marquee__track {
+    position: absolute;
+    inset: 0;
+    width: calc(var(--ex-stride) * 2);
+
+    /* Base (mobile): whole slider at 75%. `scale` is its own property, so it
+       composes with the animation's `transform: translateX` and the loop stays
+       seamless (positions, stride and translate all scale together). Full size at md. */
+    scale: 0.75;
+    transform-origin: 0 0;
+    animation: ex-marquee-scroll 55s linear infinite;
+  }
+
+  .ex-marquee__item {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+  }
+
+  @keyframes ex-marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(var(--ex-stride) * -1));
+    }
+  }
+
+  /* md ≥768: slider at full size. */
+  @media (min-width: 768px) {
+    .ex-marquee {
+      height: 420px;
+    }
+
+    .ex-marquee__track {
+      scale: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ex-marquee__track {
+      animation: none;
+    }
+  }
+
+  /* ── Composed card surface ────────────────────────────────────────────────
+     For cards that aren't a single component (settings, profile, device). Same
+     recipe as .card: elevated secondary surface, medium radius, soft shadow. */
+  .ex-card {
+    box-sizing: border-box;
+    background: var(--background-secondary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--ex-shadow);
+    padding: 20px;
+  }
+
+  /* Settings, stacked switch rows with hairline dividers between them. */
+  .ex-settings {
+    width: 460px;
+  }
+
+  .ex-settings__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 16px;
+  }
+
+  .ex-settings__row:first-child {
+    padding-top: 0;
+  }
+
+  .ex-settings__row:last-child {
+    padding-bottom: 0;
+  }
+
+  .ex-settings__row + .ex-settings__row {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .ex-settings__text {
+    display: grid;
+    gap: 2px;
+  }
+
+  .ex-settings__title {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: var(--font-body-small-emphasized-lh);
     color: var(--ink-primary);
   }
-}
 
-/* md ≥768, brand-block left, columns right; accordions become static columns. */
-@media (min-width: 768px) {
-  .ex-footer__inner {
-    padding: 3rem var(--grid-margin) 3rem;
-  }
-
-  /* Two columns: the brand/language block (its own width) and the nav area. */
-  .ex-footer__top {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    align-items: start;
-    gap: 4rem;
-  }
-
-  /* 768–1023: link groups sit in two columns beside the brand. */
-  .ex-footer__nav {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-
-  .ex-footer__col-head {
-    min-height: 0;
-    padding-block: 0 12px;
-    cursor: default;
-    color: var(--ink-secondary);
+  .ex-settings__note {
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
-    font-weight: var(--font-caption-medium-weight);
+    color: var(--ink-secondary);
   }
 
-  .ex-footer__col-head::after {
+  /* Filter-chips card, wide enough to wrap 3 + 2 like the frame. */
+  .ex-chips {
+    width: 390px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Theme toggle uses the Toggle group component (.toggle-group--pill with icons).
+     This is just the white surface it floats on in the marquee, 4px around the track. */
+  .ex-theme-wrap {
+    display: inline-flex;
+    padding: 8px;
+    border-radius: var(--radius-full);
+  }
+
+  .ex-theme-wrap .toggle-group {
+    width: 368px;
+  }
+
+  /* Profile row card. */
+  .ex-profile {
+    width: 280px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ex-profile__text {
+    flex: 1;
+    display: grid;
+    gap: 0;
+  }
+
+  .ex-profile__name {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1.35;
+    color: var(--ink-primary);
+  }
+
+  .ex-profile__role {
+    font-size: var(--font-body-small-size);
+    line-height: 1.35;
+    color: var(--ink-secondary);
+  }
+
+  .ex-profile__chevron {
+    width: 18px;
+    height: 18px;
+    color: var(--ink-tertiary);
+  }
+
+  /* Privacy card, icon + title + chevron over a supporting line. No component
+     for this composition yet; built from tokens. */
+  .ex-privacy {
+    width: 387px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .ex-privacy__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ex-privacy__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--primary-soft);
+    color: var(--primary-foreground);
+  }
+
+  .ex-privacy__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ex-privacy__title {
+    flex: 1;
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  .ex-privacy__chevron {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    color: var(--ink-tertiary);
+  }
+
+  .ex-privacy__note {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    color: var(--ink-secondary);
+  }
+
+  /* Illustration card, the vertical .card with the artwork left-aligned (not
+     centered) and sitting ABOVE the text, plus a text CTA. */
+  .ex-illus {
+    width: 380px;
+    box-shadow: var(--ex-shadow);
+  }
+
+  /* The marquee is a fixed desktop element, so pin the card padding to the ≥640
+     (desktop) values, otherwise the component's 640px breakpoint retightens it. */
+  .ex-illus .card__illustration {
+    padding: 24px 24px 0;
+  }
+
+  .ex-illus .card__illustration > * {
+    margin-inline: auto;
+    width: 176px;
+  }
+
+  .ex-illus .card__title {
+    font-size: var(--font-title-small-size);
+    font-weight: var(--font-title-small-weight);
+    line-height: var(--font-title-small-lh);
+  }
+
+  /* Centered composition: illustration, title and CTA all centre-aligned.
+     24px below the CTA to the card bottom. */
+  .ex-illus .card__content {
+    padding: 24px;
+    text-align: center;
+  }
+
+  /* The CTA is the real .link--cta component; here it sits in a 40px tap target,
+     8px below the title. */
+  .ex-illus .link--cta {
+    margin-top: 8px;
+    min-height: 40px;
+  }
+
+  /* Device / session card. */
+  .ex-device {
+    width: 460px;
+    padding: 24px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .ex-device__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ex-device__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  .ex-device__title svg {
+    width: 18px;
+    height: 18px;
+    color: var(--ink-secondary);
+  }
+
+  .ex-device__logout {
+    margin-inline-start: auto;
+  }
+
+  .ex-device__meta {
+    display: grid;
+    gap: 4px;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    color: var(--ink-secondary);
+  }
+
+  .ex-device__meta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Location + timestamp in primary ink (OS line stays secondary). */
+  .ex-device__meta > span:nth-child(2),
+  .ex-device__meta > span:nth-child(3) {
+    color: var(--ink-primary);
+  }
+
+  /* Log out, a small (36px) soft-destructive button. No soft-destructive variant
+     in the button component yet, so built from tokens. */
+  .ex-logout {
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    padding-inline: 14px;
+    border: 0;
+    border-radius: var(--radius-full);
+    font: inherit;
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    color: var(--red);
+    background: rgb(from var(--red) r g b / 0.12);
+  }
+
+  /* Info icon: 18px glyph in a 24px target area. */
+  .ex-device__info {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    color: var(--ink-primary);
+  }
+
+  .ex-device__info svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Volume slider card. The round icon button is a separate marquee item, not
+     part of this card. */
+  .ex-slider {
+    width: 355px;
+  }
+
+  /* Round icon button (FAB), its own element in the strip. */
+  .ex-fab {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+  }
+
+  /* FAQ, the real .accordion (already a stack of separate rounded boxes). Give
+     each item the same soft shadow as the other cards so it reads as elevated. */
+  .ex-faq {
+    width: 387px;
+  }
+
+  .ex-faq .accordion__item {
+    box-shadow: var(--ex-shadow);
+  }
+
+  /* Small pill badge used in the device card. */
+  .ex-badge {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding-inline: 10px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-caption-medium-size);
+    font-weight: var(--font-caption-medium-weight);
+    line-height: 1;
+  }
+
+  .ex-badge--success {
+    background: var(--green-soft);
+    color: var(--green);
+  }
+
+  /* ── Top bar ──────────────────────────────────────────────────────────────
+     80px header: brand left, nav centered, Menu button right. Sticky and opaque
+     so it stays above the dotted surface while scrolling. */
+
+  /* Base = mobile: compact flex header, nav hidden (hamburger). Builds up to the
+     full grid header at lg. */
+  .ex-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+    padding-inline: 16px;
+    background: var(--background-secondary);
+  }
+
+  .ex-topbar__brand {
+    justify-self: start;
+
+    /* Wordmark. The mark is painted on ::before (see below), so the anchor is free
+       to carry the focus ring: border-radius rounds that ring to the footer link's
+       8px, and since the anchor has no fill of its own the radius clips nothing.
+       "Demo" stays as the link's accessible name. 90:25 aspect, 20px tall (24 at
+       lg, mirroring the old text brand's step-up). */
+    width: calc(20px * 90 / 25);
+    height: 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0;
+    text-decoration: none;
+  }
+
+  /* The mark itself: theme ink masked to the logo shape, flipping light/dark. On
+     ::before so the anchor's border-radius (and focus ring) never clip it. */
+  .ex-topbar__brand::before,
+  .ex-footer__brand::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--ink-primary);
+    -webkit-mask: url("/assets/images/logo.svg") center / contain no-repeat;
+    mask: url("/assets/images/logo.svg") center / contain no-repeat;
+  }
+
+  .ex-topbar__nav {
+    justify-self: center;
     display: none;
   }
 
-  .ex-footer__col-list a {
-    display: block;
-    padding-block: 6px;
+  /* The three header nav links step down to body-small at ≤1024, back to
+     body-medium above. Scoped to the example topbar, not the shared component.
+     The Settings hover dropdown stays body-small (16) at all widths. */
+  .ex-topbar__nav .nav-menu__link {
+    font-size: var(--font-body-small-size);
   }
 
-  .ex-footer__bottom {
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 1rem;
-    text-align: start;
+  @media (min-width: 1024px) {
+    .ex-topbar__nav .nav-menu__link {
+      font-size: var(--font-body-medium-size);
+    }
   }
 
-  .ex-footer__copy {
-    justify-self: start;
-  }
-
-  .ex-footer__social {
+  .ex-topbar__menu {
     justify-self: end;
   }
-}
 
-/* lg ≥1024, fixed 5-column grid. Logo/lang is column 1; the link groups are
-   pinned to the right (span from the end), so 3 groups leave one empty column
-   between. Add a group → bump the span to fill it; remove one → two empties. */
-@media (min-width: 1024px) {
+  .ex-topbar__menu svg,
+  .ex-menu__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Header buttons (topbar Menu + sheet Close) step up to body-medium at ≥1024,
+     matching the nav links. Overrides the button's own --button-font size var. */
+  @media (min-width: 1024px) {
+    .ex-topbar__menu,
+    .ex-menu__close {
+      --button-font: var(--font-body-medium-emphasized-size);
+    }
+  }
+
+  /* ── Menu ───────────────────────────────────────────────────────────────────
+     The real Sheet component (.sheet) provides the panel, slide-in animation,
+     ::backdrop, Esc + focus trap, and open/close wiring (app.js, via
+     data-dialog-open/close). Only the menu-specific layout lives here. */
+
+  .ex-menu {
+    /* Base (small phones): fullscreen, no radius. Becomes a floating 400px rounded
+     panel from sm up. */
+    width: 100vw;
+    max-width: none;
+    border-radius: 0;
+
+    /* The dialog clips; the single scroll container is .sheet__inner below. */
+    overflow: hidden;
+  }
+
+  /* Fixed column: head and foot are non-scrolling flex items (genuinely pinned);
+     only the middle scrolls. The page is scroll-locked while the menu is open
+     (app.js), so no chaining to worry about, the inner just clips. */
+  .ex-menu .sheet__inner {
+    /* No padding here, head, scroll and foot each own their gutter, so the scroll
+     can pad its own edges (giving the focus ring room without being clipped). */
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Header row, close button right. Pinned at the top (doesn't scroll). */
+  .ex-menu__head {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 72px;
+
+    /* 16px gutter (matches the topbar). Close moves to 24 at sm (logo hidden). */
+    padding-inline: 16px;
+  }
+
+  /* Demo logo in the fullscreen menu head so it reads like the topbar. Hidden from
+     sm up, where the real topbar shows beside the floating panel. */
+  .ex-menu__brand {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The only scrolling region, nav + links. Scrollbar hidden (the page is
+     scroll-locked while open, so no chaining to contain). */
+  .ex-menu__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    /* Owns the gutter (16px sides, sm+ bumps to 32) so links sit inside it and
+     their focus ring draws into the padding instead of being clipped. 8px block
+     gives the first/last item's ring room. */
+    padding: 8px 16px;
+  }
+
+  .ex-menu__scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Footer, pinned at the bottom (doesn't scroll), a full-width panel surface;
+     16px padding insets the toggle from the edges. */
+  .ex-menu__foot {
+    flex-shrink: 0;
+    padding: 16px;
+    background: var(--background-secondary);
+  }
+
+  /* Big primary links. */
+  .ex-menu__nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ex-menu__nav a {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    border-radius: 8px;
+    font-size: var(--font-title-small-size);
+    font-weight: var(--font-title-small-weight);
+    line-height: var(--font-title-small-lh);
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  /* Hairline comes from .separator; this only sets the menu's spacing. */
+  .ex-menu__divider {
+    margin: 24px 0;
+  }
+
+  /* Smaller secondary link list. */
+  .ex-menu__links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ex-menu__links a {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    border-radius: 8px;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-primary);
+    text-decoration: none;
+  }
+
+  /* Theme toggle fills the footer width. */
+  .ex-menu__theme.toggle-group {
+    display: flex;
+  }
+
+  /* ── Responsive (mobile-first: min-width overrides build up from the base) ──── */
+
+  /* md ≥768, nav takes over from the hamburger, the header goes to the 3-col
+     grid with roomier padding, and the menu panel becomes the floating 400px
+     rounded sheet. Below md it's the fullscreen hamburger menu. */
+  @media (min-width: 768px) {
+    .ex-topbar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      padding-inline: 24px;
+    }
+
+    .ex-topbar__nav {
+      display: flex;
+    }
+
+    /* Real topbar shows beside the panel, so drop the menu's own logo and go to a
+       close-only head (button 24px from the edge). */
+    .ex-menu__brand {
+      display: none;
+    }
+
+    .ex-menu__head {
+      justify-content: flex-end;
+      padding-inline-end: 24px;
+    }
+
+    /* Gutter bumps to 32 (foot keeps its 16px toggle inset). */
+    .ex-menu__scroll {
+      padding-inline: 32px;
+    }
+
+    /* Floating 400px rounded panel (fullscreen below md). */
+    .ex-menu {
+      width: min(100vw - 32px, 400px);
+      border-radius: 32px 0 0 32px;
+    }
+  }
+
+  /* lg ≥1024, taller header with more gutter and the larger brand. */
+  @media (min-width: 1024px) {
+    .ex-topbar {
+      height: 80px;
+      padding-inline: 32px;
+    }
+
+    .ex-topbar__brand {
+      width: calc(24px * 90 / 25);
+      height: 24px;
+    }
+
+    .ex-menu__head {
+      height: 80px;
+    }
+  }
+
+  /* ── Card grid ("From the system") ────────────────────────────────────────
+     The shared .card component in three rhythms. A full-bleed recessed band
+     holds a centred column capped at the real --container-max (not the 1200
+     the Sketch guide stops at); horizontal gutters use --grid-gutter, row gaps
+     are a fixed 40. Featured is a bespoke split; the six cards are plain .card. */
+
+  .ex-work {
+    background: var(--background-primary);
+
+    /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+
+    /* Top padding is the gray gap down to the first (featured) card; bottom is the
+       gray gap between the last cards and the footer (96 on mobile, 128 at md). */
+    padding-block: 2rem 6rem;
+  }
+
+  .ex-work__inner {
+    /* Same recipe as .wrap and the grid overlay: --container-max is the CONTENT
+       width (1280); the margins sit OUTSIDE it, so the cap is content + 2·margin
+       and the padding is one margin each side. Columns land on exactly 1280. */
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+    display: grid;
+    gap: 2.5rem; /* 40 between rows */
+  }
+
+  .ex-work__row {
+    display: grid;
+    row-gap: 2.5rem; /* 40 between stacked or wrapped cards */
+    column-gap: var(--grid-gutter, 1rem); /* tighter gutter when they're side by side */
+  }
+
+  /* The 2-up/3-up post cards hold title-small at every width, override the base
+     card's <640 body-large-emphasized start and its ≥640 step so nothing changes
+     across breakpoints. */
+  .ex-work__row .card__title {
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  /* Placeholder image blocks, muted fill mixed against the card surface (not
+     transparent) so it stays opaque like a real <img> and doesn't pick up the
+     card's hover/active background. 16/9 is the default (3-up, and the 2-up while
+     it's also two-per-row below lg, so the states match); the 2-up widens to 21/9
+     once it's the only wide row at lg. */
+  .ex-ph {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+
+    /* object-fit crops the photo to whatever ratio the slot sets; the muted fill
+       shows through while the image loads (and behind any transparency). */
+    object-fit: cover;
+    background: color-mix(in oklab, var(--ink-base) 10%, var(--background-secondary));
+  }
+
+  .ex-ph--3-2 {
+    aspect-ratio: 3 / 2;
+  }
+
+  @media (min-width: 1024px) {
+    .ex-ph--wide {
+      aspect-ratio: 21 / 9;
+    }
+  }
+
+  /* Featured, stacks on mobile (image over body), splits 1:1 at md. Same recipe
+     as the "with button" card: the whole card is the <a> (so a.card:hover/active
+     drives the surface), and the Read more is a decorative .button span that only
+     reacts to a direct hover. The opaque image still doesn't react. */
+  .ex-featured {
+    display: grid;
+  }
+
+  .ex-featured__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-32);
+    text-align: center;
+  }
+
+  .ex-featured__title {
+    margin: 0;
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+    color: var(--ink-primary);
+  }
+
+  .ex-featured__text {
+    margin: 0.75rem 0 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+  }
+
+  .ex-featured__cta {
+    margin-top: 1.5rem;
+  }
+
+  /* sm ≥640, the 3-up splits to two columns (40 row-gap, gutter column-gap). */
+  @media (min-width: 640px) {
+    .ex-work__row--3 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* md ≥768, 2-up and featured take their side-by-side form. */
+  @media (min-width: 768px) {
+    .ex-work {
+      padding-bottom: 8rem; /* 128 gray gap above the footer */
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+
+    .ex-work__row--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ex-featured {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ex-featured__img {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+
+    .ex-featured__body {
+      justify-content: center;
+      align-items: center;
+      padding: 48px 64px;
+      text-align: center;
+    }
+  }
+
+  /* lg ≥1024, the 3-up reaches full three columns, and the featured (one-per-row)
+     title steps up from title-small to title-large. */
+  @media (min-width: 1024px) {
+    .ex-work {
+      padding-top: 4rem; /* 64 gray gap down to the featured card */
+    }
+
+    .ex-work__row--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .ex-featured__title {
+      font-size: var(--font-title-large-size);
+      line-height: var(--font-title-large-lh);
+      font-weight: var(--font-title-large-weight);
+    }
+
+    .ex-featured__text {
+      font-size: var(--font-body-medium-size);
+      line-height: var(--font-body-medium-lh);
+      font-weight: var(--font-body-medium-weight);
+    }
+  }
+
+  /* ── Footer ────────────────────────────────────────────────────────────────
+     Brand + language on the left, three link columns on the right. On mobile the
+     columns are <details> accordions (initFooterAccordion opens the first, closes
+     the rest); at md they're forced open and static (chevron hidden, summary inert)
+     and the bottom bar spreads copyright / legal / socials across the width. */
+
+  /* White panel with a 32px rounded top, sitting on the (gray) body so the gray
+     shows through the corner notches, the card band above runs flush into it. */
+  .ex-footer {
+    position: relative;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .ex-footer__inner {
+    /* Same content column as the card grid (content = --container-max, margins
+       outside), so the footer lines up with the rest of the page. */
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    margin-inline: auto;
+    padding: 3rem var(--grid-margin) 2rem;
+  }
+
+  /* Every footer link/summary shares the 8px focus-ring rounding by default. */
+  .ex-footer :where(a, summary) {
+    border-radius: var(--radius-sm);
+  }
+
   .ex-footer__top {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 24px;
+    display: grid;
+    gap: 2.5rem;
   }
 
   .ex-footer__brand-block {
-    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem; /* logo → language, 24 on every breakpoint */
   }
 
+  /* Same masked wordmark as the header: 20px tall, stepping to 24 at lg so it
+     reads the same size top and bottom at every breakpoint. */
+  .ex-footer__brand {
+    display: inline-block;
+    width: calc(20px * 90 / 25);
+    height: 20px;
+    border-radius: var(--radius-sm); /* rounds the focus ring; shares the mark ::before */
+    font-size: 0;
+    text-decoration: none;
+  }
+
+  @media (min-width: 1024px) {
+    .ex-footer__brand {
+      width: calc(24px * 90 / 25);
+      height: 24px;
+    }
+  }
+
+  /* Language picker, the Select component, sized to the footer (fixed 240 like the
+     old button) and holding a flag + label in both the trigger value and options. */
+  .ex-footer__lang {
+    width: 240px;
+    max-width: 100%;
+  }
+
+  .ex-footer__lang .select__value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ex-lang-flag {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-full);
+  }
+
+  /* Flag + label sit together on the left; the selected-row check keeps its place
+     on the right (base .select__option is space-between, which would otherwise
+     spread the flag, label and check apart). */
+  .ex-footer__lang .select__option {
+    justify-content: flex-start;
+  }
+
+  .ex-footer__lang .select__option[aria-selected="true"]::after {
+    margin-inline-start: auto;
+  }
+
+  /* Nav columns, accordions on mobile: 56px header rows, 8px apart, no dividers. */
   .ex-footer__nav {
-    grid-column: span 3 / -1;
-    grid-template-columns: subgrid;
-  }
-}
-
-/* Forced colors (Windows High Contrast): the composed cards and the tinted
-   log-out button lose their surface/fill, so outline them to keep their bounds
-   visible (in the hero marquee and on the settings screen). */
-@media (forced-colors: active) {
-  .ex-card {
-    border: var(--border-width) solid CanvasText;
+    display: grid;
+    gap: 8px;
   }
 
-  .ex-logout {
-    border: var(--border-width) solid ButtonBorder;
+  .ex-footer__col-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 56px;
+
+    /* Matches the links' start padding below so heads and links stay aligned. */
+    padding-inline-start: 4px;
+    cursor: pointer;
+    list-style: none;
+    color: var(--ink-primary);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  .ex-footer__col-head::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Chevron drawn on the summary itself, so the <summary> holds only its label
+     (an SVG child trips the "interactive content in <summary>" audit). */
+  .ex-footer__col-head::after {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--ink-tertiary);
+    background: currentcolor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: rotate var(--motion-default);
+  }
+
+  .ex-footer__col[open] .ex-footer__col-head::after {
+    rotate: 180deg;
+  }
+
+  .ex-footer__col-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+
+  .ex-footer__col-list a {
+    display: flex;
+    align-items: center;
+
+    /* Roomier tap rows in the mobile accordion; tightened to a list rhythm at md. */
+    padding-block: 12px;
+
+    /* Start padding sets the label in from the box edge, so the inset focus ring
+       below has ~4px of breathing room to the left of the text. */
+    padding-inline-start: 4px;
+    color: var(--ink-primary);
+    text-decoration: none;
+    font-size: var(--font-body-small-size);
+
+    /* Links run flush to the head, so the focus ring draws inset: a positive
+       offset would be shaved by the accordion's clip box (overflow below). Skip
+       the global converge animation, which would sweep the ring in from outside. */
+    outline-offset: calc(-1 * var(--focus-ring-width));
+    animation: none;
+  }
+
+  .ex-footer__col::details-content {
+    overflow: hidden;
+  }
+
+  /* Ease the accordion open/close on mobile, same recipe as .accordion. Gated on
+     interpolate-size (animating block-size to auto), which is Chromium-only today:
+     browsers without it (e.g. iOS Safari) fall back to the native instant toggle
+     instead of half-running the opacity fade against a snapped height, the jank
+     you'd otherwise see there. The md override below keeps it mobile-only. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (interpolate-size: allow-keywords) {
+      .ex-footer__col {
+        interpolate-size: allow-keywords;
+      }
+
+      .ex-footer__col::details-content {
+        block-size: 0;
+        opacity: 0;
+        transition:
+          content-visibility allow-discrete var(--motion-default),
+          opacity var(--motion-default),
+          block-size var(--motion-default);
+      }
+
+      .ex-footer__col[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+      }
+    }
+  }
+
+  /* Hairline comes from .separator; this only sets the footer's spacing. */
+  .ex-footer__divider {
+    margin: 4rem 0 2rem;
+  }
+
+  .ex-footer__bottom {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .ex-footer__copy {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+  }
+
+  .ex-footer__legal {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ex-footer__legal a {
+    color: var(--ink-primary);
+    text-decoration: underline;
+    font-size: var(--font-caption-medium-size);
+  }
+
+  .ex-footer__dot {
+    color: var(--ink-tertiary);
+  }
+
+  .ex-footer__social {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0;
+    margin-inline-end: -6px; /* offset the target padding so the last icon aligns to the edge */
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 32×32 tap/focus target (8px radius shows on focus-visible); icon centred. */
+  .ex-footer__social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    color: var(--ink-secondary);
+  }
+
+  .ex-footer__social svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.5;
+  }
+
+  @media (hover: hover) {
+    /* Links: primary already; underline appears on hover. Legal (Privacy/Terms)
+       stays underlined with no hover change. Socials brighten to primary. */
+    .ex-footer__col-list a:hover {
+      text-decoration: underline;
+    }
+
+    .ex-footer__social a:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  /* md ≥768, brand-block left, columns right; accordions become static columns. */
+  @media (min-width: 768px) {
+    .ex-footer__inner {
+      padding: 3rem var(--grid-margin) 3rem;
+    }
+
+    /* Two columns: the brand/language block (its own width) and the nav area. */
+    .ex-footer__top {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      align-items: start;
+      gap: 4rem;
+    }
+
+    /* 768–1023: link groups sit in two columns beside the brand. */
+    .ex-footer__nav {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .ex-footer__col-head {
+      min-height: 0;
+      padding-block: 0 12px;
+      cursor: default;
+      color: var(--ink-secondary);
+      font-size: var(--font-caption-medium-size);
+      line-height: var(--font-caption-medium-lh);
+      font-weight: var(--font-caption-medium-weight);
+    }
+
+    .ex-footer__col-head::after {
+      display: none;
+    }
+
+    .ex-footer__col-list a {
+      display: block;
+      padding-block: 6px;
+    }
+
+    .ex-footer__bottom {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      text-align: start;
+    }
+
+    .ex-footer__copy {
+      justify-self: start;
+    }
+
+    .ex-footer__social {
+      justify-self: end;
+    }
+  }
+
+  /* lg ≥1024, fixed 5-column grid. Logo/lang is column 1; the link groups are
+     pinned to the right (span from the end), so 3 groups leave one empty column
+     between. Add a group → bump the span to fill it; remove one → two empties. */
+  @media (min-width: 1024px) {
+    .ex-footer__top {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+
+    .ex-footer__brand-block {
+      grid-column: 1;
+    }
+
+    .ex-footer__nav {
+      grid-column: span 3 / -1;
+      grid-template-columns: subgrid;
+    }
+  }
+
+  /* Forced colors (Windows High Contrast): the composed cards and the tinted
+     log-out button lose their surface/fill, so outline them to keep their bounds
+     visible (in the hero marquee and on the settings screen). */
+  @media (forced-colors: active) {
+    .ex-card {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    .ex-logout {
+      border: var(--border-width) solid ButtonBorder;
+    }
   }
 }

@@ -3,396 +3,400 @@
    a recessed 2xl surface holding a filter rail + a post-card grid + pagination.
    The page opts into the 2xl width via data-width="2xl" on <html>. */
 
-/* Hero → band gap matches the space above the hero (the main's top padding):
-   80 on mobile, 128 at md. */
-.blog-page {
-  gap: 5rem;
-
-  /* Flat hero surface, drop the .ex dot grid and its top gradient wash; keep
-     the solid --background-secondary from .ex. (Front page keeps its dots.) */
-  background-image: none;
-}
-
-@media (min-width: 768px) {
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as post.css. */
+@layer components {
+  /* Hero → band gap matches the space above the hero (the main's top padding):
+     80 on mobile, 128 at md. */
   .blog-page {
-    gap: 8rem;
+    gap: 5rem;
+
+    /* Flat hero surface, drop the .ex dot grid and its top gradient wash; keep
+       the solid --background-secondary from .ex. (Front page keeps its dots.) */
+    background-image: none;
   }
-}
 
-/* Recessed band with a rounded top (24 on mobile, 32 from md), sitting flush
-   above the footer, same treatment as the example card band. */
-.blog {
-  background: var(--background-primary);
-
-  /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-
-  /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
-     96 bottom gray gap before the footer (→ 128 at md). */
-  padding-block: 2rem 6rem;
-}
-
-.blog__inner {
-  max-width: calc(var(--container-max) + 2 * var(--grid-margin));
-  margin-inline: auto;
-  padding-inline: var(--grid-margin, 1rem);
-  display: grid;
-  gap: 2.5rem;
-}
-
-/* ── Filter rail ─────────────────────────────────────────────────────────── */
-
-/* Hidden at/below 1024 for now, a sheet trigger will replace it there. Shown
-   beside the posts above 1024 (see the responsive block). */
-.blog-filter {
-  display: none;
-}
-
-/* Filter toggle bar, shown ≤1024 where the rail is hidden (hidden again ≥1024
-   in the responsive block). The button opens the left sheet. */
-.blog__bar {
-  margin-bottom: 1.5rem;
-}
-
-/* Card-surface button: reads on the white band by the same primary→secondary
-   tonal step the cards use (no border) and takes the card hover/active states.
-   Base .button gives the pill shape, icon layout, and typography. */
-.blog__filter-toggle {
-  background: var(--background-secondary);
-  color: var(--ink-primary);
-}
-
-@media (hover: hover) {
-  .blog__filter-toggle:not(:disabled):hover {
-    background: var(--background-secondary-hover);
+  @media (min-width: 768px) {
+    .blog-page {
+      gap: 8rem;
+    }
   }
-}
 
-.blog__filter-toggle:not(:disabled):active {
-  background: var(--background-secondary-active);
-}
-
-.blog-filter__title {
-  margin: 0 0 1rem; /* 16 down to the first divider */
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-  color: var(--ink-primary);
-}
-
-/* Collapsible groups (native <details>) with a hairline above and a chevron
-   that flips when open. Interactive at every width, unlike the footer columns. */
-.blog-filter__group {
-  border-top: var(--border-width) solid var(--fill-tertiary);
-}
-
-.blog-filter__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-block: 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  list-style: none;
-  color: var(--ink-primary);
-  font-size: var(--font-body-small-emphasized-size);
-  line-height: var(--font-body-small-emphasized-lh);
-  font-weight: var(--font-body-small-emphasized-weight);
-}
-
-.blog-filter__head::-webkit-details-marker {
-  display: none;
-}
-
-/* Chevron drawn on the summary itself, so the <summary> holds only its label
-   (an SVG child trips the "interactive content in <summary>" audit). */
-.blog-filter__head::after {
-  content: "";
-  flex: none;
-  width: 20px;
-  height: 20px;
-  color: var(--ink-tertiary);
-  background: currentcolor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
-    center / contain no-repeat;
-  transition: rotate var(--motion-default);
-}
-
-.blog-filter__group[open] .blog-filter__head::after {
-  rotate: 180deg;
-}
-
-.blog-filter__body {
-  display: grid;
-  gap: 12px;
-  padding-bottom: 20px;
-}
-
-/* Same open/close ease as the accordion + footer, but with `overflow: clip` +
-   `overflow-clip-margin` instead of `overflow: hidden`, the height animation
-   still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
-   through the 6px margin instead of being cut at the rail edge. */
-@media (prefers-reduced-motion: no-preference) {
-  .blog-filter__group {
-    interpolate-size: allow-keywords;
-  }
-}
-
-.blog-filter__group::details-content {
-  overflow: clip;
-  overflow-clip-margin: 6px;
-  block-size: 0;
-  opacity: 0;
-  transition:
-    content-visibility allow-discrete var(--motion-default),
-    opacity var(--motion-default),
-    block-size var(--motion-default);
-}
-
-.blog-filter__group[open]::details-content {
-  block-size: auto;
-  opacity: 1;
-}
-
-/* ── Post grid ───────────────────────────────────────────────────────────── */
-
-.blog__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--grid-gutter, 1rem);
-}
-
-/* Cards stack the image, meta, title, and a category tag pinned to the bottom
-   so tags line up across a row regardless of title length. */
-.blog-card {
-  display: flex;
-  flex-direction: column;
-}
-
-/* display:flex/grid beat the [hidden] UA rule, so the filter's show/hide is a
-   no-op without these, restore display:none when blog.js hides a card, the
-   whole grid, or the pagination. */
-.blog-card[hidden],
-.blog__grid[hidden],
-.blog__pagination[hidden] {
-  display: none;
-}
-
-.blog-card__content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.blog-card__date {
-  color: var(--ink-secondary);
-  font-size: var(--font-caption-medium-size);
-  line-height: var(--font-caption-medium-lh);
-}
-
-.blog-card__title {
-  /* Both card gaps live here on the middle element: 12 above (date → title),
-   24 below (title → category). The category itself carries no spacing (its
-   margin-top:auto is a pin, not a gap) so the two distances read cleanly as
-   "the title has 12 over it and 24 under it". */
-  margin: 12px 0 24px;
-
-  /* Locked to title-small; don't drop to body-large below 640 like .card__title. */
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-}
-
-.blog-card__tag {
-  margin-top: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink-secondary);
-  font-size: var(--font-caption-medium-size);
-  line-height: var(--font-caption-medium-lh);
-}
-
-.blog-card__tag svg {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  stroke-width: 1.25;
-}
-
-.blog__pagination {
-  margin-top: 2.5rem;
-  display: flex;
-  justify-content: center;
-}
-
-/* ── Empty state ─────────────────────────────────────────────────────────── */
-
-/* Shown when the active filters match no posts (blog.js toggles [hidden] and
-   hides the grid + pagination). Card-surface panel matching the listing band's
-   primary→secondary tonal step, centred column of icon, title, text, action. */
-.blog-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  padding: 4rem 1.5rem;
-  background: var(--background-secondary);
-  border-radius: var(--radius-lg);
-}
-
-/* display:flex beats the [hidden] UA rule, restore display:none so the panel
-   stays out until blog.js reveals it. */
-.blog-empty[hidden] {
-  display: none;
-}
-
-.blog-empty__icon {
-  width: 48px;
-  height: 48px;
-  stroke-width: 1.25;
-  color: var(--ink-secondary);
-}
-
-.blog-empty__title {
-  margin: 0;
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-  color: var(--ink-primary);
-}
-
-.blog-empty__text {
-  margin: 0;
-  max-width: 32ch;
-  font-size: var(--font-body-medium-size);
-  line-height: var(--font-body-medium-lh);
-  color: var(--ink-secondary);
-}
-
-/* Sit the action a touch below the copy, a little more breathing room than the
-   1rem column gap gives. */
-.blog-empty .button {
-  margin-top: 0.5rem;
-}
-
-/* ── Responsive ──────────────────────────────────────────────────────────── */
-
-/* sm ≥640, posts go two-up. */
-@media (min-width: 640px) {
-  .blog__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* md ≥768, deeper gray gap above the footer (front-page band parity), and the
-   rounded top steps up from 24 to 32. */
-@media (min-width: 768px) {
+  /* Recessed band with a rounded top (24 on mobile, 32 from md), sitting flush
+     above the footer, same treatment as the example card band. */
   .blog {
-    padding-bottom: 8rem;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  }
-}
+    background: var(--background-primary);
 
-/* >1024, the filter rail returns beside the posts (hidden at/below 1024, a
-   sheet trigger will replace it there), the top gap opens to 64, and the
-   pagination moves from centre to the right. */
-@media (min-width: 1025px) {
-  .blog {
-    padding-top: 4rem;
-  }
+    /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
-  .blog-filter {
-    display: block;
-    margin-top: -8px; /* nudge the rail up to align with the posts */
-  }
-
-  .blog__bar {
-    display: none;
+    /* Matches the front-page band: 32 top down to the items (→ 64 above 1024),
+       96 bottom gray gap before the footer (→ 128 at md). */
+    padding-block: 2rem 6rem;
   }
 
   .blog__inner {
-    grid-template-columns: 216px 1fr;
-    align-items: start;
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+    display: grid;
+    gap: 2.5rem;
+  }
 
-    /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
-    gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
+  /* ── Filter rail ─────────────────────────────────────────────────────────── */
+
+  /* Hidden at/below 1024 for now, a sheet trigger will replace it there. Shown
+     beside the posts above 1024 (see the responsive block). */
+  .blog-filter {
+    display: none;
+  }
+
+  /* Filter toggle bar, shown ≤1024 where the rail is hidden (hidden again ≥1024
+     in the responsive block). The button opens the left sheet. */
+  .blog__bar {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Card-surface button: reads on the white band by the same primary→secondary
+     tonal step the cards use (no border) and takes the card hover/active states.
+     Base .button gives the pill shape, icon layout, and typography. */
+  .blog__filter-toggle {
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+  }
+
+  @media (hover: hover) {
+    .blog__filter-toggle:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .blog__filter-toggle:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
+
+  .blog-filter__title {
+    margin: 0 0 1rem; /* 16 down to the first divider */
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+    color: var(--ink-primary);
+  }
+
+  /* Collapsible groups (native <details>) with a hairline above and a chevron
+     that flips when open. Interactive at every width, unlike the footer columns. */
+  .blog-filter__group {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .blog-filter__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    list-style: none;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .blog-filter__head::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Chevron drawn on the summary itself, so the <summary> holds only its label
+     (an SVG child trips the "interactive content in <summary>" audit). */
+  .blog-filter__head::after {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--ink-tertiary);
+    background: currentcolor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: rotate var(--motion-default);
+  }
+
+  .blog-filter__group[open] .blog-filter__head::after {
+    rotate: 180deg;
+  }
+
+  .blog-filter__body {
+    display: grid;
+    gap: 12px;
+    padding-bottom: 20px;
+  }
+
+  /* Same open/close ease as the accordion + footer, but with `overflow: clip` +
+     `overflow-clip-margin` instead of `overflow: hidden`, the height animation
+     still clips, while the checkbox/radio focus rings (3px + 2px offset) bleed
+     through the 6px margin instead of being cut at the rail edge. */
+  @media (prefers-reduced-motion: no-preference) {
+    .blog-filter__group {
+      interpolate-size: allow-keywords;
+    }
+  }
+
+  .blog-filter__group::details-content {
+    overflow: clip;
+    overflow-clip-margin: 6px;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      content-visibility allow-discrete var(--motion-default),
+      opacity var(--motion-default),
+      block-size var(--motion-default);
+  }
+
+  .blog-filter__group[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+
+  /* ── Post grid ───────────────────────────────────────────────────────────── */
+
+  .blog__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gutter, 1rem);
+  }
+
+  /* Cards stack the image, meta, title, and a category tag pinned to the bottom
+     so tags line up across a row regardless of title length. */
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* display:flex/grid beat the [hidden] UA rule, so the filter's show/hide is a
+     no-op without these, restore display:none when blog.js hides a card, the
+     whole grid, or the pagination. */
+  .blog-card[hidden],
+  .blog__grid[hidden],
+  .blog__pagination[hidden] {
+    display: none;
+  }
+
+  .blog-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-card__date {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .blog-card__title {
+    /* Both card gaps live here on the middle element: 12 above (date → title),
+     24 below (title → category). The category itself carries no spacing (its
+     margin-top:auto is a pin, not a gap) so the two distances read cleanly as
+     "the title has 12 over it and 24 under it". */
+    margin: 12px 0 24px;
+
+    /* Locked to title-small; don't drop to body-large below 640 like .card__title. */
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  .blog-card__tag {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .blog-card__tag svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.25;
   }
 
   .blog__pagination {
-    justify-content: flex-end;
-  }
-}
-
-/* >1280, posts reach three columns. */
-@media (min-width: 1281px) {
-  .blog__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* When JS relocates the filter into the left sheet (≤1024), show it there
-   (overriding the rail's default hide) and drop its heading, the sheet header
-   already reads "Filter". Placed last so specificity stays ascending. */
-.sheet .blog-filter {
-  display: block;
-}
-
-.sheet .blog-filter__title {
-  display: none;
-}
-
-/* Filter sheet header: 72 tall (16 block padding around the 40 close button),
-   no divider, the first filter group's hairline reads as the top edge. */
-.blog__sheet .sheet__header {
-  padding-block: 1rem;
-  border-bottom: 0;
-}
-
-.blog__sheet .sheet__title {
-  font-size: var(--font-title-small-size);
-  line-height: var(--font-title-small-lh);
-  font-weight: var(--font-title-small-weight);
-}
-
-.blog__sheet .sheet__body {
-  padding-top: 0;
-}
-
-/* Close button: a generous 48 hit target (::before) with a compact, centred 36
-   hover surface (::after). The button box stays 40 so the 72 header height holds;
-   the base 40 hover fill is disabled in favour of the 36 one. */
-.blog__sheet .sheet__close {
-  position: relative;
-}
-
-.blog__sheet .sheet__close::before {
-  content: "";
-  position: absolute;
-  inset: -4px; /* 40 → 48 hit target */
-}
-
-.blog__sheet .sheet__close::after {
-  content: "";
-  position: absolute;
-  inset: 2px; /* 40 → 36 visible surface */
-  border-radius: var(--radius-full);
-  transition: background var(--motion-default);
-}
-
-.blog__sheet .sheet__close svg {
-  position: relative;
-  z-index: 1;
-}
-
-@media (hover: hover) {
-  .blog__sheet .sheet__close:hover {
-    background: transparent;
+    margin-top: 2.5rem;
+    display: flex;
+    justify-content: center;
   }
 
-  .blog__sheet .sheet__close:hover::after {
-    background: var(--background-secondary-hover);
+  /* ── Empty state ─────────────────────────────────────────────────────────── */
+
+  /* Shown when the active filters match no posts (blog.js toggles [hidden] and
+     hides the grid + pagination). Card-surface panel matching the listing band's
+     primary→secondary tonal step, centred column of icon, title, text, action. */
+  .blog-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 4rem 1.5rem;
+    background: var(--background-secondary);
+    border-radius: var(--radius-lg);
+  }
+
+  /* display:flex beats the [hidden] UA rule, restore display:none so the panel
+     stays out until blog.js reveals it. */
+  .blog-empty[hidden] {
+    display: none;
+  }
+
+  .blog-empty__icon {
+    width: 48px;
+    height: 48px;
+    stroke-width: 1.25;
+    color: var(--ink-secondary);
+  }
+
+  .blog-empty__title {
+    margin: 0;
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+    color: var(--ink-primary);
+  }
+
+  .blog-empty__text {
+    margin: 0;
+    max-width: 32ch;
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    color: var(--ink-secondary);
+  }
+
+  /* Sit the action a touch below the copy, a little more breathing room than the
+     1rem column gap gives. */
+  .blog-empty .button {
+    margin-top: 0.5rem;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────────────────── */
+
+  /* sm ≥640, posts go two-up. */
+  @media (min-width: 640px) {
+    .blog__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* md ≥768, deeper gray gap above the footer (front-page band parity), and the
+     rounded top steps up from 24 to 32. */
+  @media (min-width: 768px) {
+    .blog {
+      padding-bottom: 8rem;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+  }
+
+  /* >1024, the filter rail returns beside the posts (hidden at/below 1024, a
+     sheet trigger will replace it there), the top gap opens to 64, and the
+     pagination moves from centre to the right. */
+  @media (min-width: 1025px) {
+    .blog {
+      padding-top: 4rem;
+    }
+
+    .blog-filter {
+      display: block;
+      margin-top: -8px; /* nudge the rail up to align with the posts */
+    }
+
+    .blog__bar {
+      display: none;
+    }
+
+    .blog__inner {
+      grid-template-columns: 216px 1fr;
+      align-items: start;
+
+      /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
+      gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
+    }
+
+    .blog__pagination {
+      justify-content: flex-end;
+    }
+  }
+
+  /* >1280, posts reach three columns. */
+  @media (min-width: 1281px) {
+    .blog__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* When JS relocates the filter into the left sheet (≤1024), show it there
+     (overriding the rail's default hide) and drop its heading, the sheet header
+     already reads "Filter". Placed last so specificity stays ascending. */
+  .sheet .blog-filter {
+    display: block;
+  }
+
+  .sheet .blog-filter__title {
+    display: none;
+  }
+
+  /* Filter sheet header: 72 tall (16 block padding around the 40 close button),
+     no divider, the first filter group's hairline reads as the top edge. */
+  .blog__sheet .sheet__header {
+    padding-block: 1rem;
+    border-bottom: 0;
+  }
+
+  .blog__sheet .sheet__title {
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  .blog__sheet .sheet__body {
+    padding-top: 0;
+  }
+
+  /* Close button: a generous 48 hit target (::before) with a compact, centred 36
+     hover surface (::after). The button box stays 40 so the 72 header height holds;
+     the base 40 hover fill is disabled in favour of the 36 one. */
+  .blog__sheet .sheet__close {
+    position: relative;
+  }
+
+  .blog__sheet .sheet__close::before {
+    content: "";
+    position: absolute;
+    inset: -4px; /* 40 → 48 hit target */
+  }
+
+  .blog__sheet .sheet__close::after {
+    content: "";
+    position: absolute;
+    inset: 2px; /* 40 → 36 visible surface */
+    border-radius: var(--radius-full);
+    transition: background var(--motion-default);
+  }
+
+  .blog__sheet .sheet__close svg {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (hover: hover) {
+    .blog__sheet .sheet__close:hover {
+      background: transparent;
+    }
+
+    .blog__sheet .sheet__close:hover::after {
+      background: var(--background-secondary-hover);
+    }
   }
 }

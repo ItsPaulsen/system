@@ -64,8 +64,8 @@
                 type="button"
                 aria-haspopup="listbox"
                 aria-expanded="false"
-                aria-label="Language"
               >
+                <span class="sr-only">Language,</span>
                 <span class="select__value">
                   <img
                     class="ex-lang-flag"
@@ -90,7 +90,7 @@
                 </svg>
               </button>
               <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-              <ul class="select__list" role="listbox" tabindex="-1" hidden>
+              <ul class="select__list" role="listbox" tabindex="-1" aria-label="Language" hidden>
                 <li class="select__option" role="option" aria-selected="true">
                   <img
                     class="ex-lang-flag"
@@ -362,14 +362,17 @@
   inject("grid-overlay", GRID_OVERLAY);
 
   // Mark the current page's nav link (topbar + menu) by matching href to path.
-  const path = location.pathname;
+  // Both sides drop a trailing "index.html", which GitHub Pages serves as well
+  // as the bare directory, so the link still matches on either URL.
+  const tidy = (p) => p.replace(/index\.html$/, "");
+  const path = tidy(location.pathname);
   document.querySelectorAll(".ex-topbar__nav a, .ex-menu__nav a").forEach(function (a) {
-    if (a.getAttribute("href") === path) a.setAttribute("aria-current", "page");
+    if (tidy(a.getAttribute("href")) === path) a.setAttribute("aria-current", "page");
   });
 
   // Theme toggle lives in the injected menu; keep every theme control in sync.
   const radios = document.querySelectorAll(".toggle-group__radio[data-theme-opt]");
-  function applyTheme(t) {
+  function applyTheme(t, persist) {
     const root = document.documentElement;
     root.classList.add("no-transitions");
     root.dataset.theme = t;
@@ -378,10 +381,15 @@
         root.classList.remove("no-transitions");
       });
     });
-    try {
-      localStorage.setItem("theme", t);
-    } catch {
-      /* localStorage may be unavailable */
+    // Persist only a real choice. The load-time sync must not write, or the
+    // theme the head script derived from prefers-color-scheme gets stored and
+    // the site stops following the OS from then on.
+    if (persist) {
+      try {
+        localStorage.setItem("theme", t);
+      } catch {
+        /* localStorage may be unavailable */
+      }
     }
     radios.forEach(function (r) {
       r.checked = r.dataset.themeOpt === t;
@@ -389,8 +397,8 @@
   }
   radios.forEach(function (r) {
     r.addEventListener("change", function () {
-      if (r.checked) applyTheme(r.dataset.themeOpt);
+      if (r.checked) applyTheme(r.dataset.themeOpt, true);
     });
   });
-  applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light", false);
 })();

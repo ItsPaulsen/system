@@ -2,55 +2,59 @@
    toggle rows. Page shell (gray surface, sticky footer, hero, breadcrumb)
    comes from settings.css; cards reuse the shared .card and switch visuals. */
 
-/* Column, card and title are shared (see settings.css). This file owns the
-   channel toggle rows only. */
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as post.css. */
+@layer components {
+  /* Column, card and title are shared (see settings.css). This file owns the
+     channel toggle rows only. */
 
-/* ── Toggle rows ────────────────────────────────────────────────────────────
-   Whole row is a <label>: text on the left names the switch, switch on the
-   right. A hairline separates rows (not above the first). */
-.comm-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-16);
-  padding-block: var(--space-16);
-  cursor: pointer;
-}
+  /* ── Toggle rows ────────────────────────────────────────────────────────────
+     Whole row is a <label>: text on the left names the switch, switch on the
+     right. A hairline separates rows (not above the first). */
+  .comm-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-16);
+    padding-block: var(--space-16);
+    cursor: pointer;
+  }
 
-.comm-row + .comm-row {
-  border-top: var(--border-width) solid var(--fill-tertiary);
-}
+  .comm-row + .comm-row {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
 
-.comm-row__text {
-  display: flex;
-  flex-direction: column;
-}
+  .comm-row__text {
+    display: flex;
+    flex-direction: column;
+  }
 
-.comm-row__label {
-  font-size: var(--font-body-small-size);
-  line-height: var(--font-body-small-lh);
-  font-weight: var(--font-body-small-weight);
-  color: var(--ink-primary);
-}
+  .comm-row__label {
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
+    color: var(--ink-primary);
+  }
 
-.comm-row__desc {
-  font-size: var(--font-caption-medium-size);
-  line-height: var(--font-caption-medium-lh);
-  font-weight: var(--font-caption-medium-weight);
-  color: var(--ink-secondary);
-}
+  .comm-row__desc {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-weight);
+    color: var(--ink-secondary);
+  }
 
-.comm-row .switch__input-wrapper {
-  flex: none;
-}
+  .comm-row .switch__input-wrapper {
+    flex: none;
+  }
 
-/* Row padding-block shapes the gap *between* rows (and centres the divider);
-   trim it at the ends so the title margin and card padding define the edges,
-   not a doubled-up gap. Matches the Privacy lists. */
-.comm-row:first-child {
-  padding-top: 0;
-}
+  /* Row padding-block shapes the gap *between* rows (and centres the divider);
+     trim it at the ends so the title margin and card padding define the edges,
+     not a doubled-up gap. Matches the Privacy lists. */
+  .comm-row:first-child {
+    padding-top: 0;
+  }
 
-.comm-row:last-child {
-  padding-bottom: 0;
+  .comm-row:last-child {
+    padding-bottom: 0;
+  }
 }

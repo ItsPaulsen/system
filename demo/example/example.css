@@ -608,10 +608,15 @@
     display: none;
   }
 
-  /* The three header nav links step down to body-small at ≤1024, back to
-     body-medium above. Scoped to the example topbar, not the shared component.
-     The Settings hover dropdown stays body-small (16) at all widths. */
+  /* The three header nav links: a fixed 40px pill, so the box is the same for
+     all three whatever the type metrics do, rather than padding + line-height
+     deciding it. Type steps down to body-small at ≤1024, back to body-medium
+     above. Scoped to the example topbar, not the shared component. The Settings
+     hover dropdown stays body-small (16) at all widths. */
   .ex-topbar__nav .nav-menu__link {
+    height: 40px;
+    padding-block: 0;
+    border-radius: var(--radius-full);
     font-size: var(--font-body-small-size);
     transition: background var(--motion-default);
   }

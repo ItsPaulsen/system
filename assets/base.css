@@ -61,7 +61,9 @@
   }
 
   body {
-    min-width: 360px;
+    /* 340, not the 360 narrowest target: a classic vertical scrollbar eats ~15px
+       of a 360 window, so a 360 floor makes that exact width scroll sideways. */
+    min-width: 340px;
     margin: 0;
     background: var(--background-primary);
     color: var(--ink-primary);

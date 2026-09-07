@@ -4,8 +4,7 @@
    white media tile on the band, badge, clamped title, price) and the toolbar
    holding search, the result count, and one Select on a bare skin.
 
-   The page opts into the 2xl width via data-width="2xl" on <html>, which is
-   what puts five products across at the widest tier. */
+   The page opts into the 2xl width via data-width="2xl" on <html>. */
 
 /* Layered so component CSS stays overridable by specificity, not by an
    unlayered sheet outranking every layer. Same as blog.css. */
@@ -192,10 +191,17 @@
     margin-bottom: 1rem;
   }
 
-  /* Search caps out well short of the grid: a 1200px-wide field on the widest
-     tier would read as a page header, not a control. */
+  /* In the ≤1024 bar the field caps well short of the row: a full-width search
+     would read as a page header, not a control. On the rail (>1024) it takes the
+     rail's own 216 and sits above the Filter heading, so the cap comes off and a
+     bottom gap opens down to it. */
   .shop__search {
     max-width: 22.5rem; /* 360 */
+  }
+
+  .shop-filter .shop__search {
+    max-width: none;
+    margin-bottom: var(--space-24);
   }
 
   /* White field on the band, the same primary→secondary tonal step the media
@@ -279,12 +285,16 @@
      actually forbids the break; min-width beats the inline width app.js sets, so
      the list grows to its widest option instead of overflowing it. The
      right-edge clamp in positionFloating measures the list, so a widened list
-     still can't run off-screen. */
-  .shop__sort .select__list {
+     still can't run off-screen.
+
+     The hook has to sit on the <ul> itself: app.js portals an open list to
+     <body>, so a `.shop__sort .select__list` descendant selector stops matching
+     the moment it opens. */
+  .shop__sort-list {
     min-width: max-content;
   }
 
-  .shop__sort .select__option {
+  .shop__sort-list .select__option {
     white-space: nowrap;
   }
 
@@ -301,12 +311,23 @@
   }
 
   /* ── Product grid ────────────────────────────────────────────────────────
-     Two-up on mobile, up to five across at the 2xl tier (see the responsive
-     block), which is what the widest layout is drawn as. */
+     Two-up on mobile, three from 768, four from 1281 and no further: at the 2xl
+     cap that's a 287 column, wide enough that a fifth would only shrink the
+     product shots. */
   .shop__grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--grid-gutter, 1rem);
+
+    /* Two intents, named once each: the rhythm inside a card, and the space
+       between product rows. Because the cards are a subgrid (see .shop-card),
+       the parent's row-gap is the *internal* one, and the card derives its
+       bottom margin from the difference. Change either value and the other
+       stays correct. */
+    --shop-card-gap: var(--space-12);
+    --shop-row-gap: var(--space-20);
+
+    column-gap: var(--grid-gutter, 1rem);
+    row-gap: var(--shop-card-gap);
   }
 
   /* Grid and flex items floor at their content's min-content width, so one long
@@ -321,12 +342,31 @@
   }
 
   /* Cards are the anchor itself: a white media tile, then the text on the band
-     (no card surface behind it). 12 between tile, title and meta; 4 inside the
-     meta block, between price and store count. */
+     (no card surface behind it), in three rows — tile, title, meta.
+
+     Those rows are a `subgrid` of .shop__grid rather than the card's own, which
+     is what makes a row of cards share them: the tallest title in a row sets the
+     title row's height for every card beside it, so prices and store counts line
+     up across the row without any card reserving space it doesn't need. It also
+     re-groups itself for free when filtering hides cards and the rows re-flow.
+
+     The gap between tile, title and price is the parent's row-gap, and the
+     card's bottom margin makes up the difference to --shop-row-gap so product
+     rows still separate by 20.
+
+     That compensating margin is the price of row-following titles: a subgrid
+     takes every vertical gap from the one parent value, so the two distances
+     can't both live in the grid. The alternative is a self-contained card that
+     owns its own gaps and a flat grid, which is tidier to read but puts every
+     card back to reserving two title lines whether its row needs them or not. */
   .shop-card {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    position: relative; /* containing block for the badge */
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+
+    /* Tops up the inherited row-gap to --shop-row-gap between product rows. */
+    margin-bottom: calc(var(--shop-row-gap) - var(--shop-card-gap));
     color: var(--ink-primary);
     text-decoration: none;
   }
@@ -351,27 +391,45 @@
      Padding is what makes the artwork read as a product shot rather than a
      photo card. */
   .shop-card__media {
-    position: relative;
     display: block;
     padding: 1.5rem;
     border-radius: var(--radius-md);
     background: var(--background-secondary);
-    transition: background var(--motion-default);
+
+    /* Ease-out over 300ms rather than the 150ms state curve: a product tile's
+       hover should read as the tile drifting forward, and the default curve
+       lands more like a twitch over this distance. */
+    transition: scale 300ms var(--motion-ease-out);
   }
 
-  /* Link-like card: hover tints the tile (the card component's surface step),
-     nothing else moves. */
-  @media (hover: hover) and (pointer: fine) {
+  /* Hover lifts the whole tile rather than tinting it: the card component's
+     surface step would fight the product photography, and the photo is the thing
+     worth reacting. 1% is about 3px of growth on a desktop tile — enough to read
+     as a response, small enough not to read as a zoom, and nowhere near the 20
+     gutter. Skipped outright under reduced motion, where the global transition
+     clamp would make it a jump instead of a drift. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
     .shop-card:hover .shop-card__media {
-      background: var(--background-secondary-hover);
+      scale: 1.01;
     }
   }
 
+  /* Positioned against the card, not the tile, so the tile's hover scale leaves
+     it alone — a label that grows with the photo reads as part of the artwork.
+
+     The soft badge skins are alpha, so straight on the tile the badge would pick
+     up whatever is behind it (the product shot, if it reaches the corner) and
+     read as translucent rather than as a colour. Lay an opaque copy of the
+     tile's surface under the tint and it composites against a known backdrop.
+     The two longhands beat .badge--blue's `background` shorthand on source
+     order, since shop.css loads after components.css in the same layer. */
   .shop-card__badge {
     position: absolute;
     z-index: 1;
-    top: 12px;
-    inset-inline-start: 12px;
+    top: var(--space-12);
+    inset-inline-start: var(--space-12);
+    background-color: var(--background-secondary);
+    background-image: linear-gradient(var(--blue-soft), var(--blue-soft));
   }
 
   /* <picture> is inline by default, so block it out for the img's width: 100%
@@ -387,26 +445,51 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Clamped to two lines with an ellipsis, and held at two lines' height even
-     when the title is one line, so price and store count line up across a row
-     regardless of name length. (-webkit-box is still the only reliable way to
-     get the clamp; the standard `line-clamp` isn't there yet.) */
+  /* Text sits 8 in from the tile's edges, so the copy reads as inset under the
+     shot rather than flush against the column. */
+  .shop-card__head,
+  .shop-card__meta {
+    padding-inline: var(--space-8);
+  }
+
+  /* Title and its variant are one block sharing the subgrid's title row, rather
+     than the variant taking a row of its own. That keeps the card at `span 3`,
+     so a product with no variant needs no different card, and the row still
+     equalises on whichever card's block is tallest. Consecutive lines, no gap:
+     same treatment as the price and its store count. */
+  .shop-card__head {
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+  }
+
+  /* Clamped to two lines with an ellipsis. No reserved height any more: the
+     subgrid row equalises a row of cards, so a row of one-line titles stays one
+     line tall instead of every card paying for a second. */
   .shop-card__title {
     margin: 0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
-    min-height: calc(2 * 1.5 * var(--font-body-medium-emphasized-size));
     overflow: hidden;
-    font-size: var(--font-body-medium-emphasized-size);
-    line-height: var(--font-body-medium-emphasized-lh);
-    font-weight: var(--font-body-medium-emphasized-weight);
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
   }
 
+  /* The variant (colour, material, size) reads as the caption to the title, but
+     keeps the card's primary ink: it's product detail, not supporting text. */
+  .shop-card__variant {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  /* Price and store count are consecutive lines of one block, no gap: their
+     line-heights already separate them, and the 12 above the price belongs to
+     the pair, not to the price alone. */
   .shop-card__meta {
     display: flex;
     flex-direction: column;
-    gap: 4px;
   }
 
   .shop-card__price {
@@ -434,13 +517,12 @@
 
   .shop__showing {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
   }
 
   .shop__showing strong {
-    color: var(--ink-primary);
     font-weight: var(--font-body-small-emphasized-weight);
   }
 
@@ -529,8 +611,10 @@
     }
   }
 
-  /* >1024, the filter rail returns beside the products, the band's top gap
-     opens to 64, and the grid reaches four across. */
+  /* >1024, the filter rail returns beside the products and the band's top gap
+     opens to 64. The grid stays three across: the rail has just taken 216 out of
+     the row, so a fourth column here would be narrower than the three-up it
+     replaced. */
   @media (min-width: 1025px) {
     .shop {
       padding-top: 4rem;
@@ -538,10 +622,11 @@
 
     .shop-filter {
       display: block;
-      margin-top: -8px; /* nudge the rail up to align with the toolbar */
     }
 
-    .shop__filter-toggle-wrap {
+    /* The whole row goes: the search has moved up into the rail and the Filter
+       button has nothing left to open for. */
+    .shop__bar {
       display: none;
     }
 
@@ -552,17 +637,14 @@
       /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
       gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
     }
-
-    .shop__grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
   }
 
-  /* >1440, five across: at the 2xl cap (1536 content) that lands each product
-     on the 226px column the layout is drawn on. */
-  @media (min-width: 1441px) {
+  /* >1280, four across. Landing the fourth column here keeps every product about
+     290 wide from 768 all the way to the 2xl cap, so the shots hold their size
+     across the whole ladder instead of shrinking at each step. */
+  @media (min-width: 1281px) {
     .shop__grid {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 

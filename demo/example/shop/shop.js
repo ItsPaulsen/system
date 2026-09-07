@@ -54,7 +54,7 @@
   const filter = document.querySelector(".shop-filter");
   const empty = document.querySelector(".shop-empty");
   const foot = document.querySelector(".shop__foot");
-  const sort = document.querySelector(".shop__sort");
+  const sort = document.querySelector(".ex-sort");
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
   const countEl = document.querySelector("[data-shop-count]");

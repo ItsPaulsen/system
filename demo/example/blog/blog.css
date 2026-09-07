@@ -51,28 +51,111 @@
     display: none;
   }
 
-  /* Filter toggle bar, shown ≤1024 where the rail is hidden (hidden again ≥1024
-     in the responsive block). The button opens the left sheet. */
-  .blog__bar {
-    margin-bottom: 1.5rem;
+  /* ── Toolbar ─────────────────────────────────────────────────────────────
+     One row: the post count, then the controls. Below 1024 the Filter trigger
+     joins the sort control there, since the rail it replaces is hidden. Same
+     arrangement as the shop listing. */
+  .blog__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: var(--space-16);
   }
 
-  /* Card-surface button: reads on the white band by the same primary→secondary
-     tonal step the cards use (no border) and takes the card hover/active states.
-     Base .button gives the pill shape, icon layout, and typography. */
+  /* Whole line at 500, so the number and its noun read as one label rather than
+     a figure with a caption. */
+  .blog__count {
+    margin: 0;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: var(--font-body-small-emphasized-lh);
+  }
+
+  /* No gap: both controls carry their own inline padding, so their pill hover
+     surfaces sit side by side without a dead strip between them. */
+  .blog__toolbar-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Bare then pill, the same treatment the sort control beside it takes: no
+     surface at rest, a pill of the band's own hover step under the pointer. */
   .blog__filter-toggle {
-    background: var(--background-secondary);
+    height: 40px;
+    padding-inline: var(--space-16);
+    padding-inline-start: calc(var(--space-16) - 4px);
+    background: transparent;
     color: var(--ink-primary);
   }
 
-  @media (hover: hover) {
+  @media (hover: hover) and (pointer: fine) {
     .blog__filter-toggle:not(:disabled):hover {
-      background: var(--background-secondary-hover);
+      background: var(--background-primary-hover);
     }
   }
 
-  .blog__filter-toggle:not(:disabled):active {
-    background: var(--background-secondary-active);
+  /* Sort: the Select component on a bare skin. No border and no fill at rest, so
+     it reads as the label it is; the chevron carries the affordance. On hover and
+     while open it takes a pill of the band's own hover step. Focus swaps Select's
+     border for the shared ring, since there's no border left to light. */
+  .blog__sort {
+    flex: none;
+  }
+
+  .blog__sort .select__trigger {
+    width: auto;
+    min-height: 0;
+    height: 40px;
+    padding-inline: var(--space-16);
+
+    /* The chevron side derives the tighter padding the same way the button and
+       badge do: --px minus 4. */
+    padding-inline-end: calc(var(--space-16) - 4px);
+    gap: var(--space-4);
+    border-color: transparent;
+    border-radius: var(--radius-full);
+    background: transparent;
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: 1.2;
+    transition: background var(--motion-default);
+  }
+
+  .blog__sort .select__trigger:focus-visible,
+  .blog__sort .select__trigger[aria-expanded="true"] {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  /* Lit while the list is open as well as on hover: the trigger should stay
+     marked for as long as its panel is showing. */
+  .blog__sort .select__trigger[aria-expanded="true"] {
+    background: var(--background-primary-hover);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .blog__sort .select__trigger:hover {
+      background: var(--background-primary-hover);
+    }
+  }
+
+  .blog__sort .select__trigger:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-full);
+  }
+
+  /* The hook sits on the <ul> itself: app.js portals an open list to <body>, so a
+     `.blog__sort .select__list` descendant selector stops matching the moment it
+     opens. */
+  .blog__sort-list {
+    min-width: max-content;
+  }
+
+  .blog__sort-list .select__option {
+    white-space: nowrap;
   }
 
   /* The Scroll Area viewport is a scroll container at every width, so it clips
@@ -377,7 +460,8 @@
       scroll-padding-block-end: var(--space-24);
     }
 
-    .blog__bar {
+    /* The rail is back, so the Filter trigger has nothing left to open for. */
+    .blog__filter-toggle {
       display: none;
     }
 

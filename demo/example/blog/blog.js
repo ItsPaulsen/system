@@ -28,22 +28,28 @@
   desktop.addEventListener("change", place);
 })();
 
-// Category filter, checking one or more Category boxes narrows the grid to
-// posts whose tag matches; with none checked, everything shows. When nothing
-// matches, the grid gives way to the empty state, whose "Clear all filters"
-// button unchecks every box and restores the full grid. Pagination is a
-// full-listing affordance, so it shows only when every post is visible and
-// hides the moment a filter narrows the set (a partial demo set isn't paged).
+// Category filter and sort, plus the count that reports the result.
 //
-// Categories are read from the visible label / tag text, so there's no second
-// source of truth to keep in sync with the markup. The one .blog-filter node is
-// relocated between rail and sheet (see above) rather than recreated, so a
+// Checking one or more Category boxes narrows the grid to posts whose tag
+// matches; with none checked, everything shows. When nothing matches, the grid
+// gives way to the empty state, whose "Clear all filters" button unchecks every
+// box and restores the full grid. Pagination is a full-listing affordance, so it
+// shows only when every post is visible and hides the moment a filter narrows
+// the set (a partial demo set isn't paged).
+//
+// Categories are read from the visible tag text, so there's no second source of
+// truth to keep in sync with the markup; the date is the one thing that isn't on
+// screen in a sortable form, so it lives in data-date. The one .blog-filter node
+// is relocated between rail and sheet (see above) rather than recreated, so a
 // change listener bound to it survives the move.
 (function () {
   const filter = document.querySelector(".blog-filter");
   const grid = document.querySelector(".blog__grid");
   const empty = document.querySelector(".blog-empty");
   const pagination = document.querySelector(".blog__pagination");
+  const sort = document.querySelector(".blog__sort");
+  const countEl = document.querySelector("[data-blog-count]");
+  const nouns = document.querySelectorAll("[data-blog-noun]");
   if (!filter || !grid || !empty) return;
 
   const boxes = [...filter.querySelectorAll('input[type="checkbox"]')];
@@ -53,6 +59,14 @@
     box.closest(".checkbox")?.querySelector(".checkbox__label")?.textContent.trim().toLowerCase();
   const categoryOf = (card) =>
     card.querySelector(".blog-card__tag")?.textContent.trim().toLowerCase();
+  // ISO dates, so a string compare is a date compare.
+  const dateOf = (card) => card.dataset.date || "";
+
+  const SORTS = {
+    newest: (a, b) => dateOf(b).localeCompare(dateOf(a)),
+    oldest: (a, b) => dateOf(a).localeCompare(dateOf(b))
+  };
+  let order = "newest";
 
   const apply = () => {
     const active = new Set(boxes.filter((b) => b.checked).map(labelOf));
@@ -61,6 +75,15 @@
       const match = active.size === 0 || active.has(categoryOf(card));
       card.hidden = !match;
       if (match) shown += 1;
+    });
+
+    // Sort the full set, not just the matches, so the DOM order stays stable
+    // while filters come and go.
+    [...cards].sort(SORTS[order]).forEach((card) => grid.append(card));
+
+    if (countEl) countEl.textContent = String(shown);
+    nouns.forEach((n) => {
+      n.textContent = shown === 1 ? "post" : "posts";
     });
 
     const isEmpty = shown === 0;
@@ -74,10 +97,17 @@
     if (e.target.matches('input[type="checkbox"]')) apply();
   });
 
+  sort?.addEventListener("select:change", (e) => {
+    order = e.detail.option.dataset.sort || "newest";
+    apply();
+  });
+
   empty.querySelector("[data-blog-clear]")?.addEventListener("click", () => {
     boxes.forEach((b) => {
       b.checked = false;
     });
     apply();
   });
+
+  apply();
 })();

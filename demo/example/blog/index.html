@@ -52,20 +52,6 @@
               <h2 class="blog-filter__title">Filter</h2>
 
               <details class="blog-filter__group" open>
-                <summary class="blog-filter__head">Sort by</summary>
-                <div class="blog-filter__body" role="radiogroup" aria-label="Sort by">
-                  <label class="radio">
-                    <input type="radio" name="blog-sort" class="radio__input" checked />
-                    <span class="radio__label">Newest</span>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="blog-sort" class="radio__input" />
-                    <span class="radio__label">Popular</span>
-                  </label>
-                </div>
-              </details>
-
-              <details class="blog-filter__group" open>
                 <summary class="blog-filter__head">Category</summary>
                 <div class="blog-filter__body">
                   <label class="checkbox">
@@ -168,39 +154,89 @@
 
           <!-- Posts -->
           <div class="blog__main">
-            <!-- Filter toggle, shown ≤1024 (the rail is hidden there); opens the
-                 left sheet, into which JS relocates the one .blog-filter node. -->
-            <div class="blog__bar" data-size="sm">
-              <button
-                type="button"
-                class="button button--with-start-icon blog__filter-toggle"
-                data-dialog-open="blog-filter-sheet"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
+            <!-- Result count, then the controls. The count is a live region, so
+                 filtering is announced without moving focus. Below 1024 the
+                 Filter trigger joins the sort control here, since the rail it
+                 opens is hidden there. -->
+            <div class="blog__toolbar">
+              <p class="blog__count" role="status">
+                <strong data-blog-count>9</strong> <span data-blog-noun>posts</span>
+              </p>
+
+              <div class="blog__toolbar-actions" data-size="sm">
+                <button
+                  type="button"
+                  class="button button--with-start-icon blog__filter-toggle"
+                  data-dialog-open="blog-filter-sheet"
                 >
-                  <path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                  <path d="M4 6l8 0" />
-                  <path d="M16 6l4 0" />
-                  <path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                  <path d="M4 12l2 0" />
-                  <path d="M10 12l10 0" />
-                  <path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                  <path d="M4 18l11 0" />
-                  <path d="M19 18l1 0" />
-                </svg>
-                Filter
-              </button>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 6l8 0" />
+                    <path d="M16 6l4 0" />
+                    <path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 12l2 0" />
+                    <path d="M10 12l10 0" />
+                    <path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 18l11 0" />
+                    <path d="M19 18l1 0" />
+                  </svg>
+                  Filter
+                </button>
+
+                <div class="select blog__sort" data-select>
+                  <button
+                    class="select__trigger"
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                  >
+                    <span class="sr-only">Sort by,</span>
+                    <span class="select__value">Newest first</span>
+                    <svg
+                      class="select__chevron"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </button>
+                  <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                  <ul
+                    class="select__list blog__sort-list"
+                    role="listbox"
+                    tabindex="-1"
+                    aria-label="Sort by"
+                    hidden
+                  >
+                    <li
+                      class="select__option"
+                      role="option"
+                      aria-selected="true"
+                      data-sort="newest"
+                    >
+                      Newest first
+                    </li>
+                    <li class="select__option" role="option" data-sort="oldest">Oldest first</li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div class="blog__grid">
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-07-23" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -244,7 +280,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-07-09" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -265,7 +301,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">9 Jul 2026</span>
                   <h3 class="card__title blog-card__title">
                     Theming: light and dark from one swap
                   </h3>
@@ -291,7 +327,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-06-18" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -312,7 +348,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">18 Jun 2026</span>
                   <h3 class="card__title blog-card__title">Density as a single knob</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -333,7 +369,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-06-02" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -354,7 +390,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">2 Jun 2026</span>
                   <h3 class="card__title blog-card__title">What shipped in the July release</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -376,7 +412,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-05-14" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -397,7 +433,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">14 May 2026</span>
                   <h3 class="card__title blog-card__title">Meet the team behind the system</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -418,7 +454,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-04-28" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -439,7 +475,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">28 Apr 2026</span>
                   <h3 class="card__title blog-card__title">Writing components that compose</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -461,7 +497,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-04-07" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -482,7 +518,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">7 Apr 2026</span>
                   <h3 class="card__title blog-card__title">Accessible by default, not by audit</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -503,7 +539,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-03-19" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -524,7 +560,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">19 Mar 2026</span>
                   <h3 class="card__title blog-card__title">Our first community design day</h3>
                   <span class="blog-card__tag"
                     ><svg
@@ -545,7 +581,7 @@
                 </div>
               </a>
 
-              <a class="card blog-card" href="/demo/example/blog/post/">
+              <a class="card blog-card" data-date="2026-02-26" href="/demo/example/blog/post/">
                 <picture>
                   <source
                     type="image/webp"
@@ -566,7 +602,7 @@
                   />
                 </picture>
                 <div class="card__content blog-card__content">
-                  <span class="blog-card__date">23 Jul 2026</span>
+                  <span class="blog-card__date">26 Feb 2026</span>
                   <h3 class="card__title blog-card__title">The new 2xl grid tier</h3>
                   <span class="blog-card__tag"
                     ><svg

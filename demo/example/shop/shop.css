@@ -263,10 +263,12 @@
   /* ── Toolbar ─────────────────────────────────────────────────────────────
      One row: the result count, then the controls. Below 1024 the Filter trigger
      joins the sort control there, since the rail it replaces is hidden. */
+
+  /* No gap: both controls carry their own inline padding, so their pill hover
+     surfaces sit side by side without a dead strip between them. */
   .shop__toolbar-actions {
     display: flex;
     align-items: center;
-    gap: var(--space-8);
   }
 
   /* Same bare-then-pill treatment as the sort control beside it: no surface at

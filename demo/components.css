@@ -3114,8 +3114,10 @@
   /* ── Navigation Menu ───────────────────────────────────────────────────────
    Primary navigation between destinations, e.g. in a header. Unlike Tabs (which
    swap panels within one page), each item is a link to another page, marked
-   with aria-current="page". Fixed-height pills with hover and pressed surfaces,
-   like a text button; the current page carries no surface of its own.
+   with aria-current="page". Fixed-height pills with a hover surface and nothing
+   else: no pressed state (a link navigates away rather than toggling, and the
+   panel links and menu rows are hover-only too) and no fill for the current
+   page. Only the keyboard focus ring is added.
 
    Optional dropdown: give an item a .nav-menu__menu panel and it reveals on
    hover or keyboard focus. The item's own link stays clickable (link-first, no
@@ -3175,13 +3177,6 @@
     .nav-menu__item:hover > .nav-menu__link {
       background: var(--background-secondary-hover);
     }
-  }
-
-  /* Pressed feedback, like a text button's. Outside the hover query so touch
-   gets it too. Ties with the hover rule on specificity, so it has to stay after
-   it in source order. */
-  .nav-menu__item > .nav-menu__link:active {
-    background: var(--background-secondary-active);
   }
 
   /* Item wraps the link + its optional dropdown; the panel anchors to it. */

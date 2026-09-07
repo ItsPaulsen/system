@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import Spinner from "./Spinner";
 
 // Composes the button classes; styling lives in components.css + globals.css.
-const SKINS = ["primary", "secondary", "flat", "destructive"];
+const SKINS = ["primary", "secondary", "flat", "destructive", "foreground"];
 
 const Button = forwardRef(function Button(
   {

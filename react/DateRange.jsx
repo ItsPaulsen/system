@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const WEEKDAY_LABELS = [
@@ -19,6 +19,13 @@ const parse = (s) => {
   return d && !Number.isNaN(d.getTime()) ? d : null;
 };
 const mondayIndex = (d) => (d.getDay() + 6) % 7;
+// Month paging clamps the day to the target month's length; without it the 31st
+// rolls over into the month after (31 Jan + 1 month = 3 Mar).
+const addMonths = (d, n) => {
+  const m = d.getMonth() + n;
+  const last = new Date(d.getFullYear(), m + 1, 0).getDate();
+  return new Date(d.getFullYear(), m, Math.min(d.getDate(), last));
+};
 
 // Two-month range picker. Uncontrolled via defaultStart/defaultEnd; picks are staged, and Apply
 // commits the range (fires onChange + onApply, ISO "yyyy-mm-dd") while Cancel discards it (onCancel).
@@ -43,9 +50,25 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
   const value = range;
   const [previewEnd, setPreviewEnd] = useState(null);
 
+  // The view is the LEFT month and the right grid is view + 1, so a December
+  // view would put the right one past maxDate and render it blank. Back off a
+  // month in that case (the same ceiling the Next button enforces).
+  const clampView = useCallback(
+    (d) => {
+      const v = new Date(d.getFullYear(), d.getMonth(), 1);
+      return new Date(v.getFullYear(), v.getMonth() + 1, 1) > maxDate
+        ? new Date(v.getFullYear(), v.getMonth() - 1, 1)
+        : v;
+    },
+    [maxDate]
+  );
+
   const [view, setView] = useState(() => {
     const b = value.start || today;
-    return new Date(b.getFullYear(), b.getMonth(), 1);
+    const v = new Date(b.getFullYear(), b.getMonth(), 1);
+    return new Date(v.getFullYear(), v.getMonth() + 1, 1) > maxDate
+      ? new Date(v.getFullYear(), v.getMonth() - 1, 1)
+      : v;
   });
 
   const [pendingFocus, setPendingFocus] = useState(null);
@@ -89,7 +112,9 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
       (mDate.getMonth() === 11 &&
         d.getFullYear() === mDate.getFullYear() + 1 &&
         d.getMonth() === 0);
-    if (!inView(view)) setView(new Date(d.getFullYear(), d.getMonth(), 1));
+    // clampView keeps the right grid inside maxDate; d stays rendered either
+    // way, as the left month or (when clamped) the right one.
+    if (!inView(view)) setView(clampView(d));
     setPendingFocus(iso(d));
   };
 
@@ -107,10 +132,8 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
     if (e.key in moves) shift(moves[e.key]);
     else if (e.key === "Home") shift(-dow);
     else if (e.key === "End") shift(6 - dow);
-    else if (e.key === "PageUp")
-      roam(new Date(cur.getFullYear(), cur.getMonth() - 1, cur.getDate()));
-    else if (e.key === "PageDown")
-      roam(new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate()));
+    else if (e.key === "PageUp") roam(addMonths(cur, -1));
+    else if (e.key === "PageDown") roam(addMonths(cur, 1));
     else if (e.key === "Enter" || e.key === " ") pick(cur);
     else return;
     e.preventDefault();
@@ -126,10 +149,33 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
     new Date(view.getFullYear(), view.getMonth(), 1),
     new Date(view.getFullYear(), view.getMonth() + 1, 1)
   ];
-  // One tabbable day across both grids: the start if shown, else the first of the view month.
-  const tabbable = value.start ? iso(value.start) : iso(months[0]);
+  // One tabbable day across both grids: the start when it is actually on screen,
+  // else the first of the view month. Paging away from the start month would
+  // otherwise leave both grids with no tab stop at all.
+  const startShown =
+    !!value.start &&
+    months.some(
+      (m) =>
+        value.start.getFullYear() === m.getFullYear() && value.start.getMonth() === m.getMonth()
+    );
+  const tabbable = startShown ? iso(value.start) : iso(months[0]);
   const prevDisabled = months[0] <= minDate;
   const nextDisabled = new Date(view.getFullYear(), view.getMonth() + 2, 1) > maxDate;
+
+  // Paging swaps both grids silently (changing a non-focused grid's labels isn't
+  // announced), so speak the new span. Quiet on the first render.
+  const rangeLabel = `${months[0].toLocaleDateString(undefined, {
+    month: "long",
+    year: "numeric"
+  })} to ${months[1].toLocaleDateString(undefined, { month: "long", year: "numeric" })}`;
+  const prevLabel = useRef(rangeLabel);
+  const [announce, setAnnounce] = useState("");
+  useEffect(() => {
+    if (prevLabel.current !== rangeLabel) {
+      setAnnounce(rangeLabel);
+      prevLabel.current = rangeLabel;
+    }
+  }, [rangeLabel]);
 
   return (
     <div
@@ -137,7 +183,8 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
       ref={rootRef}
       onKeyDown={onKeyDown}
       onClick={(e) => {
-        const btn = e.target.closest(".calendar__day");
+        // Buttons only: neighbouring-month days render as inert divs.
+        const btn = e.target.closest("button.calendar__day");
         if (btn?.dataset.date) pick(parse(btn.dataset.date));
       }}
       onMouseOver={(e) => {
@@ -147,6 +194,9 @@ export default function DateRange({ defaultStart, defaultEnd, onChange, onApply,
       }}
       onMouseLeave={() => setPreviewEnd(null)}
     >
+      <div className="sr-only" role="status">
+        {announce}
+      </div>
       <div className="calendar__months">
         {months.map((month, mi) => (
           <div className="calendar__month" key={iso(month)}>

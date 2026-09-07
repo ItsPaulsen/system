@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 // An <input> flanked by −/+ steppers: type a value or step it. Steps on click and
 // Arrow Up/Down, press-and-hold repeats, clamps on blur, and disables a stepper at
@@ -21,6 +21,11 @@ export default function NumberField({
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const current = value ?? uncontrolled;
   const hold = useRef({});
+  // The repeat interval outlives the render that started it, so it reads the
+  // value through a ref; closing over `current` would re-step from the same
+  // base on every tick.
+  const latest = useRef(current);
+  latest.current = current;
   const clamp = (n) => Math.min(max, Math.max(min, n));
   const cls = ["input", "number-field", size && `number-field--${size}`, className]
     .filter(Boolean)
@@ -31,20 +36,32 @@ export default function NumberField({
     onChange?.(n);
   };
   const nudge = (dir) => {
-    const base = Number.isNaN(parseFloat(current)) ? (min > -Infinity ? min : 0) : Number(current);
-    commit(clamp(base + dir * step));
+    const n = parseFloat(latest.current);
+    const base = Number.isNaN(n) ? (min > -Infinity ? min : 0) : n;
+    const next = clamp(base + dir * step);
+    latest.current = next;
+    commit(next);
+    return next;
   };
 
   // click does the single step; a held pointer layers repeat on top after a delay.
-  const press = (dir) => {
+  const press = (dir, e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
     hold.current.t = setTimeout(() => {
-      hold.current.i = setInterval(() => nudge(dir), 60);
+      // Stop at the bound instead of spinning on a stepper that just disabled.
+      hold.current.i = setInterval(() => {
+        const next = nudge(dir);
+        if (dir < 0 ? next <= min : next >= max) release();
+      }, 60);
     }, 400);
   };
   const release = () => {
     clearTimeout(hold.current.t);
     clearInterval(hold.current.i);
   };
+  // A pointer released outside the button (or an unmount mid-press) would
+  // otherwise leave the repeat running.
+  useEffect(() => release, []);
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowUp") {
@@ -57,15 +74,19 @@ export default function NumberField({
   };
 
   return (
-    <label className={cls} htmlFor={id}>
-      {label && <span className="input__label">{label}</span>}
+    <div className={cls}>
+      {label && (
+        <label className="input__label" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <span className="input__container number-field__control">
         <button
           type="button"
           className="number-field__step"
           aria-label="Decrease"
-          disabled={Number(current) <= min}
-          onPointerDown={() => press(-1)}
+          disabled={!Number.isNaN(parseFloat(current)) && parseFloat(current) <= min}
+          onPointerDown={(e) => press(-1, e)}
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
@@ -95,8 +116,8 @@ export default function NumberField({
           type="button"
           className="number-field__step"
           aria-label="Increase"
-          disabled={Number(current) >= max}
-          onPointerDown={() => press(1)}
+          disabled={!Number.isNaN(parseFloat(current)) && parseFloat(current) >= max}
+          onPointerDown={(e) => press(1, e)}
           onPointerUp={release}
           onPointerLeave={release}
           onPointerCancel={release}
@@ -106,7 +127,7 @@ export default function NumberField({
         </button>
       </span>
       {hint && <span className="input__hint">{hint}</span>}
-    </label>
+    </div>
   );
 }
 

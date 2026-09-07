@@ -27,7 +27,10 @@ function positionFloating(anchor, list, wasAbove) {
   const rect = anchor.getBoundingClientRect();
   list.style.position = "fixed";
   list.style.width = `${rect.width}px`;
-  list.style.left = `${rect.left}px`;
+  // Clamp horizontally so a list near the right edge (or wider than the space to
+  // its right) doesn't run off-screen, the same guard the popover/tooltip use.
+  const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
+  list.style.left = `${Math.max(PAD, Math.min(rect.left, viewRight - rect.width))}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
@@ -122,6 +125,20 @@ export default function Combobox({
       aboveRef.current = positionFloating(rootRef.current, listRef.current, aboveRef.current);
     }
   }, [matches.length, open]);
+
+  // The focusout rule below only fires with a relatedTarget, so a click into
+  // dead page space (which blurs to null) would leave the list open. Pair it
+  // with a document click, the way the vanilla combobox does.
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e) => {
+      if (!rootRef.current?.contains(e.target) && !listRef.current?.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, [open]);
 
   const choose = (opt) => {
     setQuery(opt);

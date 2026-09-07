@@ -3,7 +3,8 @@ import { cloneElement, useEffect, useId, useRef, useState } from "react";
 // Short label shown on hover or keyboard focus. Wrap the trigger; `label` is the bubble text
 // and `side` the preferred placement, which flips if there's no room. Positioning mirrors the
 // vanilla initTooltips (flip by space, clamp to viewport, arrow points at the trigger). Esc
-// dismisses without moving the pointer or focus (WCAG 1.4.13).
+// dismisses without moving the pointer or focus, and the bubble stays up while the pointer is
+// on it, so it can be read (WCAG 1.4.13).
 const PAD = 8;
 const GAP = 8;
 const clamp = (v, min, max) => Math.max(min, Math.min(v, max));
@@ -14,6 +15,19 @@ export default function Tooltip({ label, side = "top", children }) {
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState(side);
   const id = useId();
+  // WCAG 1.4.13 (hoverable): the bubble sits GAP px off the trigger, so moving
+  // onto it crosses dead space that belongs to neither. A short grace delay
+  // keeps it up long enough to get there.
+  const hideTimer = useRef(0);
+  const show = () => {
+    clearTimeout(hideTimer.current);
+    setVisible(true);
+  };
+  const scheduleHide = () => {
+    clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => setVisible(false), 120);
+  };
+  useEffect(() => () => clearTimeout(hideTimer.current), []);
 
   useEffect(() => {
     if (!visible) return;
@@ -51,9 +65,13 @@ export default function Tooltip({ label, side = "top", children }) {
     }
 
     // A fixed-position bubble drifts from the trigger on scroll, so just dismiss.
-    const onScroll = () => setVisible(false);
+    const dismiss = () => {
+      clearTimeout(hideTimer.current);
+      setVisible(false);
+    };
+    const onScroll = () => dismiss();
     const onKey = (e) => {
-      if (e.key === "Escape") setVisible(false);
+      if (e.key === "Escape") dismiss();
     };
     window.addEventListener("scroll", onScroll, { capture: true, passive: true });
     document.addEventListener("keydown", onKey, true);
@@ -67,10 +85,14 @@ export default function Tooltip({ label, side = "top", children }) {
     <span
       className="tooltip"
       ref={rootRef}
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
+      onMouseEnter={show}
+      onMouseLeave={scheduleHide}
+      onFocus={show}
+      // Ignore focus moving between the trigger's own descendants; only hide
+      // when focus actually leaves.
+      onBlur={(e) => {
+        if (!e.relatedTarget || !rootRef.current?.contains(e.relatedTarget)) setVisible(false);
+      }}
     >
       {cloneElement(children, { "aria-describedby": id })}
       <span
@@ -79,6 +101,8 @@ export default function Tooltip({ label, side = "top", children }) {
         id={id}
         ref={bubbleRef}
         data-placement={placement}
+        onMouseEnter={show}
+        onMouseLeave={scheduleHide}
       >
         {label}
       </span>

@@ -2788,14 +2788,14 @@
   }
 
   /* A spinner conveys ongoing state, so it must not freeze like decorative
-   motion: the global guard stops all animation after one near-instant cycle, so
-   re-enable an infinite (slowed) spin under reduced motion.
-   Overrides the guard's !important, hence !important here too. */
+   motion. The global guard in globals.css exempts these two selectors from its
+   animation clamp (an !important override from this layer could not win), so a
+   plain slowed spin is all that's needed here. */
   @media (prefers-reduced-motion: reduce) {
     .spinner,
     .spinner__arc {
-      animation-duration: 6s !important;
-      animation-iteration-count: infinite !important;
+      animation-duration: 6s;
+      animation-iteration-count: infinite;
     }
   }
 
@@ -4600,11 +4600,20 @@
       border-color: Highlight;
     }
 
-    /* Alert + toast icons keep their semantic color (the color is set on the SVG
-     for alerts / the wrapper span for toasts; opt out so the forced palette
-     doesn't remap it). */
+    /* Alert icons keep their semantic color (set on the SVG; opt out so the
+     forced palette doesn't remap it). */
     .alert__icon {
       forced-color-adjust: none;
+    }
+
+    /* Avatar presence dot: a background-only circle with a box-shadow ring, so
+     both halves are stripped. Keep the fill and swap the ring for a real
+     border, or the dot vanishes entirely. */
+    .avatar__status {
+      forced-color-adjust: none;
+      background: Highlight;
+      border: var(--border-width) solid Canvas;
+      box-shadow: none;
     }
 
     /* Focus affordances built from box-shadow (input, custom select, menu trigger)

@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
-// Floating surface on the native Popover API: top-layer, light-dismiss, Esc, and CSS anchor
-// positioning, all driven by the trigger's popovertarget. --panel pads content, --center
-// centers it on the trigger.
+// Floating surface on the native Popover API: top-layer, light-dismiss and Esc come from
+// popovertarget; placement is scripted (CSS anchor positioning's flip/clamp fallbacks aren't
+// reliable yet). --panel pads content, --center centers it on the trigger.
 const PopoverContext = createContext(null);
 
 export function Popover({ children }) {
@@ -36,28 +36,61 @@ export function PopoverTrigger({ className = "button button--secondary", childre
   );
 }
 
+// Below the trigger by default, flipped up when cramped, clamped to the viewport.
+function place(trigger, pop) {
+  const GAP = 4;
+  const PAD = 8;
+  const t = trigger.getBoundingClientRect();
+  const p = pop.getBoundingClientRect();
+  let top = t.bottom + GAP;
+  if (top + p.height + PAD > window.innerHeight && t.top - p.height - GAP > 0) {
+    top = t.top - p.height - GAP;
+  }
+  const anchorLeft = pop.classList.contains("popover--center")
+    ? t.left + t.width / 2 - p.width / 2
+    : t.left;
+  const left = Math.max(PAD, Math.min(anchorLeft, window.innerWidth - p.width - PAD));
+  pop.style.left = `${Math.round(left)}px`;
+  pop.style.top = `${Math.round(top)}px`;
+}
+
 export function PopoverContent({ panel = true, center, className, children, ...rest }) {
   const id = useContext(PopoverContext);
   const ref = useRef(null);
   const cls = ["popover", panel && "popover--panel", center && "popover--center", className]
     .filter(Boolean)
     .join(" ");
-  // role="dialog" (the trigger promises aria-haspopup="dialog"), so move focus in
-  // on open; the native popover returns focus to the trigger on close.
+  // .popover is position:fixed with no inset, so it must be placed on open or it
+  // sits in the viewport corner. role="dialog" (the trigger promises
+  // aria-haspopup="dialog"), so move focus in on open too; the native popover
+  // returns focus to the trigger on close.
   // Name it with aria-label / aria-labelledby via ...rest.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const trigger = document.querySelector(`[popovertarget="${CSS.escape(id)}"]`);
+    const reposition = () => trigger && place(trigger, el);
     const onToggle = (e) => {
-      if (e.newState !== "open") return;
+      if (e.newState !== "open") {
+        window.removeEventListener("scroll", reposition, true);
+        window.removeEventListener("resize", reposition);
+        return;
+      }
+      reposition();
       const focusable = el.querySelector(
         'button:not([disabled]), select, [href], input, textarea, [tabindex]:not([tabindex="-1"])'
       );
       (focusable || el).focus();
+      window.addEventListener("scroll", reposition, true);
+      window.addEventListener("resize", reposition);
     };
     el.addEventListener("toggle", onToggle);
-    return () => el.removeEventListener("toggle", onToggle);
-  }, []);
+    return () => {
+      el.removeEventListener("toggle", onToggle);
+      window.removeEventListener("scroll", reposition, true);
+      window.removeEventListener("resize", reposition);
+    };
+  }, [id]);
   return (
     <div ref={ref} className={cls} id={id} popover="auto" role="dialog" tabIndex={-1} {...rest}>
       {children}

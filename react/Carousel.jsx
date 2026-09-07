@@ -10,8 +10,11 @@ const EASE = "transform 350ms var(--motion-ease-out)";
 
 export default function Carousel({
   items,
-  cols = 1,
-  gap = "1rem",
+  // Left undefined so the documented class + breakpoint overrides
+  // (.carousel--x { --carousel-cols: 2 }) still win; an inline style would not
+  // be overridable from CSS.
+  cols,
+  gap,
   className,
   "aria-label": ariaLabel
 }) {

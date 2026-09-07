@@ -20,11 +20,15 @@ export function NavMenuItem({ children, ...rest }) {
   const [expanded, setExpanded] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const triggerRef = useRef(null);
+  const collapsingRef = useRef(false);
   const hasPanel = Children.toArray(children).some((c) => c?.type === NavMenuPanel);
 
   const handlers = hasPanel
     ? {
+        // Escape refocuses the trigger, and that focus event would re-open the
+        // panel it just closed, so let the collapse survive its own focus move.
         onFocus: () => {
+          if (collapsingRef.current) return;
           setExpanded(true);
           setCollapsed(false);
         },
@@ -39,7 +43,9 @@ export function NavMenuItem({ children, ...rest }) {
           if (e.key === "Escape") {
             setExpanded(false);
             setCollapsed(true);
+            collapsingRef.current = true;
             triggerRef.current?.focus();
+            collapsingRef.current = false;
           }
         }
       }

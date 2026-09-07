@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useId, useRef } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
 // Panel that slides in from a screen edge, built on native <dialog> via showModal(), so the
 // focus trap, Esc-to-close, and inert background come for free. side="left" flips it to the
@@ -9,7 +9,14 @@ const SheetContext = createContext(null);
 export function Sheet({ children }) {
   const ref = useRef(null);
   const titleId = useId();
-  return <SheetContext.Provider value={{ ref, titleId }}>{children}</SheetContext.Provider>;
+  // Only wire aria-labelledby when a SheetTitle actually mounts, so the
+  // <dialog> never points at a missing id.
+  const [hasTitle, setHasTitle] = useState(false);
+  return (
+    <SheetContext.Provider value={{ ref, titleId, hasTitle, setHasTitle }}>
+      {children}
+    </SheetContext.Provider>
+  );
 }
 
 export function SheetTrigger({ children, ...rest }) {
@@ -31,7 +38,7 @@ export function SheetClose({ children, ...rest }) {
 }
 
 export function SheetContent({ side, className, children, ...rest }) {
-  const { ref, titleId } = useContext(SheetContext);
+  const { ref, titleId, hasTitle } = useContext(SheetContext);
 
   useEffect(() => {
     const dlg = ref.current;
@@ -44,6 +51,11 @@ export function SheetContent({ side, className, children, ...rest }) {
       dlg.querySelector(".sheet__inner")?.focus({ preventScroll: true });
     };
     const unlock = () => {
+      // Overlays nest (a Dialog raised from inside a Sheet), and both are
+      // <dialog> elements, so only release the page lock once no other one is
+      // still open. Exclude self: on unmount this dialog can still be open.
+      const others = [...document.querySelectorAll("dialog[open]")].some((d) => d !== dlg);
+      if (others) return;
       root.classList.remove("is-scroll-locked");
       root.style.removeProperty("--scrollbar-comp");
     };
@@ -67,7 +79,7 @@ export function SheetContent({ side, className, children, ...rest }) {
 
   const cls = ["sheet", side === "left" && "sheet--left", className].filter(Boolean).join(" ");
   return (
-    <dialog ref={ref} className={cls} aria-labelledby={titleId} {...rest}>
+    <dialog ref={ref} className={cls} aria-labelledby={hasTitle ? titleId : undefined} {...rest}>
       <div className="sheet__inner" tabIndex={-1}>
         {children}
       </div>
@@ -84,7 +96,12 @@ export function SheetHeader({ children, ...rest }) {
 }
 
 export function SheetTitle({ children, ...rest }) {
-  const { titleId } = useContext(SheetContext);
+  const { titleId, setHasTitle } = useContext(SheetContext);
+  // Tell SheetContent a title exists so it wires aria-labelledby.
+  useEffect(() => {
+    setHasTitle(true);
+    return () => setHasTitle(false);
+  }, [setHasTitle]);
   return (
     <h2 id={titleId} className="sheet__title" {...rest}>
       {children}

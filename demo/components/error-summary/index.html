@@ -74,43 +74,9 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            A labelled region with a link per error. Insert it after a failed submit and call
-            <code>.focus()</code> on it (<code>tabindex="-1"</code>) so it is announced.
-          </p>
-          <div class="example" data-example>
-            <div class="component-preview">
-              <div
-                class="error-summary"
-                tabindex="-1"
-                aria-labelledby="es-heading"
-                style="width: 100%; max-width: 420px"
-              >
-                <p class="error-summary__title" id="es-heading">There is a problem</p>
-                <ul class="error-summary__list">
-                  <li>
-                    <a class="error-summary__link" href="#es-email">Enter a valid email address</a>
-                  </li>
-                  <li>
-                    <a class="error-summary__link" href="#es-name">Enter your full name</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <script type="text/plain" class="example__react">
-              <ErrorSummary
-                errors={[
-                  { id: "email", message: "Enter a valid email address" },
-                  { id: "name", message: "Enter your full name" },
-                ]}
-              />
-            </script>
-          </div>
-        </section>
-
-        <section class="preview-block">
-          <h2 class="subhead">In a form</h2>
-          <p class="section-note">
-            The fields stack above one another; each summary link jumps to and focuses its field.
+            A labelled region with a link per error, each jumping to and focusing its field. Insert
+            it after a failed submit and call <code>.focus()</code> on it
+            (<code>tabindex="-1"</code>) so it is announced.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -127,15 +93,15 @@
                   <span class="input__label">Full name</span>
                   <span class="input__container input__container--invalid">
                     <input
-                      id="es2-name"
+                      id="es-name"
                       class="input__element"
                       type="text"
                       value=""
                       aria-invalid="true"
-                      aria-describedby="es2-name-error"
+                      aria-describedby="es-name-error"
                     />
                   </span>
-                  <span class="input__error" id="es2-name-error">
+                  <span class="input__error" id="es-name-error">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -157,15 +123,15 @@
                   <span class="input__label">Email</span>
                   <span class="input__container input__container--invalid">
                     <input
-                      id="es2-email"
+                      id="es-email"
                       class="input__element"
                       type="email"
                       value="not-an-email"
                       aria-invalid="true"
-                      aria-describedby="es2-email-error"
+                      aria-describedby="es-email-error"
                     />
                   </span>
-                  <span class="input__error" id="es2-email-error">
+                  <span class="input__error" id="es-email-error">
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"
@@ -183,14 +149,14 @@
                   </span>
                 </label>
 
-                <div class="error-summary" tabindex="-1" aria-labelledby="es2-heading">
-                  <p class="error-summary__title" id="es2-heading">There is a problem</p>
+                <div class="error-summary" tabindex="-1" aria-labelledby="es-heading">
+                  <p class="error-summary__title" id="es-heading">There is a problem</p>
                   <ul class="error-summary__list">
                     <li>
-                      <a class="error-summary__link" href="#es2-name">Enter your full name</a>
+                      <a class="error-summary__link" href="#es-name">Enter your full name</a>
                     </li>
                     <li>
-                      <a class="error-summary__link" href="#es2-email"
+                      <a class="error-summary__link" href="#es-email"
                         >Enter a valid email address</a
                       >
                     </li>

@@ -5,6 +5,11 @@
 //   • tracks the active breakpoint on resize
 // Tokens are declared with data-token (the CSS custom-property name, sans "--").
 
+// The global CSS reduced-motion guard sets scroll-behavior, which an explicit
+// JS behavior:"smooth" overrides, so scripted scrolling has to ask as well.
+const scrollBehavior = () =>
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
 // toast(msg) / toast.success|info|warning|error(msg) / toast.promise(p, msgs).
 // One reused pill; typed toasts get a Tabler icon in the matching semantic
 // color (same icons as the Alert component).
@@ -308,7 +313,7 @@ const PROJECT_PAGES = {
         { label: "Link", href: "/demo/components/link/" },
         { label: "Native Select", href: "/demo/components/native-select/" },
         { label: "Navigation Menu", href: "/demo/components/navigation-menu/" },
-        { label: "Number Field", href: "/demo/components/number-field/", new: true },
+        { label: "Number Field", href: "/demo/components/number-field/" },
         { label: "Pagination", href: "/demo/components/pagination/" },
         { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },
@@ -986,8 +991,10 @@ function initErrorSummary() {
       const field = document.getElementById(id);
       if (!field) return;
       e.preventDefault();
-      field.scrollIntoView({ block: "center", behavior: "smooth" });
-      field.focus();
+      field.scrollIntoView({ block: "center", behavior: scrollBehavior() });
+      // preventScroll: focus() would otherwise jump the page and cancel the
+      // smooth scroll we just started.
+      field.focus({ preventScroll: true });
     });
   });
 }
@@ -1701,7 +1708,9 @@ function initComboboxes() {
       // On touch, lift the field toward the top so the list has room to open
       // below it above the keyboard (the reflow listeners keep it glued).
       if (!overlayIsDesktop.matches) {
-        requestAnimationFrame(() => root.scrollIntoView({ block: "start", behavior: "smooth" }));
+        requestAnimationFrame(() =>
+          root.scrollIntoView({ block: "start", behavior: scrollBehavior() })
+        );
       }
     };
     const close = () => {
@@ -1847,6 +1856,14 @@ function initComboboxes() {
   });
 }
 
+// Shared by both calendars: month paging clamps the day to the target month's
+// length, or the 31st rolls over into the month after (31 Jan + 1 = 3 Mar).
+const addMonths = (d, n) => {
+  const m = d.getMonth() + n;
+  const last = new Date(d.getFullYear(), m + 1, 0).getDate();
+  return new Date(d.getFullYear(), m, Math.min(d.getDate(), last));
+};
+
 // Calendar: renders a month grid into [data-cal-days] and drives month nav +
 // keyboard (arrows = ±1/±7 days, Home/End = week ends, PageUp/Dn = ±month,
 // Enter/Space selects). One day carries tabindex 0 (roving), the rest -1. The
@@ -1903,8 +1920,8 @@ function initCalendars() {
         d.getDate()
       ).padStart(2, "0")}`;
     const same = (a, b) =>
-      a &&
-      b &&
+      !!a &&
+      !!b &&
       a.getFullYear() === b.getFullYear() &&
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate();
@@ -2069,9 +2086,17 @@ function initCalendars() {
 
     function select(d) {
       if (d > maxDate) return; // can't pick past the cap
+      // render() rebuilds the grid, destroying the focused day button. Put focus
+      // on the new selected day so keyboard picks don't drop focus to <body>
+      // (and so an enclosing popover still has focus inside it when it closes).
+      const hadFocus = daysEl.contains(document.activeElement);
       selected = d;
       root.setAttribute("data-cal-value", iso(d));
       render();
+      if (hadFocus) {
+        const btn = daysEl.querySelector(`button[data-date="${iso(d)}"]`);
+        if (btn) btn.focus();
+      }
       const targetSel = root.getAttribute("data-cal-target");
       if (targetSel) {
         const el = document.querySelector(targetSel);
@@ -2135,9 +2160,7 @@ function initCalendars() {
         focusDate(n);
       } else if (e.key === "PageUp" || e.key === "PageDown") {
         e.preventDefault();
-        focusDate(
-          new Date(cur.getFullYear(), cur.getMonth() + (e.key === "PageUp" ? -1 : 1), cur.getDate())
-        );
+        focusDate(addMonths(cur, e.key === "PageUp" ? -1 : 1));
       } else if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         select(cur);
@@ -2180,7 +2203,7 @@ function initDateRanges() {
       `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
         d.getDate()
       ).padStart(2, "0")}`;
-    const same = (a, b) => a && b && iso(a) === iso(b);
+    const same = (a, b) => !!a && !!b && iso(a) === iso(b);
     const parse = (s) => {
       const d = s && new Date(`${s}T00:00:00`);
       return d && !Number.isNaN(d.getTime()) ? d : null;
@@ -2201,7 +2224,16 @@ function initDateRanges() {
     let previewEnd = null;
     let focusIso = start ? iso(start) : null;
     const base = start || today;
-    let view = new Date(base.getFullYear(), base.getMonth(), 1);
+    // The view is the LEFT month and the right one is view + 1, so a December
+    // base would put the right grid past maxDate and render it blank. Back the
+    // view off by a month in that case (same clamp the next button enforces).
+    const clampView = (d) => {
+      const v = new Date(d.getFullYear(), d.getMonth(), 1);
+      return new Date(v.getFullYear(), v.getMonth() + 1, 1) > maxDate
+        ? new Date(v.getFullYear(), v.getMonth() - 1, 1)
+        : v;
+    };
+    let view = clampView(base);
 
     // With a footer, selection is staged: picks update the calendar but only Apply
     // commits (writes targets + closes). committed is the baseline Cancel reverts to.
@@ -2416,7 +2448,9 @@ function initDateRanges() {
       focusIso = iso(d);
       let btn = root.querySelector(`button.calendar__day[data-date="${iso(d)}"]`);
       if (!btn) {
-        view = new Date(d.getFullYear(), d.getMonth(), 1);
+        // clampView keeps the right grid inside maxDate; d stays rendered either
+        // way, as the left month or (when clamped) the right one.
+        view = clampView(d);
         render();
         btn = root.querySelector(`button.calendar__day[data-date="${iso(d)}"]`);
       }
@@ -2451,14 +2485,19 @@ function initDateRanges() {
       });
 
     root.addEventListener("click", (e) => {
-      const btn = e.target.closest(".calendar__day");
+      // Only in-month days are buttons; neighbouring-month days are inert divs
+      // that carry data-date purely so the band can run over them, so they must
+      // not become an endpoint.
+      const btn = e.target.closest("button.calendar__day");
       if (btn && btn.dataset.date) select(parse(btn.dataset.date));
     });
 
     // Hover preview while a start is set but the end isn't yet.
     root.addEventListener("mouseover", (e) => {
       if (!start || end) return;
-      const btn = e.target.closest(".calendar__day");
+      // Buttons only, matching click: previewing to an inert day would promise
+      // an endpoint that can't be picked.
+      const btn = e.target.closest("button.calendar__day");
       if (!btn || !btn.dataset.date) return;
       previewEnd = parse(btn.dataset.date);
       applyRange();
@@ -2483,10 +2522,8 @@ function initDateRanges() {
       if (e.key in moves) shift(moves[e.key]);
       else if (e.key === "Home") shift(-dow);
       else if (e.key === "End") shift(6 - dow);
-      else if (e.key === "PageUp")
-        focusDate(new Date(cur.getFullYear(), cur.getMonth() - 1, cur.getDate()));
-      else if (e.key === "PageDown")
-        focusDate(new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate()));
+      else if (e.key === "PageUp") focusDate(addMonths(cur, -1));
+      else if (e.key === "PageDown") focusDate(addMonths(cur, 1));
       else if (e.key === "Enter" || e.key === " ") select(cur);
       else return;
       e.preventDefault();
@@ -3217,7 +3254,11 @@ function initNavMenus() {
     trigger.setAttribute("aria-controls", panel.id);
     trigger.setAttribute("aria-expanded", "false");
 
+    // Escape moves focus back to the trigger, and that focusin would re-open the
+    // panel it just closed. Let the collapse survive its own focus move.
+    let collapsing = false;
     item.addEventListener("focusin", () => {
+      if (collapsing) return;
       trigger.setAttribute("aria-expanded", "true");
       item.removeAttribute("data-collapsed");
     });
@@ -3232,7 +3273,9 @@ function initNavMenus() {
       if (e.key === "Escape" && item.contains(document.activeElement)) {
         item.setAttribute("data-collapsed", "");
         trigger.setAttribute("aria-expanded", "false");
+        collapsing = true;
         trigger.focus();
+        collapsing = false;
       }
     });
   });

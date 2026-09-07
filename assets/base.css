@@ -19,7 +19,6 @@
   /* Chrome layout tokens. The consumer baseline (reset, color-scheme,
    --flip) lives in globals.css, loaded on every page. */
   :root {
-    --radius: 10px;
     --nav-h: 56px;
     --sidebar-w: 15rem;
     --page-gutter: 1.5rem; /* fixed 24px chrome gutter for header + sidebar */

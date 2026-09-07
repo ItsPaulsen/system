@@ -26,7 +26,11 @@ function positionFloating(anchor, list, wasAbove) {
   const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
-  list.style.left = `${rect.left + window.scrollX}px`;
+  // Clamp horizontally so a list near the right edge (or wider than the space to
+  // its right) doesn't run off-screen, the same guard the popover/tooltip use.
+  const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
+  const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
+  list.style.left = `${left + window.scrollX}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
@@ -87,12 +91,19 @@ export default function Select({
     const reflow = rafThrottle(place);
     place();
     list.focus(); // move focus into the list so VoiceOver speaks the active option
-    window.addEventListener("scroll", reflow, true);
+    // Capturing scroll also catches the list's own internal scroll (the active-row
+    // scrollIntoView), so ignore scrolls that originate inside the list:
+    // re-placing on those rewrites inline styles and makes VoiceOver re-read.
+    const onScroll = (e) => {
+      if (e.target instanceof Node && list.contains(e.target)) return;
+      reflow();
+    };
+    window.addEventListener("scroll", onScroll, true);
     window.addEventListener("resize", reflow);
     window.visualViewport?.addEventListener("resize", reflow);
     window.visualViewport?.addEventListener("scroll", reflow);
     return () => {
-      window.removeEventListener("scroll", reflow, true);
+      window.removeEventListener("scroll", onScroll, true);
       window.removeEventListener("resize", reflow);
       window.visualViewport?.removeEventListener("resize", reflow);
       window.visualViewport?.removeEventListener("scroll", reflow);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 
 // Native range input; fill width tracks the value via --slider-fill. Uncontrolled unless you pass value + onChange.
 export default function Slider({
@@ -10,10 +10,14 @@ export default function Slider({
   step,
   showValue = true,
   className,
-  id,
+  id: idProp,
   onChange,
   ...rest
 }) {
+  // The label and the value output both point at the input by id, so it needs
+  // one even when the caller doesn't pass it.
+  const autoId = useId();
+  const id = idProp ?? autoId;
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const value = controlled ?? uncontrolled;
   const pct = max === min ? 0 : ((value - min) / (max - min)) * 100;

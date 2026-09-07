@@ -22,6 +22,13 @@ const parse = (s) => {
 };
 // Weekday index with Monday as 0 (JS getDay() has Sunday as 0).
 const mondayIndex = (d) => (d.getDay() + 6) % 7;
+// Month paging clamps the day to the target month's length; without it the 31st
+// rolls over into the month after (31 Jan + 1 month = 3 Mar).
+const addMonths = (d, n) => {
+  const m = d.getMonth() + n;
+  const last = new Date(d.getFullYear(), m + 1, 0).getDate();
+  return new Date(d.getFullYear(), m, Math.min(d.getDate(), last));
+};
 
 // Month grid for choosing a date, capped at 31 Dec of the current year. Uncontrolled via
 // defaultValue; pass value + onSelect (both ISO "yyyy-mm-dd") to control it. Keyboard nav:
@@ -89,10 +96,8 @@ export default function Calendar({ value, defaultValue, onSelect }) {
     if (e.key in moves) shift(moves[e.key]);
     else if (e.key === "Home") shift(-dow);
     else if (e.key === "End") shift(6 - dow);
-    else if (e.key === "PageUp")
-      roam(new Date(cur.getFullYear(), cur.getMonth() - 1, cur.getDate()));
-    else if (e.key === "PageDown")
-      roam(new Date(cur.getFullYear(), cur.getMonth() + 1, cur.getDate()));
+    else if (e.key === "PageUp") roam(addMonths(cur, -1));
+    else if (e.key === "PageDown") roam(addMonths(cur, 1));
     else if (e.key === "Enter" || e.key === " ") pick(cur);
     else return;
     e.preventDefault();

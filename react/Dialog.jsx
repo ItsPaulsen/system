@@ -7,11 +7,15 @@ export function Dialog({ children }) {
   const ref = useRef(null);
   const titleId = useId();
   const descId = useId();
-  // Only wire aria-describedby when a DialogDescription actually mounts, so the
-  // <dialog> never points at a missing id.
+  // Only wire aria-labelledby / aria-describedby when a DialogTitle /
+  // DialogDescription actually mounts, so the <dialog> never points at a
+  // missing id.
+  const [hasTitle, setHasTitle] = useState(false);
   const [hasDesc, setHasDesc] = useState(false);
   return (
-    <DialogContext.Provider value={{ ref, titleId, descId, hasDesc, setHasDesc }}>
+    <DialogContext.Provider
+      value={{ ref, titleId, descId, hasTitle, setHasTitle, hasDesc, setHasDesc }}
+    >
       {children}
     </DialogContext.Provider>
   );
@@ -36,7 +40,7 @@ export function DialogClose({ children, ...rest }) {
 }
 
 export function DialogContent({ children, ...rest }) {
-  const { ref, titleId, descId, hasDesc } = useContext(DialogContext);
+  const { ref, titleId, descId, hasTitle, hasDesc } = useContext(DialogContext);
 
   useEffect(() => {
     const dlg = ref.current;
@@ -49,6 +53,11 @@ export function DialogContent({ children, ...rest }) {
       dlg.querySelector(".dialog__inner")?.focus({ preventScroll: true });
     };
     const unlock = () => {
+      // Overlays nest (a Dialog raised from inside a Sheet), and both are
+      // <dialog> elements, so only release the page lock once no other one is
+      // still open. Exclude self: on unmount this dialog can still be open.
+      const others = [...document.querySelectorAll("dialog[open]")].some((d) => d !== dlg);
+      if (others) return;
       root.classList.remove("is-scroll-locked");
       root.style.removeProperty("--scrollbar-comp");
     };
@@ -76,7 +85,7 @@ export function DialogContent({ children, ...rest }) {
     <dialog
       ref={ref}
       className="dialog"
-      aria-labelledby={titleId}
+      aria-labelledby={hasTitle ? titleId : undefined}
       aria-describedby={hasDesc ? descId : undefined}
       {...rest}
     >
@@ -88,7 +97,12 @@ export function DialogContent({ children, ...rest }) {
 }
 
 export function DialogTitle({ children, className, ...rest }) {
-  const { titleId } = useContext(DialogContext);
+  const { titleId, setHasTitle } = useContext(DialogContext);
+  // Tell DialogContent a title exists so it wires aria-labelledby.
+  useEffect(() => {
+    setHasTitle(true);
+    return () => setHasTitle(false);
+  }, [setHasTitle]);
   return (
     <h2 id={titleId} className={["dialog__title", className].filter(Boolean).join(" ")} {...rest}>
       {children}

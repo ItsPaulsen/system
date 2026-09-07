@@ -404,3 +404,37 @@
   });
   applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light", false);
 })();
+
+// Filter sheet: when a filter changed while the sheet was open, closing it lands
+// on the top of the results.
+//
+// Filtering shortens the grid, so a reader scrolled deep into 34 products can
+// close the sheet on a result of 3 and be left looking at the footer, with no
+// products in view; the browser's own scroll anchoring can't help when the page
+// shrinks that far. So one movement, once, at the moment the results become
+// visible again.
+//
+// Deliberately NOT on every tick: the grid is behind the sheet, so scrolling it
+// then is invisible work, and it would fight a reader ticking several boxes. And
+// not on desktop at all, where the rail sits beside the grid and the change is
+// already in view. Only when something actually changed, so opening the sheet to
+// read it and closing it again leaves the reader where they were.
+(function () {
+  // .ex-filter-sheet, not any dialog.sheet: the menu sheet is one too, and its
+  // theme toggle fires change events that have nothing to do with the results.
+  const sheet = document.querySelector(".ex-filter-sheet");
+  const toolbar = document.querySelector(".ex-listing__toolbar");
+  if (!sheet || !toolbar) return;
+
+  let changed = false;
+  sheet.addEventListener("change", () => {
+    changed = true;
+  });
+
+  sheet.addEventListener("close", () => {
+    if (!changed) return;
+    changed = false;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    toolbar.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+})();

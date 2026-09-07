@@ -67,7 +67,7 @@
             <div class="scroll-area__viewport">
               <h2 class="ex-filter__title">Filter</h2>
 
-              <details class="ex-filter__group" open>
+              <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Price</summary>
                 <div class="ex-filter__body" role="radiogroup" aria-label="Price">
                   <label class="radio">
@@ -87,7 +87,7 @@
                 </div>
               </details>
 
-              <details class="ex-filter__group" open>
+              <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Category</summary>
                 <div class="ex-filter__body" data-filter="category">
                   <label class="checkbox">
@@ -115,7 +115,7 @@
                    that text rather than a data attribute: one source of truth, and
                    a product can't be tagged with a brand it doesn't display. Only
                    the real products carry one so far. -->
-              <details class="ex-filter__group" open>
+              <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Brand</summary>
                 <div class="ex-filter__body" data-filter="brand" data-filter-long>
                   <label class="input ex-filter__search">
@@ -202,7 +202,7 @@
                    copy shown to the reader: the variant line carries that, and it
                    can be as specific as the product needs ("refine leather
                    black/black") without the filter having to know about it. -->
-              <details class="ex-filter__group" open>
+              <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Color</summary>
                 <div class="ex-filter__body" data-filter="color">
                   <label class="checkbox">
@@ -1886,7 +1886,7 @@
              node into .sheet__body here, and back to the rail above 1024. The
              generic data-dialog-open/close wiring (app.js) drives open/close and
              focus. -->
-        <dialog class="sheet sheet--left shop__sheet" id="shop-filter-sheet">
+        <dialog class="sheet sheet--left ex-filter-sheet shop__sheet" id="shop-filter-sheet">
           <div class="sheet__inner">
             <header class="sheet__header">
               <h2 class="sheet__title">Filter</h2>

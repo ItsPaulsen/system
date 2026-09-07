@@ -312,6 +312,9 @@
   }
 
   .ex-listing__toolbar {
+    /* Clears the sticky topbar when the filter sheet scrolls the results back
+       into view on close (see chrome.js). */
+    scroll-margin-top: var(--ex-topbar-h);
     display: flex;
     align-items: center;
     justify-content: space-between;

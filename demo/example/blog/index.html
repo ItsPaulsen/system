@@ -55,7 +55,7 @@
             <div class="scroll-area__viewport">
               <h2 class="ex-filter__title">Filter</h2>
 
-              <details class="ex-filter__group" open>
+              <details class="ex-filter__group" name="blog-filter">
                 <summary class="ex-filter__head">Category</summary>
                 <div class="ex-filter__body">
                   <label class="checkbox">
@@ -668,7 +668,7 @@
         <!-- Left sheet holding the filter ≤1024. JS moves the .blog-filter node
              into .sheet__body here, and back to the rail above 1024. The generic
              data-dialog-open/close wiring (app.js) drives open/close/focus. -->
-        <dialog class="sheet sheet--left blog__sheet" id="blog-filter-sheet">
+        <dialog class="sheet sheet--left ex-filter-sheet blog__sheet" id="blog-filter-sheet">
           <div class="sheet__inner">
             <header class="sheet__header">
               <h2 class="sheet__title">Filter</h2>

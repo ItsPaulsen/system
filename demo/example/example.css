@@ -636,9 +636,10 @@
     }
   }
 
-  /* 40px to match the nav pills (the Button default is 48), and 16px inline
-   padding, which the --with-end-icon modifier tightens to 12 on the icon side
-   by itself. Both buttons are the same control, so they scale together. */
+  /* Below 1024 these are the compact header controls: 40px to match the nav
+   pills, and 16px inline padding, which the --with-end-icon modifier tightens
+   to 12 on the icon side by itself. Both buttons are the same control, so they
+   scale together. Restored to the Button defaults at >=1024 below. */
   .ex-topbar__menu,
   .ex-menu__close {
     --button-size: 40px;
@@ -656,10 +657,13 @@
   }
 
   /* Header buttons (topbar Menu + sheet Close) step up to body-medium at ≥1024,
-     matching the nav links. Overrides the button's own --button-font size var. */
+     matching the nav links, and back to the Button component's own size and
+     inline padding. Overrides the button's own --button-font size var. */
   @media (min-width: 1024px) {
     .ex-topbar__menu,
     .ex-menu__close {
+      --button-size: 48px;
+      --button-px: 20px;
       --button-font: var(--font-body-medium-emphasized-size);
     }
   }

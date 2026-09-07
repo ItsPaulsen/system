@@ -366,7 +366,7 @@
   // as the bare directory, so the link still matches on either URL.
   const tidy = (p) => p.replace(/index\.html$/, "");
   const path = tidy(location.pathname);
-  document.querySelectorAll(".ex-topbar__nav a, .ex-menu__nav a").forEach(function (a) {
+  document.querySelectorAll(".ex-topbar__nav a, .ex-menu__nav a").forEach((a) => {
     if (tidy(a.getAttribute("href")) === path) a.setAttribute("aria-current", "page");
   });
 
@@ -376,10 +376,8 @@
     const root = document.documentElement;
     root.classList.add("no-transitions");
     root.dataset.theme = t;
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        root.classList.remove("no-transitions");
-      });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => root.classList.remove("no-transitions"));
     });
     // Persist only a real choice. The load-time sync must not write, or the
     // theme the head script derived from prefers-color-scheme gets stored and
@@ -391,12 +389,12 @@
         /* localStorage may be unavailable */
       }
     }
-    radios.forEach(function (r) {
+    radios.forEach((r) => {
       r.checked = r.dataset.themeOpt === t;
     });
   }
-  radios.forEach(function (r) {
-    r.addEventListener("change", function () {
+  radios.forEach((r) => {
+    r.addEventListener("change", () => {
       if (r.checked) applyTheme(r.dataset.themeOpt, true);
     });
   });

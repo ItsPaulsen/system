@@ -153,6 +153,7 @@
   }
 
   .ex-filter__head {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -169,6 +170,31 @@
 
   .ex-filter__head::-webkit-details-marker {
     display: none;
+  }
+
+  /* Compact 36 hover surface behind the chevron, the same treatment the sheet's
+     close button gets: the whole row is the target, but only the chevron shows
+     it, so the row doesn't light up like a menu item.
+
+     An alpha fill rather than a background step, because this row appears on two
+     different surfaces: the band's gray on the rail, and the sheet's own when
+     the filter is relocated there. One value reads on both. */
+  .ex-filter__head::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline-end: -8px; /* 36 surface around the 20 glyph */
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    translate: 0 -50%;
+    transition: background var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ex-filter__head:hover::before {
+      background: var(--fill-quaternary);
+    }
   }
 
   /* Chevron drawn on the summary itself, so the <summary> holds only its label
@@ -488,6 +514,16 @@
      already reads "Filter". Placed last so specificity stays ascending. */
   .sheet .ex-filter {
     display: block;
+  }
+
+  /* In the sheet the .sheet__body is already the scroll container, so the rail's
+     viewport must not be a second one nested inside it: two of them means the
+     inner one briefly overflows while a group animates open, flashing the bar in
+     and out. Handing the scrolling to the sheet also means the viewport stops
+     clipping, so the focus rings need no inset here. */
+  .sheet .ex-filter > .scroll-area__viewport {
+    padding-inline: 0;
+    overflow: visible;
   }
 
   .sheet .ex-filter__title {

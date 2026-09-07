@@ -3003,6 +3003,7 @@ function initSliders() {
 // area is marked [data-scrollable="false"] and the bar stays hidden.
 function initScrollAreas() {
   const MIN_THUMB = 24; // keep it grabbable on very long content
+  const SLACK = 8; // see update(): phantom overflow that shouldn't show a bar
 
   document.querySelectorAll("[data-scroll-area]").forEach((area) => {
     const viewport = area.querySelector(".scroll-area__viewport");
@@ -3015,10 +3016,14 @@ function initScrollAreas() {
     const update = () => {
       const { scrollHeight, clientHeight, scrollTop } = viewport;
       const overflow = scrollHeight - clientHeight;
-      // A pixel of slack: sub-pixel layout can leave a scrollHeight a hair over
-      // clientHeight on content that visually fits, which would flash the bar.
-      area.dataset.scrollable = overflow > 1 ? "true" : "false";
-      if (overflow <= 1) return;
+      // Slack, not a strict compare: sub-pixel layout leaves scrollHeight a hair
+      // over clientHeight on content that visually fits, and a child with
+      // `overflow-clip-margin` (the filter groups have one, so their focus rings
+      // survive the open/close animation) contributes that margin to the
+      // scrollable overflow even while it fits. Either would show a bar for
+      // content that doesn't need one.
+      area.dataset.scrollable = overflow > SLACK ? "true" : "false";
+      if (overflow <= SLACK) return;
 
       const track = bar.clientHeight;
       const height = Math.max(MIN_THUMB, (clientHeight / scrollHeight) * track);
@@ -3039,6 +3044,11 @@ function initScrollAreas() {
       update();
       flash();
     });
+
+    // A ResizeObserver fires per animation frame, so a group animating open is
+    // measured mid-flight; this guarantees one more reading once it settles,
+    // rather than leaving the bar on a transient size.
+    viewport.addEventListener("transitionend", update);
 
     // Content height changes on its own here (accordion groups open and close,
     // filters hide rows), so watch the viewport and its contents rather than

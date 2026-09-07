@@ -7,16 +7,28 @@
 /* Layered so component CSS stays overridable by specificity, not by an
    unlayered sheet outranking every layer. Same as post.css. */
 @layer components {
-  /* Header height, shared by the sticky topbar, the open menu's header row, and
-   the skip-link scroll offset, so the three can't drift apart. 64 on mobile,
-   72 from md. */
+  /* Header sizing, kept in one place so the pieces can't drift apart.
+   --ex-topbar-h is the sticky topbar, the open menu's header row and the
+   skip-link scroll offset: 64 on mobile, 72 from md. --ex-control-* is the nav
+   pills and the Menu/Close buttons: compact 40/16 below lg, the Button
+   component's own 48/20 from lg. --with-end-icon derives the tighter icon-side
+   padding from the inline value on its own, so only these numbers are set. */
   :root {
     --ex-topbar-h: 64px;
+    --ex-control-h: 40px;
+    --ex-control-px: 16px;
   }
 
   @media (min-width: 768px) {
     :root {
       --ex-topbar-h: 72px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --ex-control-h: 48px;
+      --ex-control-px: 20px;
     }
   }
 
@@ -621,25 +633,22 @@
     display: none;
   }
 
-  /* The three header nav links: a fixed 40px pill, so the box is the same for
+  /* The three header nav links: a fixed-height pill, so the box is the same for
      all three whatever the type metrics do, rather than padding + line-height
      deciding it. Type steps down to body-small at ≤1024, back to body-medium
-     above. Scoped to the example topbar, not the shared component. The Settings
-     hover dropdown stays body-small (16) at all widths. */
+     above, and the box steps with it via --ex-control-*. Scoped to the example
+     topbar, not the shared component. The Settings hover dropdown stays
+     body-small (16) at all widths. */
   .ex-topbar__nav .nav-menu__link {
-    height: 40px;
-    padding: 0 16px;
+    height: var(--ex-control-h);
+    padding: 0 var(--ex-control-px);
     border-radius: var(--radius-full);
     font-size: var(--font-body-small-size);
     transition: background var(--motion-default);
   }
 
-  /* At >=1024 the box steps with the type, to 48px and 20px, so it matches the
-   header buttons and the padding ratio doesn't drift under the larger text. */
   @media (min-width: 1024px) {
     .ex-topbar__nav .nav-menu__link {
-      height: 48px;
-      padding: 0 20px;
       font-size: var(--font-body-medium-size);
     }
   }
@@ -653,14 +662,11 @@
     }
   }
 
-  /* Below 1024 these are the compact header controls: 40px to match the nav
-   pills, and 16px inline padding, which the --with-end-icon modifier tightens
-   to 12 on the icon side by itself. Both buttons are the same control, so they
-   scale together. Restored to the Button defaults at >=1024 below. */
+  /* Same size pair as the nav pills, so the whole header row matches. */
   .ex-topbar__menu,
   .ex-menu__close {
-    --button-size: 40px;
-    --button-px: 16px;
+    --button-size: var(--ex-control-h);
+    --button-px: var(--ex-control-px);
   }
 
   .ex-topbar__menu {
@@ -674,13 +680,11 @@
   }
 
   /* Header buttons (topbar Menu + sheet Close) step up to body-medium at ≥1024,
-     matching the nav links, and back to the Button component's own size and
-     inline padding. Overrides the button's own --button-font size var. */
+     matching the nav links. Overrides the button's own --button-font size var;
+     the height and padding come from --ex-control-*. */
   @media (min-width: 1024px) {
     .ex-topbar__menu,
     .ex-menu__close {
-      --button-size: 48px;
-      --button-px: 20px;
       --button-font: var(--font-body-medium-emphasized-size);
     }
   }

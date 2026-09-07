@@ -284,9 +284,15 @@
 
   /* No gap: both controls carry their own inline padding, so their pill hover
      surfaces sit side by side without a dead strip between them. */
+
+  /* Up to 1024 the controls own the row: Filter to the start, sort to the end,
+     the biggest targets the width allows. From 1025 they group at the end beside
+     the count, with no gap between them so their pill hover surfaces meet. */
   .ex-listing__actions {
     display: flex;
+    flex: 1;
     align-items: center;
+    justify-content: space-between;
   }
 
   /* Same bare-then-pill treatment as the sort control beside it: no surface at
@@ -320,9 +326,21 @@
     font-weight: inherit;
   }
 
-  /* Whole line at 500, so the number and its noun read as one label rather than
-     a figure with a caption. */
+  /* Visually hidden up to 1024, where the row is better spent on the two
+     controls, but NOT display: none: this is the row's role="status", so it is
+     what announces the result when a filter changes, and hiding the box would
+     drop that announcement at the width with the least other feedback. Restored
+     to a normal line from 1025 (below).
+
+     Whole line at 500 there, so the number and its noun read as one label rather
+     than a figure with a caption. */
   .ex-listing__count {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
     margin: 0;
     color: var(--ink-primary);
     font-size: var(--font-body-small-emphasized-size);
@@ -445,6 +463,20 @@
     /* The rail is back, so the Filter trigger has nothing left to open for. */
     .ex-filter-toggle {
       display: none;
+    }
+
+    /* Count returns to a normal line, and the controls stop spreading. */
+    .ex-listing__count {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+    }
+
+    .ex-listing__actions {
+      flex: none;
+      justify-content: flex-end;
     }
   }
 

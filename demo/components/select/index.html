@@ -237,7 +237,10 @@
           <h2 class="subhead">JavaScript</h2>
           <p class="section-note">
             From <code>app.js</code>. Owns open/close, click and keyboard selection
-            (arrows/Enter/Esc), type-ahead, and click-away.
+            (arrows/Enter/Esc), type-ahead, and click-away. On selection it dispatches a bubbling
+            <code>select:change</code> on the root, with
+            <code>detail: { index, option, value }</code>: there's no native change event to listen
+            for, so that's how you act on a choice.
           </p>
           <div data-source="/assets/app.js" data-fn="initSelects"></div>
         </section>

@@ -98,6 +98,23 @@
     display: none;
   }
 
+  /* No converge animation on anything in the rail. It starts the ring at
+     outline-offset 6, so it reaches 9 outside the control before settling at 5 —
+     past the 6 of padding the scroll container clips at, so the first frames get
+     shaved. The ring still appears, just at its resting offset. */
+  .shop-filter :focus-visible {
+    animation: none;
+  }
+
+  /* The Scroll Area viewport is a scroll container at every width, so it clips
+     at its padding edge even in the sheet where nothing actually scrolls. This
+     6 is the room the checkbox and radio focus rings need; the rail cancels it
+     with a negative margin on the desktop rail (below), while in the sheet a 6
+     inset sits inside the sheet's own padding and doesn't read. */
+  .shop-filter > .scroll-area__viewport {
+    padding-inline: 6px;
+  }
+
   .shop-filter__title {
     margin: 0 0 1rem; /* 16 down to the first divider */
     font-size: var(--font-title-small-size);
@@ -110,6 +127,11 @@
      that flips when open. Interactive at every width. */
   .shop-filter__group {
     border-top: var(--border-width) solid var(--fill-tertiary);
+
+    /* 4 either side of the heading row, so a collapsed group reads as centred
+       between its two dividers. On the GROUP, not the body, so the bottom 4 is
+       there whether the group is open or closed. */
+    padding-block: var(--space-4);
   }
 
   .shop-filter__head {
@@ -117,7 +139,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding-block: 16px;
+    height: 48px;
     border-radius: var(--radius-sm);
     cursor: pointer;
     list-style: none;
@@ -151,8 +173,23 @@
 
   .shop-filter__body {
     display: grid;
-    gap: 12px;
-    padding-bottom: 20px;
+
+    /* 4 below the heading row, matching the 4 above it. On the body rather than
+       the heading so a collapsed group doesn't carry the gap. */
+    padding-top: var(--space-4);
+
+    /* 12 here plus the group's own 4 gives 16 down to the next divider. */
+    padding-bottom: var(--space-12);
+  }
+
+  /* Options are full-width rows that touch, rather than inline labels with gaps
+     between them: no dead space in the list, and each row is a 40 tall target
+     rather than just the box and its label. Vertical padding only — with no
+     hover surface there's nothing for inline padding to shape. */
+  .shop-filter__body .checkbox,
+  .shop-filter__body .radio {
+    width: 100%;
+    padding-block: var(--space-8);
   }
 
   /* ── Long filter groups ───────────────────────────────────────────────────
@@ -246,13 +283,14 @@
     margin-bottom: var(--space-24);
   }
 
-  /* White field on the band, the same primary→secondary tonal step the media
-     tiles and the Show more button take, so every raised thing on this surface
-     matches. Border stays transparent until focus, where the base
-     .input__container:focus-within lights it. */
+  /* Recessed field rather than a raised one: it reads as a well cut into the
+     rail instead of another card, which is what the media tiles and the Show
+     more button are. Off the gray ramp, so it tracks the theme. Border stays
+     transparent until focus, where the base .input__container:focus-within
+     lights it. */
   .shop__search-field {
     border-color: transparent;
-    background: var(--background-secondary);
+    background: var(--neutral-gray-3);
   }
 
   /* Filter trigger, shown ≤1024 where the rail is hidden (hidden again ≥1024 in
@@ -774,8 +812,47 @@
       padding-top: 4rem;
     }
 
+    /* Sticky rail: it scrolls up with the products until it reaches its offset
+       under the sticky topbar, then holds while the grid keeps going. The rail
+       only *bounds* the height — the Scroll Area viewport inside it does the
+       scrolling and owns the bar, so the scrollbar is a real element that fades
+       in on hover (see the Scroll Area block in components.css).
+
+       No `overscroll-behavior: contain`, deliberately: it stops the rail's
+       scroll chaining to the page, so bottoming out the rail before it has
+       reached its sticky offset leaves the page unable to scroll and the rest of
+       the rail parked below the viewport, unreachable. Let it chain and the rail
+       sticks as soon as the page catches up. */
     .shop-filter {
+      --shop-rail-top: calc(var(--ex-topbar-h) + var(--space-32));
+
       display: block;
+      position: sticky;
+      top: var(--shop-rail-top);
+
+      /* Pull the start edge back by the viewport's padding below, so the options
+         still line up with the breadcrumb and title above. */
+      margin-inline-start: -6px;
+    }
+
+    /* The bar is absolutely positioned, so the content needs holding clear of it
+       (14 on the end side for the 10 bar plus air). The 6 on the start side is
+       the room the checkbox and radio focus rings (3px ring, 2px offset) need
+       not to be clipped by the scroll container's edge.
+
+       Bottom padding belongs inside the scroll container: without it the last
+       option sits flush against the container's edge and can't scroll clear. */
+    .shop-filter > .scroll-area__viewport {
+      /* The height bound goes on the VIEWPORT, not the rail: it's the scroll
+         container, and a max-height on the rail alone leaves it with nothing to
+         scroll against. */
+      max-height: calc(100dvh - var(--shop-rail-top));
+
+      /* 24 on the end side: the 10 bar, less the pill's own 2 inset, leaves 16
+         clear between the nearest option and the pill. */
+      padding-inline: 6px var(--space-24);
+      padding-block-end: var(--space-24);
+      scroll-padding-block-end: var(--space-24);
     }
 
     /* The whole row goes: the search has moved up into the rail and the Filter
@@ -785,11 +862,15 @@
     }
 
     .shop__inner {
-      grid-template-columns: 216px 1fr;
+      /* 244 = 220 of usable option width, plus the rail's 6 + 24 of padding,
+         less the 6 it borrows back with its negative start margin. */
+      grid-template-columns: 244px 1fr;
       align-items: start;
 
-      /* Fluid gap: 32 at 1024, scaling with window width to 112 at 1600. */
-      gap: clamp(2rem, calc(2rem + (100vw - 64rem) * 5 / 36), 7rem);
+      /* Flat 32 rather than scaling with the window: the rail is a fixed 244, so
+         a widening gap just pushed the products further from the filter that
+         drives them. */
+      gap: var(--space-32);
     }
   }
 

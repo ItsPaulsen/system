@@ -2990,6 +2990,104 @@ function initSliders() {
 // input, steps on click and Arrow Up/Down, press-and-hold repeats, clamps on blur,
 // and disables a stepper at its bound. The input stays type=text (inputmode numeric)
 // so we control formatting; stepping fires a change event for listeners.
+// Scroll Area: a DOM scrollbar for a real scroll container.
+//
+// The viewport does all the actual scrolling (wheel, keyboard, touch, momentum,
+// find-in-page); this only sizes and places a thumb over it, and lets you drag
+// that thumb. The native bar is hidden in CSS. See the Scroll Area block in
+// components.css for why a DOM thumb rather than ::-webkit-scrollbar.
+//
+// Nothing here assumes a height: whatever bounds the viewport (max-height, a
+// flex row, a grid row) is the consumer's business. When the content fits, the
+// area is marked [data-scrollable="false"] and the bar stays hidden.
+function initScrollAreas() {
+  const MIN_THUMB = 24; // keep it grabbable on very long content
+
+  document.querySelectorAll("[data-scroll-area]").forEach((area) => {
+    const viewport = area.querySelector(".scroll-area__viewport");
+    const bar = area.querySelector(".scroll-area__bar");
+    const thumb = area.querySelector(".scroll-area__thumb");
+    if (!viewport || !bar || !thumb) return;
+
+    let hideTimer;
+
+    const update = () => {
+      const { scrollHeight, clientHeight, scrollTop } = viewport;
+      const overflow = scrollHeight - clientHeight;
+      // A pixel of slack: sub-pixel layout can leave a scrollHeight a hair over
+      // clientHeight on content that visually fits, which would flash the bar.
+      area.dataset.scrollable = overflow > 1 ? "true" : "false";
+      if (overflow <= 1) return;
+
+      const track = bar.clientHeight;
+      const height = Math.max(MIN_THUMB, (clientHeight / scrollHeight) * track);
+      const top = (scrollTop / overflow) * (track - height);
+      thumb.style.height = `${height}px`;
+      thumb.style.top = `${top}px`;
+    };
+
+    // Shown while scrolling as well as on hover, so a wheel or keyboard scroll
+    // still reports position when the pointer is elsewhere.
+    const flash = () => {
+      area.classList.add("is-scrolling");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => area.classList.remove("is-scrolling"), 700);
+    };
+
+    viewport.addEventListener("scroll", () => {
+      update();
+      flash();
+    });
+
+    // Content height changes on its own here (accordion groups open and close,
+    // filters hide rows), so watch the viewport and its contents rather than
+    // recomputing on a timer.
+    if (typeof ResizeObserver === "function") {
+      const ro = new ResizeObserver(update);
+      ro.observe(viewport);
+      [...viewport.children].forEach((child) => ro.observe(child));
+    }
+    window.addEventListener("resize", update);
+
+    // Drag: map pointer movement to scrollTop by the track-to-content ratio, so
+    // the thumb tracks the cursor exactly rather than drifting.
+    thumb.addEventListener("pointerdown", (e) => {
+      e.preventDefault(); // don't start a text selection in the content
+      const startY = e.clientY;
+      const startScroll = viewport.scrollTop;
+      const overflow = viewport.scrollHeight - viewport.clientHeight;
+      const range = bar.clientHeight - thumb.offsetHeight;
+      if (range <= 0) return;
+
+      area.classList.add("is-dragging");
+      thumb.setPointerCapture(e.pointerId);
+
+      const move = (ev) => {
+        viewport.scrollTop = startScroll + ((ev.clientY - startY) / range) * overflow;
+      };
+      const up = () => {
+        area.classList.remove("is-dragging");
+        thumb.removeEventListener("pointermove", move);
+        thumb.removeEventListener("pointerup", up);
+        thumb.removeEventListener("pointercancel", up);
+      };
+      thumb.addEventListener("pointermove", move);
+      thumb.addEventListener("pointerup", up);
+      thumb.addEventListener("pointercancel", up);
+    });
+
+    // Track click pages toward the click, the way a native bar does.
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target === thumb) return;
+      const rect = thumb.getBoundingClientRect();
+      const dir = e.clientY < rect.top ? -1 : 1;
+      viewport.scrollBy({ top: dir * viewport.clientHeight * 0.9, behavior: "smooth" });
+    });
+
+    update();
+  });
+}
+
 function initNumberFields() {
   document.querySelectorAll("[data-number-field]").forEach((root) => {
     const input = root.querySelector(".number-field__input");
@@ -3720,6 +3818,7 @@ function init() {
   initTabs();
   initCarousel();
   initNumberFields();
+  initScrollAreas();
   initErrorSummary();
   initCharCount();
   refreshResponsive();

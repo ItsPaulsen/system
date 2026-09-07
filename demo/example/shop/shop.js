@@ -22,6 +22,9 @@
   const search = document.querySelector(".shop__search");
   const bar = document.querySelector(".shop__bar");
   const title = document.querySelector(".shop-filter__title");
+  // The rail's contents live in a Scroll Area viewport, so that — not the rail
+  // itself — is where the search field belongs.
+  const railBody = filter.querySelector(".scroll-area__viewport") || filter;
   if (!filter || !rail || !main || !sheetBody) return;
 
   const desktop = window.matchMedia("(min-width: 1025px)");
@@ -31,7 +34,7 @@
     // before the filter moves keeps it from riding along into the sheet.
     if (search && bar && title) {
       if (desktop.matches) {
-        if (search.parentElement !== filter) filter.insertBefore(search, title);
+        if (search.parentElement !== railBody) railBody.insertBefore(search, title);
       } else if (search.parentElement !== bar) {
         bar.prepend(search);
       }

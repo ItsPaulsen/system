@@ -63,64 +63,39 @@
           <!-- Filter rail, collapsible Price / Category groups. Same rail as the
                blog listing: above 1024 it sits here, below it moves into the
                left sheet (shop.js), so its state survives the move. -->
-          <aside class="shop-filter" aria-label="Filter">
-            <h2 class="shop-filter__title">Filter</h2>
+          <aside class="scroll-area shop-filter" aria-label="Filter" data-scroll-area>
+            <div class="scroll-area__viewport">
+              <h2 class="shop-filter__title">Filter</h2>
 
-            <details class="shop-filter__group" open>
-              <summary class="shop-filter__head">Price</summary>
-              <div class="shop-filter__body" role="radiogroup" aria-label="Price">
-                <label class="radio">
-                  <input type="radio" name="shop-price" class="radio__input" value="any" checked />
-                  <span class="radio__label">Any price</span>
-                </label>
-                <label class="radio">
-                  <input type="radio" name="shop-price" class="radio__input" value="under" />
-                  <span class="radio__label">Under 6 000 kr</span>
-                </label>
-              </div>
-            </details>
+              <details class="shop-filter__group" open>
+                <summary class="shop-filter__head">Price</summary>
+                <div class="shop-filter__body" role="radiogroup" aria-label="Price">
+                  <label class="radio">
+                    <input
+                      type="radio"
+                      name="shop-price"
+                      class="radio__input"
+                      value="any"
+                      checked
+                    />
+                    <span class="radio__label">Any price</span>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="shop-price" class="radio__input" value="under" />
+                    <span class="radio__label">Under 6 000 kr</span>
+                  </label>
+                </div>
+              </details>
 
-            <details class="shop-filter__group" open>
-              <summary class="shop-filter__head">Category</summary>
-              <div class="shop-filter__body" data-filter="category">
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-cat-chairs" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Chairs</span>
-                </label>
-              </div>
-            </details>
-
-            <!-- Brand. The card's title *is* the brand, so the filter matches on
-                 that text rather than a data attribute: one source of truth, and
-                 a product can't be tagged with a brand it doesn't display. Only
-                 the real products carry one so far. -->
-            <details class="shop-filter__group" open>
-              <summary class="shop-filter__head">Brand</summary>
-              <div class="shop-filter__body" data-filter="brand" data-filter-long>
-                <label class="input shop-filter__search">
-                  <span class="input__label sr-only">Find brand</span>
-                  <span
-                    class="input__container input__container--rounded shop-filter__search-field"
-                  >
-                    <span class="input__leading">
+              <details class="shop-filter__group" open>
+                <summary class="shop-filter__head">Category</summary>
+                <div class="shop-filter__body" data-filter="category">
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-cat-chairs" type="checkbox" class="checkbox__input" />
                       <svg
+                        class="checkbox__check"
                         viewBox="0 0 24 24"
-                        width="20"
-                        height="20"
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2"
@@ -128,327 +103,367 @@
                         stroke-linejoin="round"
                         aria-hidden="true"
                       >
-                        <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                        <path d="M21 21l-6 -6" />
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
-                    <input
-                      name="shop-brand-find"
-                      class="input__element"
-                      type="search"
-                      placeholder="Find brand"
-                      autocomplete="off"
-                    />
-                  </span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-brand-muuto" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Muuto</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input name="shop-brand-carl-hansen" type="checkbox" class="checkbox__input" />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Carl Hansen &amp; Søn</span>
-                </label>
-                <button type="button" class="link shop-filter__more" hidden></button>
-              </div>
-            </details>
+                    <span class="checkbox__label">Chairs</span>
+                  </label>
+                </div>
+              </details>
 
-            <!-- Color, whose options are families rather than single values.
-                 Each checkbox declares the colors it covers in data-colors, so
-                 the filter's own markup is the one place that says which values
-                 belong to it — adding a wood is one word here, next to the
-                 label it belongs to.
+              <!-- Brand. The card's title *is* the brand, so the filter matches on
+                   that text rather than a data attribute: one source of truth, and
+                   a product can't be tagged with a brand it doesn't display. Only
+                   the real products carry one so far. -->
+              <details class="shop-filter__group" open>
+                <summary class="shop-filter__head">Brand</summary>
+                <div class="shop-filter__body" data-filter="brand" data-filter-long>
+                  <label class="input shop-filter__search">
+                    <span class="input__label sr-only">Find brand</span>
+                    <span
+                      class="input__container input__container--rounded shop-filter__search-field"
+                    >
+                      <span class="input__leading">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                          <path d="M21 21l-6 -6" />
+                        </svg>
+                      </span>
+                      <input
+                        name="shop-brand-find"
+                        class="input__element"
+                        type="search"
+                        placeholder="Find brand"
+                        autocomplete="off"
+                      />
+                    </span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-brand-muuto" type="checkbox" class="checkbox__input" />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Muuto</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-brand-carl-hansen"
+                        type="checkbox"
+                        class="checkbox__input"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Carl Hansen &amp; Søn</span>
+                  </label>
+                  <button type="button" class="link shop-filter__more" hidden></button>
+                </div>
+              </details>
 
-                 data-color on a card is the facet token (oak, black), never the
-                 copy shown to the reader: the variant line carries that, and it
-                 can be as specific as the product needs ("refine leather
-                 black/black") without the filter having to know about it. -->
-            <details class="shop-filter__group" open>
-              <summary class="shop-filter__head">Color</summary>
-              <div class="shop-filter__body" data-filter="color">
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-tree"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="oak ash beech birch pine walnut"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Tree</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-black"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="black"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Black</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-brown"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="brown cognac"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Brown</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-beige"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="beige natural eggshell"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Beige</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-green"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="green seaweed"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Green</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-white"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="white"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">White</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-grey"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="slate"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Grey</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-yellow"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="yellow"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Yellow</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-orange"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="terracotta"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Orange</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-red"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="falu"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Red</span>
-                </label>
-                <label class="checkbox">
-                  <span class="checkbox__box">
-                    <input
-                      name="shop-color-blue"
-                      type="checkbox"
-                      class="checkbox__input"
-                      data-colors="northsea"
-                    />
-                    <svg
-                      class="checkbox__check"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" pathLength="1" />
-                    </svg>
-                  </span>
-                  <span class="checkbox__label">Blue</span>
-                </label>
-              </div>
-            </details>
+              <!-- Color, whose options are families rather than single values.
+                   Each checkbox declares the colors it covers in data-colors, so
+                   the filter's own markup is the one place that says which values
+                   belong to it — adding a wood is one word here, next to the
+                   label it belongs to.
+
+                   data-color on a card is the facet token (oak, black), never the
+                   copy shown to the reader: the variant line carries that, and it
+                   can be as specific as the product needs ("refine leather
+                   black/black") without the filter having to know about it. -->
+              <details class="shop-filter__group" open>
+                <summary class="shop-filter__head">Color</summary>
+                <div class="shop-filter__body" data-filter="color">
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-tree"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="oak ash beech birch pine walnut"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Tree</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-black"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="black"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Black</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-brown"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="brown cognac"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Brown</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-beige"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="beige natural eggshell"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Beige</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-green"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="green seaweed"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Green</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-white"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="white"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">White</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-grey"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="slate"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Grey</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-yellow"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="yellow"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Yellow</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-orange"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="terracotta"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Orange</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-red"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="falu"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Red</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-blue"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="northsea"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Blue</span>
+                  </label>
+                </div>
+              </details>
+            </div>
+            <div class="scroll-area__bar" aria-hidden="true">
+              <div class="scroll-area__thumb"></div>
+            </div>
           </aside>
 
           <div class="shop__main">

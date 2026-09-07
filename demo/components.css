@@ -4471,6 +4471,119 @@
     background: var(--fill-tertiary);
   }
 
+  /* ── Scroll area ───────────────────────────────────────────────────────── */
+
+  /* A scroll container whose scrollbar is a real element rather than the
+   platform's own, so it can be styled and revealed the way the rest of the
+   system's affordances are: a pill thumb that fades in when the pointer is over
+   the area (or while it's scrolling), darkens under the pointer, and darkens
+   again while dragged.
+
+   Why not just style the native bar: `::-webkit-scrollbar` gets you the shape,
+   but scrollbars are composited separately and Chrome won't reliably repaint the
+   thumb when the container's :hover flips, so reveal-on-hover fails
+   intermittently and lingers after the pointer leaves. A DOM thumb is
+   deterministic. The trade is that this needs JS (initScrollAreas in app.js) to
+   size and place the thumb.
+
+   The viewport stays a real scroll container, so keyboard scrolling, wheel and
+   touch momentum, find-in-page and scroll anchoring all keep working — only the
+   bar is ours. It needs no tabindex: the content's own focusable controls are
+   reachable by tab, and focusing one scrolls it into view.
+
+   Structure:
+     <div class="scroll-area" data-scroll-area>
+       <div class="scroll-area__viewport">…content…</div>
+       <div class="scroll-area__bar" aria-hidden="true">
+         <div class="scroll-area__thumb"></div>
+       </div>
+     </div>
+
+   Give the VIEWPORT its height (max-height, height, or a flex context); the
+   component doesn't assume one. */
+  .scroll-area {
+    position: relative;
+  }
+
+  /* No height here on purpose: the consumer sizes the VIEWPORT (max-height,
+   height, or a flex/grid context). Setting height: 100% would resolve to auto
+   against a parent that only has a max-height, and nothing would scroll. */
+  .scroll-area__viewport {
+    overflow-y: auto;
+
+    /* Hide the platform bar; ours replaces it. */
+    scrollbar-width: none;
+  }
+
+  .scroll-area__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The bar reserves its own width via the viewport's padding (set by the
+   consumer), not by taking layout space here: it's absolutely positioned, so
+   revealing it never reflows the content. */
+  .scroll-area__bar {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    inset-inline-end: 0;
+    width: 10px;
+    opacity: 0;
+    transition: opacity var(--motion-default);
+  }
+
+  /* Revealed by pointer presence over the area, and while it's actually
+   scrolling (JS sets is-scrolling), so a wheel or keyboard scroll shows the
+   position even with the pointer elsewhere. Both are dropped when the content
+   fits: JS marks the area [data-scrollable="false"] and the bar stays out. */
+  @media (hover: hover) and (pointer: fine) {
+    .scroll-area:hover > .scroll-area__bar {
+      opacity: 1;
+    }
+  }
+
+  .scroll-area.is-scrolling > .scroll-area__bar,
+  .scroll-area.is-dragging > .scroll-area__bar {
+    opacity: 1;
+  }
+
+  .scroll-area[data-scrollable="false"] > .scroll-area__bar {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Top and height come from JS. The transparent border insets the pill — 2px
+   each side leaves a 6px pill inside the full 10px grab target. */
+  .scroll-area__thumb {
+    position: absolute;
+    inset-inline: 0;
+    border: 2px solid transparent;
+    border-radius: var(--radius-full);
+    background: var(--fill-secondary);
+    background-clip: content-box;
+    cursor: default;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .scroll-area__thumb:hover {
+      background: var(--fill-primary);
+      background-clip: content-box;
+    }
+  }
+
+  .scroll-area.is-dragging .scroll-area__thumb {
+    background: var(--ink-tertiary);
+    background-clip: content-box;
+  }
+
+  /* Reduced motion: the fade is decoration, the thumb still appears. */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-area__bar {
+      transition: none;
+    }
+  }
+
   /* ── Carousel ──────────────────────────────────────────────────────────── */
 
   /* A horizontal, snapping slider of items with prev/next controls. app.js

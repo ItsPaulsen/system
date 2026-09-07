@@ -180,11 +180,12 @@
        between product rows. Because the cards are a subgrid (see .shop-card),
        the parent's row-gap is the *internal* one, and the card derives its
        bottom margin from the difference. Change either value and the other
-       stays correct. */
-    --shop-card-gap: var(--space-12);
-    --shop-row-gap: var(--space-20);
+       stays correct. Columns sit 16 apart, tighter than the layout gutter: the
+       rows are the reading rhythm here, so they get the wider space. */
+    --shop-card-gap: var(--space-8);
+    --shop-row-gap: var(--space-32);
 
-    column-gap: var(--grid-gutter, 1rem);
+    column-gap: var(--space-16);
     row-gap: var(--shop-card-gap);
   }
 
@@ -345,6 +346,10 @@
     display: flex;
     flex-direction: column;
     align-self: start;
+
+    /* The subgrid takes every internal gap from one row-gap, now 8 for title to
+       price. Tile to title wants 12, so it makes up the 4 itself. */
+    margin-block-start: var(--space-4);
   }
 
   /* Clamped to two lines with an ellipsis. No reserved height any more: the

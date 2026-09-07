@@ -467,43 +467,16 @@
           </aside>
 
           <div class="shop__main">
-            <!-- Search + the filter trigger, the ≤1024 row. Above 1024 the whole
-                 row goes away: shop.js moves the search up into the filter rail
-                 (where it's anchored to something instead of floating over the
-                 grid) and the rail replaces the Filter button, which only exists
-                 to open the left sheet. -->
-            <div class="shop__bar">
-              <label class="input shop__search">
-                <span class="input__label sr-only">Search products</span>
-                <span class="input__container input__container--rounded shop__search-field">
-                  <span class="input__leading">
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="20"
-                      height="20"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                      <path d="M21 21l-6 -6" />
-                    </svg>
-                  </span>
-                  <input
-                    name="shop-search"
-                    class="input__element"
-                    type="search"
-                    placeholder="Search…"
-                    autocomplete="off"
-                    data-shop-search
-                  />
-                </span>
-              </label>
+            <!-- Result count + sort. The count is a live region, so filtering or
+                 searching is announced without moving focus. The sort control is
+                 the Select component on a bare skin (no border, no fill), the
+                 only page-local restyle on this screen. -->
+            <div class="shop__toolbar">
+              <p class="shop__count" role="status">
+                <strong data-shop-count>34</strong> <span data-shop-noun>products</span>
+              </p>
 
-              <div class="shop__filter-toggle-wrap" data-size="sm">
+              <div class="shop__toolbar-actions" data-size="sm">
                 <button
                   type="button"
                   class="button button--with-start-icon shop__filter-toggle"
@@ -530,58 +503,55 @@
                   </svg>
                   Filter
                 </button>
-              </div>
-            </div>
 
-            <!-- Result count + sort. The count is a live region, so filtering or
-                 searching is announced without moving focus. The sort control is
-                 the Select component on a bare skin (no border, no fill), the
-                 only page-local restyle on this screen. -->
-            <div class="shop__toolbar">
-              <p class="shop__count" role="status">
-                <strong data-shop-count>34</strong> <span data-shop-noun>products</span>
-              </p>
-
-              <div class="select shop__sort" data-select>
-                <button
-                  class="select__trigger"
-                  type="button"
-                  aria-haspopup="listbox"
-                  aria-expanded="false"
-                >
-                  <span class="sr-only">Sort by,</span>
-                  <span class="select__value">Most popular</span>
-                  <svg
-                    class="select__chevron"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
+                <div class="select shop__sort" data-select>
+                  <button
+                    class="select__trigger"
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
                   >
-                    <path d="M6 9l6 6l6 -6" />
-                  </svg>
-                </button>
-                <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
-                <ul
-                  class="select__list shop__sort-list"
-                  role="listbox"
-                  tabindex="-1"
-                  aria-label="Sort by"
-                  hidden
-                >
-                  <li class="select__option" role="option" aria-selected="true" data-sort="popular">
-                    Most popular
-                  </li>
-                  <li class="select__option" role="option" data-sort="newest">Newest first</li>
-                  <li class="select__option" role="option" data-sort="oldest">Oldest first</li>
-                  <li class="select__option" role="option" data-sort="price-asc">Price low-high</li>
-                  <li class="select__option" role="option" data-sort="price-desc">
-                    Price high-low
-                  </li>
-                </ul>
+                    <span class="sr-only">Sort by,</span>
+                    <span class="select__value">Most popular</span>
+                    <svg
+                      class="select__chevron"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </button>
+                  <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                  <ul
+                    class="select__list shop__sort-list"
+                    role="listbox"
+                    tabindex="-1"
+                    aria-label="Sort by"
+                    hidden
+                  >
+                    <li
+                      class="select__option"
+                      role="option"
+                      aria-selected="true"
+                      data-sort="popular"
+                    >
+                      Most popular
+                    </li>
+                    <li class="select__option" role="option" data-sort="newest">Newest first</li>
+                    <li class="select__option" role="option" data-sort="oldest">Oldest first</li>
+                    <li class="select__option" role="option" data-sort="price-asc">
+                      Price low-high
+                    </li>
+                    <li class="select__option" role="option" data-sort="price-desc">
+                      Price high-low
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 

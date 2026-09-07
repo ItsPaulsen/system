@@ -1,45 +1,21 @@
-// Filter and search placement, one source of truth for each control.
+// Filter placement, one source of truth for the filter UI.
 //
-// There's a single .shop-filter node and a single search field, and both have
-// two homes either side of 1024:
-//
-//   >1024  rail: the filter is column one of the listing grid, and the search
-//          sits at the top of it, so it's anchored to the rail instead of
-//          floating in its own row over the products.
-//   ≤1024  no rail: the filter moves into the left sheet behind a Filter
-//          button, and the search drops back to the .shop__bar row, where it
-//          stays visible rather than hiding behind the drawer.
-//
-// Relocating the same nodes (rather than rendering two copies) is what keeps
-// their state (open groups, checked boxes, the typed query) across the move.
-// Mirrors the 1025px breakpoint in shop.css. The sheet open/close/focus is
-// handled by the generic dialog wiring in app.js.
+// There's a single .shop-filter node. Above 1024 it sits in the listing grid as
+// the left rail; at/below 1024 the rail is replaced by a Filter button in the
+// toolbar and the same node is relocated into the left sheet, so its state
+// (open groups, checked boxes, chosen price) survives the move. Mirrors the
+// 1025px breakpoint in shop.css. The sheet open/close/focus is handled by the
+// generic dialog wiring in app.js. Same arrangement as the blog listing.
 (function () {
   const filter = document.querySelector(".shop-filter");
   const rail = document.querySelector(".shop__inner");
   const main = document.querySelector(".shop__main");
   const sheetBody = document.querySelector("[data-shop-filter-slot]");
-  const search = document.querySelector(".shop__search");
-  const bar = document.querySelector(".shop__bar");
-  const title = document.querySelector(".shop-filter__title");
-  // The rail's contents live in a Scroll Area viewport, so that, not the rail
-  // itself, is where the search field belongs.
-  const railBody = filter.querySelector(".scroll-area__viewport") || filter;
   if (!filter || !rail || !main || !sheetBody) return;
 
   const desktop = window.matchMedia("(min-width: 1025px)");
 
   const place = () => {
-    // Search first: it lives inside .shop-filter on the rail, so pulling it out
-    // before the filter moves keeps it from riding along into the sheet.
-    if (search && bar && title) {
-      if (desktop.matches) {
-        if (search.parentElement !== railBody) railBody.insertBefore(search, title);
-      } else if (search.parentElement !== bar) {
-        bar.prepend(search);
-      }
-    }
-
     if (desktop.matches) {
       // Rail: filter returns to the grid, ahead of the products column.
       if (filter.parentElement !== rail) rail.insertBefore(filter, main);
@@ -56,7 +32,7 @@
 // Search, filter, sort and paging over the products already in the markup.
 //
 // One apply() owns the whole result set: it narrows the cards to the ones
-// matching the search text, the price band and the checked categories, orders
+// matching the price band, the checked categories, brands and colors, orders
 // that set by the sort control, then reveals the first PAGE_SIZE of them and
 // lets Show more extend the window. Anything that changes the set resets the
 // window, so "Showing 24 of 3" can't happen.
@@ -78,7 +54,6 @@
   const filter = document.querySelector(".shop-filter");
   const empty = document.querySelector(".shop-empty");
   const foot = document.querySelector(".shop__foot");
-  const search = document.querySelector("[data-shop-search]");
   const sort = document.querySelector(".shop__sort");
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
@@ -94,9 +69,6 @@
   const popularity = new Map(cards.map((card, i) => [card, i]));
 
   const num = (card, attr) => Number(card.dataset[attr]) || 0;
-  // Name + variant, so a search for a material or a size ("oak", "set of 4")
-  // finds the products whose qualifier says so, not just their titles.
-  const textOf = (card) => card.querySelector(".shop-card__head")?.textContent || "";
   // The title is the brand, so the brand filter reads it straight off the card
   // rather than a parallel attribute that could disagree with what's on screen.
   const brandOf = (card) =>
@@ -139,7 +111,6 @@
   const priceBand = () => filter.querySelector('input[name="shop-price"]:checked')?.value || "any";
 
   const apply = () => {
-    const query = (search?.value || "").trim().toLowerCase();
     const categories = checkedIn("category");
     const brands = checkedIn("brand");
     const colors = activeColors();
@@ -152,9 +123,6 @@
       // them is asked for. No color of its own and it drops out.
       if (colors.size && !tokens(card.dataset.color).some((c) => colors.has(c))) return false;
       if (band === "under" && num(card, "price") >= UNDER) return false;
-      if (query && !`${textOf(card)} ${card.dataset.category}`.toLowerCase().includes(query)) {
-        return false;
-      }
       return true;
     });
 
@@ -169,7 +137,7 @@
     });
 
     if (countEl) countEl.textContent = String(matches.length);
-    // Both counts agree with the size of the result, so a search narrowed to a
+    // Both counts agree with the size of the result, so a filter narrowed to a
     // single hit reads "1 product" / "Showing 1 of 1 product".
     nouns.forEach((n) => {
       n.textContent = matches.length === 1 ? "product" : "products";
@@ -200,7 +168,6 @@
     });
     const any = filter.querySelector('input[name="shop-price"][value="any"]');
     if (any) any.checked = true;
-    if (search) search.value = "";
     reset();
   };
 
@@ -256,14 +223,6 @@
   };
 
   filter.addEventListener("change", reset);
-
-  // Typing is debounced: the count is a live region, so re-running apply() on
-  // every keystroke would queue an announcement per character.
-  let typing;
-  search?.addEventListener("input", () => {
-    clearTimeout(typing);
-    typing = setTimeout(reset, 200);
-  });
   sort?.addEventListener("select:change", (e) => {
     order = e.detail.option.dataset.sort || "popular";
     reset();

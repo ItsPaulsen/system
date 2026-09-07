@@ -3114,8 +3114,8 @@
   /* ── Navigation Menu ───────────────────────────────────────────────────────
    Primary navigation between destinations, e.g. in a header. Unlike Tabs (which
    swap panels within one page), each item is a link to another page, marked
-   with aria-current="page". Plain links, no hover, active, or pressed states;
-   only the keyboard focus ring remains.
+   with aria-current="page". Fixed-height pills with a hover surface; no active
+   or pressed state, since a nav link navigates away rather than toggling.
 
    Optional dropdown: give an item a .nav-menu__menu panel and it reveals on
    hover or keyboard focus. The item's own link stays clickable (link-first, no

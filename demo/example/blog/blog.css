@@ -347,10 +347,13 @@
     display: none;
   }
 
-  /* Filter sheet header: 72 tall (16 block padding around the 40 close button),
-     no divider, the first filter group's hairline reads as the top edge. */
+  /* Filter sheet header: same height as the topbar and the main menu's header
+     (--ex-topbar-h, 64 on mobile / 72 from md), so every header row on the
+     example site matches. No divider, the first filter group's hairline reads as
+     the top edge. */
   .blog__sheet .sheet__header {
-    padding-block: 1rem;
+    height: var(--ex-topbar-h);
+    padding-block: 0;
     border-bottom: 0;
   }
 
@@ -365,8 +368,8 @@
   }
 
   /* Close button: a generous 48 hit target (::before) with a compact, centred 36
-     hover surface (::after). The button box stays 40 so the 72 header height holds;
-     the base 40 hover fill is disabled in favour of the 36 one. */
+     hover surface (::after). The header sets its own height now, so the 40 box
+     just centres in it; the base 40 hover fill is disabled in favour of the 36. */
   .blog__sheet .sheet__close {
     position: relative;
   }

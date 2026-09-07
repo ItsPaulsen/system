@@ -85,7 +85,7 @@
   }
 
   /* No converge animation on anything in the rail. It starts the ring at
-     outline-offset 6, so it reaches 9 outside the control before settling at 5 —
+     outline-offset 6, so it reaches 9 outside the control before settling at 5,
      past the 6 of padding the scroll container clips at, so the first frames get
      shaved. The ring still appears, just at its resting offset. */
   .blog-filter :focus-visible {
@@ -161,7 +161,7 @@
 
   /* Options are full-width rows that touch, rather than inline labels with gaps
      between them: no dead space in the list, and each row is a 40 tall target
-     rather than just the box and its label. No hover surface — the checkbox and
+     rather than just the box and its label. No hover surface: the checkbox and
      radio carry their own hover on the control. */
   .blog-filter__body .checkbox,
   .blog-filter__body .radio {
@@ -346,7 +346,7 @@
 
     /* Sticky rail: it scrolls up with the posts until it reaches its offset under
        the sticky topbar, then holds while the grid keeps going. The rail only
-       *bounds* the height — the Scroll Area viewport inside it does the
+       *bounds* the height: the Scroll Area viewport inside it does the
        scrolling and owns the bar (see the Scroll Area block in components.css).
 
        No `overscroll-behavior: contain`, deliberately: it stops the rail's scroll

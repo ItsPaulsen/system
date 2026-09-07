@@ -27,20 +27,29 @@
       })();
     </script>
     <style>
-      /* The component sets no height of its own, so every example here bounds
-         its own viewport. */
+      /* Recessed preview surface, so the scroll area's own bounds read against it
+         instead of white on white. */
+      .component-preview {
+        background: var(--background-primary);
+      }
+
+      /* Raised card against the recessed preview, so the box the scroll area
+         bounds is visible. The component sets no height of its own, so every
+         example here bounds its own viewport. */
       .demo-scroll {
         width: 100%;
         max-width: 320px;
+        border-radius: var(--radius-md);
+        background: var(--background-secondary);
       }
 
       .demo-scroll .scroll-area__viewport {
         max-height: 220px;
 
-        /* Room for the bar, plus the 6 the focus rings need not to be clipped by
-           the scroll container's edge. */
-        padding-inline: 6px 24px;
-        padding-block-end: 1rem;
+        /* 24 on the end side clears the bar; the rest sets the content in from
+           the card's edges. */
+        padding-inline: 1rem 24px;
+        padding-block: 1rem;
       }
 
       .demo-scroll p {
@@ -114,10 +123,8 @@
         <section class="preview-block">
           <h2 class="subhead">Default</h2>
           <p class="section-note">
-            Hover it: the thumb fades in, darkens under the pointer, and darkens again while
-            dragged. Bound the <code>__viewport</code>, not the outer element — it's the scroll
-            container, and a height on the wrapper alone leaves it nothing to scroll against. Needs
-            <code>initScrollAreas()</code>.
+            Bound the <code>__viewport</code>, not the wrapper: it's the scroll container. The thumb
+            fades in on hover and darkens as you engage it. Needs <code>initScrollAreas()</code>.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -134,7 +141,7 @@
                   <p>
                     Why not just style the native bar? Scrollbars are composited separately, and
                     Chrome won't reliably repaint a styled thumb when the container's hover state
-                    flips — so reveal-on-hover fails intermittently and lingers after the pointer
+                    flips, so reveal-on-hover fails intermittently and lingers after the pointer
                     leaves.
                   </p>
                   <p>
@@ -160,10 +167,8 @@
         <section class="preview-block">
           <h2 class="subhead">Content that fits</h2>
           <p class="section-note">
-            Nothing to scroll, so the bar stays out: the script marks the area
-            <code>data-scrollable="false"</code>. It re-checks on resize and via a
-            <code>ResizeObserver</code>, so a disclosure opening or rows filtering out brings the
-            bar back on its own.
+            No overflow, no bar: the script sets <code>data-scrollable="false"</code>. A
+            <code>ResizeObserver</code> brings it back when the content grows.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -187,10 +192,9 @@
         <section class="preview-block">
           <h2 class="subhead">A list of controls</h2>
           <p class="section-note">
-            What a filter rail looks like. The viewport needs inline padding: it clips at its
-            padding edge, and a focus ring sits 5 outside its control (3 ring + 2 offset). Kill the
-            ring's converge animation inside one, too — it starts at
-            <code>outline-offset: 6px</code>, so the first frames reach 9 out and get shaved.
+            The viewport clips at its padding edge, so leave 6 for focus rings, and set
+            <code>animation: none</code> on <code>:focus-visible</code> inside, since the ring's
+            converge starts 9 out and gets shaved.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -344,9 +348,8 @@
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            Height goes on the viewport via <code>viewportClassName</code> (or a rule targeting
-            <code>.scroll-area__viewport</code>). A <code>ResizeObserver</code> tracks content that
-            changes height on its own, so nothing needs to tell it to re-measure.
+            Height goes on the viewport via <code>viewportClassName</code>. A
+            <code>ResizeObserver</code> re-measures content that changes height on its own.
           </p>
           <div data-source="/react/ScrollArea.jsx"></div>
         </section>
@@ -354,10 +357,9 @@
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            <code>data-scroll-area</code> wires it. The viewport takes the height; the bar is
-            absolutely positioned, so revealing it never reflows the content. It needs no
-            <code>tabindex</code> — the content's own focusable controls are tab-reachable, and
-            focusing one scrolls it into view.
+            <code>data-scroll-area</code> wires it. The bar is absolutely positioned, so revealing
+            it never reflows the content. No <code>tabindex</code> needed: focusing a control inside
+            scrolls it into view.
           </p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area"</span> <span class="tok-prop">data-scroll-area</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__viewport"</span><span class="tok-key">&gt;</span>…content…<span class="tok-key">&lt;/div&gt;</span>

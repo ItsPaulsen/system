@@ -99,7 +99,7 @@
   }
 
   /* No converge animation on anything in the rail. It starts the ring at
-     outline-offset 6, so it reaches 9 outside the control before settling at 5 —
+     outline-offset 6, so it reaches 9 outside the control before settling at 5,
      past the 6 of padding the scroll container clips at, so the first frames get
      shaved. The ring still appears, just at its resting offset. */
   .shop-filter :focus-visible {
@@ -184,7 +184,7 @@
 
   /* Options are full-width rows that touch, rather than inline labels with gaps
      between them: no dead space in the list, and each row is a 40 tall target
-     rather than just the box and its label. Vertical padding only — with no
+     rather than just the box and its label. Vertical padding only: with no
      hover surface there's nothing for inline padding to shape. */
   .shop-filter__body .checkbox,
   .shop-filter__body .radio {
@@ -334,7 +334,7 @@
   /* Sort: the Select component on a bare skin, the one page-local restyle on
      this screen. No border and no fill at rest, so it reads as the label it is;
      the chevron carries the affordance. On hover and while open it takes a pill
-     surface, the same treatment the nav menu's links get — a step up from the
+     surface, the same treatment the nav menu's links get, a step up from the
      surface it sits on, which here is the band's own gray rather than the white
      the nav sits on. Focus swaps Select's border for the shared ring, since
      there's no border left to light. */
@@ -427,7 +427,7 @@
 
   /* The Chip component's own checked skin, applied directly: these chips have no
      input to key `:has(input:checked)` off, because the chip *is* the remove
-     control — the state it reports lives in the rail.
+     control: the state it reports lives in the rail.
 
      Scoped through .shop__chips so it outranks [data-size="sm"] .chip, which is
      what sets the compact padding these start from. */
@@ -508,7 +508,7 @@
   }
 
   /* Cards are the anchor itself: a white media tile, then the text on the band
-     (no card surface behind it), in three rows — tile, title, meta.
+     (no card surface behind it), in three rows: tile, title, meta.
 
      Those rows are a `subgrid` of .shop__grid rather than the card's own, which
      is what makes a row of cards share them: the tallest title in a row sets the
@@ -529,7 +529,7 @@
     /* The media tile is a fixed white plate in BOTH themes: the product shots
        are photographed on white, so a theme-following tile would frame a white
        rectangle inside a dark box. That makes the plate a light-theme island,
-       and anything drawn on it needs theme-fixed colour too — hence the blue
+       and anything drawn on it needs theme-fixed colour too, hence the blue
        kept here rather than read from --blue, which inverts for dark surfaces
        and would leave light-blue text on a near-white badge. Light theme's blue
        anchor; a page one-off, not a token. */
@@ -581,7 +581,7 @@
 
   /* Hover lifts the whole tile rather than tinting it: the card component's
      surface step would fight the product photography, and the photo is the thing
-     worth reacting. 1% is about 3px of growth on a desktop tile — enough to read
+     worth reacting. 1% is about 3px of growth on a desktop tile, enough to read
      as a response, small enough not to read as a zoom, and nowhere near the 20
      gutter. Skipped outright under reduced motion, where the global transition
      clamp would make it a jump instead of a drift. */
@@ -592,7 +592,7 @@
   }
 
   /* Positioned against the card, not the tile, so the tile's hover scale leaves
-     it alone — a label that grows with the photo reads as part of the artwork.
+     it alone: a label that grows with the photo reads as part of the artwork.
 
      It carries its whole skin here rather than taking .badge--blue, because none
      of that variant would survive: its tint is alpha, so on the plate it would
@@ -640,8 +640,8 @@
   /* Leading inside a product card is tuned in px rather than left on the type
      tokens' 1.5 ratio: 22 on the title, 20 on the variant, the price and the
      store count. The card is a dense stack of short lines where the exact line
-     box matters — the title is clamped, so its value *is* the reserved block
-     height (two lines = 44) — and a shared 20 keeps every line under it on one
+     box matters (the title is clamped, so its value *is* the reserved block
+     height, two lines = 44) and a shared 20 keeps every line under it on one
      rhythm. Font sizes stay on the tokens; only the leading is tuned.
 
      Title and its variant are one block sharing the subgrid's title row, rather
@@ -815,7 +815,7 @@
 
     /* Sticky rail: it scrolls up with the products until it reaches its offset
        under the sticky topbar, then holds while the grid keeps going. The rail
-       only *bounds* the height — the Scroll Area viewport inside it does the
+       only *bounds* the height: the Scroll Area viewport inside it does the
        scrolling and owns the bar, so the scrollbar is a real element that fades
        in on hover (see the Scroll Area block in components.css).
 

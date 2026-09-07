@@ -11,7 +11,7 @@
 //          stays visible rather than hiding behind the drawer.
 //
 // Relocating the same nodes (rather than rendering two copies) is what keeps
-// their state — open groups, checked boxes, the typed query — across the move.
+// their state (open groups, checked boxes, the typed query) across the move.
 // Mirrors the 1025px breakpoint in shop.css. The sheet open/close/focus is
 // handled by the generic dialog wiring in app.js.
 (function () {
@@ -22,8 +22,8 @@
   const search = document.querySelector(".shop__search");
   const bar = document.querySelector(".shop__bar");
   const title = document.querySelector(".shop-filter__title");
-  // The rail's contents live in a Scroll Area viewport, so that — not the rail
-  // itself — is where the search field belongs.
+  // The rail's contents live in a Scroll Area viewport, so that, not the rail
+  // itself, is where the search field belongs.
   const railBody = filter.querySelector(".scroll-area__viewport") || filter;
   if (!filter || !rail || !main || !sheetBody) return;
 
@@ -61,8 +61,8 @@
 // lets Show more extend the window. Anything that changes the set resets the
 // window, so "Showing 24 of 3" can't happen.
 //
-// A result that fits on one page has nothing to page, so the whole footer —
-// count line and button both — stays out until the set is bigger than a page.
+// A result that fits on one page has nothing to page, so the whole footer,
+// count line and button both, stays out until the set is bigger than a page.
 //
 // Each facet reads from wherever it already lives, so nothing is stored twice:
 // the brand off the card's own title (it *is* the brand), the category, colors,

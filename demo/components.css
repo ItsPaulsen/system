@@ -4487,7 +4487,7 @@
    size and place the thumb.
 
    The viewport stays a real scroll container, so keyboard scrolling, wheel and
-   touch momentum, find-in-page and scroll anchoring all keep working — only the
+   touch momentum, find-in-page and scroll anchoring all keep working, only the
    bar is ours. It needs no tabindex: the content's own focusable controls are
    reachable by tab, and focusing one scrolls it into view.
 
@@ -4525,9 +4525,15 @@
   .scroll-area__bar {
     position: absolute;
     z-index: 1;
-    top: 0;
-    bottom: 0;
-    inset-inline-end: 0;
+
+    /* Inset from both ends so the thumb never runs into a rounded corner on the
+     surface it sits over. The JS reads the bar's own height, so the track and
+     thumb sizing follow this automatically. */
+    top: 6px;
+    bottom: 6px;
+
+    /* 2 off the end edge too, so the pill isn't kissing the surface's side. */
+    inset-inline-end: 2px;
     width: 10px;
     opacity: 0;
     transition: opacity var(--motion-default);
@@ -4553,7 +4559,7 @@
     pointer-events: none;
   }
 
-  /* Top and height come from JS. The transparent border insets the pill — 2px
+  /* Top and height come from JS. The transparent border insets the pill: 2px
    each side leaves a 6px pill inside the full 10px grab target. */
   .scroll-area__thumb {
     position: absolute;

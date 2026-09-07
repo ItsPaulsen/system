@@ -3,7 +3,7 @@
 // There's a single .shop-filter node. Above 1024 it sits in the listing grid as
 // the left rail; at/below 1024 the rail is replaced by a Filter button in the
 // toolbar and the same node is relocated into the left sheet, so its state
-// (open groups, checked boxes, chosen price) survives the move. Mirrors the
+// (open groups, checked boxes, price range) survives the move. Mirrors the
 // 1025px breakpoint in shop.css. The sheet open/close/focus is handled by the
 // generic dialog wiring in app.js. Same arrangement as the blog listing.
 (function () {
@@ -32,7 +32,7 @@
 // Search, filter, sort and paging over the products already in the markup.
 //
 // One apply() owns the whole result set: it narrows the cards to the ones
-// matching the price band, the checked categories, brands and colors, orders
+// matching the price range, the checked categories, brands and colors, orders
 // that set by the sort control, then reveals the first PAGE_SIZE of them and
 // lets Show more extend the window. Anything that changes the set resets the
 // window, so "Showing 24 of 3" can't happen.
@@ -48,7 +48,6 @@
 // move.
 (function () {
   const PAGE_SIZE = 24;
-  const UNDER = 6000; // the "Under 6 000 kr" band in the Price group
 
   const grid = document.querySelector(".shop__grid");
   const filter = document.querySelector(".shop-filter");
@@ -57,6 +56,8 @@
   const sort = document.querySelector(".ex-sort");
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
+  const priceSlider = document.querySelector(".shop-price__slider");
+  const priceValue = document.querySelector("[data-shop-price-value]");
   const countEl = document.querySelector("[data-shop-count]");
   const nouns = document.querySelectorAll("[data-shop-noun]");
   const shownEl = document.querySelector("[data-shop-shown]");
@@ -108,13 +109,37 @@
   const activeColors = () =>
     new Set(checkedBoxes("color").flatMap((b) => tokens(b.dataset.colors)));
 
-  const priceBand = () => filter.querySelector('input[name="shop-price"]:checked')?.value || "any";
+  // Price range. The slider's own min/max are the bounds, so "both handles at
+  // the ends" is the off state and nothing here has to know the catalogue's
+  // prices: widening the range is one attribute in the markup.
+  const priceInputs = () => [...(priceSlider?.querySelectorAll(".slider-range__input") || [])];
+  const priceBounds = () => {
+    const [lower] = priceInputs();
+    return { min: Number(lower?.min || 0), max: Number(lower?.max || 0) };
+  };
+  const priceRange = () => {
+    const [lower, upper] = priceInputs();
+    if (!lower || !upper) return priceBounds();
+    return { min: Number(lower.value), max: Number(upper.value) };
+  };
+  const kr = (v) => `${String(v).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} kr`;
+
+  // Put both handles back on the bounds and let the slider repaint itself, so
+  // the fill and the readout follow without this file knowing how they work.
+  const resetPrice = () => {
+    const [lower, upper] = priceInputs();
+    const { min, max } = priceBounds();
+    if (!lower || !upper) return;
+    lower.value = String(min);
+    upper.value = String(max);
+    lower.dispatchEvent(new Event("input", { bubbles: true }));
+  };
 
   const apply = () => {
     const categories = checkedIn("category");
     const brands = checkedIn("brand");
     const colors = activeColors();
-    const band = priceBand();
+    const price = priceRange();
 
     const matches = cards.filter((card) => {
       if (categories.size && !categories.has(card.dataset.category)) return false;
@@ -122,7 +147,8 @@
       // A piece can be more than one color ("oak cognac"), and matches if any of
       // them is asked for. No color of its own and it drops out.
       if (colors.size && !tokens(card.dataset.color).some((c) => colors.has(c))) return false;
-      if (band === "under" && num(card, "price") >= UNDER) return false;
+      const value = num(card, "price");
+      if (value < price.min || value > price.max) return false;
       return true;
     });
 
@@ -142,6 +168,7 @@
     nouns.forEach((n) => {
       n.textContent = matches.length === 1 ? "product" : "products";
     });
+    if (priceValue) priceValue.textContent = `${kr(price.min)} - ${kr(price.max)}`;
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 
@@ -166,14 +193,13 @@
     filter.querySelectorAll('input[type="checkbox"]').forEach((b) => {
       b.checked = false;
     });
-    const any = filter.querySelector('input[name="shop-price"][value="any"]');
-    if (any) any.checked = true;
+    resetPrice();
     reset();
   };
 
   // The chip row is a view of the rail, rebuilt from it on every apply(), so the
   // two can't drift. Each chip owns the input it came from and unchecks it; the
-  // price radio resets to "Any price" instead, since a radio group is never off.
+  // price chip puts both handles back on the bounds, its off state.
   const X_ICON =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
     'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -185,11 +211,10 @@
       const label = labelOf(input);
       if (label) out.push({ label, off: () => (input.checked = false) });
     });
-    const price = filter.querySelector('input[name="shop-price"]:checked');
-    if (price && price.value !== "any") {
-      const label = price.closest(".radio")?.querySelector(".radio__label")?.textContent.trim();
-      const any = filter.querySelector('input[name="shop-price"][value="any"]');
-      if (label && any) out.push({ label, off: () => (any.checked = true) });
+    const price = priceRange();
+    const bounds = priceBounds();
+    if (price.min !== bounds.min || price.max !== bounds.max) {
+      out.push({ label: `${kr(price.min)} - ${kr(price.max)}`, off: resetPrice });
     }
     return out;
   };
@@ -222,7 +247,14 @@
     }
   };
 
-  filter.addEventListener("change", reset);
+  filter.addEventListener("change", (e) => {
+    // The slider reports through slider-range:change below; its native change
+    // on release would run the same work a second time.
+    if (!e.target.matches(".slider-range__input")) reset();
+  });
+
+  // Live while dragging: the count and the grid follow the handles.
+  filter.addEventListener("slider-range:change", reset);
   sort?.addEventListener("select:change", (e) => {
     order = e.detail.option.dataset.sort || "popular";
     reset();

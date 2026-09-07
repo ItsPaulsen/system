@@ -60,30 +60,44 @@
            which is what puts five products across at the widest tier. -->
       <section class="shop" aria-label="Products">
         <div class="shop__inner">
-          <!-- Filter rail, collapsible Price / Category groups. Same rail as the
+          <!-- Filter rail: price range plus collapsible option groups. Same rail as the
                blog listing: above 1024 it sits here, below it moves into the
                left sheet (shop.js), so its state survives the move. -->
           <aside class="scroll-area ex-filter shop-filter" aria-label="Filter" data-scroll-area>
             <div class="scroll-area__viewport">
               <h2 class="ex-filter__title">Filter</h2>
 
+              <!-- Price is a two-handle range slider. min/max are the bounds of
+                   the real catalogue rounded out to the step, so both handles at
+                   the ends means "no price filter" and the chip stays away. -->
               <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Price</summary>
-                <div class="ex-filter__body" role="radiogroup" aria-label="Price">
-                  <label class="radio">
-                    <input
-                      type="radio"
-                      name="shop-price"
-                      class="radio__input"
-                      value="any"
-                      checked
-                    />
-                    <span class="radio__label">Any price</span>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="shop-price" class="radio__input" value="under" />
-                    <span class="radio__label">Under 6 000 kr</span>
-                  </label>
+                <div class="ex-filter__body">
+                  <div class="shop-price">
+                    <output class="shop-price__value" data-shop-price-value
+                      >5 000 - 56 000 kr</output
+                    >
+                    <div class="slider-range shop-price__slider" data-slider-range>
+                      <input
+                        class="slider-range__input"
+                        type="range"
+                        min="5000"
+                        max="56000"
+                        step="1000"
+                        value="5000"
+                        aria-label="Minimum price"
+                      />
+                      <input
+                        class="slider-range__input"
+                        type="range"
+                        min="5000"
+                        max="56000"
+                        step="1000"
+                        value="56000"
+                        aria-label="Maximum price"
+                      />
+                    </div>
+                  </div>
                 </div>
               </details>
 

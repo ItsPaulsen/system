@@ -3582,6 +3582,145 @@
     opacity: 0.5;
   }
 
+  /* ── Slider range ──────────────────────────────────────────────────────── */
+
+  /* Two-handle range: two native <input type="range"> stacked on one track, so
+   each thumb keeps native keyboard, touch and screen-reader behaviour and only
+   the "handles can't cross" rule is ours (app.js, initSliderRanges).
+
+   Why stacked natives rather than a custom control: a div-based range means
+   re-implementing role="slider" twice, aria-valuemin/max/now, and arrow/Home/End
+   on both thumbs. Natives give all of that, and each input keeps its own
+   accessible name, so a screen reader reads "Minimum" and "Maximum" rather than
+   two unlabelled numbers.
+
+   The inputs are transparent and pointer-transparent EXCEPT their thumbs, so a
+   drag lands on the thumb you grabbed and a click on the bare track doesn't jump
+   the wrong handle. The track and the filled middle are painted on the wrapper
+   from --slider-range-from/--slider-range-to, both set by the script.
+
+   Structure:
+   <div class="slider-range" data-slider-range>
+     <input class="slider-range__input" type="range" min="0" max="100" value="20"
+            aria-label="Minimum" />
+     <input class="slider-range__input" type="range" min="0" max="100" value="80"
+            aria-label="Maximum" />
+   </div> */
+  .slider-range {
+    --slider-range-from: 0%;
+    --slider-range-to: 100%;
+
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 20px;
+  }
+
+  /* The track, and the filled segment between the handles, on one gradient: two
+   hard stops, so there's no third element to keep in sync. */
+  .slider-range::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline: 0;
+    height: 6px;
+    border-radius: var(--radius-full);
+    translate: 0 -50%;
+    background: linear-gradient(
+      to right,
+      var(--fill-tertiary) var(--slider-range-from),
+      var(--primary-foreground) var(--slider-range-from),
+      var(--primary-foreground) var(--slider-range-to),
+      var(--fill-tertiary) var(--slider-range-to)
+    );
+  }
+
+  .slider-range__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 20px;
+    margin: 0;
+    appearance: none;
+    background: transparent;
+
+    /* The input is a click-through overlay; only its thumb takes the pointer, so
+     the two stacked inputs never steal each other's drags. */
+    pointer-events: none;
+  }
+
+  .slider-range__input:focus-visible {
+    outline: none;
+  }
+
+  /* Tracks stay invisible: the wrapper paints the one both handles ride on. */
+  .slider-range__input::-webkit-slider-runnable-track {
+    height: 6px;
+    background: transparent;
+  }
+
+  .slider-range__input::-moz-range-track {
+    height: 6px;
+    background: transparent;
+  }
+
+  .slider-range__input::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+
+    /* Centre the 20px thumb on the 6px track: (20 − 6) / 2 = 7px. */
+    margin-top: -7px;
+    border: 2px solid var(--background-secondary);
+    border-radius: var(--radius-full);
+    background: var(--primary-foreground);
+    box-shadow: var(--shadow-sm);
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .slider-range__input::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--background-secondary);
+    border-radius: var(--radius-full);
+    background: var(--primary-foreground);
+    box-shadow: var(--shadow-sm);
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .slider-range__input:active::-webkit-slider-thumb {
+    cursor: grabbing;
+  }
+
+  .slider-range__input:active::-moz-range-thumb {
+    cursor: grabbing;
+  }
+
+  .slider-range__input:focus-visible::-webkit-slider-thumb {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: 0;
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  .slider-range__input:focus-visible::-moz-range-thumb {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: 0;
+    animation: focus-ring-converge var(--motion-default);
+  }
+
+  /* Both handles at the same end would bury one under the other; the script
+   raises whichever was grabbed last so it can always be dragged back out. */
+  .slider-range__input[data-on-top] {
+    z-index: 1;
+  }
+
+  .slider-range:has(:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
   /* ── Combobox ──────────────────────────────────────────────────────────── */
 
   /* A text field that filters a listbox: Select with type-to-filter. Reuses the

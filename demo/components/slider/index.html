@@ -37,12 +37,12 @@
               class="btn"
               type="button"
               data-copy-css="/demo/components.css"
-              data-copy-section="Slider"
+              data-copy-section="Slider, Slider range"
             >
               Copy CSS
             </button>
           </div>
-          <p class="lede">Pick a value from a range by dragging.</p>
+          <p class="lede">Pick a value, or a span between two handles, by dragging.</p>
         </div>
       </header>
 
@@ -150,6 +150,45 @@
           </div>
         </section>
 
+        <section class="preview-block">
+          <h2 class="subhead">Range</h2>
+          <p class="section-note">
+            Two handles on one track: two stacked native inputs, so each thumb keeps its own
+            keyboard and screen-reader behaviour. They clamp at each other instead of crossing.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <span class="slider-field__label">Price</span>
+                  <output class="slider-field__value" data-slider-range-value>20 - 80</output>
+                </div>
+                <div class="slider-range" data-slider-range>
+                  <input
+                    class="slider-range__input"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="20"
+                    aria-label="Minimum price"
+                  />
+                  <input
+                    class="slider-range__input"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="80"
+                    aria-label="Maximum price"
+                  />
+                </div>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <SliderRange min={0} max={100} defaultValue={[20, 80]} />
+            </script>
+          </div>
+        </section>
+
         <section class="preview-block" data-lang="react">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
@@ -157,6 +196,15 @@
             <code>.slider</code> classes, no extra styling.
           </p>
           <div data-source="/react/Slider.jsx"></div>
+        </section>
+
+        <section class="preview-block" data-lang="react">
+          <h2 class="subhead">Range component</h2>
+          <p class="section-note">
+            Value is a <code>[low, high]</code> pair, controlled or uncontrolled. Same
+            <code>.slider-range</code> classes.
+          </p>
+          <div data-source="/react/SliderRange.jsx"></div>
         </section>
 
         <section class="preview-block" data-lang="html">
@@ -171,12 +219,30 @@
         </section>
 
         <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Range markup</h2>
+          <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-range"</span> <span class="tok-prop">data-slider-range</span><span class="tok-key">&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-range__input"</span> <span class="tok-prop">type</span>=<span class="tok-str">"range"</span> <span class="tok-prop">min</span>=<span class="tok-str">"0"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span> <span class="tok-prop">value</span>=<span class="tok-str">"20"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Minimum"</span> <span class="tok-key">/&gt;</span>
+  <span class="tok-key">&lt;input</span> <span class="tok-prop">class</span>=<span class="tok-str">"slider-range__input"</span> <span class="tok-prop">type</span>=<span class="tok-str">"range"</span> <span class="tok-prop">min</span>=<span class="tok-str">"0"</span> <span class="tok-prop">max</span>=<span class="tok-str">"100"</span> <span class="tok-prop">value</span>=<span class="tok-str">"80"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Maximum"</span> <span class="tok-key">/&gt;</span>
+<span class="tok-key">&lt;/div&gt;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
           <h2 class="subhead">JavaScript</h2>
           <p class="section-note">
             From <code>app.js</code>. Sets the fill width from the value and updates the
             <code>&lt;output&gt;</code>. Call once on load; re-run after adding sliders dynamically.
           </p>
           <div data-source="/assets/app.js" data-fn="initSliders"></div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript (range)</h2>
+          <p class="section-note">
+            Paints the filled middle, keeps the handles from crossing, and fires
+            <code>slider-range:change</code> with <code>{ min, max }</code> for anything that needs
+            a formatted readout.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initSliderRanges"></div>
         </section>
       </div>
     </main>

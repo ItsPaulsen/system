@@ -3001,6 +3001,80 @@ function initSliders() {
 // Nothing here assumes a height: whatever bounds the viewport (max-height, a
 // flex row, a grid row) is the consumer's business. When the content fits, the
 // area is marked [data-scrollable="false"] and the bar stays hidden.
+// Slider Range: two native range inputs on one track.
+//
+// Everything a thumb does (arrows, Home/End, touch, screen-reader value) is the
+// native input's. This adds only what two inputs can't know about each other:
+// they must not cross, the filled segment between them has to be painted, and
+// whichever was grabbed last has to sit on top so a pair stacked at the same end
+// can still be pulled apart.
+//
+// Reports through a bubbling `slider-range:change` on the wrapper, with
+// detail: { min, max }, since there's no single element whose change event means
+// "the range moved".
+function initSliderRanges() {
+  document.querySelectorAll("[data-slider-range]").forEach((root) => {
+    const [lower, upper] = root.querySelectorAll(".slider-range__input");
+    if (!lower || !upper) return;
+
+    const bounds = () => ({
+      min: Number(lower.min || 0),
+      max: Number(lower.max || 100)
+    });
+
+    // Optional readout: an <output data-slider-range-value> in the surrounding
+    // field gets "low - high", so simple cases need no extra code. Anything
+    // formatted (currency, units) listens for slider-range:change instead.
+    const output = root.closest(".slider-field")?.querySelector("[data-slider-range-value]");
+
+    const paint = () => {
+      const { min, max } = bounds();
+      const span = max - min || 1;
+      const from = ((Number(lower.value) - min) / span) * 100;
+      const to = ((Number(upper.value) - min) / span) * 100;
+      root.style.setProperty("--slider-range-from", `${from}%`);
+      root.style.setProperty("--slider-range-to", `${to}%`);
+      if (output) output.textContent = `${lower.value} - ${upper.value}`;
+    };
+
+    const announce = () => {
+      root.dispatchEvent(
+        new CustomEvent("slider-range:change", {
+          bubbles: true,
+          detail: { min: Number(lower.value), max: Number(upper.value) }
+        })
+      );
+    };
+
+    // Clamp rather than swap: swapping would hand the drag to the other input
+    // mid-gesture, and the pointer would carry on moving a thumb it no longer
+    // controls. Pushing to the neighbour's value keeps the grabbed thumb yours.
+    const clamp = (moved) => {
+      if (Number(lower.value) > Number(upper.value)) {
+        if (moved === lower) lower.value = upper.value;
+        else upper.value = lower.value;
+      }
+    };
+
+    [lower, upper].forEach((input) => {
+      input.addEventListener("input", () => {
+        clamp(input);
+        paint();
+        announce();
+      });
+      // The last thumb touched goes on top, so two stacked at one end can always
+      // be separated again.
+      input.addEventListener("pointerdown", () => {
+        lower.removeAttribute("data-on-top");
+        upper.removeAttribute("data-on-top");
+        input.setAttribute("data-on-top", "");
+      });
+    });
+
+    paint();
+  });
+}
+
 function initScrollAreas() {
   const MIN_THUMB = 24; // keep it grabbable on very long content
   const SLACK = 8; // see update(): phantom overflow that shouldn't show a bar
@@ -3829,6 +3903,7 @@ function init() {
   initTabs();
   initCarousel();
   initNumberFields();
+  initSliderRanges();
   initScrollAreas();
   initErrorSummary();
   initCharCount();

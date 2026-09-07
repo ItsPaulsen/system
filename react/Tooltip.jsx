@@ -15,9 +15,8 @@ export default function Tooltip({ label, side = "top", children }) {
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState(side);
   const id = useId();
-  // WCAG 1.4.13 (hoverable): the bubble sits GAP px off the trigger, so moving
-  // onto it crosses dead space that belongs to neither. A short grace delay
-  // keeps it up long enough to get there.
+  // WCAG 1.4.13 (hoverable): the bubble sits GAP off the trigger, so reaching it
+  // crosses dead space. A grace delay keeps it up long enough to get there.
   const hideTimer = useRef(0);
   const show = () => {
     clearTimeout(hideTimer.current);

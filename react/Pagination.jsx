@@ -18,8 +18,8 @@ export default function Pagination({ total, page, defaultPage = 1, onPageChange 
   const [uncontrolled, setUncontrolled] = useState(defaultPage);
   const current = Math.min(total, Math.max(1, page ?? uncontrolled));
 
-  // A nav button that disables itself at an edge drops focus to <body>, so move
-  // focus to the now-current page instead (parity with the vanilla render).
+  // A nav button that disables itself at an edge drops focus to <body>, so send
+  // it to the now-current page.
   const navRef = useRef(null);
   const [focusPage, setFocusPage] = useState(null);
   useEffect(() => {

@@ -25,8 +25,7 @@ export function NavMenuItem({ children, ...rest }) {
 
   const handlers = hasPanel
     ? {
-        // Escape refocuses the trigger, and that focus event would re-open the
-        // panel it just closed, so let the collapse survive its own focus move.
+        // Escape refocuses the trigger, which would re-open the panel it closed.
         onFocus: () => {
           if (collapsingRef.current) return;
           setExpanded(true);

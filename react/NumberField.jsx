@@ -21,15 +21,13 @@ export default function NumberField({
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const current = value ?? uncontrolled;
   const hold = useRef({});
-  // The repeat interval outlives the render that started it, so it reads the
-  // value through a ref; closing over `current` would re-step from the same
-  // base on every tick.
+  // The repeat interval outlives its render, so read through a ref; a closure
+  // would re-step from the same base every tick.
   const latest = useRef(current);
   latest.current = current;
   const clamp = (n) => Math.min(max, Math.max(min, n));
-  // Binary floats make a decimal step drift (0.1 + 0.2 = 0.30000000000000004),
-  // so round the result back to the decimals actually in play. Exponential
-  // notation has no meaningful decimal count, so leave those alone.
+  // Binary floats drift (0.1 + 0.2 = 0.30000000000000004), so round back to the
+  // decimals in play. Exponential notation has no decimal count, so skip it.
   const decimals = (n) => {
     const str = String(n);
     return str.includes("e") ? 0 : (str.split(".")[1] || "").length;
@@ -72,8 +70,8 @@ export default function NumberField({
     clearTimeout(hold.current.t);
     clearInterval(hold.current.i);
   };
-  // A hold that has already stepped swallows the click that follows the release,
-  // which would otherwise land one step past where the user let go.
+  // A hold that already stepped swallows the click on release, which would
+  // otherwise land one step past where the user let go.
   const onStepClick = (dir) => {
     if (hold.current.repeated) {
       hold.current.repeated = false;
@@ -81,8 +79,7 @@ export default function NumberField({
     }
     nudge(dir);
   };
-  // A pointer released outside the button (or an unmount mid-press) would
-  // otherwise leave the repeat running.
+  // A release outside the button, or an unmount mid-press, would leave it running.
   useEffect(() => release, []);
 
   const onKeyDown = (e) => {

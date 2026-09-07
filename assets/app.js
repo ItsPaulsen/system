@@ -35,7 +35,7 @@ const toast = (() => {
   const SR_ONLY =
     "position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;";
   // Mount the pill + both live regions up front (idempotent) so a first
-  // announcement isn't injected and populated in the same tick — some screen
+  // announcement isn't injected and populated in the same tick, and some screen
   // readers miss that. The visible pill is aria-hidden; the message is announced
   // through a persistent region of the right politeness. Swapping role/aria-live
   // on one shared node per message is unreliable across readers, so keep both.
@@ -1436,13 +1436,13 @@ function positionFloating(anchor, list, wasAbove, fixed = false) {
   const sx = fixed ? 0 : window.scrollX;
   const sy = fixed ? 0 : window.scrollY;
   // getBoundingClientRect is relative to the visual viewport, so cap against the
-  // visual viewport height directly (the area above the keyboard) — no offset.
+  // visual viewport height directly (the area above the keyboard), no offset.
   const vv = window.visualViewport;
   const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
   // Clamp horizontally so a list near the right edge (or wider than the space to
-  // its right) doesn't run off-screen — same guard positionPopover/tooltip use.
+  // its right) doesn't run off-screen, the same guard positionPopover/tooltip use.
   const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
   const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
   list.style.left = `${left + sx}px`;
@@ -1451,7 +1451,7 @@ function positionFloating(anchor, list, wasAbove, fixed = false) {
   const roomBelow = viewBottom - rect.bottom - GAP - PAD;
   const roomAbove = rect.top - GAP - PAD;
   // Hysteresis so it behaves the same both ways: prefer below on open, then stay
-  // on the current side and clip it down to MIN before flipping — never flip back
+  // on the current side and clip it down to MIN before flipping. Never flip back
   // just because the other side grew.
   let above;
   if (wasAbove === undefined) above = roomBelow < Math.min(natural, MIN) && roomAbove > roomBelow;
@@ -1472,7 +1472,7 @@ function positionFloating(anchor, list, wasAbove, fixed = false) {
 // changes (mobile keyboard). Never closes on those, just re-places.
 // Default: portal to <body>, position:absolute in page coords (Select). fixed:
 // leave the list in the DOM and float it with position:fixed (Combobox), so a
-// screen reader can follow aria-activedescendant into it — a body portal breaks
+// screen reader can follow aria-activedescendant into it; a body portal breaks
 // that for a control that keeps focus in the input.
 function floatingList(anchor, list, { fixed = false } = {}) {
   let above;
@@ -1483,7 +1483,7 @@ function floatingList(anchor, list, { fixed = false } = {}) {
   // Capturing scroll catches page/ancestor scrolls to keep the list glued, but it
   // also catches the list's OWN internal scroll (scrollIntoView keeping the active
   // row visible). Re-placing on that rewrites the list's inline styles on every
-  // arrow key, which makes VoiceOver re-read and drop the option name — so ignore
+  // arrow key, which makes VoiceOver re-read and drop the option name, so ignore
   // scrolls that originate inside the list.
   const onScroll = (e) => {
     const t = e.target;
@@ -1538,7 +1538,7 @@ function initSelects() {
     // The open list takes DOM focus (see open()); the active option is tracked
     // with .is-active + aria-activedescendant ON THE LIST. Keeping the ref on the
     // list (not the trigger) means the pointer and its target stay in one subtree,
-    // so VoiceOver still follows it once the list is portaled to <body> — an
+    // so VoiceOver still follows it once the list is portaled to <body>. An
     // activedescendant ref reaching across the portal from the trigger isn't.
     // scroll=false for pointer moves: only keyboard nav should tug the scroll.
     const setActive = (i, scroll = true) => {
@@ -1791,9 +1791,9 @@ function initComboboxes() {
       });
     }
 
-    // The whole field is a hit target: clicking its padding — the
-    // dead space around the shorter input and by the chevron — focuses the input
-    // instead of doing nothing. The input and chevron handle their own clicks.
+    // The whole field is a hit target: clicking its padding, the dead space
+    // around the shorter input and by the chevron, focuses the input instead of
+    // doing nothing. The input and chevron handle their own clicks.
     const control = root.querySelector(".combobox__control");
     control?.addEventListener("mousedown", (e) => {
       if (e.target === input || chevron?.contains(e.target)) return;
@@ -3646,7 +3646,7 @@ function init() {
       const code = codeCopy.parentElement.querySelector("code");
       if (!code) return;
       // navigator.clipboard is undefined on insecure origins (file://, plain
-      // http), so guard before deref — otherwise it throws before the .catch.
+      // http), so guard before deref, or it throws before the .catch.
       if (!navigator.clipboard) {
         toast("Copy failed");
         return;

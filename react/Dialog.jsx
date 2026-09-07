@@ -7,9 +7,8 @@ export function Dialog({ children }) {
   const ref = useRef(null);
   const titleId = useId();
   const descId = useId();
-  // Only wire aria-labelledby / aria-describedby when a DialogTitle /
-  // DialogDescription actually mounts, so the <dialog> never points at a
-  // missing id.
+  // Wire the labelling only when a title/description mounts, so the <dialog>
+  // never points at a missing id.
   const [hasTitle, setHasTitle] = useState(false);
   const [hasDesc, setHasDesc] = useState(false);
   return (
@@ -53,9 +52,8 @@ export function DialogContent({ children, ...rest }) {
       dlg.querySelector(".dialog__inner")?.focus({ preventScroll: true });
     };
     const unlock = () => {
-      // Overlays nest (a Dialog raised from inside a Sheet), and both are
-      // <dialog> elements, so only release the page lock once no other one is
-      // still open. Exclude self: on unmount this dialog can still be open.
+      // Overlays nest, so release the lock only when no other <dialog> is open.
+      // Exclude self: on unmount this one can still be open.
       const others = [...document.querySelectorAll("dialog[open]")].some((d) => d !== dlg);
       if (others) return;
       root.classList.remove("is-scroll-locked");

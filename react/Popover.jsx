@@ -60,11 +60,9 @@ export function PopoverContent({ panel = true, center, className, children, ...r
   const cls = ["popover", panel && "popover--panel", center && "popover--center", className]
     .filter(Boolean)
     .join(" ");
-  // .popover is position:fixed with no inset, so it must be placed on open or it
-  // sits in the viewport corner. role="dialog" (the trigger promises
-  // aria-haspopup="dialog"), so move focus in on open too; the native popover
-  // returns focus to the trigger on close.
-  // Name it with aria-label / aria-labelledby via ...rest.
+  // .popover is position:fixed with no inset, so an unplaced panel sits in the
+  // viewport corner. Opening also moves focus in (the trigger promises
+  // aria-haspopup="dialog"); closing returns it natively. Name it via ...rest.
   useEffect(() => {
     const el = ref.current;
     if (!el) return;

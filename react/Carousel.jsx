@@ -10,9 +10,8 @@ const EASE = "transform 350ms var(--motion-ease-out)";
 
 export default function Carousel({
   items,
-  // Left undefined so the documented class + breakpoint overrides
-  // (.carousel--x { --carousel-cols: 2 }) still win; an inline style would not
-  // be overridable from CSS.
+  // Undefined by default: CSS can't override an inline style, and these are
+  // meant to be set by class or breakpoint.
   cols,
   gap,
   className,

@@ -26,8 +26,7 @@ function positionFloating(anchor, list, wasAbove) {
   const viewBottom = vv ? vv.height : window.innerHeight;
   const rect = anchor.getBoundingClientRect();
   list.style.width = `${rect.width}px`;
-  // Clamp horizontally so a list near the right edge (or wider than the space to
-  // its right) doesn't run off-screen, the same guard the popover/tooltip use.
+  // Clamp horizontally so a list near the right edge doesn't run off-screen.
   const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
   const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
   list.style.left = `${left + window.scrollX}px`;

@@ -27,8 +27,7 @@ function positionFloating(anchor, list, wasAbove) {
   const rect = anchor.getBoundingClientRect();
   list.style.position = "fixed";
   list.style.width = `${rect.width}px`;
-  // Clamp horizontally so a list near the right edge (or wider than the space to
-  // its right) doesn't run off-screen, the same guard the popover/tooltip use.
+  // Clamp horizontally so a list near the right edge doesn't run off-screen.
   const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
   list.style.left = `${Math.max(PAD, Math.min(rect.left, viewRight - rect.width))}px`;
   list.style.maxHeight = "";
@@ -65,8 +64,8 @@ export default function Combobox({
 }) {
   const [uncontrolled, setUncontrolled] = useState(defaultValue || null);
   const selected = value !== undefined ? value : uncontrolled;
-  // The input text is its own state: it diverges from the committed value while
-  // the user types, then snaps back on a pick.
+  // Own state: the typed text diverges from the committed value, then snaps
+  // back on a pick.
   const [query, setQuery] = useState(value ?? defaultValue);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1); // no row pre-highlighted
@@ -131,9 +130,8 @@ export default function Combobox({
     }
   }, [matches.length, open]);
 
-  // The focusout rule below only fires with a relatedTarget, so a click into
-  // dead page space (which blurs to null) would leave the list open. Pair it
-  // with a document click, the way the vanilla combobox does.
+  // focusout only fires with a relatedTarget, so a click into dead page space
+  // needs this too.
   useEffect(() => {
     if (!open) return;
     const onDocClick = (e) => {
@@ -158,8 +156,7 @@ export default function Combobox({
 
   const onKeyDown = (e) => {
     if (e.key === "Escape") {
-      // Swallow it so an enclosing dialog/popover doesn't close too; Tab below
-      // is left to bubble so focus still moves on normally.
+      // Swallow it so an enclosing dialog doesn't close too; Tab still bubbles.
       e.preventDefault();
       e.stopPropagation();
       setOpen(false);

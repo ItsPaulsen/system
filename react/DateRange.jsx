@@ -19,8 +19,7 @@ const parse = (s) => {
   return d && !Number.isNaN(d.getTime()) ? d : null;
 };
 const mondayIndex = (d) => (d.getDay() + 6) % 7;
-// Month paging clamps the day to the target month's length; without it the 31st
-// rolls over into the month after (31 Jan + 1 month = 3 Mar).
+// Clamp the day to the target month's length, or 31 Jan + 1 month = 3 Mar.
 const addMonths = (d, n) => {
   const m = d.getMonth() + n;
   const last = new Date(d.getFullYear(), m + 1, 0).getDate();
@@ -50,8 +49,8 @@ export default function DateRange({
   const minDate = useMemo(() => new Date(maxYear - 10, 0, 1), [maxYear]);
 
   // Selection is staged: picks update `range`, Apply commits it (fires onChange),
-  // Cancel reverts to `committed`, Clear empties it. Only the committed range is
-  // controllable; the in-progress pick is this component's own business.
+  // Cancel reverts to `committed`, Clear empties it. Only the committed range
+  // is controllable; the staged pick stays internal.
   const controlled = start !== undefined || end !== undefined;
   const [internalCommitted, setInternalCommitted] = useState(() => ({
     start: parse(defaultStart),
@@ -69,9 +68,8 @@ export default function DateRange({
     setRange({ start: parse(start), end: parse(end) });
   }, [controlled, start, end]);
 
-  // The view is the LEFT month and the right grid is view + 1, so a December
-  // view would put the right one past maxDate and render it blank. Back off a
-  // month in that case (the same ceiling the Next button enforces).
+  // The right grid is view + 1, so a December view would render it past
+  // maxDate and blank. Same ceiling the Next button enforces.
   const clampView = useCallback(
     (d) => {
       const v = new Date(d.getFullYear(), d.getMonth(), 1);
@@ -131,8 +129,7 @@ export default function DateRange({
       (mDate.getMonth() === 11 &&
         d.getFullYear() === mDate.getFullYear() + 1 &&
         d.getMonth() === 0);
-    // clampView keeps the right grid inside maxDate; d stays rendered either
-    // way, as the left month or (when clamped) the right one.
+    // clampView keeps the right grid inside maxDate; d stays rendered either way.
     if (!inView(view)) setView(clampView(d));
     setPendingFocus(iso(d));
   };
@@ -168,9 +165,8 @@ export default function DateRange({
     new Date(view.getFullYear(), view.getMonth(), 1),
     new Date(view.getFullYear(), view.getMonth() + 1, 1)
   ];
-  // One tabbable day across both grids: the start when it is actually on screen,
-  // else the first of the view month. Paging away from the start month would
-  // otherwise leave both grids with no tab stop at all.
+  // One tabbable day across both grids: the start when it's on screen, else the
+  // first of the view month, or paging away leaves no tab stop at all.
   const startShown =
     !!value.start &&
     months.some(
@@ -181,8 +177,7 @@ export default function DateRange({
   const prevDisabled = months[0] <= minDate;
   const nextDisabled = new Date(view.getFullYear(), view.getMonth() + 2, 1) > maxDate;
 
-  // Paging swaps both grids silently (changing a non-focused grid's labels isn't
-  // announced), so speak the new span. Quiet on the first render.
+  // Paging swaps both grids silently, so speak the new span. Quiet on load.
   const rangeLabel = `${months[0].toLocaleDateString(undefined, {
     month: "long",
     year: "numeric"

@@ -22,8 +22,7 @@ const parse = (s) => {
 };
 // Weekday index with Monday as 0 (JS getDay() has Sunday as 0).
 const mondayIndex = (d) => (d.getDay() + 6) % 7;
-// Month paging clamps the day to the target month's length; without it the 31st
-// rolls over into the month after (31 Jan + 1 month = 3 Mar).
+// Clamp the day to the target month's length, or 31 Jan + 1 month = 3 Mar.
 const addMonths = (d, n) => {
   const m = d.getMonth() + n;
   const last = new Date(d.getFullYear(), m + 1, 0).getDate();

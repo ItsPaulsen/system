@@ -9,8 +9,7 @@ const SheetContext = createContext(null);
 export function Sheet({ children }) {
   const ref = useRef(null);
   const titleId = useId();
-  // Only wire aria-labelledby when a SheetTitle actually mounts, so the
-  // <dialog> never points at a missing id.
+  // Wire aria-labelledby only when a title mounts, so it never dangles.
   const [hasTitle, setHasTitle] = useState(false);
   return (
     <SheetContext.Provider value={{ ref, titleId, hasTitle, setHasTitle }}>
@@ -51,9 +50,8 @@ export function SheetContent({ side, className, children, ...rest }) {
       dlg.querySelector(".sheet__inner")?.focus({ preventScroll: true });
     };
     const unlock = () => {
-      // Overlays nest (a Dialog raised from inside a Sheet), and both are
-      // <dialog> elements, so only release the page lock once no other one is
-      // still open. Exclude self: on unmount this dialog can still be open.
+      // Overlays nest, so release the lock only when no other <dialog> is open.
+      // Exclude self: on unmount this one can still be open.
       const others = [...document.querySelectorAll("dialog[open]")].some((d) => d !== dlg);
       if (others) return;
       root.classList.remove("is-scroll-locked");

@@ -1578,8 +1578,11 @@ function positionFloating(anchor, list, wasAbove, fixed = false) {
   list.style.width = `${rect.width}px`;
   // Clamp horizontally so a list near the right edge (or wider than the space to
   // its right) doesn't run off-screen, the same guard positionPopover/tooltip use.
+  // Measured, not taken from the anchor: a page can widen the list past its
+  // trigger with min-width (the shop's bare sort control does), and then the
+  // anchor's width would under-clamp and let it run off the right edge.
   const viewRight = (vv ? vv.width : window.innerWidth) - PAD;
-  const left = Math.max(PAD, Math.min(rect.left, viewRight - rect.width));
+  const left = Math.max(PAD, Math.min(rect.left, viewRight - (list.offsetWidth || rect.width)));
   list.style.left = `${left + sx}px`;
   list.style.maxHeight = "";
   const natural = list.offsetHeight;

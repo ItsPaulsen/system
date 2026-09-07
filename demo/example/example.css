@@ -909,6 +909,12 @@
   .ex-ph {
     display: block;
     width: 100%;
+
+    /* width: 100% can't resolve while a flex/grid track is being sized from its
+       content, so the image falls back to its intrinsic 800px there and drags
+       the track (and the page) wider than the viewport. The cap is what keeps a
+       narrow phone from scrolling sideways. */
+    max-width: 100%;
     aspect-ratio: 16 / 9;
 
     /* object-fit crops the photo to whatever ratio the slot sets; the muted fill

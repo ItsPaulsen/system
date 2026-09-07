@@ -274,6 +274,20 @@
     inset-inline: -8px;
   }
 
+  /* The trigger hugs its label, so the list can't inherit that width without
+     wrapping "Price: low to high" onto two lines. nowrap on the options is what
+     actually forbids the break; min-width beats the inline width app.js sets, so
+     the list grows to its widest option instead of overflowing it. The
+     right-edge clamp in positionFloating measures the list, so a widened list
+     still can't run off-screen. */
+  .shop__sort .select__list {
+    min-width: max-content;
+  }
+
+  .shop__sort .select__option {
+    white-space: nowrap;
+  }
+
   .shop__sort .select__trigger:focus-visible,
   .shop__sort .select__trigger[aria-expanded="true"] {
     border-color: transparent;
@@ -293,6 +307,17 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--grid-gutter, 1rem);
+  }
+
+  /* Grid and flex items floor at their content's min-content width, so one long
+     product name or a wide image would push the column past the viewport rather
+     than wrap. Zeroing the floor down the whole chain (band column → grid →
+     card → tile) is what lets the products actually shrink on a narrow phone. */
+  .shop__main,
+  .shop__grid,
+  .shop-card,
+  .shop-card__media {
+    min-width: 0;
   }
 
   /* Cards are the anchor itself: a white media tile, then the text on the band

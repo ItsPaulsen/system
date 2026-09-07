@@ -3165,8 +3165,14 @@
     transition: background var(--motion-default);
   }
 
+  /* Driven off the ITEM, not the link. The panel's 4px hover bridge (::before,
+   below) slides across the link's bottom edge while the panel animates open or
+   closed, which steals :hover from the link and flickers the surface off and
+   back. Hovering anywhere in the item also keeps the trigger marked while its
+   panel is open, which is what you want. For an item with no panel this is the
+   same box as the link. */
   @media (hover: hover) and (pointer: fine) {
-    .nav-menu__link:hover {
+    .nav-menu__item:hover > .nav-menu__link {
       background: var(--background-secondary-hover);
     }
   }

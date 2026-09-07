@@ -621,8 +621,12 @@
     transition: background var(--motion-default);
   }
 
+  /* At >=1024 the box steps with the type, to 48px and 20px, so it matches the
+   header buttons and the padding ratio doesn't drift under the larger text. */
   @media (min-width: 1024px) {
     .ex-topbar__nav .nav-menu__link {
+      height: 48px;
+      padding: 0 20px;
       font-size: var(--font-body-medium-size);
     }
   }

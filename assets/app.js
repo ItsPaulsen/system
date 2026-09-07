@@ -1369,18 +1369,22 @@ function injectCodeCopy() {
   });
 }
 
-// Shared overlay scroll behavior for trigger-anchored surfaces (menu, select,
-// popover). Desktop: lock the page while open, the pointer stays over the
+// Shared overlay scroll behavior for trigger-anchored surfaces (the dropdown
+// menu today). Desktop: lock the page while open, the pointer stays over the
 // surface so page-scroll isn't the intent. Touch: dismiss on a scroll that
 // starts outside the surface, which is exactly how a touch scroll begins.
 // Call onOpen()/onClose() from the component's own open/close.
 const overlayIsDesktop = window.matchMedia("(hover: hover) and (pointer: fine)");
 function overlayScroll(surface, close) {
   let onScroll = null;
+  // Only desktop takes the page lock, so only desktop may release it; a stray
+  // unlock would drop the count an enclosing dialog/sheet is holding.
+  let locked = false;
   return {
     onOpen() {
       if (overlayIsDesktop.matches) {
         lockBodyScroll();
+        locked = true;
         return;
       }
       // Ignore scrolls originating inside the surface itself (long lists).
@@ -1390,7 +1394,10 @@ function overlayScroll(surface, close) {
       window.addEventListener("scroll", onScroll, { passive: true, capture: true });
     },
     onClose() {
-      unlockBodyScroll();
+      if (locked) {
+        unlockBodyScroll();
+        locked = false;
+      }
       if (!onScroll) return;
       window.removeEventListener("scroll", onScroll, true);
       onScroll = null;
@@ -1662,7 +1669,7 @@ function initSelects() {
 // filters, Arrow keys walk only the visible rows, Enter picks the active one.
 // aria-activedescendant tracks the active row while focus stays in the input.
 function initComboboxes() {
-  document.querySelectorAll("[data-combobox]").forEach((root) => {
+  document.querySelectorAll("[data-combobox]").forEach((root, ci) => {
     const input = root.querySelector('[role="combobox"]');
     const list = root.querySelector('[role="listbox"]');
     const options = [...root.querySelectorAll(".select__option")];
@@ -1676,8 +1683,15 @@ function initComboboxes() {
     status.setAttribute("role", "status");
     root.appendChild(status);
 
+    // Unique per instance (ci), or two id-less comboboxes on one page mint the
+    // same option ids and aria-activedescendant resolves to the wrong row.
+    const base = root.id || list.id || `combobox-${ci}`;
+    // A combobox must point at its popup, so wire it here rather than relying on
+    // every instance's markup to spell the pairing out.
+    if (!list.id) list.id = `${base}-list`;
+    input.setAttribute("aria-controls", list.id);
     options.forEach((o, i) => {
-      if (!o.id) o.id = `${root.id || list.id || "combobox"}-opt-${i}`;
+      if (!o.id) o.id = `${base}-opt-${i}`;
       // Every listbox option must expose a selected state; without it VoiceOver
       // can announce the active row inconsistently.
       if (!o.hasAttribute("aria-selected")) o.setAttribute("aria-selected", "false");

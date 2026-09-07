@@ -24,15 +24,14 @@ export default function Tabs({
     onChange?.(val);
   };
 
-  // Arrow/Home/End move to the next enabled tab and activate it (focus follows).
+  // Left/Right/Home/End move to the next enabled tab and activate it (focus
+  // follows). The list is horizontal, so Up/Down are left alone.
   const onKeyDown = (e) => {
     const enabled = items.map((it, i) => (it.disabled ? -1 : i)).filter((i) => i >= 0);
     const here = enabled.indexOf(items.findIndex((it) => it.value === selected));
     let next;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown")
-      next = enabled[(here + 1) % enabled.length];
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
-      next = enabled[(here - 1 + enabled.length) % enabled.length];
+    if (e.key === "ArrowRight") next = enabled[(here + 1) % enabled.length];
+    else if (e.key === "ArrowLeft") next = enabled[(here - 1 + enabled.length) % enabled.length];
     else if (e.key === "Home") next = enabled[0];
     else if (e.key === "End") next = enabled[enabled.length - 1];
     else return;

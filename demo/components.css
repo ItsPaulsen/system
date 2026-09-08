@@ -132,7 +132,7 @@
     height: 20px;
     margin: 0;
     background: transparent;
-    border: 1.5px solid var(--ink-tertiary);
+    border: var(--border-width) solid var(--ink-tertiary);
     cursor: pointer;
     transition:
       background var(--motion-default),
@@ -275,12 +275,15 @@
     border-color: var(--red);
   }
 
-  /* Subtle fill on hover while still unchecked (quaternary tint).
-   Declared last: higher specificity than the :disabled/:checked rules. */
+  /* Hover while still unchecked darkens the border, it doesn't fill: the fill is
+   the disabled state's now, and a quaternary tint (0.17) against that
+   --fill-secondary box (0.20) would be the same box. Same border width, so
+   nothing shifts under the pointer. Declared last: higher specificity than the
+   :disabled/:checked rules. */
   @media (hover: hover) and (pointer: fine) {
     .checkbox__input:not(:disabled, :checked):hover,
     .radio__input:not(:disabled, :checked):hover {
-      background: var(--fill-quaternary-hover);
+      border-color: var(--ink-primary);
     }
   }
 

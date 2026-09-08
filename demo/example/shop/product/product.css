@@ -796,8 +796,16 @@
 
   /* The field keeps the button's pill and height (number-field--lg is 48, the
      default button height), so what changes on the swap is the control, not the
-     shape of the thing in that slot. */
+     shape of the thing in that slot. The component's own corner is the Input's,
+     which is right in a form and wrong in this row. */
   .pdp-cart__control {
+    border-radius: var(--radius-full);
+  }
+
+  /* And the stepper's surface with it: the component's is a rounded square, cut
+     to the field's own corner, which inside a pill leaves the curve of each end
+     uncovered. */
+  .pdp-cart__control .number-field__step::before {
     border-radius: var(--radius-full);
   }
 

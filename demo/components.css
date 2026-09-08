@@ -4419,18 +4419,17 @@
      </span>
    </div> */
 
-  /* Size scale: default 40px, .number-field--sm 32px, .number-field--lg 48px. */
+  /* Size scale, one number per size: --number-field-size is the field's outer
+   height, and a stepper is that less the two borders, which makes the strip square
+   (38 on the default 40 field) so the surface inside it can sit the same distance
+   from every edge.
+
+   The corner is the Input's, so the field matches the ones beside it in a form; a
+   page that puts it in a row of pill buttons rounds it there (see the product
+   page). */
   .number-field__control {
-    min-height: 40px;
+    min-height: var(--number-field-size);
     padding: 0;
-  }
-
-  .number-field--sm .number-field__control {
-    min-height: 32px;
-  }
-
-  .number-field--lg .number-field__control {
-    min-height: 48px;
   }
 
   /* A stepper doesn't light the whole field. The field's border says "text goes
@@ -4444,11 +4443,11 @@
   }
 
   /* The stepper keeps the full strip as its hit area, but every state it shows is a
-   32 circle drawn inside that (::before below): nothing square fights the field's
-   corners, it works as well on the pill variant as on the default rectangle, and
-   the target stays the whole strip rather than shrinking to the circle. There are
-   no dividers between the three parts either: they are one control, and rules
-   between them only chop it up. */
+   32 box drawn inside that (::before below): nothing reaches the field's corners,
+   it works as well on the pill as on a rectangle, and the target stays the whole
+   strip rather than shrinking to the surface. There are no dividers between the
+   three parts either: they are one control, and rules between them only chop it
+   up. */
   .number-field__step {
     display: inline-flex;
     position: relative;
@@ -4456,7 +4455,7 @@
     align-items: center;
     justify-content: center;
     align-self: stretch;
-    width: 2.5rem;
+    width: calc(var(--number-field-size) - 2 * var(--border-width));
     padding: 0;
     border: 0;
     background: transparent;
@@ -4464,37 +4463,22 @@
     cursor: pointer;
   }
 
-  /* The circle: 8 in from the strip on the default 40 field, and the same step down
-   at each size. Centred explicitly rather than left to the static position of an
-   abspos flex child. */
+  /* 4 in from the strip on every side, rather than a fixed square: min-height is
+   the field's outer size, so the strip inside its borders is 38 tall and 40 wide,
+   and a square surface left 4 at the sides but 3 above and below. Insets keep the
+   breathing room even at every size too, which is why there's nothing to restate
+   for --sm and --lg.
+
+   Rounded rather than a circle: it sits inside a field whose own corners are
+   curved, and a squarer surface fills the strip instead of leaving a crescent of
+   it above and below. Its corner is the field's less the inset, so the two curves
+   stay parallel. */
   .number-field__step::before {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 2rem;
-    height: 2rem;
-    border-radius: var(--radius-full);
-    translate: -50% -50%;
+    inset: var(--space-4);
+    border-radius: calc(var(--radius-sm) - var(--space-4));
     transition: background var(--motion-default);
-  }
-
-  .number-field--sm .number-field__step {
-    width: 2rem;
-  }
-
-  .number-field--sm .number-field__step::before {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .number-field--lg .number-field__step {
-    width: 3rem;
-  }
-
-  .number-field--lg .number-field__step::before {
-    width: 2.5rem;
-    height: 2.5rem;
   }
 
   /* Positioned, so the glyph paints over the circle behind it. */
@@ -4538,7 +4522,17 @@
 
   /* The field hugs its content rather than filling a fixed width. */
   .number-field {
+    --number-field-size: 40px;
+
     width: fit-content;
+  }
+
+  .number-field--sm {
+    --number-field-size: 32px;
+  }
+
+  .number-field--lg {
+    --number-field-size: 48px;
   }
 
   /* Value reads centred, tabular so digits don't jitter. field-sizing lets it grow

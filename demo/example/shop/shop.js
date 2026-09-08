@@ -155,7 +155,7 @@
   };
 
   // Put both handles back on the bounds and let the slider repaint itself, so
-  // the fill and the readout follow without this file knowing how they work.
+  // the fill and the fields follow without this file knowing how they work.
   const resetPrice = () => {
     const [lower, upper] = priceInputs();
     const { min, max } = priceBounds();
@@ -206,11 +206,10 @@
   };
 
   // Per-option counts: what each option would show against the rest of the rail,
-  // its own group left out of the pool (see passes). A count of 0 stays a count
-  // rather than disabling the row, so the list doesn't shift under the pointer
-  // as other filters change.
-  const showOptionCounts = () => {
-    const f = facets();
+  // its own group left out of the pool (see passes). An option with nothing
+  // behind it is disabled rather than hidden, so the list keeps its length and
+  // nothing shifts under the pointer as other filters change.
+  const showOptionCounts = (f) => {
     filter.querySelectorAll("[data-filter]").forEach((group) => {
       const match = OPTION_MATCH[group.dataset.filter];
       if (!match) return;
@@ -250,7 +249,7 @@
       n.textContent = matches.length === 1 ? "product" : "products";
     });
     showPrice(priceRange());
-    showOptionCounts();
+    showOptionCounts(f);
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 

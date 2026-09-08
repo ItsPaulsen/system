@@ -2251,7 +2251,7 @@
   }
 
   /* Stacked form fields, 1rem between fields; the 1.5rem space above and below
-   the group comes from the .dialog__inner gap. */
+   the group comes from the .dialog__scroll gap. */
   .dialog__form {
     display: flex;
     flex-direction: column;
@@ -2272,7 +2272,7 @@
   }
 
   /* Plain footer: just a small lift above the buttons. The 1.5rem separation from
-   the content above comes from the .dialog__inner gap. */
+   the content above comes from the .dialog__scroll gap. */
   .dialog__actions {
     display: flex;
     justify-content: flex-end;

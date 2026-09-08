@@ -418,12 +418,11 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Square white tile with the product inset, the raised surface on the band.
-     Padding is what makes the artwork read as a product shot rather than a
-     photo card. */
+  /* Square white tile, the raised surface on the band. No padding: every product
+     shot carries 10% of white of its own now (baked into the file), so a tile
+     inset on top of that only made the artwork smaller. */
   .shop-card__media {
     display: block;
-    padding: 1.5rem;
     border-radius: var(--radius-md);
     background: var(--shop-plate);
 
@@ -477,10 +476,13 @@
      ratio and the inner rounding are new. */
 
   /* .ex-ph's loading fill derives from --background-secondary, which would be a
-     dark square inside the white plate; mix it against the plate instead. */
+     dark square inside the white plate; mix it against the plate instead.
+
+     The radius is stated, not inherited: the <img> sits inside a <picture>, which
+     has none of its own. */
   .shop-card__img {
     aspect-ratio: 1;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--neutral-black) 8%, var(--shop-plate));
   }
 

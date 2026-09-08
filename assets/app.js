@@ -3346,10 +3346,6 @@ function initCarousel() {
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
     };
 
-    // Index the last sync settled on. Starts at the resting slide so the initial
-    // sync doesn't fire a change event for a position the markup already shows.
-    let at = 0;
-
     const sync = () => {
       const scroll = -pos;
       const m = maxScroll();
@@ -3361,33 +3357,31 @@ function initCarousel() {
         if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
         else el.removeAttribute("aria-current");
       });
-      // Lets a page react to the slide (the product page retitles and reprices
-      // from the active thumbnail) without reaching into the carousel.
-      if (i !== at) {
-        at = i;
-        root.dispatchEvent(
-          new CustomEvent("carousel:change", {
-            bubbles: true,
-            detail: { index: i, total: items.length }
-          })
-        );
-      }
     };
 
-    const settle = (scroll) => {
+    const settle = (scroll, animate = true) => {
       pos = -Math.max(0, Math.min(maxScroll(), scroll));
-      render(true);
+      render(animate);
       sync();
     };
-    const goTo = (i) => {
+    const goTo = (i, animate = true) => {
       const pts = points();
-      settle(pts[Math.max(0, Math.min(pts.length - 1, i))]);
+      settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
     };
     const current = () => nearestIndex(-pos);
 
     prev?.addEventListener("click", () => goTo(current() - 1));
     next?.addEventListener("click", () => goTo(current() + 1));
     nav.forEach((el, n) => el.addEventListener("click", () => goTo(navIndex(el, n))));
+
+    // Programmatic jump, for a page that has to move the track itself rather than
+    // in response to a press: `animate: false` places the slide instead of
+    // sliding to it, which is what a reset wants (the product page returns to the
+    // first shot when the colour changes, and sliding there would read as the new
+    // colour arriving from the side).
+    root.addEventListener("carousel:goto", (e) => {
+      goTo(Number(e.detail?.index) || 0, e.detail?.animate !== false);
+    });
     root.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
@@ -3445,10 +3439,13 @@ function initCarousel() {
     viewport.addEventListener("lostpointercapture", endDrag);
 
     // Re-snap to the current item after a resize (widths and maxScroll change).
+    // Placed, not animated: a resize fires continuously while a window is dragged,
+    // and animating each step leaves the track sliding around under the pointer
+    // instead of the slide simply scaling in place.
     let frame;
     window.addEventListener("resize", () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => goTo(current()));
+      frame = requestAnimationFrame(() => goTo(current(), false));
     });
 
     render(false);

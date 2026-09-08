@@ -4869,8 +4869,9 @@
    Any element inside the root with data-carousel-goto="<index>" jumps to that
    slide, and carries aria-current="true" while it's the current one — that's how
    a thumbnail rail or a row of dots hooks up, without its own JS. The root also
-   dispatches a bubbling `carousel:change` (detail: { index, total }) on settle,
-   for a page that has to follow the slide.
+   listens for a `carousel:goto` (detail: { index, animate }) from a page that has
+   to move it — `animate: false` places the slide rather than sliding to it, which
+   is what a reset wants.
 
    <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="…">
      <button class="carousel__control carousel__control--prev" …>…</button>

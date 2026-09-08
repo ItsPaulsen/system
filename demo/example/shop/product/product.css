@@ -26,8 +26,9 @@
   .pdp-page {
     --pdp-ring-room: 4px;
 
-    /* The rail tile, ring included. The rail's height cap is derived from it. */
-    --pdp-thumb-size: 96px;
+    /* The rail tile at its biggest, ring included. It scales with the image below
+       that (see the lg block), the way IKEA's does. */
+    --pdp-thumb-max: 96px;
 
     /* How far a focus ring reaches past its control, so a scroll container can
        leave room for one: the ring's width plus its offset. */
@@ -104,34 +105,49 @@
   }
 
   /* ── Split ────────────────────────────────────────────────────────────────
-     Gallery over buy column on phones, side by side from lg. The media side is
-     given slightly more than half: it holds a square plate, and an even split
-     made the image the taller of the two columns by a long way. */
+     Gallery over buy column on phones. */
   .pdp__split {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
   }
 
+  /* Side by side from md, and always on the page's own 12-column grid, which is
+     why the gap is the grid's gutter and nothing else: any other value and neither
+     column lands on a boundary, so the gallery would stop lining up with the cards
+     further down.
+
+     Six and six here. A tablet is wide enough for the two to sit together, and
+     the alternative is a full-width photograph with everything worth reading
+     pushed under the fold. */
+  @media (min-width: 768px) {
+    .pdp__split {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gutter);
+    }
+  }
+
+  /* Seven and five from lg: the media side takes the extra, since it holds a
+     square plate and an even split made it much the taller of the two.
+
+     A gutter alone is tight between two blocks of content, so the buy column adds
+     40 of its own inside its span: the air comes from the column, not from the
+     gap, which is exactly what IKEA does (`grid-column: 8 / span 5` with
+     `padding-inline-start: 2.5rem` on a 12-column grid). It waits until lg
+     because at md the column is only ~350 wide and the two buttons need all of
+     it. */
   @media (min-width: 1024px) {
     .pdp__split {
-      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
-      gap: 3rem;
-    }
-  }
+      --pdp-col: calc((100% - 11 * var(--grid-gutter)) / 12);
 
-  @media (min-width: 1280px) {
-    .pdp__split {
-      gap: 4rem;
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, calc(5 * var(--pdp-col) + 4 * var(--grid-gutter)));
     }
-  }
 
-  /* At the 2xl tier the page is 1536 wide, so an unchecked buy column would run
-     its text to ~700px. Capping it there hands the extra width to the image and
-     keeps the copy on a readable measure. */
-  @media (min-width: 1536px) {
-    .pdp__split {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 33rem);
+    /* Inside the span, so the column edge is still on the grid. */
+    .pdp-buy {
+      padding-inline-start: 2.5rem;
     }
   }
 
@@ -146,6 +162,11 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-16);
     align-content: start;
+
+    /* .carousel is a flex row that centres its items, and only `display` was
+       overridden here, so the rail sat halfway down beside the image. Both items
+       start at the top of the row, like IKEA's. */
+    align-items: start;
   }
 
   /* Grid items floor at their content's min-content width, and the carousel's
@@ -158,23 +179,43 @@
     min-width: 0;
   }
 
-  /* Containing block for the overlaid controls. */
+  /* Containing block for the overlaid controls.
+
+     The rail comes first in the DOM, because at lg it sits left of the image and
+     tab order has to follow that. Below lg it's under the image, so order puts it
+     back after the stage. */
   .pdp-gallery__stage {
     position: relative;
+  }
+
+  .pdp-rail {
+    order: 1;
   }
 
   /* Controls sit on the plate rather than beside it: at this size a pair of
      gutters for two arrows costs more width than the arrows are worth. They keep
      the component's own skin, which is a dark circle on the (fixed white) plate
      in dark theme, and a light one in light theme. 40, up from the component's
-     32: they're overlaid on photography rather than sitting in chrome. */
+     32: they're overlaid on photography rather than sitting in chrome.
+
+     Not on phones at all: the gesture there is a drag, and the dots under the
+     image already say where you are. They come back from md, where a pointer is
+     the likely input and the image sits beside a column of copy rather than
+     filling the screen. */
   .pdp-gallery__control {
+    display: none;
     position: absolute;
     z-index: 1;
     top: 50%;
     width: 40px;
     height: 40px;
     translate: 0 -50%;
+  }
+
+  @media (min-width: 768px) {
+    .pdp-gallery__control {
+      display: inline-flex;
+    }
   }
 
   .pdp-gallery__control svg {
@@ -190,14 +231,19 @@
 
   /* Where there's a real pointer the arrows only appear over the image, so the
      resting state is the photograph on its own. They stay put on touch, which has
-     no hover to reveal them, and a keyboard tab brings the focused one back. */
+     no hover to reveal them.
+
+     Nothing here has to bring them back for the keyboard: they're tabindex="-1"
+     in the markup, because every slide is reachable from the rail (which comes
+     first in the tab order) and the arrows are a second way to do the same thing.
+     They stay real buttons for the pointer and for assistive tech, which can
+     still reach and press them. */
   @media (hover: hover) and (pointer: fine) {
     .pdp-gallery__control {
       opacity: 0;
       transition: opacity var(--motion-default);
     }
 
-    .pdp-gallery__control:focus-visible,
     .pdp-gallery__stage:hover .pdp-gallery__control {
       opacity: 1;
     }
@@ -212,33 +258,15 @@
   }
 
   /* Each slide is its own white plate (--ex-plate, shared with the shop card),
-     because the shots are photographed on white. The inset is what makes the
-     artwork read as a product shot rather than a photo card, and it grows with
-     the plate so the chair doesn't swell to fill a desktop column. */
+     because the shots are photographed on white.
+
+     No inset: the photograph is the plate, edge to edge. The shots are trimmed and
+     re-centred on white, so they carry their own breathing room, and an inset on
+     top of that only made the chair smaller. The plate colour stays as the fill
+     behind a shot that hasn't loaded. */
   .pdp-gallery__slide {
-    padding: var(--space-24);
     border-radius: var(--radius-md);
     background: var(--ex-plate);
-  }
-
-  @media (min-width: 640px) {
-    .pdp-gallery__slide {
-      padding: 2.5rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .pdp-gallery__slide {
-      padding: 3rem;
-    }
-  }
-
-  /* 80 at the widest tier: the plate is ~880 there, and the inset is what keeps
-     the chair at a size the 640 source can actually fill. */
-  @media (min-width: 1536px) {
-    .pdp-gallery__slide {
-      padding: 5rem;
-    }
   }
 
   .pdp-gallery__slide picture {
@@ -247,9 +275,13 @@
 
   /* .ex-ph supplies the loading fill and object-fit; the fill derives from
      --background-secondary, which would be a dark square inside the white plate,
-     so mix it against the plate instead (same as the shop card's tile). */
+     so mix it against the plate instead (same as the shop card's tile).
+
+     The radius is stated, not inherited: the <img> sits inside a <picture>, so
+     `inherit` picked that up (it has none) rather than the slide's 16. */
   .pdp-gallery__img {
     aspect-ratio: 1;
+    border-radius: var(--radius-md);
     background: color-mix(in oklab, var(--neutral-black) 8%, var(--ex-plate));
   }
 
@@ -282,26 +314,26 @@
     cursor: pointer;
   }
 
-  /* The two differ only in width: the rail's is the bigger box, the swatch holds a
-     48 plate in the same ring room. */
+  /* The two differ only in width. A rail thumb fills its column, which is a share
+     of the gallery capped at --pdp-thumb-max (see the lg block); a swatch is a
+     fixed 48 plate in the same ring room. */
   .pdp-thumb {
-    width: var(--pdp-thumb-size);
+    width: 100%;
   }
 
   .pdp-swatch {
     width: calc(48px + 2 * var(--pdp-ring-room));
   }
 
-  /* The plate lives on the photograph, not on the tile: 4px of padding leaves it
-     showing as a thin frame around the shot, and it's also the fill behind one
-     that hasn't loaded. It stays white in both themes because the shots are
-     photographed on white, so the frame reads in dark theme and merges with the
-     page in light, exactly as the big plate does. */
+  /* The plate lives on the photograph, not on the tile: it's the fill behind a shot
+     that hasn't loaded, and it stays white in both themes because the shots are
+     photographed on white. Nothing is inset here: every product shot carries 10%
+     of white of its own (baked into the file), so the breathing room comes with
+     the picture at any size and no tile has to add its own. */
   .pdp-tile__img {
     display: block;
     width: 100%;
     aspect-ratio: 1;
-    padding: 4px;
     border-radius: var(--radius-sm);
     background: var(--ex-plate);
     object-fit: cover;
@@ -327,11 +359,16 @@
   }
 
   /* Same reason: the focusable thing is the button itself in one case and the
-     radio inside the label in the other. */
+     radio inside the label in the other.
+
+     No converge animation on either. The global ring animates in from a wider
+     offset, which around a photograph reads as something growing out of the
+     picture, and on a 24 dot it's most of the row flashing. */
   .pdp-thumb:focus-visible,
   .pdp-swatch:has(.pdp-swatch__input:focus-visible) {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
+    animation: none;
   }
 
   /* ── Image rail ───────────────────────────────────────────────────────────
@@ -351,18 +388,27 @@
     list-style: none;
   }
 
-  /* The rail sits beside the image from md, not under it. Under it, a row of
+  /* The rail sits beside the image from lg, not under it. Under it, a row of
      white plates on a white surface reads as a line drawn across the page rather
      than as a set of pictures; beside the image it's a column that ends where the
-     image does. It stays under on phones, where a 96 side rail would take a third
-     of the width off the shot.
+     image does. It stays under it below lg, where the media column is half a
+     tablet and a 96 side rail would take a third of the width off the shot.
 
      Order rather than explicit placement, so the single-slide case below can drop
-     to one column and let the stage fall into it. */
-  @media (min-width: 768px) {
+     to one column and let the stage fall into it: the rail is already first in the
+     DOM, so it just stops being pushed after the stage. */
+  @media (min-width: 1024px) {
+    /* The rail is a share of the gallery rather than a fixed column, capped at the
+       tile's largest size: 96 from the widest tier down to about 1400, and scaling
+       with the image below that, so the two never drift out of proportion. IKEA
+       does the same with a flat 13% (and no cap). */
     .pdp-gallery {
-      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-columns: min(12%, var(--pdp-thumb-max)) minmax(0, 1fr);
       column-gap: var(--space-16);
+    }
+
+    .pdp-thumb {
+      width: 100%;
     }
 
     /* nowrap on purpose: a column flex that wraps would spill into a *second*
@@ -373,24 +419,32 @@
       flex-wrap: nowrap;
     }
 
-    /* Five tiles and their gaps. A cap in tiles rather than a measurement of the
-       image: it can't be read in CSS, and five is under the image's height at
-       every width the rail is a column (the image is a square of the rest of the
-       row). Past that the Scroll Area takes over, and only then does the viewport
-       open a gutter for the bar, so a short rail is untouched.
-
-       The viewport is a scroll container, so it clips on the inline axis too and
-       a tile's focus ring would be cut off at both sides. Pad it by the ring's
-       reach and pull the rail back by the same amount, so the tiles still sit on
-       the content edge: the same trick the listing's filter rail uses. */
+    /* The viewport is a scroll container, so it clips on the inline axis too and a
+       tile's focus ring would be cut off at both sides. It pads by the ring's reach
+       and the rail is pulled back by the same amount, so the tiles still sit on the
+       content edge: the trick the listing's filter rail uses. Past about five
+       tiles the Scroll Area takes over, and only then does the viewport open a
+       gutter for the bar, so a short rail is untouched. */
     .pdp-rail {
-      order: -1;
+      order: 0;
+
+      /* Pulled back on both axes by what the viewport pads, so the tiles still sit
+         on the content edge and the first one still lines up with the top of the
+         image. */
+      margin-block-start: calc(-1 * var(--pdp-focus-room));
       margin-inline-start: calc(-1 * var(--pdp-focus-room));
     }
 
+    /* About five tiles, as a ratio of the rail's own width now that the width is
+       fluid: a fixed cap would outgrow the image once the tiles scaled down.
+       max-content keeps the box off the space a short rail doesn't use. */
     .pdp-rail__viewport {
-      max-height: calc(5 * var(--pdp-thumb-size) + 4 * var(--space-8));
-      padding-inline: var(--pdp-focus-room);
+      aspect-ratio: 1 / 5.3;
+      max-height: max-content;
+
+      /* All four sides: it's a vertical scroll container, so it was clipping the
+         first tile's ring at the top and the last one's at the bottom. */
+      padding: var(--pdp-focus-room);
     }
 
     .pdp-rail[data-scrollable="true"] .pdp-rail__viewport {
@@ -398,10 +452,77 @@
     }
   }
 
+  /* Below lg the rail sits under the image, where a row of white plates reads as a
+     line across the page: it renders as dots there instead, centred under the
+     shot. A max-width query, unusually for this sheet, because the tile *is* the
+     default (the swatches are tiles at every width, and the thumbs are tiles from
+     lg) and the dot is the exception at the small end.
+
+     Same buttons either way, so the carousel wiring and aria-current don't change;
+     only what they look like does. The button is exactly the shape it draws, so
+     the gap between two of them is the gap you see — sizing the button to a 24 hit
+     area instead left the pill nearly filling its box and a dot floating in the
+     middle of one, which read as uneven spacing. The tap target comes from ::after
+     reaching outside the box, where it costs the layout nothing. */
+  @media (max-width: 1023.98px) {
+    /* The tile's rings are dropped at the same specificity they're set with, or
+       .pdp-thumb[aria-current="true"] and .pdp-tile:hover keep drawing a circle
+       around the dot. */
+    .pdp-thumb,
+    .pdp-thumb[aria-current="true"],
+    .pdp-thumb:hover {
+      position: relative;
+      width: var(--space-8);
+      height: var(--space-8);
+      padding: 0;
+      border-radius: var(--radius-full);
+      background: var(--fill-primary);
+      box-shadow: none;
+      transition: background var(--motion-default);
+    }
+
+    /* The current one stretches into a pill rather than changing colour alone. */
+    .pdp-thumb[aria-current="true"] {
+      width: 20px;
+      background: var(--ink-primary);
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      /* One step up the ladder, not all the way to the current dot's ink: rest is
+         --fill-primary (ink at 26%), hover --ink-tertiary, current --ink-primary. */
+      .pdp-thumb:not([aria-current="true"]):hover {
+        background: var(--ink-tertiary);
+      }
+    }
+
+    /* 24 tall to press, drawn outside the box so it can't push the dots apart. */
+    .pdp-thumb::after {
+      content: "";
+      position: absolute;
+      inset: calc(-1 * var(--space-8));
+    }
+
+    .pdp-thumb .pdp-tile__img {
+      display: none;
+    }
+
+    /* The viewport is still a scroll container here, so it clips a dot's focus ring
+       on every side: it needs the ring's reach as padding, the same room the column
+       rail reserves on its inline axis at lg. */
+    .pdp-rail__viewport {
+      padding: var(--pdp-focus-room);
+    }
+
+    .pdp-thumbs {
+      justify-content: center;
+      gap: var(--space-8);
+    }
+  }
+
   /* Chevrons that page the rail, overlaid on its first and last tile the way
      IKEA's are. They're the Button component at 40, and product.js hides the one
      at whichever end the rail is already against, so neither ever sits there
-     dead. Below md the rail is a wrapping row with nothing to page, and they stay
+     dead. Below lg the rail is a wrapping row with nothing to page, and they stay
      hidden. */
   .pdp-rail__step {
     --button-size: 40px;
@@ -425,16 +546,16 @@
     display: none;
   }
 
-  /* From lg the split is two columns and the buy column is the taller of the two,
-     so the media column sticks and the product stays in view while the copy under
-     it scrolls, the way IKEA's does. align-self: start is what gives it room to
-     travel: a stretched grid item is already as tall as its row and can't move.
+  /* Wherever the two sit side by side the buy column is the taller of them, so the
+     media column sticks and the product stays in view while the copy scrolls, the
+     way IKEA's does. align-self: start is what gives it room to travel: a
+     stretched grid item is already as tall as its row and can't move.
 
      The offset is the listing rail's, topbar plus 32 (see .ex-filter), so every
      sticky thing on the mini-site parks at the same line. A media column taller
-     than the viewport parks with its bottom out of reach, which is the trade
-     IKEA takes too; it only happens on a wide, short window. */
-  @media (min-width: 1024px) {
+     than the viewport parks with its bottom out of reach, which is the trade IKEA
+     takes too; it only happens on a wide, short window. */
+  @media (min-width: 768px) {
     .pdp-gallery {
       position: sticky;
       top: calc(var(--ex-topbar-h) + var(--space-32));
@@ -604,15 +725,20 @@
     gap: var(--space-12);
   }
 
-  /* Add to cart takes the row, Save takes what it needs. */
-  .pdp-cart__add {
-    flex: 1 1 12rem;
-    min-width: 0;
+  /* The two share the row evenly: basis 0, so what they get is the whole row split
+     between them rather than their own content widths plus an equal share of
+     what's left over (which is what left them different widths). The 10rem floor
+     is what makes them wrap to their own lines instead of squeezing the labels on
+     a narrow phone. */
+  .pdp-cart__add,
+  .pdp-buy__save {
+    flex: 1 1 0;
+    min-width: 10rem;
   }
 
   /* The quantity field is the component at its own width: adding to the cart is
-     the moment the row gives its space to Save rather than holding a wide field
-     nobody asked to use. */
+     the moment the row gives its space to Save, which grows into it, rather than
+     holding a wide field nobody asked to use. */
   .pdp-cart__qty {
     flex: 0 0 auto;
     width: auto;
@@ -642,11 +768,6 @@
   .pdp-cart__step:last-child {
     border-start-end-radius: var(--radius-full);
     border-end-end-radius: var(--radius-full);
-  }
-
-  /* Grows into whatever the field hands back. */
-  .pdp-buy__save {
-    flex: 1 1 auto;
   }
 
   /* The pickup row (.item--muted) and the accordion both take the recessed skin:

@@ -22,7 +22,6 @@
   // colour. data-views on the radio says how many the colour has.
   const gallery = document.querySelector(".pdp-gallery");
   const extras = Array.from(document.querySelectorAll("[data-pdp-extra]"));
-  const firstThumb = document.querySelector(".pdp-thumb");
 
   // Two stock states, each a badge skin plus the lead time it implies.
   const STOCK = {
@@ -52,8 +51,11 @@
     // card serves, so a colour change costs no new download on a page the listing
     // was reached from. Only the pack shot carries these hooks; the back view and
     // the detail shot belong to the model, not the colour.
+    // 400/640/720 exist for every colourway; data-big names a larger tier where a
+    // colour has a high-resolution source behind it (only oak does, so far).
     sources.forEach((el) => {
-      el.srcset = `${d.img}-400.webp 400w, ${d.img}-640.webp 640w`;
+      const tiers = [400, 640, 720].concat(d.big ? [Number(d.big)] : []);
+      el.srcset = tiers.map((w) => `${d.img}-${w}.webp ${w}w`).join(", ");
     });
     images.forEach((el, n) => {
       el.src = `${d.img}-640.jpg`;
@@ -71,8 +73,13 @@
 
     // Back to the pack shot: the colour that was picked is the one to show, and a
     // track left translated onto a slide that has just been hidden would park the
-    // gallery on nothing. The click routes through the carousel's own goto.
-    if (firstThumb) firstThumb.click();
+    // gallery on nothing. Placed, not slid: animating it reads as the new colour
+    // arriving from the side rather than as the gallery resetting.
+    if (gallery) {
+      gallery.dispatchEvent(
+        new CustomEvent("carousel:goto", { detail: { index: 0, animate: false } })
+      );
+    }
 
     // The carousel measures its track live but only re-reads it on resize, so the
     // slides that just appeared or left need one to be counted.
@@ -144,6 +151,31 @@
         railView.scrollBy({ top: Number(b.dataset.pdpRailStep) * tile() * 3, behavior: "smooth" });
       })
     );
+    // Arrowing inside the rail steps it and takes focus along, the way it does in
+    // any list you arrow through: both axes, because the rail is a vertical column
+    // from lg and a row of dots below it. The carousel root handles left and right
+    // too, so the event is stopped here or the slide would move twice — and that
+    // handler doesn't move focus, which is what left the ring behind on the first
+    // thumb while the current one moved on.
+    const STEPS = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+    rail.addEventListener("keydown", (e) => {
+      const step = STEPS[e.key] || 0;
+      if (!step) return;
+      e.stopPropagation();
+      const shown = Array.from(rail.querySelectorAll(".pdp-thumb")).filter(
+        (t) => !t.closest("li").hidden
+      );
+      const from = shown.findIndex((t) => t.getAttribute("aria-current") === "true");
+      const next = shown[Math.max(0, Math.min(shown.length - 1, Math.max(from, 0) + step))];
+      if (!next || next === shown[from]) {
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      next.click();
+      next.focus();
+    });
+
     railView.addEventListener("scroll", sync);
     window.addEventListener("resize", sync);
     sync();

@@ -8,11 +8,14 @@
 /* Layered so component CSS stays overridable by specificity, not by an unlayered
    sheet outranking every layer. Same as shop.css and blog.css. */
 @layer components {
-  /* Keeps .ex's secondary surface for the product itself, and drops the dot grid
-     (same flat treatment as the shop hero). Specs and the related row sit below
-     in a recessed band instead, so the seam between them is the page's one
-     divider. No bottom padding: the band is the last child and runs flush into
-     the footer.
+  /* Two surfaces: .ex's secondary one for the product, and a recessed band under
+     it for the reference material. The seam between them *is* the divider, and a
+     background change can only ever be full-bleed, so that line runs the width of
+     the page. Drawing it on the content column instead would mean one surface for
+     the whole page, and his call is the two surfaces.
+
+     The dot grid stays off, the same flat treatment as the shop hero. No bottom
+     padding: the band is the last child and runs flush into the footer.
 
      No plate carries a border of its own: the tiles are ringed from outside
      instead (see .pdp-thumb), which is what lets those rings follow the theme.
@@ -22,6 +25,9 @@
      compensating margin to line up. */
   .pdp-page {
     --pdp-ring-room: 4px;
+
+    /* The rail tile, ring included. The rail's height cap is derived from it. */
+    --pdp-thumb-size: 96px;
 
     gap: 4rem;
     padding-block: var(--space-24) 0;
@@ -39,8 +45,8 @@
      that are reference rather than product, and owns the gap between them.
 
      Full-bleed, like the shop's: the recessed surface is the page's, not a panel.
-     Anything that has to line up with the grid is drawn inside the content column
-     instead (see .pdp-related__rule). */
+     Its top edge is the boundary between the product and the reference material
+     under it. */
   .pdp-band {
     display: grid;
 
@@ -275,7 +281,7 @@
   /* The two differ only in width: the rail's is the bigger box, the swatch holds a
      48 plate in the same ring room. */
   .pdp-thumb {
-    width: 96px;
+    width: var(--pdp-thumb-size);
   }
 
   .pdp-swatch {
@@ -355,9 +361,73 @@
       column-gap: var(--space-16);
     }
 
-    .pdp-thumbs {
+    .pdp-rail {
       order: -1;
+    }
+
+    /* nowrap on purpose: a column flex that wraps would spill into a *second*
+       column once its height is capped, doubling the rail's width. The overflow
+       belongs to the Scroll Area's viewport. */
+    .pdp-thumbs {
       flex-direction: column;
+      flex-wrap: nowrap;
+    }
+
+    /* Five tiles and their gaps. A cap in tiles rather than a measurement of the
+       image: it can't be read in CSS, and five is under the image's height at
+       every width the rail is a column (the image is a square of the rest of the
+       row). Past that the Scroll Area takes over, and only then does the viewport
+       open a gutter for the bar, so a short rail is untouched. */
+    .pdp-rail__viewport {
+      max-height: calc(5 * var(--pdp-thumb-size) + 4 * var(--space-8));
+    }
+
+    .pdp-rail[data-scrollable="true"] .pdp-rail__viewport {
+      padding-inline-end: 14px;
+    }
+  }
+
+  /* Chevrons that page the rail, overlaid on its first and last tile the way
+     IKEA's are. They're the Button component at 40, and product.js hides the one
+     at whichever end the rail is already against, so neither ever sits there
+     dead. Below md the rail is a wrapping row with nothing to page, and they stay
+     hidden. */
+  .pdp-rail__step {
+    --button-size: 40px;
+
+    position: absolute;
+    z-index: 1;
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  .pdp-rail__step[data-pdp-rail-step="-1"] {
+    top: 0;
+  }
+
+  .pdp-rail__step[data-pdp-rail-step="1"] {
+    bottom: 0;
+  }
+
+  /* .button is inline-flex, which beats the UA [hidden] rule. */
+  .pdp-rail__step[hidden] {
+    display: none;
+  }
+
+  /* From lg the split is two columns and the buy column is the taller of the two,
+     so the media column sticks and the product stays in view while the copy under
+     it scrolls, the way IKEA's does. align-self: start is what gives it room to
+     travel: a stretched grid item is already as tall as its row and can't move.
+
+     The offset is the listing rail's, topbar plus 32 (see .ex-filter), so every
+     sticky thing on the mini-site parks at the same line. A media column taller
+     than the viewport parks with its bottom out of reach, which is the trade
+     IKEA takes too; it only happens on a wide, short window. */
+  @media (min-width: 1024px) {
+    .pdp-gallery {
+      position: sticky;
+      top: calc(var(--ex-topbar-h) + var(--space-32));
+      align-self: start;
     }
   }
 
@@ -366,7 +436,7 @@
      image plate, rather than a slider that visibly has nowhere to go. The rail's
      column goes with it, or its gap would indent the image. */
   .pdp-gallery:has(.carousel__item:only-child) .pdp-gallery__control,
-  .pdp-gallery:has(.carousel__item:only-child) .pdp-thumbs {
+  .pdp-gallery:has(.carousel__item:only-child) .pdp-rail {
     display: none;
   }
 
@@ -420,21 +490,15 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Base (mobile): title-large 32, headline-small 38 from lg, where the column
-     is half the page rather than all of it. */
+  /* The whole product name, which is the variant line the Shop card carries for
+     it, so it changes with the colour. title-large 32, headline-small 38 from lg,
+     where the column is half the page rather than all of it. */
   .pdp-buy__title {
     margin: 0;
     color: var(--ink-primary);
     font-size: var(--font-title-large-size);
     line-height: var(--font-title-large-lh);
     font-weight: var(--font-title-large-weight);
-  }
-
-  .pdp-buy__variant {
-    margin: 0;
-    color: var(--ink-primary);
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
   }
 
   @media (min-width: 1024px) {
@@ -494,13 +558,12 @@
 
   .pdp-color__legend {
     padding: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
   }
 
   .pdp-color__value {
-    color: var(--ink-primary);
     font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
@@ -512,6 +575,14 @@
     flex-wrap: wrap;
     gap: var(--space-8);
     margin: var(--space-12) 0 0;
+  }
+
+  /* Add to cart and Save on one row. Both grow, and both can wrap to their own
+     line, so the pair splits instead of squeezing on a narrow phone. */
+  .pdp-buy__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-12);
   }
 
   /* Add to cart takes the row, Save takes what it needs. */
@@ -597,12 +668,6 @@
      column. Fixed at a third so the values line up down the table. */
   .pdp-specs__table th {
     width: 33%;
-  }
-
-  /* The divider between the two band sections. It belongs to the related row and
-     sits inside the content column, so it spans the grid rather than the page. */
-  .pdp-related__rule {
-    margin: 0;
   }
 
   /* The listing's grid caps at four columns, which is exactly the related row, so

@@ -44,10 +44,10 @@
       out.badge.classList.add(stock.skin);
     }
 
-    // One stem per colourway, the widths appended here: the same three files the
-    // shop card serves, so a colour change costs no new download on a page the
-    // listing was reached from. Only the first slide is described, the other two
-    // are the same photograph (see the gallery comment in index.html).
+    // One stem per colourway, the widths appended here: the same files the shop
+    // card serves, so a colour change costs no new download on a page the listing
+    // was reached from. Only the pack shot carries these hooks; the back view and
+    // the detail shot belong to the model, not the colour.
     sources.forEach((el) => {
       el.srcset = `${d.img}-400.webp 400w, ${d.img}-640.webp 640w`;
     });
@@ -98,6 +98,36 @@
     };
     qtyInput.addEventListener("change", check);
     qtyInput.addEventListener("blur", check);
+  }
+
+  // The rail's chevrons page it by three tiles. The Scroll Area keeps the wheel,
+  // touch and keyboard scrolling; these are the coarse affordance over the tiles,
+  // and each hides itself once the rail is against that end, so a chevron never
+  // sits there doing nothing.
+  const rail = document.querySelector("[data-pdp-rail]");
+  const railView = rail && rail.querySelector(".scroll-area__viewport");
+  if (rail && railView) {
+    const steps = Array.from(rail.querySelectorAll("[data-pdp-rail-step]"));
+    const tile = () => {
+      const first = railView.querySelector(".pdp-thumb");
+      return first ? first.getBoundingClientRect().height + 8 : 104;
+    };
+    const sync = () => {
+      const room = railView.scrollHeight - railView.clientHeight;
+      steps.forEach((b) => {
+        const back = Number(b.dataset.pdpRailStep) < 0;
+        // 1px of slack: a fractional scrollTop at an end still counts as the end.
+        b.hidden = room <= 8 || (back ? railView.scrollTop <= 1 : railView.scrollTop >= room - 1);
+      });
+    };
+    steps.forEach((b) =>
+      b.addEventListener("click", () => {
+        railView.scrollBy({ top: Number(b.dataset.pdpRailStep) * tile() * 3, behavior: "smooth" });
+      })
+    );
+    railView.addEventListener("scroll", sync);
+    window.addEventListener("resize", sync);
+    sync();
   }
 
   // Deep link from a Shop card: ?color=<slug> opens on that colourway.

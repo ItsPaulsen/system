@@ -64,10 +64,12 @@
                  live in the buy column. product.js repoints all three slides and
                  all three thumbs when the colour changes.
 
-                 Our catalogue has exactly one photograph per colourway, so those
-                 three are the same file three times, there to keep the slider and
-                 rail logic on the page. Real extra shots per variant drop straight
-                 in: give each slide its own stem and alt.
+                 Slide one is the colourway's own pack shot and follows the
+                 swatches; the back view and the detail shot are the model's, shared
+                 by every colourway, which is how a catalogue with one pack shot per
+                 colour and one set of studio imagery actually works. A colourway
+                 with its own extra shots drops in the same way: give the slide a
+                 stem and put the data-pdp-* hooks back on it.
 
                  A product can also arrive with a single shot, so the layout can't
                  depend on a second one: an arrow at an end hides itself, and the
@@ -131,18 +133,16 @@
                       <picture>
                         <source
                           type="image/webp"
-                          data-pdp-source
                           srcset="
-                            /assets/images/products/cover-side-chair-oak-400.webp 400w,
-                            /assets/images/products/cover-side-chair-oak-640.webp 640w
+                            /assets/images/products/cover-side-chair-back-400.webp 400w,
+                            /assets/images/products/cover-side-chair-back-640.webp 640w
                           "
                           sizes="(min-width: 1536px) 720px, (min-width: 1280px) 540px, (min-width: 1024px) 42vw, (min-width: 640px) 66vw, 82vw"
                         />
                         <img
                           class="ex-ph pdp-gallery__img"
-                          data-pdp-img
-                          src="/assets/images/products/cover-side-chair-oak-640.jpg"
-                          alt=""
+                          src="/assets/images/products/cover-side-chair-back-640.jpg"
+                          alt="Cover Side Chair seen from the back"
                           loading="lazy"
                           decoding="async"
                         />
@@ -156,18 +156,16 @@
                       <picture>
                         <source
                           type="image/webp"
-                          data-pdp-source
                           srcset="
-                            /assets/images/products/cover-side-chair-oak-400.webp 400w,
-                            /assets/images/products/cover-side-chair-oak-640.webp 640w
+                            /assets/images/products/cover-side-chair-detail-400.webp 400w,
+                            /assets/images/products/cover-side-chair-detail-640.webp 640w
                           "
                           sizes="(min-width: 1536px) 720px, (min-width: 1280px) 540px, (min-width: 1024px) 42vw, (min-width: 640px) 66vw, 82vw"
                         />
                         <img
                           class="ex-ph pdp-gallery__img"
-                          data-pdp-img
-                          src="/assets/images/products/cover-side-chair-oak-640.jpg"
-                          alt=""
+                          src="/assets/images/products/cover-side-chair-detail-640.jpg"
+                          alt="The Cover Side Chair’s backrest and seat, close up"
                           loading="lazy"
                           decoding="async"
                         />
@@ -195,59 +193,108 @@
                 <span class="sr-only" aria-live="polite" data-carousel-status></span>
               </div>
 
-              <ul class="pdp-thumbs">
-                <li>
-                  <button
-                    class="pdp-tile pdp-thumb"
-                    type="button"
-                    data-carousel-goto="0"
-                    aria-label="Image 1"
+              <!-- The rail is a Scroll Area from md: past five images its column
+                   would run taller than the image beside it, so the viewport caps
+                   there and the rest scrolls. The two chevrons page it, the way
+                   IKEA's rail does; the component's own bar is the fine-grained
+                   affordance under the pointer. Nothing to scroll below md, where
+                   the rail is a wrapping row under the image. -->
+              <div class="scroll-area pdp-rail" data-scroll-area data-pdp-rail>
+                <button
+                  class="button button--secondary button--icon pdp-rail__step"
+                  type="button"
+                  data-pdp-rail-step="-1"
+                  aria-label="Show previous images"
+                  hidden
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
                   >
-                    <img
-                      class="pdp-tile__img"
-                      data-pdp-thumb
-                      src="/assets/images/products/cover-side-chair-oak-400.webp"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="pdp-tile pdp-thumb"
-                    type="button"
-                    data-carousel-goto="1"
-                    aria-label="Image 2"
+                    <path d="M6 15l6 -6l6 6" />
+                  </svg>
+                </button>
+                <div class="scroll-area__viewport pdp-rail__viewport">
+                  <ul class="pdp-thumbs">
+                    <li>
+                      <button
+                        class="pdp-tile pdp-thumb"
+                        type="button"
+                        data-carousel-goto="0"
+                        aria-label="Image 1"
+                      >
+                        <img
+                          class="pdp-tile__img"
+                          src="/assets/images/products/cover-side-chair-back-400.webp"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        class="pdp-tile pdp-thumb"
+                        type="button"
+                        data-carousel-goto="1"
+                        aria-label="Image 2"
+                      >
+                        <img
+                          class="pdp-tile__img"
+                          src="/assets/images/products/cover-side-chair-detail-400.webp"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        class="pdp-tile pdp-thumb"
+                        type="button"
+                        data-carousel-goto="2"
+                        aria-label="Image 3"
+                      >
+                        <img
+                          class="pdp-tile__img"
+                          data-pdp-thumb
+                          src="/assets/images/products/cover-side-chair-oak-400.webp"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="button button--secondary button--icon pdp-rail__step"
+                  type="button"
+                  data-pdp-rail-step="1"
+                  aria-label="Show next images"
+                  hidden
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
                   >
-                    <img
-                      class="pdp-tile__img"
-                      data-pdp-thumb
-                      src="/assets/images/products/cover-side-chair-oak-400.webp"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="pdp-tile pdp-thumb"
-                    type="button"
-                    data-carousel-goto="2"
-                    aria-label="Image 3"
-                  >
-                    <img
-                      class="pdp-tile__img"
-                      data-pdp-thumb
-                      src="/assets/images/products/cover-side-chair-oak-400.webp"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </button>
-                </li>
-              </ul>
+                    <path d="M6 9l6 6l6 -6" />
+                  </svg>
+                </button>
+                <div class="scroll-area__bar" aria-hidden="true">
+                  <div class="scroll-area__thumb"></div>
+                </div>
+              </div>
             </div>
 
             <!-- Buy column. Brand, name, the variant line and the price all follow
@@ -258,8 +305,7 @@
                    the space between groups. -->
               <div class="pdp-buy__head">
                 <a class="pdp-buy__brand" href="/demo/example/shop/">Muuto</a>
-                <h1 class="pdp-buy__title">Cover Side Chair</h1>
-                <p class="pdp-buy__variant" data-pdp-variant>Moulded oak veneer shell, oak legs</p>
+                <h1 class="pdp-buy__title" data-pdp-variant>Cover Side Chair, oak</h1>
               </div>
 
               <div class="pdp-buy__offer">
@@ -293,7 +339,7 @@
                    nothing is stored twice. -->
               <fieldset class="pdp-color">
                 <legend class="pdp-color__legend">
-                  Color: <span class="pdp-color__value" data-pdp-color>Oak</span>
+                  Color <span class="pdp-color__value" data-pdp-color>Oak</span>
                 </legend>
                 <div class="pdp-color__list">
                   <label class="pdp-tile pdp-swatch">
@@ -304,7 +350,7 @@
                       value="oak"
                       checked
                       data-color="Oak"
-                      data-variant="Moulded oak veneer shell, oak legs"
+                      data-variant="Cover Side Chair, oak"
                       data-price="5 295 kr"
                       data-stores="5 stores"
                       data-stock="in"
@@ -327,7 +373,7 @@
                       name="pdp-color"
                       value="black"
                       data-color="Black"
-                      data-variant="Black stained shell, black legs"
+                      data-variant="Cover Side Chair, black"
                       data-price="5 295 kr"
                       data-stores="4 stores"
                       data-stock="in"
@@ -350,7 +396,7 @@
                       name="pdp-color"
                       value="dark-beige"
                       data-color="Dark beige"
-                      data-variant="Dark beige lacquered shell, oak legs"
+                      data-variant="Cover Side Chair, dark beige"
                       data-price="5 295 kr"
                       data-stores="4 stores"
                       data-stock="in"
@@ -373,7 +419,7 @@
                       name="pdp-color"
                       value="dark-brown"
                       data-color="Stained dark brown"
-                      data-variant="Dark brown stained shell, dark brown legs"
+                      data-variant="Cover Side Chair, stained dark brown"
                       data-price="5 295 kr"
                       data-stores="3 stores"
                       data-stock="in"
@@ -396,7 +442,7 @@
                       name="pdp-color"
                       value="green"
                       data-color="Green"
-                      data-variant="Green lacquered shell, oak legs"
+                      data-variant="Cover Side Chair, green"
                       data-price="5 295 kr"
                       data-stores="2 stores"
                       data-stock="in"
@@ -419,7 +465,7 @@
                       name="pdp-color"
                       value="cognac"
                       data-color="Refine leather cognac"
-                      data-variant="Cognac refine leather, oak legs"
+                      data-variant="Cover Side Chair, refine leather cognac/oak"
                       data-price="7 349 kr"
                       data-stores="3 stores"
                       data-stock="order"
@@ -442,7 +488,7 @@
                       name="pdp-color"
                       value="black-leather"
                       data-color="Refine leather black"
-                      data-variant="Black refine leather, black legs"
+                      data-variant="Cover Side Chair, refine leather black/black"
                       data-price="7 349 kr"
                       data-stores="2 stores"
                       data-stock="order"
@@ -698,7 +744,6 @@
            row can't drift from the Shop page. -->
         <section class="pdp-related">
           <div class="pdp-wrap">
-            <hr class="separator pdp-related__rule" />
             <h2 class="pdp-heading">Goes well with</h2>
             <div class="shop__grid pdp-related__grid">
               <a class="shop-card" href="/demo/example/shop/product/">

@@ -381,14 +381,13 @@
      owns its own gaps and a flat grid, which is tidier to read but puts every
      card back to reserving two title lines whether its row needs them or not. */
   .shop-card {
-    /* The media tile is a fixed white plate in BOTH themes: the product shots
-       are photographed on white, so a theme-following tile would frame a white
-       rectangle inside a dark box. That makes the plate a light-theme island,
-       and anything drawn on it needs theme-fixed colour too, hence the blue
-       kept here rather than read from --blue, which inverts for dark surfaces
-       and would leave light-blue text on a near-white badge. Light theme's blue
-       anchor; a page one-off, not a token. */
-    --shop-plate: white;
+    /* The media tile is a fixed white plate in BOTH themes (--ex-plate, shared
+       with the product page's gallery). That makes the plate a light-theme
+       island, and anything drawn on it needs theme-fixed colour too, hence the
+       blue kept here rather than read from --blue, which inverts for dark
+       surfaces and would leave light-blue text on a near-white badge. Light
+       theme's blue anchor; a page one-off, not a token. */
+    --shop-plate: var(--ex-plate);
     --shop-plate-blue: 25 80 200;
     --shop-plate-tint: color-mix(in oklab, rgb(var(--shop-plate-blue)), white 20%);
 

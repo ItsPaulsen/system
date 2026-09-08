@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="en" data-width="2xl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Product - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <!-- The listing's sheet comes along for .shop__grid / .shop-card: the related
+         row at the bottom is the listing's card, not a second one. -->
+    <link rel="stylesheet" href="/demo/example/shop/shop.css" />
+    <link rel="stylesheet" href="/demo/example/shop/product/product.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <div data-chrome="topbar"></div>
+
+    <!-- The whole page sits on the recessed surface, unlike the other example
+         screens: everything on a product page is an elevated thing (the white
+         image plate, the accordion, the pickup row, the fields), so the recessed
+         background is what lets them all read without a band per section. -->
+    <main class="ex pdp-page" id="ex-main" tabindex="-1">
+      <section class="pdp">
+        <div class="pdp-wrap">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <ol class="breadcrumb__list">
+              <li class="breadcrumb__item">
+                <a class="breadcrumb__link" href="/demo/example/">Home</a>
+              </li>
+              <li class="breadcrumb__item">
+                <a class="breadcrumb__link" href="/demo/example/shop/">Shop</a>
+              </li>
+              <li class="breadcrumb__item">
+                <span class="breadcrumb__current" aria-current="page">Cover Side Chair</span>
+              </li>
+            </ol>
+          </nav>
+
+          <div class="pdp__split">
+            <!-- Gallery: one image in view, dragged or stepped, never scrolled.
+                 Every slide is a shot of the *selected* colourway, so the rail
+                 under it never mixes colours; the swatches that choose the colour
+                 live in the buy column. product.js repoints all three slides and
+                 all three thumbs when the colour changes.
+
+                 Our catalogue has exactly one photograph per colourway, so those
+                 three are the same file three times, there to keep the slider and
+                 rail logic on the page. Real extra shots per variant drop straight
+                 in: give each slide its own stem and alt.
+
+                 A product can also arrive with a single shot, so the layout can't
+                 depend on a second one: an arrow at an end hides itself, and the
+                 rail goes when the track holds one slide (product.css). -->
+            <div
+              class="carousel pdp-gallery"
+              data-carousel
+              role="group"
+              aria-roledescription="carousel"
+              aria-label="Cover Side Chair"
+            >
+              <div class="pdp-gallery__stage">
+                <button
+                  class="carousel__control carousel__control--prev pdp-gallery__control"
+                  type="button"
+                  aria-label="Previous image"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 6l-6 6l6 6" />
+                  </svg>
+                </button>
+                <div class="carousel__viewport">
+                  <ul class="carousel__track">
+                    <li
+                      class="carousel__item pdp-gallery__slide"
+                      role="group"
+                      aria-roledescription="slide"
+                    >
+                      <picture>
+                        <source
+                          type="image/webp"
+                          data-pdp-source
+                          srcset="
+                            /assets/images/products/cover-side-chair-oak-400.webp 400w,
+                            /assets/images/products/cover-side-chair-oak-640.webp 640w
+                          "
+                          sizes="(min-width: 1536px) 720px, (min-width: 1280px) 540px, (min-width: 1024px) 42vw, (min-width: 640px) 66vw, 82vw"
+                        />
+                        <img
+                          class="ex-ph pdp-gallery__img"
+                          data-pdp-img
+                          src="/assets/images/products/cover-side-chair-oak-640.jpg"
+                          alt="Cover Side Chair in oak"
+                          decoding="async"
+                        />
+                      </picture>
+                    </li>
+                    <li
+                      class="carousel__item pdp-gallery__slide"
+                      role="group"
+                      aria-roledescription="slide"
+                    >
+                      <picture>
+                        <source
+                          type="image/webp"
+                          data-pdp-source
+                          srcset="
+                            /assets/images/products/cover-side-chair-oak-400.webp 400w,
+                            /assets/images/products/cover-side-chair-oak-640.webp 640w
+                          "
+                          sizes="(min-width: 1536px) 720px, (min-width: 1280px) 540px, (min-width: 1024px) 42vw, (min-width: 640px) 66vw, 82vw"
+                        />
+                        <img
+                          class="ex-ph pdp-gallery__img"
+                          data-pdp-img
+                          src="/assets/images/products/cover-side-chair-oak-640.jpg"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    </li>
+                    <li
+                      class="carousel__item pdp-gallery__slide"
+                      role="group"
+                      aria-roledescription="slide"
+                    >
+                      <picture>
+                        <source
+                          type="image/webp"
+                          data-pdp-source
+                          srcset="
+                            /assets/images/products/cover-side-chair-oak-400.webp 400w,
+                            /assets/images/products/cover-side-chair-oak-640.webp 640w
+                          "
+                          sizes="(min-width: 1536px) 720px, (min-width: 1280px) 540px, (min-width: 1024px) 42vw, (min-width: 640px) 66vw, 82vw"
+                        />
+                        <img
+                          class="ex-ph pdp-gallery__img"
+                          data-pdp-img
+                          src="/assets/images/products/cover-side-chair-oak-640.jpg"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </picture>
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="carousel__control carousel__control--next pdp-gallery__control"
+                  type="button"
+                  aria-label="Next image"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </button>
+                <span class="sr-only" aria-live="polite" data-carousel-status></span>
+              </div>
+
+              <div class="pdp-picker">
+                <ul class="pdp-thumbs">
+                  <li>
+                    <button
+                      class="pdp-thumb"
+                      type="button"
+                      data-carousel-goto="0"
+                      aria-label="Image 1"
+                    >
+                      <img
+                        class="pdp-thumb__img"
+                        data-pdp-thumb
+                        src="/assets/images/products/cover-side-chair-oak-400.webp"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="pdp-thumb"
+                      type="button"
+                      data-carousel-goto="1"
+                      aria-label="Image 2"
+                    >
+                      <img
+                        class="pdp-thumb__img"
+                        data-pdp-thumb
+                        src="/assets/images/products/cover-side-chair-oak-400.webp"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      class="pdp-thumb"
+                      type="button"
+                      data-carousel-goto="2"
+                      aria-label="Image 3"
+                    >
+                      <img
+                        class="pdp-thumb__img"
+                        data-pdp-thumb
+                        src="/assets/images/products/cover-side-chair-oak-400.webp"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Buy column. Brand, name, the variant line and the price all follow
+                 the gallery; everything below Add to cart is fixed copy. -->
+            <div class="pdp-buy">
+              <!-- Grouped so the vertical rhythm is gaps rather than a margin per
+                   element: each wrapper owns the spacing inside it, the column owns
+                   the space between groups. -->
+              <div class="pdp-buy__head">
+                <a class="pdp-buy__brand" href="/demo/example/shop/">Muuto</a>
+                <h1 class="pdp-buy__title">Cover Side Chair</h1>
+                <p class="pdp-buy__variant" data-pdp-variant>Moulded oak veneer shell, oak legs</p>
+              </div>
+
+              <div class="pdp-buy__offer">
+                <p class="pdp-buy__price">
+                  <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
+                </p>
+
+                <p class="pdp-buy__stock">
+                  <span class="badge badge--green badge--with-start-icon" data-pdp-stock-badge>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                    <span data-pdp-stock-label>In stock</span>
+                  </span>
+                  <span class="pdp-buy__lead" data-pdp-lead>Ships in 2-4 days</span>
+                </p>
+              </div>
+
+              <!-- Colour: native radios, so the group keeps its arrow-key
+                   behaviour and its selected state without JS. The swatch is the
+                   product shot on the same white plate as the gallery, and each
+                   input carries everything that differs between colourways, so
+                   nothing is stored twice. -->
+              <fieldset class="pdp-colour">
+                <legend class="pdp-colour__legend">
+                  Colour: <span class="pdp-colour__value" data-pdp-colour>Oak</span>
+                </legend>
+                <div class="pdp-colour__list">
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="oak"
+                      checked
+                      data-colour="Oak"
+                      data-variant="Moulded oak veneer shell, oak legs"
+                      data-price="5 295 kr"
+                      data-stores="5 stores"
+                      data-stock="in"
+                      data-img="/assets/images/products/cover-side-chair-oak"
+                      data-alt="Cover Side Chair in oak"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-oak-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Oak</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="black"
+                      data-colour="Black"
+                      data-variant="Black stained shell, black legs"
+                      data-price="5 295 kr"
+                      data-stores="4 stores"
+                      data-stock="in"
+                      data-img="/assets/images/products/cover-side-chair-black"
+                      data-alt="Cover Side Chair in black"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-black-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Black</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="dark-beige"
+                      data-colour="Dark beige"
+                      data-variant="Dark beige lacquered shell, oak legs"
+                      data-price="5 295 kr"
+                      data-stores="4 stores"
+                      data-stock="in"
+                      data-img="/assets/images/products/cover-side-chair-dark-beige"
+                      data-alt="Cover Side Chair in dark beige"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-dark-beige-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Dark beige</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="dark-brown"
+                      data-colour="Stained dark brown"
+                      data-variant="Dark brown stained shell, dark brown legs"
+                      data-price="5 295 kr"
+                      data-stores="3 stores"
+                      data-stock="in"
+                      data-img="/assets/images/products/cover-side-chair-dark-brown"
+                      data-alt="Cover Side Chair stained dark brown"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-dark-brown-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Stained dark brown</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="green"
+                      data-colour="Green"
+                      data-variant="Green lacquered shell, oak legs"
+                      data-price="5 295 kr"
+                      data-stores="2 stores"
+                      data-stock="in"
+                      data-img="/assets/images/products/cover-side-chair-green"
+                      data-alt="Cover Side Chair in green"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-green-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Green</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="cognac"
+                      data-colour="Refine leather cognac"
+                      data-variant="Cognac refine leather, oak legs"
+                      data-price="7 349 kr"
+                      data-stores="3 stores"
+                      data-stock="order"
+                      data-img="/assets/images/products/cover-side-chair-cognac-oak"
+                      data-alt="Cover Side Chair in cognac refine leather on an oak base"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-cognac-oak-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Refine leather cognac</span>
+                  </label>
+                  <label class="pdp-swatch">
+                    <input
+                      class="pdp-swatch__input sr-only"
+                      type="radio"
+                      name="pdp-colour"
+                      value="black-leather"
+                      data-colour="Refine leather black"
+                      data-variant="Black refine leather, black legs"
+                      data-price="7 349 kr"
+                      data-stores="2 stores"
+                      data-stock="order"
+                      data-img="/assets/images/products/cover-side-chair-black-leather"
+                      data-alt="Cover Side Chair in black refine leather"
+                    />
+                    <img
+                      class="pdp-swatch__img"
+                      src="/assets/images/products/cover-side-chair-black-leather-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">Refine leather black</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <div class="pdp-buy__buy">
+                <div class="pdp-buy__actions">
+                  <div class="input number-field number-field--lg pdp-buy__qty" data-number-field>
+                    <label class="input__label sr-only" for="pdp-qty">Quantity</label>
+                    <span class="input__container number-field__control">
+                      <button
+                        class="number-field__step"
+                        type="button"
+                        data-step="-1"
+                        aria-label="Decrease quantity"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M5 12l14 0" />
+                        </svg>
+                      </button>
+                      <input
+                        class="input__element number-field__input"
+                        id="pdp-qty"
+                        type="text"
+                        inputmode="numeric"
+                        value="1"
+                        data-min="1"
+                        data-max="12"
+                        data-step="1"
+                      />
+                      <button
+                        class="number-field__step"
+                        type="button"
+                        data-step="1"
+                        aria-label="Increase quantity"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 5l0 14" />
+                          <path d="M5 12l14 0" />
+                        </svg>
+                      </button>
+                    </span>
+                  </div>
+                  <button class="button button--primary pdp-buy__cart" type="button">
+                    Add to cart
+                  </button>
+                </div>
+
+                <button
+                  class="button button--secondary button--with-start-icon pdp-buy__save"
+                  type="button"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"
+                    />
+                  </svg>
+                  Save for later
+                </button>
+              </div>
+
+              <div class="pdp-buy__info">
+                <!-- Pickup row: an Item on the recessed skin, since the page surface
+                   is the recessed one and a default (white) row would read as the
+                   page. The store count follows the selected colour. -->
+                <a class="item item--muted pdp-buy__pickup" href="#">
+                  <span class="item__media pdp-buy__pickup-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 21l18 0" />
+                      <path
+                        d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"
+                      />
+                      <path d="M5 21l0 -10.15" />
+                      <path d="M19 21l0 -10.15" />
+                      <path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4" />
+                    </svg>
+                  </span>
+                  <span class="item__content">
+                    <span class="item__title">Collect in store</span>
+                    <span class="item__description">
+                      Ready in 24 hours at <span data-pdp-stores>5 stores</span>
+                    </span>
+                  </span>
+                  <span class="item__actions">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6l-6 6" />
+                    </svg>
+                  </span>
+                </a>
+
+                <div class="accordion pdp-buy__details">
+                  <details class="accordion__item pdp-detail">
+                    <summary class="accordion__summary">
+                      About this chair
+                      <span class="accordion__toggle"></span>
+                    </summary>
+                    <div class="accordion__body">
+                      <p>
+                        A stacking side chair with a moulded shell and a tapered wooden base. The
+                        shell is pressure-formed in one piece, so the back flexes slightly under
+                        load instead of holding you rigid, and the seat is deep enough to sit in
+                        through a long dinner.
+                      </p>
+                      <p>
+                        Stacks four high. Felt glides come fitted; a set for hard floors is included
+                        in the box.
+                      </p>
+                    </div>
+                  </details>
+                  <details class="accordion__item pdp-detail">
+                    <summary class="accordion__summary">
+                      Materials and care
+                      <span class="accordion__toggle"></span>
+                    </summary>
+                    <div class="accordion__body">
+                      <p>
+                        Shell in moulded veneer, lacquered or stained; legs in solid oak. The
+                        leather colourways use a semi-aniline hide that darkens a little with use.
+                      </p>
+                      <p>
+                        Wipe with a damp cloth and dry straight after. Keep out of direct sun, which
+                        lightens both the stain and the leather.
+                      </p>
+                    </div>
+                  </details>
+                  <details class="accordion__item pdp-detail">
+                    <summary class="accordion__summary">
+                      Delivery and returns
+                      <span class="accordion__toggle"></span>
+                    </summary>
+                    <div class="accordion__body">
+                      <p>
+                        Stock colours leave the warehouse in 2-4 days. Leather is made to order and
+                        ships in 6-8 weeks. Delivery is free over 2 000 kr, otherwise 199 kr.
+                      </p>
+                      <p>
+                        Return an unused chair in its packaging within 60 days for a full refund.
+                      </p>
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="pdp-band">
+        <section class="pdp-specs">
+          <div class="pdp-wrap">
+            <h2 class="pdp-heading">Specifications</h2>
+            <div class="table-wrap pdp-specs__table">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th scope="row">Width</th>
+                    <td>51 cm</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Depth</th>
+                    <td>52 cm</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Height</th>
+                    <td>79 cm</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Seat height</th>
+                    <td>46 cm</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Weight</th>
+                    <td>6,5 kg</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Stacks</th>
+                    <td>Four chairs high</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Designed</th>
+                    <td>2013</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Related products are the listing's own card and grid (shop.css), so the
+           row can't drift from the Shop page. -->
+        <section class="pdp-related">
+          <div class="pdp-wrap">
+            <h2 class="pdp-heading">Goes well with</h2>
+            <div class="shop__grid pdp-related__grid">
+              <a class="shop-card" href="/demo/example/shop/product/">
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-oak-400.webp 400w,
+                        /assets/images/products/cover-armchair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Armchair, oak</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 249 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a class="shop-card" href="/demo/example/shop/product/">
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
+                        /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Muuto</h3>
+                  <span class="shop-card__variant">Cover Armchair, refine leather cognac/oak</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 449 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+
+              <a class="shop-card" href="/demo/example/shop/product/">
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch36-dining-chair-soaped-oak-400.webp 400w,
+                        /assets/images/products/ch36-dining-chair-soaped-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch36-dining-chair-soaped-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
+                  <span class="shop-card__variant">CH36 Dining Chair, soaped oak</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">10 507 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a class="shop-card" href="/demo/example/shop/product/">
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soaped-beech-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soaped-beech-640.webp 640w
+                      "
+                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soaped-beech-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <div class="shop-card__head">
+                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soaped beech/natural</span>
+                </div>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 321 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div data-chrome="footer"></div>
+
+    <div data-chrome="menu"></div>
+
+    <div data-chrome="grid-overlay"></div>
+
+    <script src="/demo/example/chrome.js" defer></script>
+    <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/shop/product/product.js" defer></script>
+  </body>
+</html>

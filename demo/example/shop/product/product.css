@@ -1,0 +1,573 @@
+/* Product page, the detail screen behind a Shop card: an image gallery that is
+   stepped rather than scrolled, a buy column, the spec table, and a related row
+   built from the listing's own card.
+
+   It loads shop.css for .shop__grid / .shop-card, so the related row can't drift
+   from the listing, and keeps only what is this page's own here. */
+
+/* Layered so component CSS stays overridable by specificity, not by an unlayered
+   sheet outranking every layer. Same as shop.css and blog.css. */
+@layer components {
+  /* Keeps .ex's secondary surface for the product itself, and drops the dot grid
+     (same flat treatment as the shop hero). Specs and the related row sit below
+     in a recessed band instead, so the seam between them is the page's one
+     divider. No bottom padding: the band is the last child and runs flush into
+     the footer.
+
+     Hairline for the thumbnail plates (the gallery slide stays borderless). Mixed against the plate rather than taken from --fill-*, which is
+     alpha ink and would draw a *light* line on a white tile in dark theme. */
+  .pdp-page {
+    --pdp-plate-line: color-mix(in oklab, var(--neutral-black) 14%, var(--ex-plate));
+
+    gap: 4rem;
+    padding-block: var(--space-24) 0;
+    background-image: none;
+  }
+
+  @media (min-width: 768px) {
+    .pdp-page {
+      gap: 6rem;
+    }
+  }
+
+  /* Recessed band with a rounded top, flush above the footer: the same treatment
+     the shop listing and the front-page card band use. Holds the two sections
+     that are reference rather than product, and owns the gap between them. */
+  .pdp-band {
+    display: grid;
+
+    /* minmax(0, 1fr), not the implicit `auto` column: an auto track sizes to its
+       item's max-content, so the band would have stopped at the content column's
+       cap (1600) instead of running the full width of the page. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4rem;
+    padding-block: 4rem 6rem;
+    background: var(--background-primary);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  @media (min-width: 768px) {
+    .pdp-band {
+      gap: 6rem;
+      padding-block: 6rem 8rem;
+    }
+  }
+
+  /* Every section shares the content column (content = --container-max, margins
+     outside), so breadcrumb, gallery, specs and the related row all sit on one
+     left edge. */
+  .pdp-wrap {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+
+    /* One column, so the space under a section's heading (or the breadcrumb) is
+       this gap rather than a margin on the heading itself. Sections that want a
+       different distance set the var.
+
+       minmax(0, 1fr), not the implicit `auto` column: an auto track sizes to its
+       item's max-content and is *not* clamped to the container, so the carousel
+       (a track seven slides wide) blew the column past the page instead of being
+       clipped by its viewport, and the gallery ran under the buy column. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--pdp-wrap-gap, var(--space-20));
+  }
+
+  .pdp .pdp-wrap {
+    --pdp-wrap-gap: var(--space-24);
+  }
+
+  @media (min-width: 1024px) {
+    .pdp .pdp-wrap {
+      --pdp-wrap-gap: var(--space-32);
+    }
+  }
+
+  /* ── Split ────────────────────────────────────────────────────────────────
+     Gallery over buy column on phones, side by side from lg. The media side is
+     given slightly more than half: it holds a square plate, and an even split
+     made the image the taller of the two columns by a long way. */
+  .pdp__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .pdp__split {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+      gap: 3rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .pdp__split {
+      gap: 4rem;
+    }
+  }
+
+  /* At the 2xl tier the page is 1536 wide, so an unchecked buy column would run
+     its text to ~700px. Capping it there hands the extra width to the image and
+     keeps the copy on a readable measure. */
+  @media (min-width: 1536px) {
+    .pdp__split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 33rem);
+    }
+  }
+
+  /* ── Gallery ──────────────────────────────────────────────────────────────
+     The Carousel component, one image per view: the image is dragged or stepped,
+     never scrolled, so a product page never asks anyone to scroll a column of
+     photos to see the second one. .carousel is a flex row by default (controls
+     flanking the viewport); here it's a two-row stack of stage + thumbnail rail,
+     with the controls overlaid on the image instead. */
+  .pdp-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-16);
+    align-content: start;
+  }
+
+  /* Grid items floor at their content's min-content width, and the carousel's
+     content is seven slides side by side, so every box between the split and the
+     viewport has to have that floor removed or the gallery pushes its column
+     wider than the page (the same chain the shop grid zeroes). */
+  .pdp__split,
+  .pdp-gallery,
+  .pdp-gallery__stage {
+    min-width: 0;
+  }
+
+  /* Containing block for the overlaid controls. */
+  .pdp-gallery__stage {
+    position: relative;
+  }
+
+  /* Controls sit on the plate rather than beside it: at this size a pair of
+     gutters for two arrows costs more width than the arrows are worth. They keep
+     the component's own skin, which is a dark circle on the (fixed white) plate
+     in dark theme, and a light one in light theme. 40, up from the component's
+     32: they're overlaid on photography rather than sitting in chrome. */
+  .pdp-gallery__control {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    translate: 0 -50%;
+  }
+
+  .pdp-gallery__control svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* At an end there is nowhere to go, so the control leaves rather than sitting
+     there greyed: the arrows are a hint over the image, not a fixed pair. */
+  .pdp-gallery__control:disabled {
+    display: none;
+  }
+
+  /* Where there's a real pointer the arrows only appear over the image, so the
+     resting state is the photograph on its own. They stay put on touch, which has
+     no hover to reveal them, and a keyboard tab brings the focused one back. */
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-gallery__control {
+      opacity: 0;
+      transition: opacity var(--motion-default);
+    }
+
+    .pdp-gallery__control:focus-visible,
+    .pdp-gallery__stage:hover .pdp-gallery__control {
+      opacity: 1;
+    }
+  }
+
+  .carousel__control--prev.pdp-gallery__control {
+    inset-inline-start: var(--space-12);
+  }
+
+  .carousel__control--next.pdp-gallery__control {
+    inset-inline-end: var(--space-12);
+  }
+
+  /* Each slide is its own white plate (--ex-plate, shared with the shop card),
+     because the shots are photographed on white. The inset is what makes the
+     artwork read as a product shot rather than a photo card, and it grows with
+     the plate so the chair doesn't swell to fill a desktop column. */
+  .pdp-gallery__slide {
+    padding: var(--space-24);
+    border-radius: var(--radius-md);
+    background: var(--ex-plate);
+  }
+
+  @media (min-width: 640px) {
+    .pdp-gallery__slide {
+      padding: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .pdp-gallery__slide {
+      padding: 3rem;
+    }
+  }
+
+  /* 80 at the widest tier: the plate is ~880 there, and the inset is what keeps
+     the chair at a size the 640 source can actually fill. */
+  @media (min-width: 1536px) {
+    .pdp-gallery__slide {
+      padding: 5rem;
+    }
+  }
+
+  .pdp-gallery__slide picture {
+    display: block;
+  }
+
+  /* .ex-ph supplies the loading fill and object-fit; the fill derives from
+     --background-secondary, which would be a dark square inside the white plate,
+     so mix it against the plate instead (same as the shop card's tile). */
+  .pdp-gallery__img {
+    aspect-ratio: 1;
+    background: color-mix(in oklab, var(--neutral-black) 8%, var(--ex-plate));
+  }
+
+  /* ── Image rail ───────────────────────────────────────────────────────────
+     Thumbnails of the selected colourway, wired to the carousel by its own
+     [data-carousel-goto] hook: app.js jumps the track and puts aria-current on
+     the current thumb, so the styling below hangs off state, not a class. The
+     colour itself is chosen in the buy column. */
+  .pdp-picker {
+    display: grid;
+  }
+
+  .pdp-thumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A small plate of the same white, since it holds the same photography. The
+     hairline is what separates it from the (near-white) page in light theme.
+
+     Padding compensates for the border so the artwork holds one size across the
+     states: 1 + 6 selected-off, 2 + 5 selected-on. */
+  .pdp-thumb {
+    display: block;
+    width: 68px;
+    padding: 6px;
+    border: var(--border-width) solid var(--pdp-plate-line);
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+    cursor: pointer;
+    transition:
+      background var(--motion-default),
+      border-color var(--motion-default);
+  }
+
+  .pdp-thumb__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  /* Selected: the same hairline at 2px in the plate's own near-black. */
+  .pdp-thumb[aria-current="true"] {
+    padding: 5px;
+    border-width: 2px;
+    border-color: color-mix(in oklab, var(--neutral-black) 85%, var(--ex-plate));
+  }
+
+  /* Hover keeps its hands off the border: a heavier line there reads as the
+     selected state. It tints the plate instead, mixed against the plate for the
+     same reason the border is. */
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-thumb:not([aria-current="true"]):hover {
+      background: color-mix(in oklab, var(--neutral-black) 5%, var(--ex-plate));
+    }
+  }
+
+  .pdp-thumb:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* A product can arrive with a single shot. With one slide there's nothing to
+     step through, so the arrows and the rail both go and what's left is a plain
+     image plate, rather than a slider that visibly has nowhere to go. */
+  .pdp-gallery:has(.carousel__item:only-child) .pdp-gallery__control,
+  .pdp-gallery:has(.carousel__item:only-child) .pdp-picker {
+    display: none;
+  }
+
+  /* ── Buy column ───────────────────────────────────────────────────────────
+     Groups rather than a flat stack: each wrapper owns its internal gap and the
+     column owns the space between them, so no element carries a margin. */
+  .pdp-buy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+    min-width: 0;
+  }
+
+  .pdp-buy__head,
+  .pdp-buy__offer,
+  .pdp-buy__buy {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .pdp-buy__info {
+    display: grid;
+    gap: var(--space-16);
+  }
+
+  /* Link-like, so hover and a focus ring are the whole state model. */
+  .pdp-buy__brand {
+    justify-self: start;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    line-height: var(--font-caption-medium-emphasized-lh);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-buy__brand:hover {
+      color: var(--ink-primary);
+    }
+  }
+
+  .pdp-buy__brand:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Base (mobile): title-large 32, headline-small 38 from lg, where the column
+     is half the page rather than all of it. */
+  .pdp-buy__title {
+    margin: 0;
+    color: var(--ink-primary);
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
+  }
+
+  .pdp-buy__variant {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+  }
+
+  @media (min-width: 1024px) {
+    .pdp-buy__title {
+      font-size: var(--font-headline-small-size);
+      line-height: var(--font-headline-small-lh);
+      font-weight: var(--font-headline-small-weight);
+    }
+  }
+
+  /* Price and the excl.-VAT line on one baseline: the second figure is a note on
+     the first, not a second price, so it sits beside it rather than under it. */
+  .pdp-buy__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-8) var(--space-12);
+    margin: 0;
+  }
+
+  .pdp-buy__amount {
+    color: var(--ink-primary);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  /* Stock badge plus the lead time it implies. The badge carries the state (green
+     in stock, amber made to order); the text beside it says what that means. */
+  .pdp-buy__stock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-8) var(--space-12);
+    margin: 0;
+  }
+
+  .pdp-buy__lead {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  /* ── Colour swatches ──────────────────────────────────────────────────────
+     Native radios: the group keeps its arrow-key behaviour and its checked state
+     for free, so nothing here is JS-dependent. The <input> is sr-only and the
+     <label> is the whole tile, which is also what makes the tile clickable. */
+  .pdp-colour {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    /* A fieldset's automatic minimum size is min-content, so it won't shrink with
+       the column without this. */
+    min-width: 0;
+  }
+
+  .pdp-colour__legend {
+    padding: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .pdp-colour__value {
+    color: var(--ink-primary);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+  }
+
+  /* A legend is out of flow, so the gap to the swatches is its margin. */
+  .pdp-colour__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+  }
+
+  /* Same plate and hairline as the image rail, one size down: it holds the same
+     photography, so it reads as part of the same family. Padding compensates for
+     the border so the shot holds one size across the states (1 + 5, then 2 + 4). */
+  .pdp-swatch {
+    display: block;
+    width: 48px;
+    padding: 5px;
+    border: var(--border-width) solid var(--pdp-plate-line);
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+    cursor: pointer;
+    transition:
+      background var(--motion-default),
+      border-color var(--motion-default);
+  }
+
+  .pdp-swatch__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .pdp-swatch:has(.pdp-swatch__input:checked) {
+    padding: 4px;
+    border-width: 2px;
+    border-color: color-mix(in oklab, var(--neutral-black) 85%, var(--ex-plate));
+  }
+
+  /* Hover keeps off the border, which reads as checked; it tints the plate. */
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-swatch:not(:has(.pdp-swatch__input:checked)):hover {
+      background: color-mix(in oklab, var(--neutral-black) 5%, var(--ex-plate));
+    }
+  }
+
+  .pdp-swatch:has(.pdp-swatch__input:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* Quantity + Add to cart on one row: the stepper takes what it needs and the
+     button takes the rest. Both are 48 tall (number-field--lg matches the default
+     button height), so the row reads as one control. */
+  .pdp-buy__actions {
+    display: flex;
+    gap: var(--space-12);
+  }
+
+  .pdp-buy__qty {
+    flex: 0 0 8.5rem;
+    width: auto;
+  }
+
+  .pdp-buy__cart {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pdp-buy__save {
+    width: 100%;
+  }
+
+  /* The pickup row (.item--muted) and the accordion both take the recessed skin:
+     the buy column sits on the secondary surface, so a default (secondary) panel
+     would be the page. Own class beside the component's, not a descendant. */
+  .pdp-detail {
+    background: var(--background-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-detail:not([open]) .accordion__summary:hover {
+      background: var(--background-primary-hover);
+    }
+  }
+
+  .pdp-buy__pickup-icon {
+    background: var(--primary-soft);
+    color: var(--primary-foreground);
+  }
+
+  /* ── Specs and related ────────────────────────────────────────────────────
+     Section headings for the two blocks under the split. */
+  .pdp-heading {
+    margin: 0;
+    color: var(--ink-primary);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
+  }
+
+  /* The spec sheet is a two-column table, so it stops well short of the page on
+     a wide screen: pairs of short values read badly stretched across 1280. */
+  .pdp-specs__table {
+    max-width: 34rem;
+  }
+
+  /* Row headers are the table's <th>, so they take the header fill as a label
+     column. Fixed at a third so the values line up down the table. */
+  .pdp-specs__table th {
+    width: 33%;
+  }
+
+  /* The listing's grid caps at four columns, which is exactly the related row, so
+     it needs nothing here beyond dropping the bottom margin its cards carry for
+     the next product row (there isn't one). */
+  .pdp-related__grid .shop-card {
+    margin-bottom: 0;
+  }
+
+  /* Forced colors (Windows High Contrast): the plates lose their fill and the
+     selected thumb loses its ring, so give both real borders. */
+  @media (forced-colors: active) {
+    .pdp-gallery__slide,
+    .pdp-thumb,
+    .pdp-swatch {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    .pdp-thumb[aria-current="true"],
+    .pdp-swatch:has(.pdp-swatch__input:checked) {
+      border-color: Highlight;
+      border-width: 2px;
+    }
+  }
+}

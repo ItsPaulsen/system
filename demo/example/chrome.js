@@ -17,9 +17,6 @@
             <a class="nav-menu__link" href="/demo/example/blog/">Blog</a>
           </li>
           <li class="nav-menu__item">
-            <a class="nav-menu__link" href="/demo/example/blog/post/">Article</a>
-          </li>
-          <li class="nav-menu__item">
             <a class="nav-menu__link" href="/demo/example/settings/">Settings</a>
             <div class="nav-menu__menu">
               <a class="nav-menu__menu-link" href="/demo/example/settings/about/">About you</a>
@@ -268,7 +265,6 @@
           <nav class="ex-menu__nav" aria-label="Pages">
             <a href="/demo/example/shop/">Shop</a>
             <a href="/demo/example/blog/">Blog</a>
-            <a href="/demo/example/blog/post/">Article</a>
             <a href="/demo/example/settings/">Settings</a>
           </nav>
 

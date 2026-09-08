@@ -3310,6 +3310,12 @@ function initCarousel() {
     const items = Array.from(track.children);
     if (!items.length) return;
 
+    // Optional jump-to-slide controls inside the root (thumbnails, dots): each
+    // carries data-carousel-goto="<index>". The current one gets aria-current,
+    // so the styling hangs off state rather than a class the page has to manage.
+    const nav = Array.from(root.querySelectorAll("[data-carousel-goto]"));
+    const navIndex = (el, n) => Number(el.dataset.carouselGoto || n);
+
     const RESIST = 0.3; // fraction of the drag that shows past an end
     const EASE = "transform 350ms var(--motion-ease-out)";
     let pos = 0;
@@ -3340,14 +3346,31 @@ function initCarousel() {
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
     };
 
+    // Index the last sync settled on. Starts at the resting slide so the initial
+    // sync doesn't fire a change event for a position the markup already shows.
+    let at = 0;
+
     const sync = () => {
       const scroll = -pos;
       const m = maxScroll();
       if (prev) prev.disabled = scroll <= 0.5;
       if (next) next.disabled = scroll >= m - 0.5;
-      if (status) {
-        const i = nearestIndex(scroll);
-        status.textContent = `Slide ${i + 1} of ${items.length}`;
+      const i = nearestIndex(scroll);
+      if (status) status.textContent = `Slide ${i + 1} of ${items.length}`;
+      nav.forEach((el, n) => {
+        if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
+        else el.removeAttribute("aria-current");
+      });
+      // Lets a page react to the slide (the product page retitles and reprices
+      // from the active thumbnail) without reaching into the carousel.
+      if (i !== at) {
+        at = i;
+        root.dispatchEvent(
+          new CustomEvent("carousel:change", {
+            bubbles: true,
+            detail: { index: i, total: items.length }
+          })
+        );
       }
     };
 
@@ -3364,6 +3387,7 @@ function initCarousel() {
 
     prev?.addEventListener("click", () => goTo(current() - 1));
     next?.addEventListener("click", () => goTo(current() + 1));
+    nav.forEach((el, n) => el.addEventListener("click", () => goTo(navIndex(el, n))));
     root.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
@@ -3426,6 +3450,7 @@ function initCarousel() {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => goTo(current()));
     });
+
     render(false);
     sync();
   });

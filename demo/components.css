@@ -4397,15 +4397,21 @@
    Arrow Up/Down, press-and-hold repeats, clamps on blur, and disables a stepper
    once its bound is reached.
 
-   <label class="input number-field" data-number-field>
-     <span class="input__label">Quantity</span>
+   Bounds live in data-min / data-max / data-step on the input: min/max/step
+   aren't valid attributes on a type=text input.
+
+   The label is a sibling with `for`, not a wrapper: a <label> wrapping the input
+   *and* the two steppers is a label for three controls.
+
+   <div class="input number-field" data-number-field>
+     <label class="input__label" for="qty">Quantity</label>
      <span class="input__container number-field__control">
        <button class="number-field__step" type="button" data-step="-1" aria-label="Decrease">−</button>
-       <input class="input__element number-field__input" type="text" inputmode="numeric"
-              value="1" min="0" max="10" step="1" />
+       <input class="input__element number-field__input" id="qty" type="text" inputmode="numeric"
+              value="1" data-min="0" data-max="10" data-step="1" />
        <button class="number-field__step" type="button" data-step="1" aria-label="Increase">+</button>
      </span>
-   </label> */
+   </div> */
 
   /* Size scale: default 40px, .number-field--sm 32px, .number-field--lg 48px. */
   .number-field__control {
@@ -4866,6 +4872,12 @@
    --carousel-cols sets how many items show at once (default 1); --carousel-gap
    the space between them. The item flex-basis subtracts the gaps so N items fit
    exactly. Override the vars on the root (or per breakpoint) for a multi-up view.
+
+   Any element inside the root with data-carousel-goto="<index>" jumps to that
+   slide, and carries aria-current="true" while it's the current one — that's how
+   a thumbnail rail or a row of dots hooks up, without its own JS. The root also
+   dispatches a bubbling `carousel:change` (detail: { index, total }) on settle,
+   for a page that has to follow the slide.
 
    <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="…">
      <button class="carousel__control carousel__control--prev" …>…</button>

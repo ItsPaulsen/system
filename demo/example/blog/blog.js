@@ -53,7 +53,9 @@
   const nouns = document.querySelectorAll("[data-blog-noun]");
   if (!filter || !grid || !empty) return;
 
-  const SHORT = 5; // the "Under 5 min" band in the Reading time group
+  // The Reading time split: under 5 goes to "Under 5 min", 5 and up to
+  // "Over 5 min", which is where an exactly-5-minute post lands.
+  const SHORT = 5;
 
   const boxes = [...filter.querySelectorAll('input[type="checkbox"]')];
   const cards = [...grid.querySelectorAll(".blog-card")];

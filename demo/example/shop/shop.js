@@ -194,18 +194,32 @@
     return true;
   };
 
-  // Per-option counts on the colour group: what each colour would show against
-  // the rest of the rail. A count of 0 stays a count rather than disabling the
-  // row, so the list doesn't shift under the pointer as other filters change.
-  const showColorCounts = () => {
+  // What a single option covers, per group: category and brand match a card on
+  // the same value apply() filters by, a colour on its whole family.
+  const OPTION_MATCH = {
+    category: (card, input) => card.dataset.category === labelOf(input).toLowerCase(),
+    brand: (card, input) => brandOf(card) === labelOf(input).toLowerCase(),
+    color: (card, input) => {
+      const family = new Set(tokens(input.dataset.colors));
+      return tokens(card.dataset.color).some((c) => family.has(c));
+    }
+  };
+
+  // Per-option counts: what each option would show against the rest of the rail,
+  // its own group left out of the pool (see passes). A count of 0 stays a count
+  // rather than disabling the row, so the list doesn't shift under the pointer
+  // as other filters change.
+  const showOptionCounts = () => {
     const f = facets();
-    const pool = cards.filter((card) => passes(card, f, "color"));
-    filter.querySelectorAll('[data-filter="color"] .checkbox').forEach((row) => {
-      const out = row.querySelector("[data-shop-option-count]");
-      const family = new Set(tokens(row.querySelector("input")?.dataset.colors));
-      if (!out || !family.size) return;
-      const n = pool.filter((card) => tokens(card.dataset.color).some((c) => family.has(c))).length;
-      out.textContent = `(${n})`;
+    filter.querySelectorAll("[data-filter]").forEach((group) => {
+      const match = OPTION_MATCH[group.dataset.filter];
+      if (!match) return;
+      const pool = cards.filter((card) => passes(card, f, group.dataset.filter));
+      group.querySelectorAll(".checkbox").forEach((row) => {
+        const out = row.querySelector("[data-shop-option-count]");
+        const input = row.querySelector("input");
+        if (out && input) out.textContent = String(pool.filter((c) => match(c, input)).length);
+      });
     });
   };
 
@@ -230,7 +244,7 @@
       n.textContent = matches.length === 1 ? "product" : "products";
     });
     showPrice(priceRange());
-    showColorCounts();
+    showOptionCounts();
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 

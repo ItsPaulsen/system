@@ -159,14 +159,14 @@
   }
 
   /* Per-option count, pushed to the trailing edge of the option row (see
-     showColorCounts in shop.js). Inside the <label>, so it's part of the
-     option's accessible name: "Black (4)". Tabular figures keep the column of
+     showOptionCounts in shop.js). Inside the <label>, so it's part of the
+     option's accessible name: "Black 4". Tabular figures keep the column of
      numbers from shifting as they change. */
   .shop-count {
     margin-inline-start: auto;
     padding-inline-start: var(--space-8);
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
     font-variant-numeric: tabular-nums;
     color: var(--ink-secondary);
   }

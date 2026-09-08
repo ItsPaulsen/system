@@ -1875,8 +1875,10 @@
             </div>
 
             <!-- Shown when the filters + search match nothing (shop.js toggles
-                 [hidden] and hides the grid and the footer). Same recipe as the
-                 blog's empty state. -->
+                 [hidden] and hides the grid and the footer). Same recipe and the
+                 same filter-off icon as the blog's empty state: the filters are
+                 what emptied the page, and a struck-through cart reads as a
+                 broken basket at this size. -->
             <div class="shop-empty" hidden>
               <svg
                 class="shop-empty__icon"
@@ -1888,10 +1890,9 @@
                 stroke-linejoin="round"
                 aria-hidden="true"
               >
-                <path d="M17 17a2 2 0 1 0 2 2" />
-                <path d="M6 5h1a1 1 0 0 1 .968 .75l2.032 7.75" />
-                <path d="M9 11h5m4 0h1l-1 4h-3" />
-                <path d="M9.5 15h6.5" />
+                <path
+                  d="M8 4h12v2.172a2 2 0 0 1 -.586 1.414l-3.914 3.914m-.5 3.5v4l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227"
+                />
                 <path d="M3 3l18 18" />
               </svg>
               <h2 class="shop-empty__title">Nothing matched those filters</h2>

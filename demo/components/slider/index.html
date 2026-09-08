@@ -125,32 +125,6 @@
         </section>
 
         <section class="preview-block">
-          <h2 class="subhead">Disabled</h2>
-          <div class="example" data-example>
-            <div class="component-preview">
-              <div class="slider-field">
-                <div class="slider-field__header">
-                  <label class="slider-field__label" for="slider-opacity">Opacity</label>
-                  <output class="slider-field__value" for="slider-opacity">40</output>
-                </div>
-                <input
-                  class="slider"
-                  type="range"
-                  id="slider-opacity"
-                  min="0"
-                  max="100"
-                  value="40"
-                  disabled
-                />
-              </div>
-            </div>
-            <script type="text/plain" class="example__react">
-              <Slider label="Opacity" defaultValue={40} disabled />
-            </script>
-          </div>
-        </section>
-
-        <section class="preview-block">
           <h2 class="subhead">Range</h2>
           <p class="section-note">
             Two handles on one track: two stacked native inputs, so each thumb keeps its own
@@ -185,6 +159,32 @@
             </div>
             <script type="text/plain" class="example__react">
               <SliderRange min={0} max={100} defaultValue={[20, 80]} />
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
+          <h2 class="subhead">Disabled</h2>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div class="slider-field">
+                <div class="slider-field__header">
+                  <label class="slider-field__label" for="slider-opacity">Opacity</label>
+                  <output class="slider-field__value" for="slider-opacity">40</output>
+                </div>
+                <input
+                  class="slider"
+                  type="range"
+                  id="slider-opacity"
+                  min="0"
+                  max="100"
+                  value="40"
+                  disabled
+                />
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <Slider label="Opacity" defaultValue={40} disabled />
             </script>
           </div>
         </section>

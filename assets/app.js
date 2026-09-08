@@ -3027,13 +3027,14 @@ function initSliderRanges() {
     // formatted (currency, units) listens for slider-range:change instead.
     const output = root.closest(".slider-field")?.querySelector("[data-slider-range-value]");
 
+    // Ratios, not percentages: the CSS works out where each thumb centre lands
+    // from these, since the two inputs travel sub-tracks that are a thumb short
+    // of the bar (see .slider-range__input).
     const paint = () => {
       const { min, max } = bounds();
       const span = max - min || 1;
-      const from = ((Number(lower.value) - min) / span) * 100;
-      const to = ((Number(upper.value) - min) / span) * 100;
-      root.style.setProperty("--slider-range-from", `${from}%`);
-      root.style.setProperty("--slider-range-to", `${to}%`);
+      root.style.setProperty("--slider-range-from", (Number(lower.value) - min) / span);
+      root.style.setProperty("--slider-range-to", (Number(upper.value) - min) / span);
       if (output) output.textContent = `${lower.value} - ${upper.value}`;
     };
 
@@ -3061,13 +3062,6 @@ function initSliderRanges() {
         clamp(input);
         paint();
         announce();
-      });
-      // The last thumb touched goes on top, so two stacked at one end can always
-      // be separated again.
-      input.addEventListener("pointerdown", () => {
-        lower.removeAttribute("data-on-top");
-        upper.removeAttribute("data-on-top");
-        input.setAttribute("data-on-top", "");
       });
     });
 

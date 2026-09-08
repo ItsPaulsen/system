@@ -109,7 +109,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-12);
 
-    /* 8 above and below, so the 20 tall slider reads as one row in a list of
+    /* 8 above and below, so the 28 tall slider reads as one row in a list of
        40 tall option rows. */
     padding-block: var(--space-8);
   }

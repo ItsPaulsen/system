@@ -202,7 +202,9 @@
           <h2 class="subhead">Range component</h2>
           <p class="section-note">
             Value is a <code>[low, high]</code> pair, controlled or uncontrolled. Same
-            <code>.slider-range</code> classes.
+            <code>.slider-range</code> classes. Each handle travels a sub-track a thumb short of the
+            bar, so two equal values sit edge to edge instead of stacked; positions go to the CSS as
+            0-1 ratios, which is what those insets are worked out from.
           </p>
           <div data-source="/react/SliderRange.jsx"></div>
         </section>

@@ -3564,7 +3564,7 @@
     appearance: none;
     width: 100%;
     max-width: 320px;
-    height: 20px;
+    height: 28px;
     background: transparent;
     cursor: pointer;
   }
@@ -3599,11 +3599,11 @@
 
   .slider::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
 
-    /* Centre the 20px thumb on the 6px track: (20 − 6) / 2 = 7px. */
-    margin-top: -7px;
+    /* Centre the 28px thumb on the 6px track: (28 − 6) / 2 = 11px. */
+    margin-top: -11px;
     border: 2px solid var(--background-secondary);
     border-radius: var(--radius-full);
     background: var(--primary-foreground);
@@ -3611,8 +3611,8 @@
   }
 
   .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     border: 2px solid var(--background-secondary);
     border-radius: var(--radius-full);
     background: var(--primary-foreground);
@@ -3693,7 +3693,13 @@
    The inputs are transparent and pointer-transparent EXCEPT their thumbs, so a
    drag lands on the thumb you grabbed and a click on the bare track doesn't jump
    the wrong handle. The track and the filled middle are painted on the wrapper
-   from --slider-range-from/--slider-range-to, both set by the script.
+   from --slider-range-from/--slider-range-to, both set by the script as 0-1
+   ratios.
+
+   The two inputs travel sub-tracks a thumb short of the bar, offset from each
+   other by that thumb (see .slider-range__input), so equal values put the
+   handles edge to edge instead of one on top of the other. Nothing has to raise
+   a buried thumb, because there isn't one.
 
    Structure:
    <div class="slider-range" data-slider-range>
@@ -3703,18 +3709,38 @@
             aria-label="Maximum" />
    </div> */
   .slider-range {
-    --slider-range-from: 0%;
-    --slider-range-to: 100%;
+    /* Handle positions as 0-1 ratios, not percentages: the stops below have to
+     do arithmetic with them (see --slider-range-thumb). Set by the script. */
+    --slider-range-from: 0;
+    --slider-range-to: 1;
+    --slider-range-thumb: 28px;
 
     position: relative;
     width: 100%;
     max-width: 320px;
-    height: 20px;
+    height: var(--slider-range-thumb);
   }
 
   /* The track, and the filled segment between the handles, on one gradient: two
-   hard stops, so there's no third element to keep in sync. */
+   hard stops, so there's no third element to keep in sync.
+
+   The stops are where the thumb CENTRES sit, which is not the plain ratio: each
+   input owns a sub-track one thumb short of the full width (below), so a centre
+   travels from half a thumb in to half a thumb short of that sub-track's end.
+   The upper handle's sub-track starts one thumb further along, hence its extra
+   offset, and that offset is exactly what keeps the two handles edge to edge
+   instead of stacked when they hold the same value. */
   .slider-range::before {
+    --slider-range-half: calc(var(--slider-range-thumb) / 2);
+    --slider-range-span: calc(100% - var(--slider-range-thumb) * 2);
+    --slider-range-low: calc(
+      var(--slider-range-half) + var(--slider-range-span) * var(--slider-range-from)
+    );
+    --slider-range-high: calc(
+      var(--slider-range-half) + var(--slider-range-thumb) + var(--slider-range-span) *
+        var(--slider-range-to)
+    );
+
     content: "";
     position: absolute;
     top: 50%;
@@ -3724,18 +3750,24 @@
     translate: 0 -50%;
     background: linear-gradient(
       to right,
-      var(--fill-tertiary) var(--slider-range-from),
-      var(--primary-foreground) var(--slider-range-from),
-      var(--primary-foreground) var(--slider-range-to),
-      var(--fill-tertiary) var(--slider-range-to)
+      var(--fill-tertiary) var(--slider-range-low),
+      var(--primary-foreground) var(--slider-range-low),
+      var(--primary-foreground) var(--slider-range-high),
+      var(--fill-tertiary) var(--slider-range-high)
     );
   }
 
+  /* Each input is inset by a thumb width at one end, so its thumb travels a
+   sub-track rather than the whole bar: the lower one stops a thumb short of the
+   right edge, the upper one starts a thumb in from the left. Two equal values
+   then land the thumbs exactly one thumb apart, touching rather than stacked,
+   and neither input's reported value changes: only where its own track begins
+   and ends. */
   .slider-range__input {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 20px;
+    inset-block: 0;
+    inset-inline: 0 var(--slider-range-thumb);
+    height: var(--slider-range-thumb);
     margin: 0;
     appearance: none;
     background: transparent;
@@ -3760,13 +3792,17 @@
     background: transparent;
   }
 
+  .slider-range__input:last-of-type {
+    inset-inline: var(--slider-range-thumb) 0;
+  }
+
   .slider-range__input::-webkit-slider-thumb {
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: var(--slider-range-thumb);
+    height: var(--slider-range-thumb);
 
-    /* Centre the 20px thumb on the 6px track: (20 − 6) / 2 = 7px. */
-    margin-top: -7px;
+    /* Centre the thumb on the 6px track: (28 − 6) / 2 = 11px. */
+    margin-top: -11px;
     border: 2px solid var(--background-secondary);
     border-radius: var(--radius-full);
     background: var(--primary-foreground);
@@ -3776,8 +3812,8 @@
   }
 
   .slider-range__input::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: var(--slider-range-thumb);
+    height: var(--slider-range-thumb);
     border: 2px solid var(--background-secondary);
     border-radius: var(--radius-full);
     background: var(--primary-foreground);
@@ -3804,12 +3840,6 @@
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: 0;
     animation: focus-ring-converge var(--motion-default);
-  }
-
-  /* Both handles at the same end would bury one under the other; the script
-   raises whichever was grabbed last so it can always be dragged back out. */
-  .slider-range__input[data-on-top] {
-    z-index: 1;
   }
 
   .slider-range:has(:disabled) {

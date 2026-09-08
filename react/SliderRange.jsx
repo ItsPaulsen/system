@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Two-handle range: two stacked native inputs, so each thumb keeps native keyboard and screen-reader behaviour. Handles clamp instead of crossing.
+// Two-handle range: two overlaid native inputs, so each thumb keeps native keyboard and screen-reader behaviour. Handles clamp instead of crossing, and each travels a sub-track a thumb short of the bar, so equal values sit edge to edge.
 export default function SliderRange({
   min = 0,
   max = 100,
@@ -15,12 +15,11 @@ export default function SliderRange({
 }) {
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const [low, high] = controlled ?? uncontrolled;
-  // Which input was grabbed last. Both handles at one end would bury one under
-  // the other, so the last one touched is raised and can be dragged back out.
-  const [onTop, setOnTop] = useState("upper");
 
   const span = max - min || 1;
-  const pct = (v) => `${((v - min) / span) * 100}%`;
+  // Ratios, not percentages: the CSS turns these into thumb-centre positions,
+  // since each input travels a sub-track a thumb short of the bar.
+  const ratio = (v) => (v - min) / span;
 
   // Clamp rather than swap: swapping mid-drag would hand the gesture to the
   // other input, and the pointer would carry on moving a thumb it no longer
@@ -39,8 +38,6 @@ export default function SliderRange({
       step={step}
       value={which === "lower" ? low : high}
       aria-label={which === "lower" ? minLabel : maxLabel}
-      data-on-top={onTop === which ? "" : undefined}
-      onPointerDown={() => setOnTop(which)}
       onChange={(e) => {
         const v = Number(e.target.value);
         commit(which === "lower" ? [Math.min(v, high), high] : [low, Math.max(v, low)]);
@@ -51,7 +48,10 @@ export default function SliderRange({
   return (
     <div
       className={["slider-range", className].filter(Boolean).join(" ")}
-      style={{ "--slider-range-from": pct(low), "--slider-range-to": pct(high) }}
+      style={{
+        "--slider-range-from": String(ratio(low)),
+        "--slider-range-to": String(ratio(high))
+      }}
       {...rest}
     >
       {input("lower")}

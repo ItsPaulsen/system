@@ -2401,9 +2401,15 @@
     height: 40px;
     margin-inline-end: -0.5rem;
     border: 0;
-    border-radius: var(--radius-sm);
+
+    /* Round, like every other icon-only control: the hover surface is the shape
+     of the target, and a rounded square read as a different kind of button. */
+    border-radius: var(--radius-full);
     background: transparent;
-    color: var(--ink-secondary);
+
+    /* Full ink: it's the one control in the header, and a secondary one read as
+     an afterthought beside the title. */
+    color: var(--ink-primary);
     cursor: pointer;
     transition: background var(--motion-default);
   }

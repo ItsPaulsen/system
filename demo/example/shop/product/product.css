@@ -223,12 +223,6 @@
     height: 20px;
   }
 
-  /* At an end there is nowhere to go, so the control leaves rather than sitting
-     there greyed: the arrows are a hint over the image, not a fixed pair. */
-  .pdp-gallery__control:disabled {
-    display: none;
-  }
-
   /* Where there's a real pointer the arrows only appear over the image, so the
      resting state is the photograph on its own. They stay put on touch, which has
      no hover to reveal them.
@@ -255,6 +249,14 @@
 
   .carousel__control--next.pdp-gallery__control {
     inset-inline-end: var(--space-12);
+  }
+
+  /* The window the slides move through is the box, so it carries the radius as
+     well as the slide: without it the slide coming in during a drag is clipped
+     square at the edges, which shows on any shot that isn't white to its corners.
+     The viewport already clips (overflow: hidden), so rounding it is all it takes. */
+  .pdp-gallery__viewport {
+    border-radius: var(--radius-md);
   }
 
   /* Each slide is its own white plate (--ex-plate, shared with the shop card),
@@ -286,9 +288,9 @@
   }
 
   /* The trigger for the larger view, bottom-right of the plate like the arrows are
-     at its sides: an explicit control, because a click on the photograph alone
-     isn't discoverable (that works too, see product.js). It follows the arrows'
-     rule of only appearing over the image on a real pointer. */
+     at its sides. Unlike them it stays: a click on the photograph opens it too
+     (see product.js), but this button is the only way in from the keyboard, so it
+     doesn't wait to be found. */
   .pdp-gallery__zoom {
     --button-size: 40px;
 
@@ -298,18 +300,8 @@
     inset-inline-end: var(--space-12);
   }
 
+  /* The photograph is a trigger of its own, so say so. */
   @media (hover: hover) and (pointer: fine) {
-    .pdp-gallery__zoom {
-      opacity: 0;
-      transition: opacity var(--motion-default);
-    }
-
-    .pdp-gallery__zoom:focus-visible,
-    .pdp-gallery__stage:hover .pdp-gallery__zoom {
-      opacity: 1;
-    }
-
-    /* The photograph is a trigger of its own, so say so. */
     .pdp-gallery__slide {
       cursor: zoom-in;
     }
@@ -850,6 +842,21 @@
     height: 100dvh;
     max-height: 100dvh;
     border-radius: 0;
+
+    /* Fade only. The Dialog's rise reads as a card arriving; a panel the size of
+       the window has no edge to travel, so the movement is just movement. */
+    transform: none;
+  }
+
+  .pdp-zoom[open] {
+    transform: none;
+    transition: opacity 0.2s ease-out;
+  }
+
+  @starting-style {
+    .pdp-zoom[open] {
+      transform: none;
+    }
   }
 
   .pdp-zoom__inner {
@@ -857,21 +864,78 @@
     position: relative;
     place-content: center;
     height: 100%;
-    padding: var(--space-24);
+    padding: var(--space-16);
   }
 
+  /* The sheet close button's box as well as its skin: 40, round, so the surface
+     under the pointer is the same size and shape wherever a panel is closed, and
+     the same as the arrows beside it. */
   .pdp-zoom__close {
+    --button-size: 40px;
+
     position: absolute;
     z-index: 1;
-    top: var(--space-24);
-    inset-inline-end: var(--space-24);
+    top: var(--space-16);
+    inset-inline-end: var(--space-16);
   }
 
-  /* The photograph is square, so the window's height is what limits it: everything
-     else in the panel is held back and the rest is the image. 10rem is the rail
-     (96), the gallery's gap to it (16) and the panel's own padding (2 x 24). */
+  /* Every round control over the photography: no border, but it does carry the
+     page's own surface, so a glyph never has to hold its own against whatever the
+     photograph is doing behind it. The border was the part competing with the
+     picture; the fill is what makes the control legible.
+
+     The arrows come from the Carousel, which gives them a border as well, so this
+     drops that and keeps the surface. */
+  .pdp-gallery__control,
+  .pdp-gallery__zoom,
+  .pdp-zoom__close {
+    border: 0;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    transition: background var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-gallery__control:hover,
+    .pdp-gallery__zoom:hover,
+    .pdp-zoom__close:hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .pdp-gallery__control:active,
+  .pdp-gallery__zoom:active,
+  .pdp-zoom__close:active {
+    background: var(--background-secondary-active);
+  }
+
+  /* 48 to press, 40 to see: the same split the filter sheet's close uses. The
+     surface stays the button's own box and the target reaches past it, so a
+     control over a photograph can be small without being fiddly. */
+  .pdp-gallery__control::before,
+  .pdp-gallery__zoom::before,
+  .pdp-zoom__close::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+
+  /* At an end there is nowhere to go, so the control leaves rather than sitting
+     there greyed: the arrows are a hint over the image, not a fixed pair. Only
+     reached by a colourway with a single shot now that the set loops. */
+  .pdp-gallery__control:disabled {
+    display: none;
+  }
+
+  /* 16 from every edge of the window, and nothing held back for the rail: it
+     floats over the bottom of the photograph instead, the way Muuto's does, so the
+     picture gets the whole panel.
+
+     Square, so whichever of the window's sides is shorter decides. On a landscape
+     window that's the height, and the side gaps are what's left over: an image
+     16 from both sides would have to be taller than the window. */
   .pdp-zoom__slot {
-    width: min(92vw, calc(100dvh - 10rem));
+    width: min(calc(100vw - 2 * var(--space-16)), calc(100dvh - 2 * var(--space-16)));
   }
 
   /* Inside the panel the rail sits under the image and centred, whatever it does
@@ -881,7 +945,15 @@
     column-gap: 0;
   }
 
+  /* Pinned to the bottom of the window, over the photograph rather than under it:
+     in flow it rode up and down as the window scaled, and holding space for it
+     shrank the picture. Fixed, like the arrows, so it belongs to the window's
+     edge. The tiles carry their own white plates, so they read over any shot. */
   .pdp-zoom .pdp-rail:not([hidden]) {
+    position: fixed;
+    z-index: 1;
+    inset-inline: 0;
+    bottom: var(--space-24);
     order: 1;
     margin: 0;
   }
@@ -905,9 +977,41 @@
     display: none;
   }
 
-  /* A thumb is a fixed tile here rather than a share of a column. */
+  /* A thumb is a fixed tile here rather than a share of a column, and it stays a
+     tile at every size: the page swaps to dots below lg because a row of white
+     plates draws a line across it, but in the panel the rail is the only way
+     through the set on a pointer and a picture beats a dot. Which means undoing
+     the dot rules, each at the specificity they were set with. */
   .pdp-zoom .pdp-thumb {
     width: var(--pdp-thumb-max);
+    height: auto;
+    padding: var(--pdp-ring-room);
+    border-radius: calc(var(--radius-sm) + var(--pdp-ring-room));
+    background: transparent;
+  }
+
+  .pdp-zoom .pdp-thumb::before {
+    content: none;
+  }
+
+  .pdp-zoom .pdp-tile__img {
+    display: block;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-zoom .pdp-thumb:not([aria-current="true"]):hover {
+      box-shadow: inset 0 0 0 var(--border-width) var(--ink-primary);
+    }
+  }
+
+  .pdp-zoom .pdp-thumb[aria-current="true"] {
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--ink-primary);
+  }
+
+  /* The dots draw their ring on ::before, which isn't there any more. */
+  .pdp-zoom .pdp-thumb:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
   }
 
   /* The arrows stay put in the panel: it's the one place where they're the whole
@@ -918,18 +1022,22 @@
      Fixed, not absolute: in the panel they belong to the window's edges rather
      than to the photograph's, and a fixed child of a modal positions against the
      viewport. They stay off phones, where the base rule already drops them and
-     the gesture is a swipe. */
+     the gesture is a swipe.
+
+     The set wraps on the page too now, so neither arrow disables anywhere; a
+     colourway with one shot switches the loop off instead (product.js), and both
+     arrows disable into nothing as before. */
   .pdp-zoom .pdp-gallery__control {
     position: fixed;
     opacity: 1;
   }
 
   .pdp-zoom .carousel__control--prev.pdp-gallery__control {
-    inset-inline-start: var(--space-16);
+    inset-inline-start: var(--space-8);
   }
 
   .pdp-zoom .carousel__control--next.pdp-gallery__control {
-    inset-inline-end: var(--space-16);
+    inset-inline-end: var(--space-8);
   }
 
   /* Nothing to zoom into from inside the panel. */

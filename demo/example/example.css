@@ -1811,6 +1811,19 @@
     }
   }
 
+  /* Filter sheet close button, shared by both listings so the two can't drift: a
+     48 hit target (::before) around the component's own 40 box, which is the
+     visible surface. */
+  .ex-filter-sheet .sheet__close {
+    position: relative;
+  }
+
+  .ex-filter-sheet .sheet__close::before {
+    content: "";
+    position: absolute;
+    inset: -4px; /* 40 → 48 hit target */
+  }
+
   /* Forced colors (Windows High Contrast): the composed cards and the tinted
      log-out button lose their surface/fill, so outline them to keep their bounds
      visible (in the hero marquee and on the settings screen). */

@@ -210,7 +210,7 @@
                      reaching it. Opening runs through app.js either way, which is
                      what locks the body scroll and parks focus so nothing opens
                      with a stray ring on the close button. -->
-                <div class="carousel__viewport" data-dialog-open="pdp-zoom">
+                <div class="carousel__viewport pdp-gallery__viewport" data-dialog-open="pdp-zoom">
                   <ul class="carousel__track">
                     <li
                       class="carousel__item pdp-gallery__slide"
@@ -303,7 +303,7 @@
                   </svg>
                 </button>
                 <button
-                  class="button button--secondary button--icon pdp-gallery__zoom"
+                  class="button button--icon pdp-gallery__zoom"
                   type="button"
                   data-dialog-open="pdp-zoom"
                   aria-label="View larger"
@@ -741,7 +741,7 @@
       <dialog class="dialog pdp-zoom" id="pdp-zoom" aria-label="Cover Side Chair, larger view">
         <div class="dialog__inner pdp-zoom__inner">
           <button
-            class="button button--secondary button--icon pdp-zoom__close"
+            class="button button--icon pdp-zoom__close"
             type="button"
             data-dialog-close
             aria-label="Close"

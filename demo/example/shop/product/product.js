@@ -83,7 +83,16 @@
       if (img) img.src = `${stem}-640.jpg`;
       if (thumb) thumb.src = `${stem}-400.webp`;
     });
-    if (gallery) gallery.dataset.pdpViews = String(1 + stems.length);
+    const views = 1 + stems.length;
+    if (gallery) {
+      gallery.dataset.pdpViews = String(views);
+      // Wrapping is worth having wherever there's more than one shot: the rail (or
+      // the dots) says where you are, so an end carries no information, and the
+      // arrows stop vanishing under the pointer. At one view there is nowhere to
+      // go, and a loop would leave two arrows that do nothing.
+      if (views > 1) gallery.dataset.carouselLoop = "";
+      else delete gallery.dataset.carouselLoop;
+    }
 
     // Back to the pack shot: the colour that was picked is the one to show, and a
     // track left translated onto a slide that has just been hidden would park the
@@ -234,17 +243,14 @@
     // registered while the document is still parsing, so it runs first and the
     // gallery is already in the slot by the time the dialog opens. `close` covers
     // every way out (button, backdrop, Escape).
-    // In the panel the arrows wrap (see data-carousel-loop) and stay put rather
-    // than disabling at the ends: there's nothing else to reach for in there, so
-    // an arrow that stops is just a dead control.
+    // Looping isn't set here any more: it belongs to the colour's shot count (see
+    // render), so it holds on the page as well as in the panel.
     const enter = () => {
       slot.append(gallery);
-      gallery.dataset.carouselLoop = "";
       remeasure();
     };
     const leave = () => {
       home.insertBefore(gallery, next);
-      delete gallery.dataset.carouselLoop;
       remeasure();
     };
 

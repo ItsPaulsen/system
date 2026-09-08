@@ -3318,6 +3318,13 @@ function initCarousel() {
 
     const RESIST = 0.3; // fraction of the drag that shows past an end
     const EASE = "transform 350ms var(--motion-ease-out)";
+
+    // A flick, in px/ms of pointer speed at release. Above it the release steps one
+    // slide in the direction of travel however short the drag was; below it the
+    // nearest slide wins, so a slow drag has to cross half a slide to count. That
+    // split is what distance alone can't do: a quick 40px flick and a slow 40px
+    // drag look identical to it. 0.35 is about 350px/s, well under a casual flick.
+    const FLICK = 0.35;
     let pos = 0;
 
     // How far the track can travel, and each item's aligned scroll offset (its
@@ -3341,15 +3348,48 @@ function initCarousel() {
       return bi;
     };
 
+    // data-carousel-loop: the set has no ends. Read live rather than at init, so a
+    // page can turn it on for one context and off again (the product page loops
+    // only in its larger view).
+    const looping = () => root.dataset.carouselLoop !== undefined;
+
+    // One slide's worth of travel, and the whole set's. Unclamped, unlike points()
+    // above: a looping track has no end to clamp against.
+    const stride = () =>
+      items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : viewport.clientWidth;
+    const span = () => stride() * items.length;
+    const wrap = (i) => ((i % items.length) + items.length) % items.length;
+
+    // What makes the wrap read as a slide rather than a jump: each item carries its
+    // own offset of a whole set width, chosen so it sits in or beside the window.
+    // Drag left off the first slide and the last one is already there, because it
+    // has been moved a set width back. The track keeps its single position; this
+    // only decides which cycle each item is drawn in.
+    const place = () => {
+      if (!looping()) {
+        items.forEach((it) => it.style.removeProperty("translate"));
+        return;
+      }
+      const s = stride();
+      const t = span();
+      items.forEach((it, j) => {
+        const k = Math.round((-pos - j * s) / t);
+        if (k) it.style.translate = `${k * t}px`;
+        else it.style.removeProperty("translate");
+      });
+    };
+
     const render = (animate) => {
       track.style.transition = animate ? EASE : "none";
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
+      place();
     };
 
-    // data-carousel-loop: the controls wrap instead of stopping, and neither one
-    // ever disables. Read live rather than at init, so a page can turn it on for
-    // one context and off again (the product page loops only in its larger view).
-    const looping = () => root.dataset.carouselLoop !== undefined;
+    const current = () => (looping() ? wrap(Math.round(-pos / stride())) : nearestIndex(-pos));
+
+    // The slide sync() last settled on. Kept because it survives a resize: the
+    // pixel position doesn't, since the stride changes with the viewport.
+    let at = 0;
 
     const sync = () => {
       const scroll = -pos;
@@ -3357,7 +3397,11 @@ function initCarousel() {
       const loop = looping();
       if (prev) prev.disabled = !loop && scroll <= 0.5;
       if (next) next.disabled = !loop && scroll >= m - 0.5;
-      const i = nearestIndex(scroll);
+      // current(), not nearestIndex(): the latter clamps to the track's ends, so a
+      // looping drag past the first slide reported the first one and left
+      // aria-current on the wrong thumbnail.
+      const i = current();
+      at = i;
       if (status) status.textContent = `Slide ${i + 1} of ${items.length}`;
       nav.forEach((el, n) => {
         if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
@@ -3366,23 +3410,27 @@ function initCarousel() {
     };
 
     const settle = (scroll, animate = true) => {
-      pos = -Math.max(0, Math.min(maxScroll(), scroll));
+      pos = looping() ? -scroll : -Math.max(0, Math.min(maxScroll(), scroll));
       render(animate);
       sync();
     };
-    const goTo = (i, animate = true) => {
-      const pts = points();
-      settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
-    };
-    const current = () => nearestIndex(-pos);
 
-    // Wrapping is the step itself, so the keys below wrap too.
-    const step = (dir) => {
-      const i = current();
-      const last = items.length - 1;
-      if (!looping()) return goTo(i + dir);
-      return goTo(i + dir < 0 ? last : i + dir > last ? 0 : i + dir);
+    // Looping, an index names a slide rather than a place on the track, so go to
+    // whichever copy of it is nearest: from the last to the first is one step
+    // forward, not the whole set backwards.
+    const goTo = (i, animate = true) => {
+      if (!looping()) {
+        const pts = points();
+        return settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
+      }
+      const n = items.length;
+      let d = wrap(i) - current();
+      if (d > n / 2) d -= n;
+      if (d < -n / 2) d += n;
+      return settle(-pos + d * stride(), animate);
     };
+
+    const step = (dir) => goTo(looping() ? current() + dir : current() + dir);
 
     prev?.addEventListener("click", () => step(-1));
     next?.addEventListener("click", () => step(1));
@@ -3412,7 +3460,12 @@ function initCarousel() {
     let down = false;
     let startX = 0;
     let startPos = 0;
+    let startAt = 0;
     let moved = false;
+    // Pointer speed in px/ms, smoothed so one jittery sample can't decide it.
+    let vx = 0;
+    let lastX = 0;
+    let lastT = 0;
     viewport.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
       if (e.pointerType === "mouse") e.preventDefault(); // stop native text/image drag
@@ -3420,6 +3473,10 @@ function initCarousel() {
       moved = false;
       startX = e.clientX;
       startPos = pos;
+      startAt = at;
+      vx = 0;
+      lastX = e.clientX;
+      lastT = e.timeStamp;
       viewport.setPointerCapture(e.pointerId);
       viewport.classList.add("is-dragging");
     });
@@ -3427,10 +3484,17 @@ function initCarousel() {
       if (!down) return;
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 3) moved = true;
-      const min = -maxScroll();
+      const dt = e.timeStamp - lastT || 16;
+      vx = vx * 0.7 + ((e.clientX - lastX) / dt) * 0.3;
+      lastX = e.clientX;
+      lastT = e.timeStamp;
       let p = startPos + dx;
-      if (p > 0) p *= RESIST;
-      else if (p < min) p = min + (p - min) * RESIST;
+      if (!looping()) {
+        // Past an end the extra travel is resisted; a looping set has no end.
+        const min = -maxScroll();
+        if (p > 0) p *= RESIST;
+        else if (p < min) p = min + (p - min) * RESIST;
+      }
       pos = p;
       render(false);
     });
@@ -3439,7 +3503,17 @@ function initCarousel() {
       down = false;
       viewport.releasePointerCapture?.(e.pointerId);
       viewport.classList.remove("is-dragging");
-      goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos))));
+      // A flick steps one; anything slower snaps to whatever is nearest.
+      const flick = Math.abs(vx) > FLICK ? -Math.sign(vx) : 0;
+      if (looping()) {
+        const s = stride();
+        const from = Math.round(-startPos / s);
+        settle((flick ? from + flick : Math.round(-pos / s)) * s);
+      } else if (flick) {
+        goTo(startAt + flick);
+      } else {
+        goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos))));
+      }
       if (moved) {
         // Both, and not just preventDefault: that stops a slide's link being
         // followed but a click listener on the slide still runs, so a drag would
@@ -3466,7 +3540,14 @@ function initCarousel() {
     let frame;
     window.addEventListener("resize", () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => goTo(current(), false));
+      frame = requestAnimationFrame(() => {
+        // From the remembered index, not the old position: looping leaves `pos`
+        // unbounded, so re-deriving the index from it against the *new* stride
+        // could name a different slide, and settling on the old pixel offset left
+        // the track sliding around while the window scaled.
+        if (looping()) settle(at * stride(), false);
+        else goTo(at, false);
+      });
     });
 
     render(false);

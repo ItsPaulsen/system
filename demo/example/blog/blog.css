@@ -249,40 +249,4 @@
   .blog__sheet .sheet__scroll {
     padding-top: 0;
   }
-
-  /* Close button: a generous 48 hit target (::before) with a compact, centred 36
-     hover surface (::after). The header sets its own height now, so the 40 box
-     just centres in it; the base 40 hover fill is disabled in favour of the 36. */
-  .blog__sheet .sheet__close {
-    position: relative;
-  }
-
-  .blog__sheet .sheet__close::before {
-    content: "";
-    position: absolute;
-    inset: -4px; /* 40 → 48 hit target */
-  }
-
-  .blog__sheet .sheet__close::after {
-    content: "";
-    position: absolute;
-    inset: 2px; /* 40 → 36 visible surface */
-    border-radius: var(--radius-full);
-    transition: background var(--motion-default);
-  }
-
-  .blog__sheet .sheet__close svg {
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (hover: hover) {
-    .blog__sheet .sheet__close:hover {
-      background: transparent;
-    }
-
-    .blog__sheet .sheet__close:hover::after {
-      background: var(--background-secondary-hover);
-    }
-  }
 }

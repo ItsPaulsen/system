@@ -17,11 +17,14 @@
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
   const images = Array.from(document.querySelectorAll("[data-pdp-img]"));
   const thumbs = Array.from(document.querySelectorAll("[data-pdp-thumb]"));
-  // The back view and the detail shot are oak's own; every other colourway has
-  // just its pack shot, so those two slides and their thumbs come and go with the
-  // colour. data-views on the radio says how many the colour has.
+  // Beyond its pack shot a colourway can have shots of its own: oak has a back
+  // view and a detail, black has a lifestyle one. data-extra on the radio lists
+  // their stems, and the two slots below take them in order, so the number of
+  // views follows the list rather than being declared beside it.
   const gallery = document.querySelector(".pdp-gallery");
   const extras = Array.from(document.querySelectorAll("[data-pdp-extra]"));
+  const TIERS = [400, 640, 720, 1440];
+  const srcsetFor = (stem) => TIERS.map((w) => `${stem}-${w}.webp ${w}w`).join(", ");
 
   // Two stock states, each a badge skin plus the lead time it implies.
   const STOCK = {
@@ -52,7 +55,7 @@
     // was reached from. Only the pack shot carries these hooks; the back view and
     // the detail shot belong to the model, not the colour.
     // 400/640/720 exist for every colourway; data-big names a larger tier where a
-    // colour has a high-resolution source behind it (only oak does, so far).
+    // colour has a high-resolution source behind it (oak and black, so far).
     sources.forEach((el) => {
       const tiers = [400, 640, 720].concat(d.big ? [Number(d.big)] : []);
       el.srcset = tiers.map((w) => `${d.img}-${w}.webp ${w}w`).join(", ");
@@ -65,11 +68,22 @@
       el.src = `${d.img}-400.webp`;
     });
 
-    const views = Number(d.views) || 1;
+    // Each slot takes the stem at its own index, or leaves if the colour has none.
+    // The extras are shown alt="", since slide one carries the product's own
+    // description and these are further views of the same thing.
+    const stems = (d.extra || "").split(" ").filter(Boolean);
     extras.forEach((el) => {
-      el.hidden = views < 2;
+      const stem = stems[Number(el.dataset.pdpExtra) - 1];
+      el.hidden = !stem;
+      if (!stem) return;
+      const source = el.querySelector("[data-pdp-extra-source]");
+      const img = el.querySelector("[data-pdp-extra-img]");
+      const thumb = el.querySelector("[data-pdp-extra-thumb]");
+      if (source) source.srcset = srcsetFor(stem);
+      if (img) img.src = `${stem}-640.jpg`;
+      if (thumb) thumb.src = `${stem}-400.webp`;
     });
-    if (gallery) gallery.dataset.pdpViews = String(views);
+    if (gallery) gallery.dataset.pdpViews = String(1 + stems.length);
 
     // Back to the pack shot: the colour that was picked is the one to show, and a
     // track left translated onto a slide that has just been hidden would park the
@@ -179,6 +193,66 @@
     railView.addEventListener("scroll", sync);
     window.addEventListener("resize", sync);
     sync();
+  }
+
+  // Larger view: the gallery node moves into the dialog and back out again, the
+  // way the listing's filter rail moves between its rail and its sheet. One
+  // carousel, so which slide is showing, which colour it belongs to and the
+  // track's own transform all come along, and there is no second set of slides to
+  // keep in step. The dialog's own opening is the generic [data-dialog-open]
+  // wiring in app.js; this only owns the move.
+  const zoom = document.getElementById("pdp-zoom");
+  const slot = zoom && zoom.querySelector("[data-pdp-zoom-slot]");
+  if (gallery && zoom && slot) {
+    const home = gallery.parentNode;
+    const next = gallery.nextElementSibling;
+    // A resize is what makes the carousel re-measure a track whose viewport just
+    // changed width; without it the slide would sit at the old offset.
+    const remeasure = () => window.dispatchEvent(new Event("resize"));
+
+    // The photograph carries data-dialog-open itself, so app.js opens it the same
+    // way the button does: that's what locks the body scroll and parks focus, so
+    // nothing opens with a stray ring on the close button. All this has to do is
+    // stop the click that ends a drag from getting there, and that means
+    // propagation rather than preventDefault, since the handler that opens is
+    // delegated on the document. The carousel swallows that click too; measuring
+    // the pointer here as well means it doesn't matter which listener runs first.
+    const viewport = gallery.querySelector(".carousel__viewport");
+    if (viewport) {
+      let downAt = null;
+      viewport.addEventListener("pointerdown", (e) => {
+        downAt = { x: e.clientX, y: e.clientY };
+      });
+      viewport.addEventListener("click", (e) => {
+        const dragged = downAt && Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 4;
+        downAt = null;
+        if (dragged) e.stopPropagation();
+      });
+    }
+
+    // The button opens through app.js's delegated handler. This listener is
+    // registered while the document is still parsing, so it runs first and the
+    // gallery is already in the slot by the time the dialog opens. `close` covers
+    // every way out (button, backdrop, Escape).
+    // In the panel the arrows wrap (see data-carousel-loop) and stay put rather
+    // than disabling at the ends: there's nothing else to reach for in there, so
+    // an arrow that stops is just a dead control.
+    const enter = () => {
+      slot.append(gallery);
+      gallery.dataset.carouselLoop = "";
+      remeasure();
+    };
+    const leave = () => {
+      home.insertBefore(gallery, next);
+      delete gallery.dataset.carouselLoop;
+      remeasure();
+    };
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest('[data-dialog-open="pdp-zoom"]')) enter();
+    });
+
+    zoom.addEventListener("close", leave);
   }
 
   // Deep link from a Shop card: ?color=<slug> opens on that colourway. Rendering

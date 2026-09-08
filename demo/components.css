@@ -4427,8 +4427,15 @@
     min-height: 48px;
   }
 
+  /* The stepper keeps the full strip as its hit area, but every state it shows is a
+   32 circle drawn inside that (::before below): nothing square fights the field's
+   corners, it works as well on the pill variant as on the default rectangle, and
+   the target stays the whole strip rather than shrinking to the circle. There are
+   no dividers between the three parts either: they are one control, and rules
+   between them only chop it up. */
   .number-field__step {
     display: inline-flex;
+    position: relative;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
@@ -4441,47 +4448,61 @@
     cursor: pointer;
   }
 
+  /* The circle: 8 in from the strip on the default 40 field, and the same step down
+   at each size. Centred explicitly rather than left to the static position of an
+   abspos flex child. */
+  .number-field__step::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-full);
+    translate: -50% -50%;
+    transition: background var(--motion-default);
+  }
+
   .number-field--sm .number-field__step {
     width: 2rem;
+  }
+
+  .number-field--sm .number-field__step::before {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .number-field--lg .number-field__step {
     width: 3rem;
   }
 
+  .number-field--lg .number-field__step::before {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  /* Positioned, so the glyph paints over the circle behind it. */
   .number-field__step svg {
+    position: relative;
     width: 20px;
     height: 20px;
   }
 
-  /* Round the outer corners so the focus ring follows the container radius (the
-   container can't clip with overflow:hidden, it would cut that ring off). */
-  .number-field__step:first-child {
-    border-start-start-radius: calc(var(--radius-sm) - var(--border-width));
-    border-end-start-radius: calc(var(--radius-sm) - var(--border-width));
-    border-inline-end: var(--border-width) solid var(--ink-tertiary);
-  }
-
-  .number-field__step:last-child {
-    border-start-end-radius: calc(var(--radius-sm) - var(--border-width));
-    border-end-end-radius: calc(var(--radius-sm) - var(--border-width));
-    border-inline-start: var(--border-width) solid var(--ink-tertiary);
-  }
-
-  /* Focus is per control, never the whole field: cancel the inherited
-   container focus-within so only the focused control shows state. */
-  .number-field__control:focus-within {
-    border-color: var(--ink-tertiary);
-    box-shadow: none;
-  }
-
-  /* Inset 2px ring via box-shadow so it follows each button's border-radius exactly
-   (an inset outline shrinks its own corner radius and no longer matches the field).
-   The transparent outline keeps a visible ring in forced-colors mode. */
+  /* Typing in the value is a text field like any other, so the field itself shows
+   focus the way an Input does (the container's own :focus-within border, which is
+   why nothing cancels it here). A stepper adds its own ring inside the circle, so
+   which of the three has focus still reads. */
   .number-field__step:focus-visible {
-    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--primary-foreground);
+    /* The transparent outline keeps a visible ring in forced colors; the ring
+     itself is drawn on the circle. */
     outline: calc(var(--border-width) * 2) solid transparent;
     animation: none;
+  }
+
+  /* Inset via box-shadow so the ring follows the circle exactly (an inset outline
+   shrinks its own radius and stops matching it). */
+  .number-field__step:focus-visible::before {
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--primary-foreground);
   }
 
   .number-field__step:disabled {
@@ -4489,9 +4510,15 @@
     cursor: not-allowed;
   }
 
-  /* No hover or press fill on a stepper: it's a strip inside a rounded field, so
-   any fill draws a square-ish block that fights the field's corners (badly on the
-   pill variant the product page uses). The value changing is the feedback. */
+  @media (hover: hover) and (pointer: fine) {
+    .number-field__step:not(:disabled):hover::before {
+      background: var(--fill-quaternary-hover);
+    }
+  }
+
+  .number-field__step:not(:disabled):active::before {
+    background: var(--fill-quaternary-active);
+  }
 
   /* The field hugs its content rather than filling a fixed width. */
   .number-field {
@@ -4865,6 +4892,10 @@
    --carousel-cols sets how many items show at once (default 1); --carousel-gap
    the space between them. The item flex-basis subtracts the gaps so N items fit
    exactly. Override the vars on the root (or per breakpoint) for a multi-up view.
+
+   data-carousel-loop on the root makes the controls wrap rather than stop: prev on
+   the first goes to the last, and neither control ever disables. It's read live,
+   so a page can turn it on for one context only.
 
    Any element inside the root with data-carousel-goto="<index>" jumps to that
    slide, and carries aria-current="true" while it's the current one — that's how

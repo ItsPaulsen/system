@@ -126,7 +126,7 @@
                         />
                       </button>
                     </li>
-                    <li data-pdp-extra>
+                    <li data-pdp-extra="1">
                       <button
                         class="pdp-tile pdp-thumb"
                         type="button"
@@ -135,6 +135,7 @@
                       >
                         <img
                           class="pdp-tile__img"
+                          data-pdp-extra-thumb
                           src="/assets/images/products/cover-side-chair-back-400.webp"
                           alt=""
                           loading="lazy"
@@ -142,7 +143,7 @@
                         />
                       </button>
                     </li>
-                    <li data-pdp-extra>
+                    <li data-pdp-extra="2">
                       <button
                         class="pdp-tile pdp-thumb"
                         type="button"
@@ -151,6 +152,7 @@
                       >
                         <img
                           class="pdp-tile__img"
+                          data-pdp-extra-thumb
                           src="/assets/images/products/cover-side-chair-detail-400.webp"
                           alt=""
                           loading="lazy"
@@ -179,7 +181,7 @@
                     <path d="M6 9l6 6l6 -6" />
                   </svg>
                 </button>
-                <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__bar pdp-rail__bar" aria-hidden="true">
                   <div class="scroll-area__thumb"></div>
                 </div>
               </div>
@@ -203,7 +205,12 @@
                     <path d="M15 6l-6 6l6 6" />
                   </svg>
                 </button>
-                <div class="carousel__viewport">
+                <!-- The photograph is a trigger for the larger view as well as the
+                     button below; product.js stops the click that ends a drag from
+                     reaching it. Opening runs through app.js either way, which is
+                     what locks the body scroll and parks focus so nothing opens
+                     with a stray ring on the close button. -->
+                <div class="carousel__viewport" data-dialog-open="pdp-zoom">
                   <ul class="carousel__track">
                     <li
                       class="carousel__item pdp-gallery__slide"
@@ -235,23 +242,19 @@
                       class="carousel__item pdp-gallery__slide"
                       role="group"
                       aria-roledescription="slide"
-                      data-pdp-extra
+                      data-pdp-extra="1"
                     >
                       <picture>
                         <source
                           type="image/webp"
-                          srcset="
-                            /assets/images/products/cover-side-chair-back-400.webp   400w,
-                            /assets/images/products/cover-side-chair-back-640.webp   640w,
-                            /assets/images/products/cover-side-chair-back-720.webp   720w,
-                            /assets/images/products/cover-side-chair-back-1440.webp 1440w
-                          "
+                          data-pdp-extra-source
                           sizes="(min-width: 1536px) 730px, (min-width: 1280px) 640px, (min-width: 1024px) 48vw, (min-width: 640px) 66vw, 82vw"
                         />
                         <img
                           class="ex-ph pdp-gallery__img"
+                          data-pdp-extra-img
                           src="/assets/images/products/cover-side-chair-back-640.jpg"
-                          alt="Cover Side Chair seen from the back"
+                          alt=""
                           loading="lazy"
                           decoding="async"
                         />
@@ -261,23 +264,19 @@
                       class="carousel__item pdp-gallery__slide"
                       role="group"
                       aria-roledescription="slide"
-                      data-pdp-extra
+                      data-pdp-extra="2"
                     >
                       <picture>
                         <source
                           type="image/webp"
-                          srcset="
-                            /assets/images/products/cover-side-chair-detail-400.webp   400w,
-                            /assets/images/products/cover-side-chair-detail-640.webp   640w,
-                            /assets/images/products/cover-side-chair-detail-720.webp   720w,
-                            /assets/images/products/cover-side-chair-detail-1440.webp 1440w
-                          "
+                          data-pdp-extra-source
                           sizes="(min-width: 1536px) 730px, (min-width: 1280px) 640px, (min-width: 1024px) 48vw, (min-width: 640px) 66vw, 82vw"
                         />
                         <img
                           class="ex-ph pdp-gallery__img"
+                          data-pdp-extra-img
                           src="/assets/images/products/cover-side-chair-detail-640.jpg"
-                          alt="The Cover Side Chair’s backrest and seat, close up"
+                          alt=""
                           loading="lazy"
                           decoding="async"
                         />
@@ -303,6 +302,27 @@
                     <path d="M9 6l6 6l-6 6" />
                   </svg>
                 </button>
+                <button
+                  class="button button--secondary button--icon pdp-gallery__zoom"
+                  type="button"
+                  data-dialog-open="pdp-zoom"
+                  aria-label="View larger"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M16 4l4 0l0 4" />
+                    <path d="M14 10l6 -6" />
+                    <path d="M8 20l-4 0l0 -4" />
+                    <path d="M4 20l6 -6" />
+                  </svg>
+                </button>
                 <span class="sr-only" aria-live="polite" data-carousel-status></span>
               </div>
             </div>
@@ -316,30 +336,6 @@
               <div class="pdp-buy__head">
                 <a class="pdp-buy__brand" href="/demo/example/shop/">Muuto</a>
                 <h1 class="pdp-buy__title">Cover Side Chair</h1>
-              </div>
-
-              <div class="pdp-buy__offer">
-                <p class="pdp-buy__price">
-                  <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
-                </p>
-
-                <p class="pdp-buy__stock">
-                  <span class="badge badge--green badge--with-start-icon" data-pdp-stock-badge>
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12l5 5l10 -10" />
-                    </svg>
-                    <span data-pdp-stock-label>In stock</span>
-                  </span>
-                  <span class="pdp-buy__lead" data-pdp-lead>Ships in 2-4 days</span>
-                </p>
               </div>
 
               <!-- Colour: native radios, so the group keeps its arrow-key
@@ -359,8 +355,8 @@
                       name="pdp-color"
                       value="oak"
                       checked
-                      data-views="3"
                       data-big="1440"
+                      data-extra="/assets/images/products/cover-side-chair-back /assets/images/products/cover-side-chair-detail"
                       data-color="Oak"
                       data-price="5 295 kr"
                       data-stores="5 stores"
@@ -383,6 +379,7 @@
                       type="radio"
                       name="pdp-color"
                       value="black"
+                      data-big="1440"
                       data-color="Black"
                       data-price="5 295 kr"
                       data-stores="4 stores"
@@ -405,6 +402,8 @@
                       type="radio"
                       name="pdp-color"
                       value="dark-beige"
+                      data-big="1440"
+                      data-extra="/assets/images/products/cover-side-chair-dark-beige-detail"
                       data-color="Dark beige"
                       data-price="5 295 kr"
                       data-stores="4 stores"
@@ -427,6 +426,8 @@
                       type="radio"
                       name="pdp-color"
                       value="dark-brown"
+                      data-big="1440"
+                      data-extra="/assets/images/products/cover-side-chair-dark-brown-detail"
                       data-color="Stained dark brown"
                       data-price="5 295 kr"
                       data-stores="3 stores"
@@ -449,6 +450,8 @@
                       type="radio"
                       name="pdp-color"
                       value="green"
+                      data-big="1440"
+                      data-extra="/assets/images/products/cover-side-chair-green-lifestyle"
                       data-color="Green"
                       data-price="5 295 kr"
                       data-stores="2 stores"
@@ -471,6 +474,8 @@
                       type="radio"
                       name="pdp-color"
                       value="cognac"
+                      data-big="1440"
+                      data-extra="/assets/images/products/cover-side-chair-cognac-lifestyle"
                       data-color="Refine leather cognac"
                       data-price="7 349 kr"
                       data-stores="3 stores"
@@ -493,6 +498,7 @@
                       type="radio"
                       name="pdp-color"
                       value="black-leather"
+                      data-big="1440"
                       data-color="Refine leather black"
                       data-price="7 349 kr"
                       data-stores="2 stores"
@@ -519,6 +525,30 @@
                    replaced by a form; the field takes only the width it needs, so
                    Save grows into what the button gives up. Stepping back down to
                    0 puts the button back. product.js owns the swap. -->
+              <div class="pdp-buy__offer">
+                <p class="pdp-buy__price">
+                  <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
+                </p>
+
+                <p class="pdp-buy__stock">
+                  <span class="badge badge--green badge--with-start-icon" data-pdp-stock-badge>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" />
+                    </svg>
+                    <span data-pdp-stock-label>In stock</span>
+                  </span>
+                  <span class="pdp-buy__lead" data-pdp-lead>Ships in 2-4 days</span>
+                </p>
+              </div>
+
               <div class="pdp-buy__actions">
                 <button class="button button--primary pdp-cart__add" type="button" data-pdp-add>
                   Add to cart
@@ -532,7 +562,7 @@
                   <label class="input__label sr-only" for="pdp-qty">Quantity in cart</label>
                   <span class="input__container number-field__control pdp-cart__control">
                     <button
-                      class="number-field__step pdp-cart__step"
+                      class="number-field__step"
                       type="button"
                       data-step="-1"
                       aria-label="Decrease quantity"
@@ -560,7 +590,7 @@
                       data-step="1"
                     />
                     <button
-                      class="number-field__step pdp-cart__step"
+                      class="number-field__step"
                       type="button"
                       data-step="1"
                       aria-label="Increase quantity"
@@ -647,7 +677,7 @@
                   </span>
                 </a>
 
-                <div class="accordion pdp-buy__details">
+                <div class="accordion">
                   <details class="accordion__item pdp-detail">
                     <summary class="accordion__summary">
                       About this chair
@@ -703,6 +733,35 @@
           </div>
         </div>
       </section>
+
+      <!-- Larger view. The gallery itself moves in here on open and back out on
+           close (product.js), the way the listing's filter rail moves between the
+           rail and its sheet: one carousel, one position, nothing to keep in sync,
+           and no second copy of the slides to repoint on a colour change. -->
+      <dialog class="dialog pdp-zoom" id="pdp-zoom" aria-label="Cover Side Chair, larger view">
+        <div class="dialog__inner pdp-zoom__inner">
+          <button
+            class="button button--secondary button--icon pdp-zoom__close"
+            type="button"
+            data-dialog-close
+            aria-label="Close"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6l-12 12" />
+              <path d="M6 6l12 12" />
+            </svg>
+          </button>
+          <div class="pdp-zoom__slot" data-pdp-zoom-slot></div>
+        </div>
+      </dialog>
 
       <div class="pdp-band">
         <section class="pdp-specs">

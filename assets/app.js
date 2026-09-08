@@ -3346,11 +3346,17 @@ function initCarousel() {
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
     };
 
+    // data-carousel-loop: the controls wrap instead of stopping, and neither one
+    // ever disables. Read live rather than at init, so a page can turn it on for
+    // one context and off again (the product page loops only in its larger view).
+    const looping = () => root.dataset.carouselLoop !== undefined;
+
     const sync = () => {
       const scroll = -pos;
       const m = maxScroll();
-      if (prev) prev.disabled = scroll <= 0.5;
-      if (next) next.disabled = scroll >= m - 0.5;
+      const loop = looping();
+      if (prev) prev.disabled = !loop && scroll <= 0.5;
+      if (next) next.disabled = !loop && scroll >= m - 0.5;
       const i = nearestIndex(scroll);
       if (status) status.textContent = `Slide ${i + 1} of ${items.length}`;
       nav.forEach((el, n) => {
@@ -3370,8 +3376,16 @@ function initCarousel() {
     };
     const current = () => nearestIndex(-pos);
 
-    prev?.addEventListener("click", () => goTo(current() - 1));
-    next?.addEventListener("click", () => goTo(current() + 1));
+    // Wrapping is the step itself, so the keys below wrap too.
+    const step = (dir) => {
+      const i = current();
+      const last = items.length - 1;
+      if (!looping()) return goTo(i + dir);
+      return goTo(i + dir < 0 ? last : i + dir > last ? 0 : i + dir);
+    };
+
+    prev?.addEventListener("click", () => step(-1));
+    next?.addEventListener("click", () => step(1));
     nav.forEach((el, n) => el.addEventListener("click", () => goTo(navIndex(el, n))));
 
     // Programmatic jump, for a page that has to move the track itself rather than
@@ -3385,10 +3399,10 @@ function initCarousel() {
     root.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        goTo(current() - 1);
+        step(-1);
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        goTo(current() + 1);
+        step(1);
       }
     });
 
@@ -3427,7 +3441,14 @@ function initCarousel() {
       viewport.classList.remove("is-dragging");
       goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos))));
       if (moved) {
-        const swallow = (c) => c.preventDefault();
+        // Both, and not just preventDefault: that stops a slide's link being
+        // followed but a click listener on the slide still runs, so a drag would
+        // fire whatever the page has bound there (the product page opens its
+        // larger view on a click).
+        const swallow = (c) => {
+          c.preventDefault();
+          c.stopPropagation();
+        };
         viewport.addEventListener("click", swallow, { capture: true });
         requestAnimationFrame(() =>
           viewport.removeEventListener("click", swallow, { capture: true })

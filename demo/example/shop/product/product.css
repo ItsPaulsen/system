@@ -285,6 +285,36 @@
     background: color-mix(in oklab, var(--neutral-black) 8%, var(--ex-plate));
   }
 
+  /* The trigger for the larger view, bottom-right of the plate like the arrows are
+     at its sides: an explicit control, because a click on the photograph alone
+     isn't discoverable (that works too, see product.js). It follows the arrows'
+     rule of only appearing over the image on a real pointer. */
+  .pdp-gallery__zoom {
+    --button-size: 40px;
+
+    position: absolute;
+    z-index: 1;
+    inset-block-end: var(--space-12);
+    inset-inline-end: var(--space-12);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-gallery__zoom {
+      opacity: 0;
+      transition: opacity var(--motion-default);
+    }
+
+    .pdp-gallery__zoom:focus-visible,
+    .pdp-gallery__stage:hover .pdp-gallery__zoom {
+      opacity: 1;
+    }
+
+    /* The photograph is a trigger of its own, so say so. */
+    .pdp-gallery__slide {
+      cursor: zoom-in;
+    }
+  }
+
   /* ── Tiles ────────────────────────────────────────────────────────────────
      One model behind both the image rail and the colour swatches: they hold the
      same photography and answer to the pointer the same way, so the ring lives
@@ -589,14 +619,19 @@
   .pdp-buy {
     display: flex;
     flex-direction: column;
-    gap: var(--space-32);
+    gap: var(--space-24);
     min-width: 0;
   }
 
-  .pdp-buy__head,
   .pdp-buy__offer {
     display: grid;
     gap: var(--space-12);
+  }
+
+  /* No gap: the brand reads as the first line of the product's name, so the two
+     sit on their own line-heights. */
+  .pdp-buy__head {
+    display: grid;
   }
 
   .pdp-buy__info {
@@ -630,22 +665,21 @@
   }
 
   /* The product, no colour in it: the swatch row under it already says which one,
-     and the Shop card's own variant line was repeating it. title-large 32,
-     headline-small 38 from lg, where the column is half the page rather than all
-     of it. */
+     and the Shop card's own variant line was repeating it. Base (mobile):
+     title-medium 28, title-large 32 from md. */
   .pdp-buy__title {
     margin: 0;
     color: var(--ink-primary);
-    font-size: var(--font-title-large-size);
-    line-height: var(--font-title-large-lh);
-    font-weight: var(--font-title-large-weight);
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .pdp-buy__title {
-      font-size: var(--font-headline-small-size);
-      line-height: var(--font-headline-small-lh);
-      font-weight: var(--font-headline-small-weight);
+      font-size: var(--font-title-large-size);
+      line-height: var(--font-title-large-lh);
+      font-weight: var(--font-title-large-weight);
     }
   }
 
@@ -758,18 +792,6 @@
     border-radius: var(--radius-full);
   }
 
-  /* The component rounds a stepper's outer corners to the field's radius, so its
-     focus ring follows them; on the pill those corners are the pill's. */
-  .pdp-cart__step:first-child {
-    border-start-start-radius: var(--radius-full);
-    border-end-start-radius: var(--radius-full);
-  }
-
-  .pdp-cart__step:last-child {
-    border-start-end-radius: var(--radius-full);
-    border-end-end-radius: var(--radius-full);
-  }
-
   /* The pickup row (.item--muted) and the accordion both take the recessed skin:
      the buy column sits on the secondary surface, so a default (secondary) panel
      would be the page. Own class beside the component's, not a descendant. */
@@ -815,6 +837,108 @@
      the next product row (there isn't one). */
   .pdp-related__grid .shop-card {
     margin-bottom: 0;
+  }
+
+  /* ── Larger view ──────────────────────────────────────────────────────────
+     A full-screen panel rather than the Dialog's centred card: the point is the
+     photograph at the biggest size the window allows. The gallery node itself
+     moves in here, so everything it knows (which slide, which colour, its
+     transform) comes with it. */
+  .pdp-zoom {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .pdp-zoom__inner {
+    display: grid;
+    position: relative;
+    place-content: center;
+    height: 100%;
+    padding: var(--space-24);
+  }
+
+  .pdp-zoom__close {
+    position: absolute;
+    z-index: 1;
+    top: var(--space-24);
+    inset-inline-end: var(--space-24);
+  }
+
+  /* The photograph is square, so the window's height is what limits it: everything
+     else in the panel is held back and the rest is the image. 10rem is the rail
+     (96), the gallery's gap to it (16) and the panel's own padding (2 x 24). */
+  .pdp-zoom__slot {
+    width: min(92vw, calc(100dvh - 10rem));
+  }
+
+  /* Inside the panel the rail sits under the image and centred, whatever it does
+     on the page (a column at lg, dots below it). */
+  .pdp-zoom .pdp-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .pdp-zoom .pdp-rail:not([hidden]) {
+    order: 1;
+    margin: 0;
+  }
+
+  .pdp-zoom .pdp-thumbs {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  /* The rail's height cap belongs to the page's column, not to a row. Nothing
+     clips in the panel either: the row of tiles fits, so the scroll container has
+     nothing to scroll and no reason to cut a tile or its ring off. */
+  .pdp-zoom .pdp-rail__viewport {
+    aspect-ratio: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* The bar goes with the scrolling. */
+  .pdp-zoom .pdp-rail__bar {
+    display: none;
+  }
+
+  /* A thumb is a fixed tile here rather than a share of a column. */
+  .pdp-zoom .pdp-thumb {
+    width: var(--pdp-thumb-max);
+  }
+
+  /* The arrows stay put in the panel: it's the one place where they're the whole
+     way through the set, so hiding them until the pointer moves would be hiding
+     the controls. They wrap rather than disable (product.js), so neither ever
+     needs the greyed-out end state either.
+
+     Fixed, not absolute: in the panel they belong to the window's edges rather
+     than to the photograph's, and a fixed child of a modal positions against the
+     viewport. They stay off phones, where the base rule already drops them and
+     the gesture is a swipe. */
+  .pdp-zoom .pdp-gallery__control {
+    position: fixed;
+    opacity: 1;
+  }
+
+  .pdp-zoom .carousel__control--prev.pdp-gallery__control {
+    inset-inline-start: var(--space-16);
+  }
+
+  .pdp-zoom .carousel__control--next.pdp-gallery__control {
+    inset-inline-end: var(--space-16);
+  }
+
+  /* Nothing to zoom into from inside the panel. */
+  .pdp-zoom .pdp-gallery__zoom {
+    display: none;
+  }
+
+  .pdp-zoom .pdp-gallery__slide {
+    cursor: default;
   }
 
   /* Forced colors (Windows High Contrast): the plates lose their fill and the

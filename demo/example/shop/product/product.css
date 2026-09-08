@@ -349,9 +349,9 @@
 
   /* The plate lives on the photograph, not on the tile: it's the fill behind a shot
      that hasn't loaded, and it stays white in both themes because the shots are
-     photographed on white. Nothing is inset here: every product shot carries 10%
-     of white of its own (baked into the file), so the breathing room comes with
-     the picture at any size and no tile has to add its own. */
+     photographed on white. Nothing is inset here: every product shot carries 15% of
+     white a side of its own (baked into the file), so the breathing room comes
+     with the picture at any size and no tile has to add its own. */
   .pdp-tile__img {
     display: block;
     width: 100%;
@@ -615,9 +615,12 @@
     min-width: 0;
   }
 
-  .pdp-buy__offer {
+  /* Name, price and colour belong closer together than to anything below them, so
+     they're one group with its own gap rather than a margin on any of them: the
+     column keeps 24 between groups and this holds 16 inside. */
+  .pdp-buy__intro {
     display: grid;
-    gap: var(--space-12);
+    gap: var(--space-16);
   }
 
   /* No gap: the brand reads as the first line of the product's name, so the two
@@ -638,9 +641,13 @@
   .pdp-buy__brand {
     justify-self: start;
     color: var(--ink-primary);
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
-    line-height: var(--font-body-small-emphasized-lh);
+
+    /* The brand is the headline here and the product's name reads under it, so it
+       takes title-large and its weight. The <h1> is still the name: what changes
+       is which line is loudest, not which one names the page. */
+    font-size: var(--font-title-large-size);
+    font-weight: var(--font-title-large-weight);
+    line-height: var(--font-title-large-lh);
     text-decoration: none;
   }
 
@@ -656,23 +663,22 @@
     border-radius: var(--radius-sm);
   }
 
-  /* The product, no colour in it: the swatch row under it already says which one,
-     and the Shop card's own variant line was repeating it. Base (mobile):
-     title-medium 28, title-large 32 from md. */
+  /* The whole name, colour included: "Cover Side Chair, oak". Body small at its
+     plain weight, one size at every width: the caps above it and the price under
+     it carry the emphasis, so the name itself can just be read. */
   .pdp-buy__title {
     margin: 0;
     color: var(--ink-primary);
-    font-size: var(--font-title-medium-size);
-    line-height: var(--font-title-medium-lh);
-    font-weight: var(--font-title-medium-weight);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
   }
 
-  @media (min-width: 768px) {
-    .pdp-buy__title {
-      font-size: var(--font-title-large-size);
-      line-height: var(--font-title-large-lh);
-      font-weight: var(--font-title-large-weight);
-    }
+  /* The colour is part of the name here rather than a label, so it doesn't carry
+     the picker's capital. Cased in CSS because product.js writes the one string
+     into both places. */
+  .pdp-buy__variant {
+    text-transform: lowercase;
   }
 
   /* Price and the excl.-VAT line on one baseline: the second figure is a note on
@@ -687,9 +693,9 @@
 
   .pdp-buy__amount {
     color: var(--ink-primary);
-    font-size: var(--font-title-small-size);
-    line-height: var(--font-title-small-lh);
-    font-weight: var(--font-title-small-weight);
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
   }
 
   /* Stock badge plus the lead time it implies. The badge carries the state (green
@@ -722,25 +728,33 @@
     min-width: 0;
   }
 
+  /* Flex, so the distance to the value is a gap of 8 rather than the word space
+     the markup carries (about 4 at this size). Whitespace-only text doesn't become
+     a flex item, so the label and the value are the only two. */
   .pdp-color__legend {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-8);
     padding: 0;
     color: var(--ink-primary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-weight-semibold);
   }
 
+  /* The label carries the weight, the value reads as the answer to it. */
   .pdp-color__value {
-    font-weight: var(--font-caption-medium-emphasized-weight);
+    font-weight: var(--font-caption-medium-weight);
   }
 
   /* A legend is out of flow, so the gap to the swatches is its margin. The tiles
-     bring their own ring room, so the row needs nothing else; 12 is the distance
-     to the tile, which is where the ring sits. */
+     bring their own ring room, so the row needs nothing else; 8 is the distance to
+     the tile, which is where the ring sits. */
   .pdp-color__list {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-8);
-    margin: var(--space-12) 0 0;
+    margin: var(--space-8) 0 0;
   }
 
   /* Add to cart and Save on one row. Both grow, and both can wrap to their own
@@ -824,9 +838,62 @@
     width: 33%;
   }
 
-  /* The listing's grid caps at four columns, which is exactly the related row, so
-     it needs nothing here beyond dropping the bottom margin its cards carry for
-     the next product row (there isn't one). */
+  /* One scrolling row at every width instead of the listing's column ladder: the
+     cards hold a fixed width and the window decides how many you see, with the
+     next one peeking at the edge. The width is exactly what six columns come to
+     inside the content cap, so the widest window shows those six and has nothing
+     left to scroll (a flat 240 overshot it by 4 and left the row twitching); a
+     phone shows one and a half and scrolls. Derived from the cap rather than typed
+     out, so it stays true on a page at the narrower xl tier.
+
+     Column flow with auto columns rather than a fixed count, so the row follows
+     however many cards the markup carries. The cards' three subgrid rows still
+     resolve: each one spans the same three implicit rows, so titles and prices
+     stay on their shared lines. */
+  .pdp-related__grid {
+    grid-auto-flow: column;
+    grid-auto-columns: calc((var(--container-max) - 5 * var(--space-20)) / 6);
+    grid-template-columns: none;
+    overflow-x: auto;
+
+    /* No bar: the peeking card is the affordance, and the row is dragged rather
+       than scrolled by hand (product.js). Tabbing a card still scrolls it into
+       view, so nothing depends on the bar being there. */
+    scrollbar-width: none;
+  }
+
+  .pdp-related__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Dragging shouldn't select the titles it passes over. */
+  .pdp-related__grid.is-dragging {
+    user-select: none;
+  }
+
+  /* Pulled past an end, the cards move rather than the scroller: a scroll
+     container is clamped by the browser, so the resistance the carousel gets for
+     free has to be drawn. Shifting the children keeps the clip box (and the page
+     edges it lines up with) where it is. product.js sets the distance and eases it
+     back to nothing on release. */
+  .pdp-related__grid > * {
+    translate: var(--pdp-related-pull, 0);
+  }
+
+  /* Below md the row runs to both window edges: on a phone the scroll is the whole
+     point, and stopping it at the content column left a strip of dead surface the
+     cards never reach. It gives back the wrap's own margin as padding, so the
+     first card still starts on the page's left edge and the last one can scroll
+     clear of the right. */
+  @media (max-width: 767.98px) {
+    .pdp-related__grid {
+      margin-inline: calc(-1 * var(--grid-margin, 1rem));
+      padding-inline: var(--grid-margin, 1rem);
+    }
+  }
+
+  /* The cards are the listing's own, so all they need here is to drop the bottom
+     margin they carry for the next product row (there isn't one). */
   .pdp-related__grid .shop-card {
     margin-bottom: 0;
   }
@@ -842,11 +909,11 @@
        the box, as everywhere else. */
     --pdp-zoom-thumb: 56px;
 
-    /* What the rail asks the picture to leave at the bottom: a tile, the room its
-       ring and focus outline need on both sides, and the gap between the two. The
-       rail's own distance from the window's edge is the panel's padding, which the
-       slot already subtracts twice. */
-    --pdp-zoom-rail: calc(var(--pdp-zoom-thumb) + 2 * var(--pdp-focus-room) + var(--space-16));
+    /* What the rail asks the picture to leave at the bottom: a tile and the gap
+       between the two. The strip is exactly as tall as a tile now, and the rail's
+       own distance from the window's edge is the panel's padding, which the slot
+       already subtracts twice. */
+    --pdp-zoom-rail: calc(var(--pdp-zoom-thumb) + var(--space-16));
 
     /* The photograph's own size: the biggest square that fits 16 from the window's
        edges with the rail's band held back, and never past the largest shot we
@@ -1039,13 +1106,15 @@
     justify-content: center;
   }
 
-  /* The rail's height cap belongs to the page's column, not to a row. Nothing
-     clips in the panel either: the row of tiles fits, so the scroll container has
-     nothing to scroll and no reason to cut a tile or its ring off. */
+  /* The rail's height cap belongs to the page's column, not to a row, and nothing
+     clips in the panel: the row of tiles fits, so the scroll container has nothing
+     to scroll and no reason to cut a tile or its ring off. Which is why the ring's
+     room is only on the inline axis here: block padding would be spacing, and it
+     made the strip 10 taller than the tiles in it. */
   .pdp-zoom .pdp-rail__viewport {
     aspect-ratio: auto;
     max-height: none;
-    padding: var(--pdp-focus-room);
+    padding: 0 var(--pdp-focus-room);
     overflow: visible;
   }
 

@@ -100,6 +100,19 @@
     }
   }
 
+  /* base.css is the docs site's chrome, and one of its base rules gives any
+     `section + section` a hairline and 3.5rem of space, which is right for a
+     documentation page's stacked sections and wrong here: the mini-site's sections
+     are page layout, and their rhythm belongs to whatever lays them out (the
+     product page's band owns its own 6rem gap). Opted out once for the whole
+     mini-site rather than per page, so the next screen with two sections doesn't
+     inherit a divider nobody drew. */
+  .ex section + section {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
   /* Dark theme: pure-black drop (a neutral tint wouldn't read on a dark surface),
      plus the top-rim highlight, the dark counterpart to a drop shadow's top edge. */
   :root[data-theme="dark"] .ex {

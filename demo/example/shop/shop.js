@@ -353,6 +353,22 @@
 
   empty.querySelector("[data-shop-clear]")?.addEventListener("click", clearAll);
 
+  // Deep link from a product's brand line: ?brand=<label> lands on the listing
+  // with that brand already checked. Matched on the label the option shows, which
+  // is the same string apply() compares against, so there's no table to keep in
+  // step. Its group opens too, so the filter says where the narrowing came from,
+  // and apply() below picks it up like any other checked box.
+  const wanted = new URLSearchParams(location.search).get("brand")?.toLowerCase();
+  if (wanted) {
+    const box = [...filter.querySelectorAll('[data-filter="brand"] input[type="checkbox"]')].find(
+      (b) => labelOf(b).toLowerCase() === wanted
+    );
+    if (box) {
+      box.checked = true;
+      box.closest("details")?.setAttribute("open", "");
+    }
+  }
+
   apply();
 })();
 

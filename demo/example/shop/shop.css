@@ -342,12 +342,12 @@
        between product rows. Because the cards are a subgrid (see .shop-card),
        the parent's row-gap is the *internal* one, and the card derives its
        bottom margin from the difference. Change either value and the other
-       stays correct. Columns sit 16 apart, tighter than the layout gutter: the
+       stays correct. Columns sit 20 apart, tighter than the layout gutter: the
        rows are the reading rhythm here, so they get the wider space. */
     --shop-card-gap: var(--space-8);
     --shop-row-gap: var(--space-32);
 
-    column-gap: var(--space-16);
+    column-gap: var(--space-20);
     row-gap: var(--shop-card-gap);
   }
 
@@ -419,7 +419,7 @@
   }
 
   /* Square white tile, the raised surface on the band. No padding: every product
-     shot carries 10% of white of its own now (baked into the file), so a tile
+     shot carries 15% of white a side of its own now (baked into the file), so a tile
      inset on top of that only made the artwork smaller. */
   .shop-card__media {
     display: block;

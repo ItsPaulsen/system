@@ -189,7 +189,8 @@
           <h2 class="subhead">Multiple items</h2>
           <p class="section-note">
             Set <code>--carousel-cols</code> to show more than one at a time, usually per breakpoint
-            (2 on phones, 3 on desktop here). <code>--carousel-gap</code> sets the space between.
+            (2 on phones, 3 on desktop here). <code>--carousel-gap</code> sets the space between,
+            and <code>--carousel-slide</code> the settle's timing, which the JS reads off the root.
           </p>
           <div class="example" data-example>
             <div class="component-preview">
@@ -285,8 +286,9 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             <code>initCarousel()</code> translates the track: pointer drag (mouse and touch) with a
-            rubber-band past the ends, snap-to-item on release, plus the buttons, arrow keys, and
-            the "Slide N of M" region.
+            rubber-band past the ends, plus the buttons, arrow keys, and the "Slide N of M" region.
+            A release commits if it crossed 30% of the viewport or was quick, so a slow drag that
+            covers half the window lands and a short flick still counts.
           </p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">data-carousel</span> <span class="tok-prop">role</span>=<span class="tok-str">"group"</span> <span class="tok-prop">aria-roledescription</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__control carousel__control--prev"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Previous slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>

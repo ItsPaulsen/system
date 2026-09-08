@@ -8,6 +8,7 @@
 
   const out = {
     color: document.querySelector("[data-pdp-color]"),
+    variant: document.querySelector("[data-pdp-variant]"),
     price: document.querySelector("[data-pdp-price]"),
     stores: document.querySelector("[data-pdp-stores]"),
     badge: document.querySelector("[data-pdp-stock-badge]"),
@@ -39,6 +40,10 @@
   const render = (input) => {
     const d = input.dataset;
     set(out.color, d.color);
+    // The colour is part of the product's name as well as the picker's value, so
+    // the title carries it. Lowercased in CSS, not here, since the picker shows
+    // the same string capitalised.
+    set(out.variant, `, ${d.color}`);
     set(out.price, d.price);
     set(out.stores, d.stores);
 
@@ -114,6 +119,21 @@
       if (input.checked) render(input);
     })
   );
+
+  // Hovering a swatch names it in the legend, so the row can be read without
+  // clicking through it. Only the legend previews: the title and the price belong
+  // to the colour that is actually selected. The checked name comes back on the
+  // way out, and a hover that turns into a click needs nothing here, since the
+  // change above re-renders everything.
+  const list = document.querySelector(".pdp-color__list");
+  list?.addEventListener("mouseover", (e) => {
+    const swatch = e.target.closest(".pdp-swatch")?.querySelector(".pdp-swatch__input");
+    if (swatch) set(out.color, swatch.dataset.color);
+  });
+  list?.addEventListener("mouseleave", () => {
+    const checked = inputs.find((i) => i.checked);
+    if (checked) set(out.color, checked.dataset.color);
+  });
 
   // Add to cart swaps the button for the quantity field in the same slot: the two
   // are the same pill, so what changes is the control's contents. Stepping the
@@ -253,12 +273,19 @@
     // has long since run, so its data-carousel is never initialised. inert and
     // aria-hidden keep it out of the tab order, the accessibility tree, and the
     // delegated open handler its viewport would otherwise still match.
+    // Where the page was when the panel opened. The panel is one carousel with the
+    // page, so without this the slide you left it on came back with it: open on
+    // the pack shot, look through to the third, and the page had moved to the
+    // third too. The larger view is a look at the set, not a change to the page.
+    let from = 0;
     let stand = null;
     const enter = () => {
       // Already in the panel: the photograph carries the open hook with it, so a
       // click on it in there matches too. Without this that click stood a second
       // copy up on the page, and only the newest one was ever taken down again.
       if (gallery.parentNode === slot) return;
+      const current = gallery.querySelector('[data-carousel-goto][aria-current="true"]');
+      from = current ? Number(current.dataset.carouselGoto) : 0;
       stand = gallery.cloneNode(true);
       stand.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
       stand.inert = true;
@@ -272,6 +299,12 @@
       stand?.remove();
       stand = null;
       remeasure();
+      // After the move, so the track is measured against the page's own width, and
+      // placed rather than slid: the page shouldn't animate to a slide it never
+      // left. This also puts the index the resize re-snaps to back where it was.
+      gallery.dispatchEvent(
+        new CustomEvent("carousel:goto", { detail: { index: from, animate: false } })
+      );
     };
 
     // The panel fades out as well as in, so the gallery leaves on the fade's tail
@@ -302,4 +335,126 @@
   if (wanted) wanted.checked = true;
   const current = inputs.find((i) => i.checked);
   if (current) render(current);
+})();
+
+// The related row is a scroll container rather than a carousel: its cards are the
+// listing's own, and their three subgrid rows (what keeps titles and prices on
+// shared lines) only resolve inside a grid, which a flex track isn't. Touch
+// already scrolls it, so this is the pointer drag, so it answers a mouse the way
+// the gallery does. Nothing here snaps: a fixed-width row of six is a shelf to
+// push along, not a set of slides to land on.
+(function () {
+  const row = document.querySelector(".pdp-related__grid");
+  if (!row) return;
+
+  const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
+
+  let down = false;
+  let startX = 0;
+  let startLeft = 0;
+  let moved = false;
+  let frame;
+  let pull = 0;
+
+  // How far the cards sit past where the scroll can go. The scroller is clamped by
+  // the browser, so this is drawn by shifting the children (see product.css).
+  const setPull = (px) => {
+    pull = px;
+    row.style.setProperty("--pdp-related-pull", `${px}px`);
+  };
+
+  // Where each card sits in the scroll, measured from the first one so the row's
+  // own start padding (it bleeds to the window edge below md) counts as zero.
+  const stops = () => {
+    const base = row.firstElementChild?.offsetLeft || 0;
+    return [...row.children].map((c) => c.offsetLeft - base);
+  };
+
+  // Ease out, and short: this is a correction of at most a card's width, not a
+  // slide crossing the window, so it lands rather than travels. Any overpull
+  // unwinds on the same curve, so the row arrives and straightens as one move.
+  const glide = (to) => {
+    const fromScroll = row.scrollLeft;
+    const fromPull = pull;
+    const dist = to - fromScroll;
+    if (Math.abs(dist) < 1 && Math.abs(fromPull) < 1) return;
+    const ms = Math.min(420, 140 + Math.max(Math.abs(dist), Math.abs(fromPull)) * 0.6);
+    const t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / ms);
+      const eased = 1 - (1 - p) ** 3;
+      row.scrollLeft = fromScroll + dist * eased;
+      setPull(fromPull * (1 - eased));
+      if (p < 1) frame = requestAnimationFrame(step);
+    };
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(step);
+  };
+
+  // Let go and the nearest card lands flush with the row's start, so what you see
+  // is whole cards and one peeking. At either end it stays where it is: the row is
+  // already against something, and pulling it off that edge to align a card would
+  // undo the drag. It still glides, to let any overpull go.
+  const settle = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    const at = row.scrollLeft;
+    if (at <= 1 || at >= max - 1) {
+      glide(at);
+      return;
+    }
+    const near = stops().reduce(
+      (best, o) => (Math.abs(o - at) < Math.abs(best - at) ? o : best),
+      0
+    );
+    glide(Math.max(0, Math.min(max, near)));
+  };
+
+  row.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0 || e.pointerType !== "mouse") return;
+    cancelAnimationFrame(frame); // taking hold of a row still settling
+    down = true;
+    moved = false;
+    startX = e.clientX;
+    startLeft = row.scrollLeft;
+    row.setPointerCapture(e.pointerId);
+    row.classList.add("is-dragging");
+    e.preventDefault(); // the cards are links: stop the native drag-and-drop
+  });
+
+  row.addEventListener("pointermove", (e) => {
+    if (!down) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 3) moved = true;
+    const max = row.scrollWidth - row.clientWidth;
+    const want = startLeft - dx;
+    const to = Math.max(0, Math.min(max, want));
+    row.scrollLeft = to;
+    // Whatever the scroll couldn't take is the overpull, resisted.
+    setPull((to - want) * RESIST);
+  });
+
+  const endDrag = (e) => {
+    if (!down) return;
+    down = false;
+    row.releasePointerCapture?.(e.pointerId);
+    row.classList.remove("is-dragging");
+    if (!moved) {
+      if (pull) glide(row.scrollLeft);
+      return;
+    }
+    settle();
+    // Let go over a card and the click would follow its link. preventDefault
+    // alone wouldn't do: the cards are anchors, but a page could bind a listener
+    // to them too, so stop the event as well (same as the carousel's own guard).
+    const swallow = (c) => {
+      c.preventDefault();
+      c.stopPropagation();
+    };
+    row.addEventListener("click", swallow, { capture: true });
+    requestAnimationFrame(() => row.removeEventListener("click", swallow, { capture: true }));
+  };
+
+  row.addEventListener("pointerup", endDrag);
+  row.addEventListener("pointercancel", endDrag);
+  row.addEventListener("lostpointercapture", endDrag);
 })();

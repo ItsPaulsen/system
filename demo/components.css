@@ -4433,6 +4433,16 @@
     min-height: 48px;
   }
 
+  /* A stepper doesn't light the whole field. The field's border says "text goes
+   here", and the trigger it inherits from Input is :focus-within, which any of
+   the three controls satisfies, so pressing + or − lit the field as though the
+   value were being typed. Only the value cell brings it back; a stepper shows its
+   own round ring inside its circle, which is its focus indicator. */
+  .number-field__control:focus-within:not(:has(.number-field__input:focus)) {
+    border-color: var(--ink-tertiary);
+    box-shadow: none;
+  }
+
   /* The stepper keeps the full strip as its hit area, but every state it shows is a
    32 circle drawn inside that (::before below): nothing square fights the field's
    corners, it works as well on the pill variant as on the default rectangle, and
@@ -4547,15 +4557,6 @@
     field-sizing: content;
     text-align: center;
     font-variant-numeric: tabular-nums;
-  }
-
-  /* The value cell alone shows the standard input field border on focus (the
-   whole-field border is cancelled above). animation:none opts out of the global
-   focus-ring-converge so it appears instantly, like the container-focused inputs. */
-  .number-field__input:focus-visible {
-    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--primary-foreground);
-    outline: calc(var(--border-width) * 2) solid transparent;
-    animation: none;
   }
 
   /* Smaller 32px variant: tighter value floor and side padding. */

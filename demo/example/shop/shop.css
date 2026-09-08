@@ -46,14 +46,15 @@
   }
 
   .shop-hero__intro {
-    margin: var(--space-24) 0 0;
+    /* 8 down from the title on mobile, 12 from md (below). */
+    margin: var(--space-8) 0 0;
     max-width: 36rem;
     color: var(--ink-secondary);
 
-    /* Base (mobile): body-medium 18px, up to body-large 20 at md. */
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
-    font-weight: var(--font-body-medium-weight);
+    /* Base (mobile, < md): body-small 16px, body-medium 18 from md up. */
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
   }
 
   @media (min-width: 768px) {
@@ -64,9 +65,10 @@
     }
 
     .shop-hero__intro {
-      font-size: var(--font-body-large-size);
-      line-height: var(--font-body-large-lh);
-      font-weight: var(--font-body-large-weight);
+      margin-top: var(--space-12);
+      font-size: var(--font-body-medium-size);
+      line-height: var(--font-body-medium-lh);
+      font-weight: var(--font-body-medium-weight);
     }
   }
 

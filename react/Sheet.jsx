@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
+import ScrollArea from "./ScrollArea";
 
 // Panel that slides in from a screen edge, built on native <dialog> via showModal(), so the
 // focus trap, Esc-to-close, and inert background come for free. side="left" flips it to the
 // opposite edge. Parts: Sheet / SheetTrigger / SheetContent / SheetHeader / SheetTitle /
-// SheetClose / SheetBody. Styling is the vanilla .sheet classes.
+// SheetClose / SheetBody. The body scrolls through ScrollArea, so its bar matches on every
+// platform. Styling is the vanilla .sheet classes.
 const SheetContext = createContext(null);
 
 export function Sheet({ children }) {
@@ -47,7 +49,13 @@ export function SheetContent({ side, className, children, ...rest }) {
     const lock = () => {
       root.style.setProperty("--scrollbar-comp", window.innerWidth - root.clientWidth + "px");
       root.classList.add("is-scroll-locked");
-      dlg.querySelector(".sheet__inner")?.focus({ preventScroll: true });
+      // The body's viewport takes focus where it exists, so the arrow keys scroll
+      // it; the inner is the fallback holder for a sheet with no body.
+      const holder = dlg.querySelector(".sheet__scroll") ?? dlg.querySelector(".sheet__inner");
+      if (holder) {
+        holder.tabIndex = -1;
+        holder.focus({ preventScroll: true });
+      }
     };
     const unlock = () => {
       // Overlays nest, so release the lock only when no other <dialog> is open.
@@ -109,8 +117,8 @@ export function SheetTitle({ children, ...rest }) {
 
 export function SheetBody({ children, ...rest }) {
   return (
-    <div className="sheet__body" {...rest}>
+    <ScrollArea className="sheet__body" viewportClassName="sheet__scroll" {...rest}>
       {children}
-    </div>
+    </ScrollArea>
   );
 }

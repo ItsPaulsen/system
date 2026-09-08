@@ -359,7 +359,10 @@
           <p class="section-note">
             <code>data-scroll-area</code> wires it. The bar is absolutely positioned, so revealing
             it never reflows the content. No <code>tabindex</code> needed: focusing a control inside
-            scrolls it into view.
+            scrolls it into view. The <code>.scroll-area</code> class only makes the root a
+            positioning context, so a component that already has one can be the root itself:
+            <a href="/demo/components/dialog/">Dialog</a> and
+            <a href="/demo/components/sheet/">Sheet</a> both do.
           </p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area"</span> <span class="tok-prop">data-scroll-area</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__viewport"</span><span class="tok-key">&gt;</span>…content…<span class="tok-key">&lt;/div&gt;</span>

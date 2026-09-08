@@ -246,7 +246,7 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  .blog__sheet .sheet__body {
+  .blog__sheet .sheet__scroll {
     padding-top: 0;
   }
 

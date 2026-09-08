@@ -500,11 +500,11 @@
     display: block;
   }
 
-  /* In the sheet the .sheet__body is already the scroll container, so the rail's
-     viewport must not be a second one nested inside it: two of them means the
-     inner one briefly overflows while a group animates open, flashing the bar in
-     and out. Handing the scrolling to the sheet also means the viewport stops
-     clipping, so the focus rings need no inset here. */
+  /* In the sheet the .sheet__body is its own scroll area, so the rail's viewport
+     must not be a second one nested inside it: two of them means the inner one
+     briefly overflows while a group animates open, flashing the bar in and out.
+     Handing the scrolling to the sheet also means the viewport stops clipping,
+     so the focus rings need no inset here. */
   .sheet .ex-filter > .scroll-area__viewport {
     padding-inline: 0;
     overflow: visible;

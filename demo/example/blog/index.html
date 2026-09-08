@@ -786,7 +786,12 @@
                 </svg>
               </button>
             </header>
-            <div class="sheet__body" data-blog-filter-slot></div>
+            <div class="sheet__body" data-scroll-area>
+              <div class="scroll-area__viewport sheet__scroll" data-blog-filter-slot></div>
+              <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__thumb"></div>
+              </div>
+            </div>
           </div>
         </dialog>
       </section>

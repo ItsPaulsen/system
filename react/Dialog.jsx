@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
+import ScrollArea from "./ScrollArea";
 
-// Compound dialog backed by showModal(), so focus trap, Esc, and inert backdrop come free.
+// Compound dialog backed by showModal(), so focus trap, Esc, and inert backdrop come free. The
+// content column scrolls through ScrollArea, so its bar matches on every platform.
 const DialogContext = createContext(null);
 
 export function Dialog({ children }) {
@@ -49,7 +51,13 @@ export function DialogContent({ children, ...rest }) {
     const lock = () => {
       root.style.setProperty("--scrollbar-comp", window.innerWidth - root.clientWidth + "px");
       root.classList.add("is-scroll-locked");
-      dlg.querySelector(".dialog__inner")?.focus({ preventScroll: true });
+      // Park focus on the scrolling viewport, so no button shows a stray ring on
+      // open and the arrow keys scroll the content.
+      const holder = dlg.querySelector(".dialog__scroll");
+      if (holder) {
+        holder.tabIndex = -1;
+        holder.focus({ preventScroll: true });
+      }
     };
     const unlock = () => {
       // Overlays nest, so release the lock only when no other <dialog> is open.
@@ -87,9 +95,9 @@ export function DialogContent({ children, ...rest }) {
       aria-describedby={hasDesc ? descId : undefined}
       {...rest}
     >
-      <div className="dialog__inner" tabIndex={-1}>
+      <ScrollArea className="dialog__inner" viewportClassName="dialog__scroll">
         {children}
-      </div>
+      </ScrollArea>
     </dialog>
   );
 }

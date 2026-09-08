@@ -95,28 +95,139 @@
      Shared styling lives on .ex-filter in example.css; only what is this page's
      own is here. */
 
-  /* Price group: the readout above the two-handle slider. The readout is the
-     group's only value display, so it sits inside the body rather than beside
-     the summary, where a collapsed group would hide it. */
+  /* Price group: the two-handle slider over its pair of fields. They're the
+     group's only value display, so they sit inside the body rather than beside
+     the summary, where a collapsed group would hide them. */
   .shop-price {
     display: grid;
-    gap: var(--space-8);
+
+    /* minmax(0, 1fr), not the implicit `auto` column: an auto track floors at
+       its items' min-content, and the two fields' is wider than the rail, so the
+       track grew to fit them and the slider (100% of that track) got clipped
+       with them. This lets the track take the rail's width and the fields shrink
+       inside it. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-12);
 
     /* 8 above and below, so the 20 tall slider reads as one row in a list of
        40 tall option rows. */
     padding-block: var(--space-8);
   }
 
-  .shop-price__value {
+  /* Two fields with the range dash between them. Fixed at 88 rather than split
+     across the rail: it's wide enough for the catalogue's five digits, and the
+     pair stays the same size in the rail and in the mobile sheet. */
+  .shop-price__fields {
+    display: flex;
+    align-items: center;
+
+    /* One field to each edge with the dash floating between them, so the pair
+       frames the slider above rather than huddling at the start. The gap is the
+       floor for a narrow rail, where there's no free space left to spread. */
+    justify-content: space-between;
+    gap: var(--space-8);
+  }
+
+  .shop-price__field {
+    flex: none;
+    width: 88px;
+  }
+
+  /* 40, not the field default 48: same compact height the rail's find field
+     takes, so the pair reads as part of the option list rather than a form. */
+  .shop-price__control {
+    min-height: 40px;
+  }
+
+  /* 12 in from the sides, the 16 of the taller default field would crowd the
+     number at this height. */
+  .shop-price__control .input__element {
+    padding-inline: var(--space-12);
+  }
+
+  .shop-price__dash {
+    flex-shrink: 0;
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
-    color: var(--ink-primary);
+    color: var(--ink-secondary);
   }
 
   /* The rail is narrower than the component's default cap, so drop it and take
      the column. */
   .shop-price__slider {
     max-width: none;
+  }
+
+  /* ── Colour swatches ──────────────────────────────────────────────────────
+     A dot beside each colour option, so the list can be scanned by colour and
+     not only read. Decoration: it's aria-hidden and the label carries the name,
+     so nothing here has to be told apart to use the filter. The dot sits in the
+     .checkbox row's own 8 gap, between the box and the label.
+
+     These are the catalogue's product colours, not brand tokens, so the values
+     stay raw. A dot standing for a family (Tree, Brown) takes the tone the
+     family reads as, not one of its members. */
+  .shop-swatch {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    background: var(--swatch);
+
+    /* Hairline ring, so a pale dot (white, beige) still has an edge against the
+       rail; on a dark dot it reads as depth and nothing more. */
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink-primary) 15%, transparent);
+  }
+
+  /* the wood family: oak, ash, beech, birch, pine, walnut */
+  .shop-swatch[data-swatch="tree"] {
+    --swatch: #b5875a;
+  }
+
+  /* brown and cognac */
+  .shop-swatch[data-swatch="brown"] {
+    --swatch: #6b3f2a;
+  }
+
+  .shop-swatch[data-swatch="beige"] {
+    --swatch: #dccfb6;
+  }
+
+  .shop-swatch[data-swatch="black"] {
+    --swatch: #1a1c20;
+  }
+
+  /* slate */
+  .shop-swatch[data-swatch="grey"] {
+    --swatch: #8b9099;
+  }
+
+  .shop-swatch[data-swatch="white"] {
+    --swatch: #fff;
+  }
+
+  /* falu */
+  .shop-swatch[data-swatch="red"] {
+    --swatch: #8c3b31;
+  }
+
+  /* terracotta */
+  .shop-swatch[data-swatch="orange"] {
+    --swatch: #c4663a;
+  }
+
+  .shop-swatch[data-swatch="yellow"] {
+    --swatch: #e0b13c;
+  }
+
+  /* green and seaweed */
+  .shop-swatch[data-swatch="green"] {
+    --swatch: #3f6b4f;
+  }
+
+  /* north sea */
+  .shop-swatch[data-swatch="blue"] {
+    --swatch: #2c4a6b;
   }
 
   /* ── Active filter chips ──────────────────────────────────────────────────
@@ -574,7 +685,7 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  .shop__sheet .sheet__body {
+  .shop__sheet .sheet__scroll {
     padding-top: 0;
   }
 

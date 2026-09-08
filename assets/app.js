@@ -3131,6 +3131,19 @@ function initScrollAreas() {
       const ro = new ResizeObserver(update);
       ro.observe(viewport);
       [...viewport.children].forEach((child) => ro.observe(child));
+
+      // Content can also arrive after init: the sheet body is a scroll area, and
+      // the page moves the panel into it at its breakpoint. Watch for new
+      // children so their height changes are measured too, not just the first
+      // batch's.
+      new MutationObserver((records) => {
+        records.forEach((record) => {
+          record.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) ro.observe(node);
+          });
+        });
+        update();
+      }).observe(viewport, { childList: true });
     }
     window.addEventListener("resize", update);
 
@@ -3695,9 +3708,13 @@ function initDialogs() {
         dlg.addEventListener("close", unlockBodyScroll, { once: true });
         // showModal() auto-focuses the first focusable child (e.g. the close
         // button), which paints a stray focus ring on open. Move focus to a
-        // non-visible holder, the panel inner, so keyboard/Esc still work with
-        // nothing highlighted (matches the sidebar drawer).
-        const holder = dlg.querySelector(".sheet__inner, .dialog__inner");
+        // non-visible holder so keyboard/Esc still work with nothing highlighted
+        // (matches the sidebar drawer). The scrolling viewport is the holder
+        // where there is one, so the arrow keys scroll the content; a comma list
+        // would pick whichever came first in the DOM, hence the two queries.
+        const holder =
+          dlg.querySelector(".dialog__scroll, .sheet__scroll") ||
+          dlg.querySelector(".sheet__inner, .dialog__inner");
         if (holder) {
           holder.tabIndex = -1;
           holder.focus({ preventScroll: true });

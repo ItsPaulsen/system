@@ -103,11 +103,16 @@
                       </svg>
                     </button>
                   </header>
-                  <div class="sheet__body">
-                    <p style="margin: 0">
-                      A sheet holds a focused, secondary task beside the page (filters, details, a
-                      quick form) without a full navigation.
-                    </p>
+                  <div class="sheet__body" data-scroll-area>
+                    <div class="scroll-area__viewport sheet__scroll">
+                      <p style="margin: 0">
+                        A sheet holds a focused, secondary task beside the page (filters, details, a
+                        quick form) without a full navigation.
+                      </p>
+                    </div>
+                    <div class="scroll-area__bar" aria-hidden="true">
+                      <div class="scroll-area__thumb"></div>
+                    </div>
                   </div>
                 </div>
               </dialog>
@@ -131,10 +136,15 @@
                       </svg>
                     </button>
                   </header>
-                  <div class="sheet__body">
-                    <p style="margin: 0">
-                      Slides from the inline-start edge, handy for a menu drawer.
-                    </p>
+                  <div class="sheet__body" data-scroll-area>
+                    <div class="scroll-area__viewport sheet__scroll">
+                      <p style="margin: 0">
+                        Slides from the inline-start edge, handy for a menu drawer.
+                      </p>
+                    </div>
+                    <div class="scroll-area__bar" aria-hidden="true">
+                      <div class="scroll-area__thumb"></div>
+                    </div>
                   </div>
                 </div>
               </dialog>
@@ -180,7 +190,9 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             Compound parts over native <code>&lt;dialog&gt;</code>. <code>side="left"</code> flips
-            the edge; the dialog owns the focus trap and dismissal.
+            the edge; the dialog owns the focus trap and dismissal. <code>SheetBody</code> is a
+            <a href="/demo/components/scroll-area/">Scroll area</a>, so its bar looks the same on
+            every platform.
           </p>
           <div data-source="/react/Sheet.jsx"></div>
         </section>
@@ -195,7 +207,12 @@
       <span class="tok-key">&lt;h2</span> <span class="tok-prop">class</span>=<span class="tok-str">"sheet__title"</span><span class="tok-key">&gt;</span>Filters<span class="tok-key">&lt;/h2&gt;</span>
       <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"sheet__close"</span> <span class="tok-prop">data-dialog-close</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Close"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>
     <span class="tok-key">&lt;/header&gt;</span>
-    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"sheet__body"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"sheet__body"</span> <span class="tok-prop">data-scroll-area</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__viewport sheet__scroll"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/div&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__bar"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span>
+        <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__thumb"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
+      <span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-key">&lt;/div&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/dialog&gt;</span>
 

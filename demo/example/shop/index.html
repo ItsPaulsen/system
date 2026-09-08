@@ -67,16 +67,14 @@
             <div class="scroll-area__viewport">
               <h2 class="ex-filter__title">Filter</h2>
 
-              <!-- Price is a two-handle range slider. min/max are the bounds of
-                   the real catalogue rounded out to the step, so both handles at
-                   the ends means "no price filter" and the chip stays away. -->
+              <!-- Price is a two-handle range slider over a pair of fields.
+                   min/max are the bounds of the real catalogue rounded out to the
+                   step, so both handles at the ends means "no price filter" and
+                   the chip stays away. -->
               <details class="ex-filter__group" name="shop-filter">
                 <summary class="ex-filter__head">Price</summary>
                 <div class="ex-filter__body">
                   <div class="shop-price">
-                    <output class="shop-price__value" data-shop-price-value
-                      >5 000 - 56 000 kr</output
-                    >
                     <div class="slider-range shop-price__slider" data-slider-range>
                       <input
                         class="slider-range__input"
@@ -96,6 +94,39 @@
                         value="56000"
                         aria-label="Maximum price"
                       />
+                    </div>
+
+                    <!-- The fields are the readout as well as an input: shop.js
+                         writes the handle values into them and reads a typed
+                         value back, clamped to the bounds and to each other. -->
+                    <div class="shop-price__fields">
+                      <label class="input shop-price__field">
+                        <span class="input__label sr-only">Minimum price in kr</span>
+                        <span class="input__container shop-price__control">
+                          <input
+                            class="input__element"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            value="5000"
+                            data-shop-price-field="min"
+                          />
+                        </span>
+                      </label>
+                      <span class="shop-price__dash" aria-hidden="true">-</span>
+                      <label class="input shop-price__field">
+                        <span class="input__label sr-only">Maximum price in kr</span>
+                        <span class="input__container shop-price__control">
+                          <input
+                            class="input__element"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            value="56000"
+                            data-shop-price-field="max"
+                          />
+                        </span>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -240,30 +271,8 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="tree" aria-hidden="true"></span>
                     <span class="checkbox__label">Tree</span>
-                  </label>
-                  <label class="checkbox">
-                    <span class="checkbox__box">
-                      <input
-                        name="shop-color-black"
-                        type="checkbox"
-                        class="checkbox__input"
-                        data-colors="black"
-                      />
-                      <svg
-                        class="checkbox__check"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12l5 5l10 -10" pathLength="1" />
-                      </svg>
-                    </span>
-                    <span class="checkbox__label">Black</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
@@ -286,6 +295,7 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="brown" aria-hidden="true"></span>
                     <span class="checkbox__label">Brown</span>
                   </label>
                   <label class="checkbox">
@@ -294,7 +304,7 @@
                         name="shop-color-beige"
                         type="checkbox"
                         class="checkbox__input"
-                        data-colors="beige natural eggshell"
+                        data-colors="beige"
                       />
                       <svg
                         class="checkbox__check"
@@ -309,15 +319,16 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="beige" aria-hidden="true"></span>
                     <span class="checkbox__label">Beige</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
                       <input
-                        name="shop-color-green"
+                        name="shop-color-black"
                         type="checkbox"
                         class="checkbox__input"
-                        data-colors="green seaweed"
+                        data-colors="black"
                       />
                       <svg
                         class="checkbox__check"
@@ -332,30 +343,8 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
-                    <span class="checkbox__label">Green</span>
-                  </label>
-                  <label class="checkbox">
-                    <span class="checkbox__box">
-                      <input
-                        name="shop-color-white"
-                        type="checkbox"
-                        class="checkbox__input"
-                        data-colors="white"
-                      />
-                      <svg
-                        class="checkbox__check"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12l5 5l10 -10" pathLength="1" />
-                      </svg>
-                    </span>
-                    <span class="checkbox__label">White</span>
+                    <span class="shop-swatch" data-swatch="black" aria-hidden="true"></span>
+                    <span class="checkbox__label">Black</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
@@ -378,15 +367,16 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="grey" aria-hidden="true"></span>
                     <span class="checkbox__label">Grey</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
                       <input
-                        name="shop-color-yellow"
+                        name="shop-color-white"
                         type="checkbox"
                         class="checkbox__input"
-                        data-colors="yellow"
+                        data-colors="white eggshell"
                       />
                       <svg
                         class="checkbox__check"
@@ -401,30 +391,8 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
-                    <span class="checkbox__label">Yellow</span>
-                  </label>
-                  <label class="checkbox">
-                    <span class="checkbox__box">
-                      <input
-                        name="shop-color-orange"
-                        type="checkbox"
-                        class="checkbox__input"
-                        data-colors="terracotta"
-                      />
-                      <svg
-                        class="checkbox__check"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12l5 5l10 -10" pathLength="1" />
-                      </svg>
-                    </span>
-                    <span class="checkbox__label">Orange</span>
+                    <span class="shop-swatch" data-swatch="white" aria-hidden="true"></span>
+                    <span class="checkbox__label">White</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
@@ -447,7 +415,80 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="red" aria-hidden="true"></span>
                     <span class="checkbox__label">Red</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-orange"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="terracotta"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="orange" aria-hidden="true"></span>
+                    <span class="checkbox__label">Orange</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-yellow"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="yellow"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="yellow" aria-hidden="true"></span>
+                    <span class="checkbox__label">Yellow</span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-green"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="green seaweed"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="green" aria-hidden="true"></span>
+                    <span class="checkbox__label">Green</span>
                   </label>
                   <label class="checkbox">
                     <span class="checkbox__box">
@@ -470,6 +511,7 @@
                         <path d="M5 12l5 5l10 -10" pathLength="1" />
                       </svg>
                     </span>
+                    <span class="shop-swatch" data-swatch="blue" aria-hidden="true"></span>
                     <span class="checkbox__label">Blue</span>
                   </label>
                 </div>
@@ -812,7 +854,7 @@
                 class="shop-card"
                 href="#"
                 data-category="chairs"
-                data-color="oak"
+                data-color="oak beige"
                 data-price="13056"
                 data-added="52"
               >
@@ -1000,7 +1042,7 @@
                 class="shop-card"
                 href="#"
                 data-category="chairs"
-                data-color="oak natural"
+                data-color="oak beige"
                 data-price="34883"
                 data-added="48"
               >
@@ -1224,7 +1266,7 @@
                 class="shop-card"
                 href="#"
                 data-category="chairs"
-                data-color="oak natural"
+                data-color="oak beige"
                 data-price="31378"
                 data-added="53"
               >
@@ -1522,7 +1564,7 @@
                 class="shop-card"
                 href="#"
                 data-category="chairs"
-                data-color="beige natural"
+                data-color="barley natural"
                 data-price="7639"
                 data-added="55"
               >
@@ -1551,43 +1593,6 @@
                 </div>
                 <span class="shop-card__meta">
                   <span class="shop-card__price">7 639 kr</span>
-                  <span class="shop-card__stores">4 stores</span>
-                </span>
-              </a>
-
-              <a
-                class="shop-card"
-                href="#"
-                data-category="chairs"
-                data-color="oak"
-                data-price="13056"
-                data-added="46"
-              >
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/mg501-cuba-chair-oak-400.webp 400w,
-                        /assets/images/products/mg501-cuba-chair-oak-640.webp 640w
-                      "
-                      sizes="(min-width: 1281px) 240px, (min-width: 1025px) 250px, (min-width: 768px) 28vw, 42vw"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/mg501-cuba-chair-oak-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                  <span class="shop-card__variant">MG501 Cuba Chair, oiled oak</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">13 056 kr</span>
                   <span class="shop-card__stores">4 stores</span>
                 </span>
               </a>
@@ -1919,7 +1924,12 @@
                 </svg>
               </button>
             </header>
-            <div class="sheet__body" data-shop-filter-slot></div>
+            <div class="sheet__body" data-scroll-area>
+              <div class="scroll-area__viewport sheet__scroll" data-shop-filter-slot></div>
+              <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__thumb"></div>
+              </div>
+            </div>
           </div>
         </dialog>
       </section>

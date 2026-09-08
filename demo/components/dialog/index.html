@@ -82,41 +82,51 @@
               </button>
 
               <dialog class="dialog" id="edit-dialog">
-                <div class="dialog__inner">
-                  <div class="dialog__header">
-                    <h2 class="dialog__title">Edit project</h2>
-                    <p class="dialog__text">Update the project name and visibility.</p>
+                <div class="dialog__inner" data-scroll-area>
+                  <div class="scroll-area__viewport dialog__scroll">
+                    <div class="dialog__header">
+                      <h2 class="dialog__title">Edit project</h2>
+                      <p class="dialog__text">Update the project name and visibility.</p>
+                    </div>
+                    <form class="dialog__form" id="edit-form" method="dialog" data-dirty-guard>
+                      <label class="input">
+                        <span class="input__label">Project name</span>
+                        <span class="input__container">
+                          <input
+                            name="project-name"
+                            class="input__element"
+                            type="text"
+                            value="Untitled"
+                          />
+                        </span>
+                      </label>
+                      <label class="input">
+                        <span class="input__label">Visibility</span>
+                        <span class="input__container input__container--select">
+                          <select name="visibility" class="input__element">
+                            <option>Private</option>
+                            <option>Team</option>
+                            <option>Public</option>
+                          </select>
+                        </span>
+                      </label>
+                    </form>
+                    <div class="dialog__actions">
+                      <button class="button button--secondary" type="button" data-dialog-close>
+                        Cancel
+                      </button>
+                      <button
+                        class="button button--primary"
+                        type="submit"
+                        form="edit-form"
+                        disabled
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
-                  <form class="dialog__form" id="edit-form" method="dialog" data-dirty-guard>
-                    <label class="input">
-                      <span class="input__label">Project name</span>
-                      <span class="input__container">
-                        <input
-                          name="project-name"
-                          class="input__element"
-                          type="text"
-                          value="Untitled"
-                        />
-                      </span>
-                    </label>
-                    <label class="input">
-                      <span class="input__label">Visibility</span>
-                      <span class="input__container input__container--select">
-                        <select name="visibility" class="input__element">
-                          <option>Private</option>
-                          <option>Team</option>
-                          <option>Public</option>
-                        </select>
-                      </span>
-                    </label>
-                  </form>
-                  <div class="dialog__actions">
-                    <button class="button button--secondary" type="button" data-dialog-close>
-                      Cancel
-                    </button>
-                    <button class="button button--primary" type="submit" form="edit-form" disabled>
-                      Save
-                    </button>
+                  <div class="scroll-area__bar" aria-hidden="true">
+                    <div class="scroll-area__thumb"></div>
                   </div>
                 </div>
               </dialog>
@@ -192,21 +202,26 @@
                 role="alertdialog"
                 aria-describedby="delete-dialog-text"
               >
-                <div class="dialog__inner">
-                  <div class="dialog__header">
-                    <h2 class="dialog__title">Delete project?</h2>
-                    <p class="dialog__text" id="delete-dialog-text">
-                      This permanently deletes the project and everything in it. You can't undo
-                      this.
-                    </p>
+                <div class="dialog__inner" data-scroll-area>
+                  <div class="scroll-area__viewport dialog__scroll">
+                    <div class="dialog__header">
+                      <h2 class="dialog__title">Delete project?</h2>
+                      <p class="dialog__text" id="delete-dialog-text">
+                        This permanently deletes the project and everything in it. You can't undo
+                        this.
+                      </p>
+                    </div>
+                    <div class="dialog__actions">
+                      <button class="button button--secondary" type="button" data-dialog-close>
+                        Cancel
+                      </button>
+                      <button class="button button--destructive" type="button" data-dialog-close>
+                        Delete
+                      </button>
+                    </div>
                   </div>
-                  <div class="dialog__actions">
-                    <button class="button button--secondary" type="button" data-dialog-close>
-                      Cancel
-                    </button>
-                    <button class="button button--destructive" type="button" data-dialog-close>
-                      Delete
-                    </button>
+                  <div class="scroll-area__bar" aria-hidden="true">
+                    <div class="scroll-area__thumb"></div>
                   </div>
                 </div>
               </dialog>
@@ -238,7 +253,9 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             Compound components over the native <code>&lt;dialog&gt;</code>, no extra dependencies.
-            <code>showModal()</code> gives the focus trap and inert backdrop for free.
+            <code>showModal()</code> gives the focus trap and inert backdrop for free. The content
+            column is a <a href="/demo/components/scroll-area/">Scroll area</a>, so a long dialog's
+            bar looks the same on every platform.
           </p>
           <div data-source="/react/Dialog.jsx"></div>
         </section>
@@ -248,11 +265,16 @@
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-dialog-open</span>=<span class="tok-str">"demo-dialog"</span><span class="tok-key">&gt;</span>Open dialog<span class="tok-key">&lt;/button&gt;</span>
 
 <span class="tok-key">&lt;dialog</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog"</span> <span class="tok-prop">id</span>=<span class="tok-str">"demo-dialog"</span><span class="tok-key">&gt;</span>
-  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__inner"</span><span class="tok-key">&gt;</span>
-    <span class="tok-key">&lt;h2</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__title"</span><span class="tok-key">&gt;</span>Delete project?<span class="tok-key">&lt;/h2&gt;</span>
-    <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__text"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/p&gt;</span>
-    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__actions"</span><span class="tok-key">&gt;</span>
-      <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span> <span class="tok-prop">data-dialog-close</span><span class="tok-key">&gt;</span>Cancel<span class="tok-key">&lt;/button&gt;</span>
+  <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__inner"</span> <span class="tok-prop">data-scroll-area</span><span class="tok-key">&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__viewport dialog__scroll"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;h2</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__title"</span><span class="tok-key">&gt;</span>Delete project?<span class="tok-key">&lt;/h2&gt;</span>
+      <span class="tok-key">&lt;p</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__text"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/p&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"dialog__actions"</span><span class="tok-key">&gt;</span>
+        <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"button button--secondary"</span> <span class="tok-prop">data-dialog-close</span><span class="tok-key">&gt;</span>Cancel<span class="tok-key">&lt;/button&gt;</span>
+      <span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-key">&lt;/div&gt;</span>
+    <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__bar"</span> <span class="tok-prop">aria-hidden</span>=<span class="tok-str">"true"</span><span class="tok-key">&gt;</span>
+      <span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"scroll-area__thumb"</span><span class="tok-key">&gt;&lt;/div&gt;</span>
     <span class="tok-key">&lt;/div&gt;</span>
   <span class="tok-key">&lt;/div&gt;</span>
 <span class="tok-key">&lt;/dialog&gt;</span></code></pre>

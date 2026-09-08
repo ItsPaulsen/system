@@ -57,7 +57,7 @@
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
   const priceSlider = document.querySelector(".shop-price__slider");
-  const priceValue = document.querySelector("[data-shop-price-value]");
+  const priceFields = [...document.querySelectorAll("[data-shop-price-field]")];
   const countEl = document.querySelector("[data-shop-count]");
   const nouns = document.querySelectorAll("[data-shop-noun]");
   const shownEl = document.querySelector("[data-shop-shown]");
@@ -124,6 +124,36 @@
   };
   const kr = (v) => `${String(v).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} kr`;
 
+  // The fields are the readout: apply() writes the handle values into them. The
+  // one being typed in is left alone, so a change somewhere else in the rail
+  // can't rewrite a half-typed number under the cursor.
+  const showPrice = ({ min, max }) => {
+    priceFields.forEach((field) => {
+      if (field === document.activeElement) return;
+      field.value = String(field.dataset.shopPriceField === "min" ? min : max);
+    });
+  };
+
+  // A typed field commits on change (blur or Enter): digits only, empty means
+  // the bound it belongs to, and the value is clamped to the bounds and then to
+  // the other handle, the clamp-not-swap rule the slider drag uses. The range
+  // input snaps what it's handed to its own step, and apply() writes that back,
+  // so the field can't end up showing a price the slider isn't on.
+  const commitPriceField = (field) => {
+    const [lower, upper] = priceInputs();
+    if (!lower || !upper) return;
+    const { min, max } = priceBounds();
+    const isMin = field.dataset.shopPriceField === "min";
+    const digits = field.value.replace(/\D/g, "");
+    const typed = digits === "" ? (isMin ? min : max) : Number(digits);
+    const value = Math.min(max, Math.max(min, typed));
+    if (isMin) lower.value = String(Math.min(value, Number(upper.value)));
+    else upper.value = String(Math.max(value, Number(lower.value)));
+    // Report it the way a drag does, so the slider repaints and the grid follows
+    // through the one path.
+    lower.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+
   // Put both handles back on the bounds and let the slider repaint itself, so
   // the fill and the readout follow without this file knowing how they work.
   const resetPrice = () => {
@@ -168,7 +198,7 @@
     nouns.forEach((n) => {
       n.textContent = matches.length === 1 ? "product" : "products";
     });
-    if (priceValue) priceValue.textContent = `${kr(price.min)} - ${kr(price.max)}`;
+    showPrice(price);
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 
@@ -248,8 +278,13 @@
   };
 
   filter.addEventListener("change", (e) => {
-    // The slider reports through slider-range:change below; its native change
-    // on release would run the same work a second time.
+    // A price field hands its value to the slider, which reports through
+    // slider-range:change below; the slider's own native change on release would
+    // run the same work a second time.
+    if (e.target.matches("[data-shop-price-field]")) {
+      commitPriceField(e.target);
+      return;
+    }
     if (!e.target.matches(".slider-range__input")) reset();
   });
 

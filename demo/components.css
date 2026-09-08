@@ -2111,19 +2111,35 @@
    free. Open with dialog.showModal(); app.js wires [data-dialog-open="id"] and
    [data-dialog-close], and a click on the backdrop closes it.
 
+   The content column is a scroll area (see Scroll area, whose block this needs
+   alongside this one): a modal is capped by the UA's max-height, so long content
+   has to scroll somewhere, and routing it through our own bar means it looks the
+   same everywhere instead of an overlay bar that hides itself on macOS and a
+   permanent gutter on Windows.
+
    Structure:
    <dialog class="dialog" id="demo-dialog">
-     <div class="dialog__inner">
-       <h2 class="dialog__title">Title</h2>
-       <p class="dialog__text">Supporting copy.</p>
-       <div class="dialog__actions">
-         <button class="button button--flat" data-dialog-close>Cancel</button>
-         <button class="button button--primary" data-dialog-close>Confirm</button>
+     <div class="dialog__inner" data-scroll-area>
+       <div class="scroll-area__viewport dialog__scroll">
+         <h2 class="dialog__title">Title</h2>
+         <p class="dialog__text">Supporting copy.</p>
+         <div class="dialog__actions">
+           <button class="button button--flat" data-dialog-close>Cancel</button>
+           <button class="button button--primary" data-dialog-close>Confirm</button>
+         </div>
+       </div>
+       <div class="scroll-area__bar" aria-hidden="true">
+         <div class="scroll-area__thumb"></div>
        </div>
      </div>
    </dialog> */
   .dialog {
     width: min(92vw, 420px);
+
+    /* The UA caps a modal's height, and this keeps the overflow past that cap
+     off the dialog itself: the viewport inside scrolls instead, and the corners
+     stay clipped over it. */
+    overflow: hidden;
     padding: 0;
     border: 0;
     border-radius: var(--radius-lg);
@@ -2138,7 +2154,12 @@
     transform: translateY(10px);
   }
 
+  /* display belongs on [open] only: an unconditional one would beat the UA's
+   `dialog:not([open]) { display: none }` and leave every dialog on screen. The
+   column is what bounds the scrolling viewport inside. */
   .dialog[open] {
+    display: flex;
+    flex-direction: column;
     opacity: 1;
     transform: translateY(0);
     transition:
@@ -2169,11 +2190,38 @@
     }
   }
 
+  /* Scroll-area root: it holds the bar, which is absolutely positioned and so
+   needs a parent that doesn't scroll under it. min-height: 0 on both this and
+   the viewport is what lets them shrink below their content; a flex item floors
+   at content height by default, and either floor would push the overflow back
+   out to the dialog. */
   .dialog__inner {
+    position: relative;
     display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* The content column, and the scrolling viewport: the gap sets the dialog's
+   vertical rhythm, and the bar sits in the 24 gutter the padding already
+   leaves, so revealing it never reflows the content. Paired with
+   .scroll-area__viewport in the markup rather than styled through it, so this
+   section stays copyable on its own. */
+  .dialog__scroll {
+    display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 1.5rem;
+    min-height: 0;
     padding: 1.5rem;
+  }
+
+  /* The column is height-bound now (it scrolls), and a flex item shrinks to fit
+   its container by default: a child with a height of its own (an image, a fixed
+   block) would be squashed instead of scrolled. Hold them all at their own
+   height and let the overflow go to the viewport. */
+  .dialog__scroll > * {
+    flex-shrink: 0;
   }
 
   /* Title + description, 1rem apart to match the dialog's vertical rhythm. */
@@ -2215,7 +2263,7 @@
 
   /* Opt-in footer surface: a full-bleed panel matching the dialog (opaque, so it
    can sit sticky over scrolling content) with a top divider. The negative margins
-   cancel .dialog__inner's padding; the 1.5rem padding restores it inside, giving
+   cancel .dialog__scroll's padding; the 1.5rem padding restores it inside, giving
    the buttons room below the divider. */
   .dialog__actions--surface {
     margin: 0 -1.5rem -1.5rem;
@@ -2242,7 +2290,12 @@
          <h2 class="sheet__title">Title</h2>
          <button class="sheet__close" data-dialog-close aria-label="Close">…</button>
        </header>
-       <div class="sheet__body">…</div>
+       <div class="sheet__body" data-scroll-area>
+         <div class="scroll-area__viewport sheet__scroll">…</div>
+         <div class="scroll-area__bar" aria-hidden="true">
+           <div class="scroll-area__thumb"></div>
+         </div>
+       </div>
      </div>
    </dialog> */
   .sheet {
@@ -2304,13 +2357,6 @@
     height: 100%;
   }
 
-  /* On open, focus is parked here (JS sets tabindex -1) so no button shows a
-   stray focus ring. It's only a programmatic focus holder, never ring it. */
-  .sheet__inner:focus-visible,
-  .dialog__inner:focus-visible {
-    outline: none;
-  }
-
   .sheet__header {
     display: flex;
     align-items: center;
@@ -2359,12 +2405,43 @@
     height: 20px;
   }
 
+  /* The body is a scroll area (see Scroll area, whose block this needs alongside
+   this one): the platform bar is hidden and app.js draws the thumb, so a long
+   sheet reads the same everywhere instead of an overlay bar that hides itself
+   on macOS and a permanent gutter on Windows.
+
+   The body is the scroll-area root and the viewport inside it does the
+   scrolling, so the absolutely positioned bar has a parent that doesn't scroll
+   under it. min-height: 0 on both is what lets them shrink below their content:
+   a flex item floors at content height by default, and either floor would hand
+   the scrolling back to the sheet. */
   .sheet__body {
+    position: relative;
+    display: flex;
     flex: 1;
-    overflow-y: auto;
-    padding: 1.5rem;
+    min-height: 0;
     font-size: var(--font-body-small-size);
     color: var(--ink-secondary);
+  }
+
+  /* The viewport carries a sheet-owned class alongside .scroll-area__viewport
+   rather than being styled through it, so this section stays copyable on its
+   own. The bar sits in the 24 gutter this padding already leaves, so revealing
+   it never reflows the content. */
+  .sheet__scroll {
+    flex: 1;
+    min-height: 0;
+    padding: 1.5rem;
+  }
+
+  /* On open, focus is parked on the panel's scrolling viewport (JS sets tabindex
+   -1) so no button shows a stray focus ring, and the arrow keys scroll the
+   content. It's only a programmatic focus holder, never ring it. */
+  .sheet__inner:focus-visible,
+  .dialog__inner:focus-visible,
+  .dialog__scroll:focus-visible,
+  .sheet__scroll:focus-visible {
+    outline: none;
   }
 
   /* ── Accordion ─────────────────────────────────────────────────────────── */

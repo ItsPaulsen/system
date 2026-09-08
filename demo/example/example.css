@@ -1232,13 +1232,15 @@
     flex-direction: column;
   }
 
+  /* The reference list under the divider: plain weight, so it reads as a list of
+     places rather than a second set of headings under the pages above it. */
   .ex-menu__links a {
     display: flex;
     align-items: center;
     height: 48px;
     border-radius: 8px;
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-size: var(--font-body-small-size);
+    font-weight: var(--font-body-small-weight);
     color: var(--ink-primary);
     text-decoration: none;
   }

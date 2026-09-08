@@ -165,22 +165,53 @@
     lower.dispatchEvent(new Event("input", { bubbles: true }));
   };
 
-  const apply = () => {
-    const categories = checkedIn("category");
-    const brands = checkedIn("brand");
-    const colors = activeColors();
-    const price = priceRange();
+  // One predicate for the grid and for the option counts. `skip` drops a facet
+  // from the test, which is what a count has to mean: how many products the
+  // option would show given what the OTHER facets already allow. Counting with
+  // the colour facet included would report 0 for every colour but the checked
+  // one, and the numbers would only ever shrink.
+  // Read once per pass, not once per card: every getter here sweeps the rail's
+  // DOM.
+  const facets = () => ({
+    categories: checkedIn("category"),
+    brands: checkedIn("brand"),
+    colors: activeColors(),
+    price: priceRange()
+  });
 
-    const matches = cards.filter((card) => {
-      if (categories.size && !categories.has(card.dataset.category)) return false;
-      if (brands.size && !brands.has(brandOf(card))) return false;
-      // A piece can be more than one color ("oak cognac"), and matches if any of
-      // them is asked for. No color of its own and it drops out.
-      if (colors.size && !tokens(card.dataset.color).some((c) => colors.has(c))) return false;
-      const value = num(card, "price");
-      if (value < price.min || value > price.max) return false;
-      return true;
+  const passes = (card, f, skip) => {
+    if (skip !== "category" && f.categories.size && !f.categories.has(card.dataset.category)) {
+      return false;
+    }
+    if (skip !== "brand" && f.brands.size && !f.brands.has(brandOf(card))) return false;
+    // A piece can be more than one color ("oak cognac"), and matches if any of
+    // them is asked for. No color of its own and it drops out.
+    if (skip !== "color" && f.colors.size) {
+      if (!tokens(card.dataset.color).some((c) => f.colors.has(c))) return false;
+    }
+    const value = num(card, "price");
+    if (skip !== "price" && (value < f.price.min || value > f.price.max)) return false;
+    return true;
+  };
+
+  // Per-option counts on the colour group: what each colour would show against
+  // the rest of the rail. A count of 0 stays a count rather than disabling the
+  // row, so the list doesn't shift under the pointer as other filters change.
+  const showColorCounts = () => {
+    const f = facets();
+    const pool = cards.filter((card) => passes(card, f, "color"));
+    filter.querySelectorAll('[data-filter="color"] .checkbox').forEach((row) => {
+      const out = row.querySelector("[data-shop-option-count]");
+      const family = new Set(tokens(row.querySelector("input")?.dataset.colors));
+      if (!out || !family.size) return;
+      const n = pool.filter((card) => tokens(card.dataset.color).some((c) => family.has(c))).length;
+      out.textContent = `(${n})`;
     });
+  };
+
+  const apply = () => {
+    const f = facets();
+    const matches = cards.filter((card) => passes(card, f));
 
     // Sort the full set, not just the matches, so the DOM order stays stable
     // while filters come and go.
@@ -198,7 +229,8 @@
     nouns.forEach((n) => {
       n.textContent = matches.length === 1 ? "product" : "products";
     });
-    showPrice(price);
+    showPrice(priceRange());
+    showColorCounts();
     if (shownEl) shownEl.textContent = String(visible);
     if (totalEl) totalEl.textContent = String(matches.length);
 

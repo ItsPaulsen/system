@@ -158,6 +158,19 @@
     max-width: none;
   }
 
+  /* Per-option count, pushed to the trailing edge of the option row (see
+     showColorCounts in shop.js). Inside the <label>, so it's part of the
+     option's accessible name: "Black (4)". Tabular figures keep the column of
+     numbers from shifting as they change. */
+  .shop-count {
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-8);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-secondary);
+  }
+
   /* ── Colour swatches ──────────────────────────────────────────────────────
      A dot beside each colour option, so the list can be scanned by colour and
      not only read. Decoration: it's aria-hidden and the label carries the name,

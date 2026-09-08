@@ -8,7 +8,6 @@
 
   const out = {
     color: document.querySelector("[data-pdp-color]"),
-    variant: document.querySelector("[data-pdp-variant]"),
     price: document.querySelector("[data-pdp-price]"),
     stores: document.querySelector("[data-pdp-stores]"),
     badge: document.querySelector("[data-pdp-stock-badge]"),
@@ -18,6 +17,12 @@
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
   const images = Array.from(document.querySelectorAll("[data-pdp-img]"));
   const thumbs = Array.from(document.querySelectorAll("[data-pdp-thumb]"));
+  // The back view and the detail shot are oak's own; every other colourway has
+  // just its pack shot, so those two slides and their thumbs come and go with the
+  // colour. data-views on the radio says how many the colour has.
+  const gallery = document.querySelector(".pdp-gallery");
+  const extras = Array.from(document.querySelectorAll("[data-pdp-extra]"));
+  const firstThumb = document.querySelector(".pdp-thumb");
 
   // Two stock states, each a badge skin plus the lead time it implies.
   const STOCK = {
@@ -32,7 +37,6 @@
   const render = (input) => {
     const d = input.dataset;
     set(out.color, d.color);
-    set(out.variant, d.variant);
     set(out.price, d.price);
     set(out.stores, d.stores);
 
@@ -58,6 +62,21 @@
     thumbs.forEach((el) => {
       el.src = `${d.img}-400.webp`;
     });
+
+    const views = Number(d.views) || 1;
+    extras.forEach((el) => {
+      el.hidden = views < 2;
+    });
+    if (gallery) gallery.dataset.pdpViews = String(views);
+
+    // Back to the pack shot: the colour that was picked is the one to show, and a
+    // track left translated onto a slide that has just been hidden would park the
+    // gallery on nothing. The click routes through the carousel's own goto.
+    if (firstThumb) firstThumb.click();
+
+    // The carousel measures its track live but only re-reads it on resize, so the
+    // slides that just appeared or left need one to be counted.
+    window.dispatchEvent(new Event("resize"));
   };
 
   inputs.forEach((input) =>
@@ -130,11 +149,12 @@
     sync();
   }
 
-  // Deep link from a Shop card: ?color=<slug> opens on that colourway.
+  // Deep link from a Shop card: ?color=<slug> opens on that colourway. Rendering
+  // the checked one either way is what sets data-pdp-views for the colour the
+  // page opens on, so the markup only has to carry oak's own state.
   const asked = new URLSearchParams(location.search).get("color");
   const wanted = asked && inputs.find((i) => i.value === asked);
-  if (wanted && !wanted.checked) {
-    wanted.checked = true;
-    render(wanted);
-  }
+  if (wanted) wanted.checked = true;
+  const current = inputs.find((i) => i.checked);
+  if (current) render(current);
 })();

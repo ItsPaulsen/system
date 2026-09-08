@@ -29,6 +29,10 @@
     /* The rail tile, ring included. The rail's height cap is derived from it. */
     --pdp-thumb-size: 96px;
 
+    /* How far a focus ring reaches past its control, so a scroll container can
+       leave room for one: the ring's width plus its offset. */
+    --pdp-focus-room: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+
     gap: 4rem;
     padding-block: var(--space-24) 0;
     background-image: none;
@@ -361,10 +365,6 @@
       column-gap: var(--space-16);
     }
 
-    .pdp-rail {
-      order: -1;
-    }
-
     /* nowrap on purpose: a column flex that wraps would spill into a *second*
        column once its height is capped, doubling the rail's width. The overflow
        belongs to the Scroll Area's viewport. */
@@ -377,9 +377,20 @@
        image: it can't be read in CSS, and five is under the image's height at
        every width the rail is a column (the image is a square of the rest of the
        row). Past that the Scroll Area takes over, and only then does the viewport
-       open a gutter for the bar, so a short rail is untouched. */
+       open a gutter for the bar, so a short rail is untouched.
+
+       The viewport is a scroll container, so it clips on the inline axis too and
+       a tile's focus ring would be cut off at both sides. Pad it by the ring's
+       reach and pull the rail back by the same amount, so the tiles still sit on
+       the content edge: the same trick the listing's filter rail uses. */
+    .pdp-rail {
+      order: -1;
+      margin-inline-start: calc(-1 * var(--pdp-focus-room));
+    }
+
     .pdp-rail__viewport {
       max-height: calc(5 * var(--pdp-thumb-size) + 4 * var(--space-8));
+      padding-inline: var(--pdp-focus-room);
     }
 
     .pdp-rail[data-scrollable="true"] .pdp-rail__viewport {
@@ -431,16 +442,23 @@
     }
   }
 
-  /* A product can arrive with a single shot. With one slide there's nothing to
-     step through, so the arrows and the rail both go and what's left is a plain
-     image plate, rather than a slider that visibly has nowhere to go. The rail's
-     column goes with it, or its gap would indent the image. */
-  .pdp-gallery:has(.carousel__item:only-child) .pdp-gallery__control,
-  .pdp-gallery:has(.carousel__item:only-child) .pdp-rail {
+  /* Most colourways have a single shot: only oak has the back view and the detail
+     beside its pack shot. product.js hides the extra slides and thumbs and counts
+     what's left into data-pdp-views, so at one view the rail goes and the arrows
+     disable themselves into nothing, leaving a plain image plate rather than a
+     slider with nowhere to go. The rail's column goes with it, or its gap would
+     indent the image.
+
+     A slide is a flex item, whose display beats the UA [hidden] rule. */
+  .pdp-gallery__slide[hidden] {
     display: none;
   }
 
-  .pdp-gallery:has(.carousel__item:only-child) {
+  .pdp-gallery[data-pdp-views="1"] .pdp-rail {
+    display: none;
+  }
+
+  .pdp-gallery[data-pdp-views="1"] {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -490,9 +508,10 @@
     border-radius: var(--radius-sm);
   }
 
-  /* The whole product name, which is the variant line the Shop card carries for
-     it, so it changes with the colour. title-large 32, headline-small 38 from lg,
-     where the column is half the page rather than all of it. */
+  /* The product, no colour in it: the swatch row under it already says which one,
+     and the Shop card's own variant line was repeating it. title-large 32,
+     headline-small 38 from lg, where the column is half the page rather than all
+     of it. */
   .pdp-buy__title {
     margin: 0;
     color: var(--ink-primary);

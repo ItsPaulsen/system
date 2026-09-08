@@ -837,20 +837,62 @@
      moves in here, so everything it knows (which slide, which colour, its
      transform) comes with it. */
   .pdp-zoom {
+    /* Smaller than the page's rail: here the tiles are a strip under a photograph
+       that has the whole window, not a column beside it. The ring's room is inside
+       the box, as everywhere else. */
+    --pdp-zoom-thumb: 56px;
+
+    /* What the rail asks the picture to leave at the bottom: a tile, the room its
+       ring and focus outline need on both sides, and the gap between the two. The
+       rail's own distance from the window's edge is the panel's padding, which the
+       slot already subtracts twice. */
+    --pdp-zoom-rail: calc(var(--pdp-zoom-thumb) + 2 * var(--pdp-focus-room) + var(--space-16));
+
+    /* The photograph's own size: the biggest square that fits 16 from the window's
+       edges with the rail's band held back, and never past the largest shot we
+       ship, so a tall window scales the panel rather than the pixels. The track
+       around it spans the whole window (see the slot). */
+    --pdp-zoom-size: min(
+      calc(100vw - 2 * var(--space-16)),
+      calc(100dvh - 2 * var(--space-16) - var(--pdp-zoom-rail)),
+      1440px
+    );
+
     width: 100vw;
     max-width: 100vw;
     height: 100dvh;
     max-height: 100dvh;
     border-radius: 0;
 
+    /* Evenly eased rather than the Dialog's front-loaded ease-out: a card that
+       size can afford to arrive, but a fade across the whole window is most of the
+       screen changing at once, so it wants to come up rather than flash.
+
+       Stated in both states, and with display and overlay transitioning
+       discretely, because the Dialog's own transition lives on [open] alone, which
+       makes every close instant. This one fades out as well. A browser without
+       allow-discrete ignores those two and closes instantly, as before. */
+    --pdp-zoom-fade-time: 250ms;
+    --pdp-zoom-fade:
+      opacity var(--pdp-zoom-fade-time) ease, display var(--pdp-zoom-fade-time) allow-discrete,
+      overlay var(--pdp-zoom-fade-time) allow-discrete;
+
     /* Fade only. The Dialog's rise reads as a card arriving; a panel the size of
        the window has no edge to travel, so the movement is just movement. */
     transform: none;
+    transition: var(--pdp-zoom-fade);
   }
 
   .pdp-zoom[open] {
     transform: none;
-    transition: opacity 0.2s ease-out;
+    transition: var(--pdp-zoom-fade);
+  }
+
+  /* Both states again, and the panel's own duration: the two fade as one surface,
+     in and out. */
+  .pdp-zoom::backdrop,
+  .pdp-zoom[open]::backdrop {
+    transition: opacity var(--pdp-zoom-fade-time) ease;
   }
 
   @starting-style {
@@ -859,12 +901,23 @@
     }
   }
 
+  /* A single shot hides the rail, so there is nothing to leave room for. */
+  .pdp-zoom:has(.pdp-gallery[data-pdp-views="1"]) {
+    --pdp-zoom-rail: 0px;
+  }
+
   .pdp-zoom__inner {
     display: grid;
     position: relative;
     place-content: center;
     height: 100%;
-    padding: var(--space-16);
+    padding-top: var(--space-16);
+
+    /* The picture centres in what's left above the rail, not in the window, or
+       centring would push it back down under the tiles. No side padding: the
+       track runs to the window's edges, and the picture's own inset is baked
+       into --pdp-zoom-size. */
+    padding-bottom: calc(var(--space-16) + var(--pdp-zoom-rail));
   }
 
   /* The sheet close button's box as well as its skin: 40, round, so the surface
@@ -927,33 +980,56 @@
     display: none;
   }
 
-  /* 16 from every edge of the window, and nothing held back for the rail: it
-     floats over the bottom of the photograph instead, the way Muuto's does, so the
-     picture gets the whole panel.
-
-     Square, so whichever of the window's sides is shorter decides. On a landscape
-     window that's the height, and the side gaps are what's left over: an image
-     16 from both sides would have to be taller than the window. */
+  /* The window's full width, not the picture's. The viewport clips the track, so
+     whatever the slot is wide is the mask a drag reveals through: at the size of
+     the photograph the next shot appeared out of thin air an inch from the
+     picture's edge. The size the picture wants is --pdp-zoom-size, applied to the
+     image inside the slide, which leaves the rest of each slide as the space
+     between one shot and the next. */
   .pdp-zoom__slot {
-    width: min(calc(100vw - 2 * var(--space-16)), calc(100dvh - 2 * var(--space-16)));
+    width: 100%;
+  }
+
+  /* No plate at this width: it would paint the whole window, and in dark it would
+     paint it white. The photographs carry their own white ground. */
+  .pdp-zoom .pdp-gallery__slide {
+    display: grid;
+    justify-items: center;
+    background: none;
+    cursor: default;
+  }
+
+  .pdp-zoom .pdp-gallery__img {
+    width: var(--pdp-zoom-size);
+  }
+
+  /* Nothing rounds a corner here: the viewport is the window, and the picture is
+     the photograph itself rather than a plate. */
+  .pdp-zoom .pdp-gallery__viewport {
+    border-radius: 0;
   }
 
   /* Inside the panel the rail sits under the image and centred, whatever it does
      on the page (a column at lg, dots below it). */
   .pdp-zoom .pdp-gallery {
+    /* The space between one shot and the next, as a share of the window: the same
+       30% the reference panel leaves, which is what makes a drag read as pulling
+       the next photograph in rather than sliding a filmstrip. Percentages on the
+       track resolve against the viewport, which is a slide's own width. */
+    --carousel-gap: 30%;
+
     grid-template-columns: minmax(0, 1fr);
     column-gap: 0;
   }
 
-  /* Pinned to the bottom of the window, over the photograph rather than under it:
-     in flow it rode up and down as the window scaled, and holding space for it
-     shrank the picture. Fixed, like the arrows, so it belongs to the window's
-     edge. The tiles carry their own white plates, so they read over any shot. */
+  /* Pinned to the bottom of the window rather than left in flow, where it rode up
+     and down as the window scaled. Fixed, like the arrows, so it belongs to the
+     window's edge and sits 16 from it like everything else in the panel. It no
+     longer overlaps anything: the slot holds --pdp-zoom-rail back for it. */
   .pdp-zoom .pdp-rail:not([hidden]) {
     position: fixed;
-    z-index: 1;
     inset-inline: 0;
-    bottom: var(--space-24);
+    bottom: var(--space-16);
     order: 1;
     margin: 0;
   }
@@ -969,6 +1045,7 @@
   .pdp-zoom .pdp-rail__viewport {
     aspect-ratio: auto;
     max-height: none;
+    padding: var(--pdp-focus-room);
     overflow: visible;
   }
 
@@ -983,14 +1060,16 @@
      through the set on a pointer and a picture beats a dot. Which means undoing
      the dot rules, each at the specificity they were set with. */
   .pdp-zoom .pdp-thumb {
-    width: var(--pdp-thumb-max);
+    width: var(--pdp-zoom-thumb);
     height: auto;
     padding: var(--pdp-ring-room);
     border-radius: calc(var(--radius-sm) + var(--pdp-ring-room));
     background: transparent;
   }
 
-  .pdp-zoom .pdp-thumb::before {
+  /* The dot's 24 hit area, which reached 8 outside its box: at 56 with a gap that
+     small it would cover the neighbouring tile and answer for it. */
+  .pdp-zoom .pdp-thumb::after {
     content: none;
   }
 
@@ -998,17 +1077,24 @@
     display: block;
   }
 
+  /* Both states also drop the dot's fill, which is set at a specificity the rule
+     above can't reach: a dot says which slide it is by its colour, a tile by its
+     ring, and the two together painted a surface behind the photograph on hover
+     and a 20px ink pill for the current one. */
   @media (hover: hover) and (pointer: fine) {
     .pdp-zoom .pdp-thumb:not([aria-current="true"]):hover {
+      background: transparent;
       box-shadow: inset 0 0 0 var(--border-width) var(--ink-primary);
     }
   }
 
   .pdp-zoom .pdp-thumb[aria-current="true"] {
+    width: var(--pdp-zoom-thumb);
+    background: transparent;
     box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--ink-primary);
   }
 
-  /* The dots draw their ring on ::before, which isn't there any more. */
+  /* The dots draw their ring on the box itself, so it needs saying here. */
   .pdp-zoom .pdp-thumb:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
@@ -1029,6 +1115,11 @@
      arrows disable into nothing as before. */
   .pdp-zoom .pdp-gallery__control {
     position: fixed;
+
+    /* Centred on the picture, not on the window: fixed makes top: 50% the window's
+       middle, which sits the pair below the middle of the photograph by half the
+       rail's band. Halve what's left after the band instead. */
+    top: calc((100dvh - var(--pdp-zoom-rail)) / 2);
     opacity: 1;
   }
 
@@ -1043,10 +1134,6 @@
   /* Nothing to zoom into from inside the panel. */
   .pdp-zoom .pdp-gallery__zoom {
     display: none;
-  }
-
-  .pdp-zoom .pdp-gallery__slide {
-    cursor: default;
   }
 
   /* Forced colors (Windows High Contrast): the plates lose their fill and the

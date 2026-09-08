@@ -4891,13 +4891,15 @@
 
   /* A horizontal, snapping slider of items with prev/next controls. app.js
    (initCarousel) owns the position: it translates the track, drags it with the
-   pointer (mouse and touch) with a rubber-band past the ends, snaps to the nearest
-   item on release, wires the buttons + keyboard (←/→), disables a control at each
-   end, and announces the current slide.
+   pointer (mouse and touch) with a rubber-band past the ends, settles on release
+   (a drag past 30% of the viewport commits, so does a quick one of any length,
+   and anything else comes back), wires the buttons + keyboard (←/→), disables a
+   control at each end, and announces the current slide.
 
    --carousel-cols sets how many items show at once (default 1); --carousel-gap
    the space between them. The item flex-basis subtracts the gaps so N items fit
    exactly. Override the vars on the root (or per breakpoint) for a multi-up view.
+   --carousel-slide times the settle, and app.js reads it from the root.
 
    data-carousel-loop on the root makes the controls wrap rather than stop: prev on
    the first goes to the last, and neither control ever disables. It's read live,
@@ -4923,9 +4925,24 @@
     --carousel-gap: 1rem;
     --carousel-cols: 1;
 
+    /* The settle: how the track travels after a release, a button, or a jump.
+     app.js reads it off the root, so a page can retime one carousel without
+     touching the engine. Long and eased at both ends, which is what stops a snap
+     from reading as a click into place; the same timing for a flick as for a
+     button, so the slide arrives the same way however it was asked for. */
+    --carousel-slide: 500ms ease-in-out;
+
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+
+  /* Reduced motion: the move still happens, the position of the track is the
+   information, but without the glide. */
+  @media (prefers-reduced-motion: reduce) {
+    .carousel {
+      --carousel-slide: 1ms linear;
+    }
   }
 
   /* The window. The track inside is moved by JS (initCarousel) via a translate3d

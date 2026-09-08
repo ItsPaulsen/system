@@ -245,20 +245,53 @@
     // every way out (button, backdrop, Escape).
     // Looping isn't set here any more: it belongs to the colour's shot count (see
     // render), so it holds on the page as well as in the panel.
+    // A still copy holds the gallery's place on the page while the real one is
+    // away. Without it the photograph leaves the page in the same frame the panel
+    // starts fading in, so the fade plays over a hole where the image was, which
+    // is what read as a flicker. The clone needs no wiring: it carries the track's
+    // inline transform, so it draws the slide the gallery was showing, and app.js
+    // has long since run, so its data-carousel is never initialised. inert and
+    // aria-hidden keep it out of the tab order, the accessibility tree, and the
+    // delegated open handler its viewport would otherwise still match.
+    let stand = null;
     const enter = () => {
+      // Already in the panel: the photograph carries the open hook with it, so a
+      // click on it in there matches too. Without this that click stood a second
+      // copy up on the page, and only the newest one was ever taken down again.
+      if (gallery.parentNode === slot) return;
+      stand = gallery.cloneNode(true);
+      stand.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+      stand.inert = true;
+      stand.setAttribute("aria-hidden", "true");
+      home.insertBefore(stand, next);
       slot.append(gallery);
       remeasure();
     };
     const leave = () => {
       home.insertBefore(gallery, next);
+      stand?.remove();
+      stand = null;
       remeasure();
     };
 
+    // The panel fades out as well as in, so the gallery leaves on the fade's tail
+    // rather than on the close event: pull it out while the panel is still on
+    // screen and the panel empties as it goes. Until then the page shows the
+    // stand-in, which looks the same. The duration is read off the panel, so the
+    // stylesheet stays the one place it's set (computed durations are in seconds).
+    let back;
     document.addEventListener("click", (e) => {
-      if (e.target.closest('[data-dialog-open="pdp-zoom"]')) enter();
+      if (!e.target.closest('[data-dialog-open="pdp-zoom"]')) return;
+      // Reopened inside the fade: the pending move back would empty the panel.
+      clearTimeout(back);
+      enter();
     });
 
-    zoom.addEventListener("close", leave);
+    zoom.addEventListener("close", () => {
+      const secs = parseFloat(getComputedStyle(zoom).transitionDuration) || 0;
+      clearTimeout(back);
+      back = setTimeout(leave, secs * 1000);
+    });
   }
 
   // Deep link from a Shop card: ?color=<slug> opens on that colourway. Rendering

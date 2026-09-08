@@ -3317,14 +3317,28 @@ function initCarousel() {
     const navIndex = (el, n) => Number(el.dataset.carouselGoto || n);
 
     const RESIST = 0.3; // fraction of the drag that shows past an end
-    const EASE = "transform 350ms var(--motion-ease-out)";
 
-    // A flick, in px/ms of pointer speed at release. Above it the release steps one
-    // slide in the direction of travel however short the drag was; below it the
-    // nearest slide wins, so a slow drag has to cross half a slide to count. That
-    // split is what distance alone can't do: a quick 40px flick and a slow 40px
-    // drag look identical to it. 0.35 is about 350px/s, well under a casual flick.
-    const FLICK = 0.35;
+    // The settle. Timing and curve live on .carousel as --carousel-slide, so the
+    // page owns the feel and the engine only decides when to animate; the track
+    // inherits the property, so the inline var() resolves against the root.
+    const EASE = "transform var(--carousel-slide)";
+
+    // The same duration in milliseconds, for the flick window below. Read from the
+    // property rather than restated here, so the stylesheet stays the one place
+    // the feel is set.
+    const slideMs = () => {
+      const m = /([\d.]+)(ms|s)/.exec(getComputedStyle(root).getPropertyValue("--carousel-slide"));
+      return m ? Number(m[1]) * (m[2] === "s" ? 1000 : 1) : 0;
+    };
+
+    // What a release does. Two ways to commit: the drag crossed 30% of the window,
+    // or it was let go inside the settle's own duration having moved at all. The
+    // second is the flick, and it's time rather than speed: a 40px twitch and a
+    // 400px sweep both commit if they end quickly, and only a short, slow drag
+    // comes back. Speed alone can't do that, a slow drag that covers half the
+    // window reads as deliberate and should land.
+    const COMMIT = 0.3; // of the viewport
+    const NUDGE = 5; // px, under which a release is a click that wobbled
     let pos = 0;
 
     // How far the track can travel, and each item's aligned scroll offset (its
@@ -3462,10 +3476,7 @@ function initCarousel() {
     let startPos = 0;
     let startAt = 0;
     let moved = false;
-    // Pointer speed in px/ms, smoothed so one jittery sample can't decide it.
-    let vx = 0;
-    let lastX = 0;
-    let lastT = 0;
+    let startT = 0;
     viewport.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
       if (e.pointerType === "mouse") e.preventDefault(); // stop native text/image drag
@@ -3474,9 +3485,7 @@ function initCarousel() {
       startX = e.clientX;
       startPos = pos;
       startAt = at;
-      vx = 0;
-      lastX = e.clientX;
-      lastT = e.timeStamp;
+      startT = e.timeStamp;
       viewport.setPointerCapture(e.pointerId);
       viewport.classList.add("is-dragging");
     });
@@ -3484,10 +3493,6 @@ function initCarousel() {
       if (!down) return;
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 3) moved = true;
-      const dt = e.timeStamp - lastT || 16;
-      vx = vx * 0.7 + ((e.clientX - lastX) / dt) * 0.3;
-      lastX = e.clientX;
-      lastT = e.timeStamp;
       let p = startPos + dx;
       if (!looping()) {
         // Past an end the extra travel is resisted; a looping set has no end.
@@ -3503,17 +3508,18 @@ function initCarousel() {
       down = false;
       viewport.releasePointerCapture?.(e.pointerId);
       viewport.classList.remove("is-dragging");
-      // A flick steps one; anything slower snaps to whatever is nearest.
-      const flick = Math.abs(vx) > FLICK ? -Math.sign(vx) : 0;
-      if (looping()) {
-        const s = stride();
-        const from = Math.round(-startPos / s);
-        settle((flick ? from + flick : Math.round(-pos / s)) * s);
-      } else if (flick) {
-        goTo(startAt + flick);
-      } else {
-        goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos))));
-      }
+      const s = stride();
+      const dx = pos - startPos;
+      // Slides crossed outright: past halfway, the nearest one is the one it's
+      // mostly showing, whatever the release looked like. Only a drag that
+      // crossed none of them asks the two rules above.
+      const crossed = Math.round(-dx / s);
+      const commit =
+        Math.abs(dx) > COMMIT * viewport.clientWidth ||
+        (Math.abs(dx) > NUDGE && e.timeStamp - startT < slideMs());
+      const delta = crossed || (commit ? -Math.sign(dx) : 0);
+      if (looping()) settle((Math.round(-startPos / s) + delta) * s);
+      else goTo(startAt + delta);
       if (moved) {
         // Both, and not just preventDefault: that stops a slide's link being
         // followed but a click listener on the slide still runs, so a drag would

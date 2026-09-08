@@ -126,6 +126,11 @@
 
         <section class="preview-block">
           <h2 class="subhead">Disabled</h2>
+          <p class="section-note">
+            Empty and disabled fills the box instead of outlining it, so it still reads as a control
+            on a recessed surface. A checked one keeps its fill and dims: a grey fill there would
+            make it indistinguishable from an empty one.
+          </p>
           <div class="example" data-example>
             <div class="component-preview">
               <label class="checkbox">
@@ -146,9 +151,28 @@
                 </span>
                 <span class="checkbox__label">Email me updates</span>
               </label>
+              <label class="checkbox">
+                <span class="checkbox__box">
+                  <input name="check-4" type="checkbox" class="checkbox__input" checked disabled />
+                  <svg
+                    class="checkbox__check"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12l5 5l10 -10" pathLength="1" />
+                  </svg>
+                </span>
+                <span class="checkbox__label">Required by your plan</span>
+              </label>
             </div>
             <script type="text/plain" class="example__react">
               <Checkbox disabled>Email me updates</Checkbox>
+              <Checkbox defaultChecked disabled>Required by your plan</Checkbox>
             </script>
           </div>
         </section>

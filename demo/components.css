@@ -233,6 +233,22 @@
     border-width: 6px;
   }
 
+  /* Disabled and empty: a pale fill takes over from the outline. Opacity alone
+   leaves a border-only box as a barely-there outline on a recessed surface,
+   where a body still reads as a control that isn't available. Deliberately off
+   :checked, whose primary fill IS the state: a grey fill there would make a
+   disabled checked option indistinguishable from a disabled empty one. Sits
+   between the plain and themed checked rules, where its specificity lands. */
+  .checkbox__input:disabled:not(:checked),
+  .radio__input:disabled:not(:checked) {
+    background: var(--fill-secondary);
+    border-color: transparent;
+
+    /* The fill is the dimming here, so drop the shared 0.5: halving a pale fill
+     leaves the box nearly gone, which is the problem it solves. */
+    opacity: 1;
+  }
+
   /* Dark theme: the deep-violet --primary reads as a muddy fill on a dark
    surface, so switch to the lifted --primary-foreground (same swap secondary
    buttons/links use). The checkbox tick then flips dark so it reads as cut out
@@ -4956,6 +4972,13 @@
     .radio__input:checked {
       forced-color-adjust: none;
       border-color: Highlight;
+    }
+
+    /* Disabled and empty: the pale fill is dropped in this mode, so the outline
+     comes back or the box would have no edge at all. */
+    .checkbox__input:disabled:not(:checked),
+    .radio__input:disabled:not(:checked) {
+      border-color: GrayText;
     }
 
     /* Alert icons keep their semantic color (set on the SVG; opt out so the

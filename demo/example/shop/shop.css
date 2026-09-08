@@ -171,6 +171,18 @@
     color: var(--ink-secondary);
   }
 
+  /* An option with a count of 0 is disabled by shop.js. Dim the label, swatch
+     and count together, since all three are the option, but leave the box out:
+     it has its own disabled treatment (a pale fill), and halving that would
+     erase it. Disabled controls are exempt from the contrast floor. */
+  .shop-filter .checkbox:has(.checkbox__input:disabled) {
+    cursor: not-allowed;
+  }
+
+  .shop-filter .checkbox:has(.checkbox__input:disabled) > :not(.checkbox__input) {
+    opacity: 0.5;
+  }
+
   /* ── Colour swatches ──────────────────────────────────────────────────────
      A dot beside each colour option, so the list can be scanned by colour and
      not only read. Decoration: it's aria-hidden and the label carries the name,

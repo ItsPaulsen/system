@@ -218,7 +218,13 @@
       group.querySelectorAll(".checkbox").forEach((row) => {
         const out = row.querySelector("[data-shop-option-count]");
         const input = row.querySelector("input");
-        if (out && input) out.textContent = String(pool.filter((c) => match(c, input)).length);
+        if (!out || !input) return;
+        const n = pool.filter((c) => match(c, input)).length;
+        out.textContent = String(n);
+        // Nothing behind the option: put it out of reach, unless it's the one
+        // doing the filtering. Disabling a checked option would strand it,
+        // leaving the chip as the only way back.
+        input.disabled = n === 0 && !input.checked;
       });
     });
   };

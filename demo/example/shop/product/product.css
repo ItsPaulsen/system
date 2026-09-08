@@ -275,16 +275,19 @@
     display: block;
   }
 
-  /* .ex-ph supplies the loading fill and object-fit; the fill derives from
-     --background-secondary, which would be a dark square inside the white plate,
-     so mix it against the plate instead (same as the shop card's tile).
+  /* The plate itself as the ground behind a shot that hasn't loaded, not .ex-ph's
+     grey: a colour change swaps the srcset, so on a cold cache there are a frame
+     or two with nothing decoded, and any fill that isn't the plate blinks there.
+     The shots are photographed on white, so white is also the honest placeholder.
+     It has to be stated here as well as on the slide: in the larger view the slide
+     drops its plate (it would paint the whole window), leaving this the only one.
 
      The radius is stated, not inherited: the <img> sits inside a <picture>, so
      `inherit` picked that up (it has none) rather than the slide's 16. */
   .pdp-gallery__img {
     aspect-ratio: 1;
     border-radius: var(--radius-md);
-    background: color-mix(in oklab, var(--neutral-black) 8%, var(--ex-plate));
+    background: var(--ex-plate);
   }
 
   /* The trigger for the larger view, bottom-right of the plate like the arrows are

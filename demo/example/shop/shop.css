@@ -114,23 +114,23 @@
     padding-block: var(--space-8);
   }
 
-  /* Two fields with the range dash between them. Fixed at 88 rather than split
-     across the rail: it's wide enough for the catalogue's five digits, and the
-     pair stays the same size in the rail and in the mobile sheet. */
+  /* Two fields with the range dash between them, each taking half the row: one
+     ends at the start edge and the other at the end edge, so the pair spans the
+     slider above it at any width. Fixed widths left dead space in the sheet,
+     which is a third wider than the rail. */
   .shop-price__fields {
     display: flex;
     align-items: center;
-
-    /* One field to each edge with the dash floating between them, so the pair
-       frames the slider above rather than huddling at the start. The gap is the
-       floor for a narrow rail, where there's no free space left to spread. */
-    justify-content: space-between;
-    gap: var(--space-8);
+    gap: var(--space-12);
   }
 
+  /* Basis 0 so the two split the row evenly whatever the digits are, and
+     min-width 0 so a field can shrink instead of forcing the row wider than the
+     rail (an auto minimum here is the input's own ~230px). 88 is the floor the
+     five-digit prices need, and the narrowest rail still clears it. */
   .shop-price__field {
-    flex: none;
-    width: 88px;
+    flex: 1;
+    min-width: 0;
   }
 
   /* 40, not the field default 48: same compact height the rail's find field

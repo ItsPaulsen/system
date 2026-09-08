@@ -14,10 +14,14 @@
      divider. No bottom padding: the band is the last child and runs flush into
      the footer.
 
-     Hairline for the thumbnail plates (the gallery slide stays borderless). Mixed against the plate rather than taken from --fill-*, which is
-     alpha ink and would draw a *light* line on a white tile in dark theme. */
+     No plate carries a border of its own: the tiles are ringed from outside
+     instead (see .pdp-thumb), which is what lets those rings follow the theme.
+
+     The room a tile reserves for its ring: 2 of line plus 2 of gap to the plate.
+     It's padding, so the ring is inside the tile's own box and the rows need no
+     compensating margin to line up. */
   .pdp-page {
-    --pdp-plate-line: color-mix(in oklab, var(--neutral-black) 14%, var(--ex-plate));
+    --pdp-ring-room: 4px;
 
     gap: 4rem;
     padding-block: var(--space-24) 0;
@@ -32,13 +36,17 @@
 
   /* Recessed band with a rounded top, flush above the footer: the same treatment
      the shop listing and the front-page card band use. Holds the two sections
-     that are reference rather than product, and owns the gap between them. */
+     that are reference rather than product, and owns the gap between them.
+
+     Full-bleed, like the shop's: the recessed surface is the page's, not a panel.
+     Anything that has to line up with the grid is drawn inside the content column
+     instead (see .pdp-related__rule). */
   .pdp-band {
     display: grid;
 
     /* minmax(0, 1fr), not the implicit `auto` column: an auto track sizes to its
        item's max-content, so the band would have stopped at the content column's
-       cap (1600) instead of running the full width of the page. */
+       cap instead of running the full width of the page. */
     grid-template-columns: minmax(0, 1fr);
     gap: 4rem;
     padding-block: 4rem 6rem;
@@ -235,15 +243,95 @@
     background: color-mix(in oklab, var(--neutral-black) 8%, var(--ex-plate));
   }
 
-  /* ── Image rail ───────────────────────────────────────────────────────────
-     Thumbnails of the selected colourway, wired to the carousel by its own
-     [data-carousel-goto] hook: app.js jumps the track and puts aria-current on
-     the current thumb, so the styling below hangs off state, not a class. The
-     colour itself is chosen in the buy column. */
-  .pdp-picker {
-    display: grid;
+  /* ── Tiles ────────────────────────────────────────────────────────────────
+     One model behind both the image rail and the colour swatches: they hold the
+     same photography and answer to the pointer the same way, so the ring lives
+     here once and each only sets its own width.
+
+     A tile is its whole box, ring included: --pdp-ring-room of transparent
+     padding holds the ring and the gap below it, and the ring itself is an
+     *inset* box-shadow, so it paints at the tile's edge. Nothing is drawn outside
+     the box, which is the point: the rows lay out, gap and align on the same box
+     the eye sees, with no margin correcting for a ring layout can't see.
+
+     Nothing at rest (the photograph is the tile); hover and selected are the same
+     ring in the same ink, differing only in weight. Sitting on transparent
+     padding rather than on the plate is what lets it follow the theme: on the
+     fixed white plate a light line would vanish in dark theme.
+
+     No transition: a ring fading in around a photograph reads as a halo growing,
+     not as a pointer landing on a tile. It appears with the pointer. */
+  .pdp-tile {
+    display: block;
+    padding: var(--pdp-ring-room);
+    border: 0;
+
+    /* Concentric with the photograph's corner: its radius plus the padding. */
+    border-radius: calc(var(--radius-sm) + var(--pdp-ring-room));
+    background: transparent;
+    cursor: pointer;
   }
 
+  /* The two differ only in width: the rail's is the bigger box, the swatch holds a
+     48 plate in the same ring room. */
+  .pdp-thumb {
+    width: 96px;
+  }
+
+  .pdp-swatch {
+    width: calc(48px + 2 * var(--pdp-ring-room));
+  }
+
+  /* The plate lives on the photograph, not on the tile: 4px of padding leaves it
+     showing as a thin frame around the shot, and it's also the fill behind one
+     that hasn't loaded. It stays white in both themes because the shots are
+     photographed on white, so the frame reads in dark theme and merges with the
+     page in light, exactly as the big plate does. */
+  .pdp-tile__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+    object-fit: cover;
+  }
+
+  /* Hover brings the ring in at 1px: the selected ink at a lighter weight, so it
+     reads as a preview of picking it. Nothing tints the plate, since the shots are
+     photographed on white and a tinted plate would frame the photo's own white
+     square as a second surface. */
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-tile:hover {
+      box-shadow: inset 0 0 0 var(--border-width) var(--ink-primary);
+    }
+  }
+
+  /* Selected: the same ring at 2px. After the hover rule, so hovering the selected
+     tile can't thin it. The two states are the same thing said twice, because the
+     rail's current tile is a button carrying aria-current and a swatch is a label
+     wrapping a checked radio. */
+  .pdp-thumb[aria-current="true"],
+  .pdp-swatch:has(.pdp-swatch__input:checked) {
+    box-shadow: inset 0 0 0 calc(var(--border-width) * 2) var(--ink-primary);
+  }
+
+  /* Same reason: the focusable thing is the button itself in one case and the
+     radio inside the label in the other. */
+  .pdp-thumb:focus-visible,
+  .pdp-swatch:has(.pdp-swatch__input:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* ── Image rail ───────────────────────────────────────────────────────────
+     Thumbnails of the selected colour, wired to the carousel by its own
+     [data-carousel-goto] hook: app.js jumps the track and puts aria-current on
+     the current thumb, so the styling above hangs off state, not a class. The
+     colour itself is chosen in the buy column.
+
+     The tiles include their rings, so the row aligns with the image above it on
+     its own, and the gap is simply the space between two of them. */
   .pdp-thumbs {
     display: flex;
     flex-wrap: wrap;
@@ -253,58 +341,37 @@
     list-style: none;
   }
 
-  /* A small plate of the same white, since it holds the same photography. The
-     hairline is what separates it from the (near-white) page in light theme.
+  /* The rail sits beside the image from md, not under it. Under it, a row of
+     white plates on a white surface reads as a line drawn across the page rather
+     than as a set of pictures; beside the image it's a column that ends where the
+     image does. It stays under on phones, where a 96 side rail would take a third
+     of the width off the shot.
 
-     Padding compensates for the border so the artwork holds one size across the
-     states: 1 + 6 selected-off, 2 + 5 selected-on. */
-  .pdp-thumb {
-    display: block;
-    width: 68px;
-    padding: 6px;
-    border: var(--border-width) solid var(--pdp-plate-line);
-    border-radius: var(--radius-sm);
-    background: var(--ex-plate);
-    cursor: pointer;
-    transition:
-      background var(--motion-default),
-      border-color var(--motion-default);
-  }
-
-  .pdp-thumb__img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  /* Selected: the same hairline at 2px in the plate's own near-black. */
-  .pdp-thumb[aria-current="true"] {
-    padding: 5px;
-    border-width: 2px;
-    border-color: color-mix(in oklab, var(--neutral-black) 85%, var(--ex-plate));
-  }
-
-  /* Hover keeps its hands off the border: a heavier line there reads as the
-     selected state. It tints the plate instead, mixed against the plate for the
-     same reason the border is. */
-  @media (hover: hover) and (pointer: fine) {
-    .pdp-thumb:not([aria-current="true"]):hover {
-      background: color-mix(in oklab, var(--neutral-black) 5%, var(--ex-plate));
+     Order rather than explicit placement, so the single-slide case below can drop
+     to one column and let the stage fall into it. */
+  @media (min-width: 768px) {
+    .pdp-gallery {
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: var(--space-16);
     }
-  }
 
-  .pdp-thumb:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
+    .pdp-thumbs {
+      order: -1;
+      flex-direction: column;
+    }
   }
 
   /* A product can arrive with a single shot. With one slide there's nothing to
      step through, so the arrows and the rail both go and what's left is a plain
-     image plate, rather than a slider that visibly has nowhere to go. */
+     image plate, rather than a slider that visibly has nowhere to go. The rail's
+     column goes with it, or its gap would indent the image. */
   .pdp-gallery:has(.carousel__item:only-child) .pdp-gallery__control,
-  .pdp-gallery:has(.carousel__item:only-child) .pdp-picker {
+  .pdp-gallery:has(.carousel__item:only-child) .pdp-thumbs {
     display: none;
+  }
+
+  .pdp-gallery:has(.carousel__item:only-child) {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   /* ── Buy column ───────────────────────────────────────────────────────────
@@ -318,8 +385,7 @@
   }
 
   .pdp-buy__head,
-  .pdp-buy__offer,
-  .pdp-buy__buy {
+  .pdp-buy__offer {
     display: grid;
     gap: var(--space-12);
   }
@@ -329,21 +395,22 @@
     gap: var(--space-16);
   }
 
-  /* Link-like, so hover and a focus ring are the whole state model. */
+  /* The brand reads as the first line of the product's name, so it takes the
+     title's weight and ink and differs only in size. Link-like, so hover and a
+     focus ring are the whole state model; the underline appears on hover and the
+     ink holds, since a colour shift off --ink-primary would read as fading. */
   .pdp-buy__brand {
     justify-self: start;
-    color: var(--ink-secondary);
-    font-size: var(--font-caption-medium-emphasized-size);
-    font-weight: var(--font-caption-medium-emphasized-weight);
-    line-height: var(--font-caption-medium-emphasized-lh);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: var(--font-body-small-emphasized-lh);
     text-decoration: none;
   }
 
   @media (hover: hover) and (pointer: fine) {
     .pdp-buy__brand:hover {
-      color: var(--ink-primary);
+      text-decoration: underline;
     }
   }
 
@@ -365,7 +432,7 @@
 
   .pdp-buy__variant {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
   }
@@ -415,7 +482,7 @@
      Native radios: the group keeps its arrow-key behaviour and its checked state
      for free, so nothing here is JS-dependent. The <input> is sr-only and the
      <label> is the whole tile, which is also what makes the tile clickable. */
-  .pdp-colour {
+  .pdp-color {
     margin: 0;
     padding: 0;
     border: 0;
@@ -425,87 +492,71 @@
     min-width: 0;
   }
 
-  .pdp-colour__legend {
+  .pdp-color__legend {
     padding: 0;
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
   }
 
-  .pdp-colour__value {
+  .pdp-color__value {
     color: var(--ink-primary);
     font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
-  /* A legend is out of flow, so the gap to the swatches is its margin. */
-  .pdp-colour__list {
+  /* A legend is out of flow, so the gap to the swatches is its margin. The tiles
+     bring their own ring room, so the row needs nothing else; 12 is the distance
+     to the tile, which is where the ring sits. */
+  .pdp-color__list {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-8);
-    margin-top: var(--space-12);
+    margin: var(--space-12) 0 0;
   }
 
-  /* Same plate and hairline as the image rail, one size down: it holds the same
-     photography, so it reads as part of the same family. Padding compensates for
-     the border so the shot holds one size across the states (1 + 5, then 2 + 4). */
-  .pdp-swatch {
-    display: block;
-    width: 48px;
-    padding: 5px;
-    border: var(--border-width) solid var(--pdp-plate-line);
-    border-radius: var(--radius-sm);
-    background: var(--ex-plate);
-    cursor: pointer;
-    transition:
-      background var(--motion-default),
-      border-color var(--motion-default);
-  }
-
-  .pdp-swatch__img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-
-  .pdp-swatch:has(.pdp-swatch__input:checked) {
-    padding: 4px;
-    border-width: 2px;
-    border-color: color-mix(in oklab, var(--neutral-black) 85%, var(--ex-plate));
-  }
-
-  /* Hover keeps off the border, which reads as checked; it tints the plate. */
-  @media (hover: hover) and (pointer: fine) {
-    .pdp-swatch:not(:has(.pdp-swatch__input:checked)):hover {
-      background: color-mix(in oklab, var(--neutral-black) 5%, var(--ex-plate));
-    }
-  }
-
-  .pdp-swatch:has(.pdp-swatch__input:focus-visible) {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
-  }
-
-  /* Quantity + Add to cart on one row: the stepper takes what it needs and the
-     button takes the rest. Both are 48 tall (number-field--lg matches the default
-     button height), so the row reads as one control. */
-  .pdp-buy__actions {
-    display: flex;
-    gap: var(--space-12);
-  }
-
-  .pdp-buy__qty {
-    flex: 0 0 8.5rem;
-    width: auto;
-  }
-
-  .pdp-buy__cart {
-    flex: 1;
+  /* Add to cart takes the row, Save takes what it needs. */
+  .pdp-cart__add {
+    flex: 1 1 12rem;
     min-width: 0;
   }
 
+  /* The quantity field is the component at its own width: adding to the cart is
+     the moment the row gives its space to Save rather than holding a wide field
+     nobody asked to use. */
+  .pdp-cart__qty {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  /* Both are display:flex/inline-flex, which beat the UA [hidden] rule, so the
+     swap is a no-op without this. */
+  .pdp-cart__add[hidden],
+  .pdp-cart__qty[hidden] {
+    display: none;
+  }
+
+  /* The field keeps the button's pill and height (number-field--lg is 48, the
+     default button height), so what changes on the swap is the control, not the
+     shape of the thing in that slot. */
+  .pdp-cart__control {
+    border-radius: var(--radius-full);
+  }
+
+  /* The component rounds a stepper's outer corners to the field's radius, so its
+     focus ring follows them; on the pill those corners are the pill's. */
+  .pdp-cart__step:first-child {
+    border-start-start-radius: var(--radius-full);
+    border-end-start-radius: var(--radius-full);
+  }
+
+  .pdp-cart__step:last-child {
+    border-start-end-radius: var(--radius-full);
+    border-end-end-radius: var(--radius-full);
+  }
+
+  /* Grows into whatever the field hands back. */
   .pdp-buy__save {
-    width: 100%;
+    flex: 1 1 auto;
   }
 
   /* The pickup row (.item--muted) and the accordion both take the recessed skin:
@@ -548,6 +599,12 @@
     width: 33%;
   }
 
+  /* The divider between the two band sections. It belongs to the related row and
+     sits inside the content column, so it spans the grid rather than the page. */
+  .pdp-related__rule {
+    margin: 0;
+  }
+
   /* The listing's grid caps at four columns, which is exactly the related row, so
      it needs nothing here beyond dropping the bottom margin its cards carry for
      the next product row (there isn't one). */
@@ -559,8 +616,7 @@
      selected thumb loses its ring, so give both real borders. */
   @media (forced-colors: active) {
     .pdp-gallery__slide,
-    .pdp-thumb,
-    .pdp-swatch {
+    .pdp-tile {
       border: var(--border-width) solid CanvasText;
     }
 

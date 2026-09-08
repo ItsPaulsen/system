@@ -195,61 +195,59 @@
                 <span class="sr-only" aria-live="polite" data-carousel-status></span>
               </div>
 
-              <div class="pdp-picker">
-                <ul class="pdp-thumbs">
-                  <li>
-                    <button
-                      class="pdp-thumb"
-                      type="button"
-                      data-carousel-goto="0"
-                      aria-label="Image 1"
-                    >
-                      <img
-                        class="pdp-thumb__img"
-                        data-pdp-thumb
-                        src="/assets/images/products/cover-side-chair-oak-400.webp"
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      class="pdp-thumb"
-                      type="button"
-                      data-carousel-goto="1"
-                      aria-label="Image 2"
-                    >
-                      <img
-                        class="pdp-thumb__img"
-                        data-pdp-thumb
-                        src="/assets/images/products/cover-side-chair-oak-400.webp"
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      class="pdp-thumb"
-                      type="button"
-                      data-carousel-goto="2"
-                      aria-label="Image 3"
-                    >
-                      <img
-                        class="pdp-thumb__img"
-                        data-pdp-thumb
-                        src="/assets/images/products/cover-side-chair-oak-400.webp"
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </button>
-                  </li>
-                </ul>
-              </div>
+              <ul class="pdp-thumbs">
+                <li>
+                  <button
+                    class="pdp-tile pdp-thumb"
+                    type="button"
+                    data-carousel-goto="0"
+                    aria-label="Image 1"
+                  >
+                    <img
+                      class="pdp-tile__img"
+                      data-pdp-thumb
+                      src="/assets/images/products/cover-side-chair-oak-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="pdp-tile pdp-thumb"
+                    type="button"
+                    data-carousel-goto="1"
+                    aria-label="Image 2"
+                  >
+                    <img
+                      class="pdp-tile__img"
+                      data-pdp-thumb
+                      src="/assets/images/products/cover-side-chair-oak-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="pdp-tile pdp-thumb"
+                    type="button"
+                    data-carousel-goto="2"
+                    aria-label="Image 3"
+                  >
+                    <img
+                      class="pdp-tile__img"
+                      data-pdp-thumb
+                      src="/assets/images/products/cover-side-chair-oak-400.webp"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                </li>
+              </ul>
             </div>
 
             <!-- Buy column. Brand, name, the variant line and the price all follow
@@ -293,19 +291,19 @@
                    product shot on the same white plate as the gallery, and each
                    input carries everything that differs between colourways, so
                    nothing is stored twice. -->
-              <fieldset class="pdp-colour">
-                <legend class="pdp-colour__legend">
-                  Colour: <span class="pdp-colour__value" data-pdp-colour>Oak</span>
+              <fieldset class="pdp-color">
+                <legend class="pdp-color__legend">
+                  Color: <span class="pdp-color__value" data-pdp-color>Oak</span>
                 </legend>
-                <div class="pdp-colour__list">
-                  <label class="pdp-swatch">
+                <div class="pdp-color__list">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="oak"
                       checked
-                      data-colour="Oak"
+                      data-color="Oak"
                       data-variant="Moulded oak veneer shell, oak legs"
                       data-price="5 295 kr"
                       data-stores="5 stores"
@@ -314,7 +312,7 @@
                       data-alt="Cover Side Chair in oak"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-oak-400.webp"
                       alt=""
                       loading="lazy"
@@ -322,13 +320,13 @@
                     />
                     <span class="sr-only">Oak</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="black"
-                      data-colour="Black"
+                      data-color="Black"
                       data-variant="Black stained shell, black legs"
                       data-price="5 295 kr"
                       data-stores="4 stores"
@@ -337,7 +335,7 @@
                       data-alt="Cover Side Chair in black"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-black-400.webp"
                       alt=""
                       loading="lazy"
@@ -345,13 +343,13 @@
                     />
                     <span class="sr-only">Black</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="dark-beige"
-                      data-colour="Dark beige"
+                      data-color="Dark beige"
                       data-variant="Dark beige lacquered shell, oak legs"
                       data-price="5 295 kr"
                       data-stores="4 stores"
@@ -360,7 +358,7 @@
                       data-alt="Cover Side Chair in dark beige"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-dark-beige-400.webp"
                       alt=""
                       loading="lazy"
@@ -368,13 +366,13 @@
                     />
                     <span class="sr-only">Dark beige</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="dark-brown"
-                      data-colour="Stained dark brown"
+                      data-color="Stained dark brown"
                       data-variant="Dark brown stained shell, dark brown legs"
                       data-price="5 295 kr"
                       data-stores="3 stores"
@@ -383,7 +381,7 @@
                       data-alt="Cover Side Chair stained dark brown"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-dark-brown-400.webp"
                       alt=""
                       loading="lazy"
@@ -391,13 +389,13 @@
                     />
                     <span class="sr-only">Stained dark brown</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="green"
-                      data-colour="Green"
+                      data-color="Green"
                       data-variant="Green lacquered shell, oak legs"
                       data-price="5 295 kr"
                       data-stores="2 stores"
@@ -406,7 +404,7 @@
                       data-alt="Cover Side Chair in green"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-green-400.webp"
                       alt=""
                       loading="lazy"
@@ -414,13 +412,13 @@
                     />
                     <span class="sr-only">Green</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="cognac"
-                      data-colour="Refine leather cognac"
+                      data-color="Refine leather cognac"
                       data-variant="Cognac refine leather, oak legs"
                       data-price="7 349 kr"
                       data-stores="3 stores"
@@ -429,7 +427,7 @@
                       data-alt="Cover Side Chair in cognac refine leather on an oak base"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-cognac-oak-400.webp"
                       alt=""
                       loading="lazy"
@@ -437,13 +435,13 @@
                     />
                     <span class="sr-only">Refine leather cognac</span>
                   </label>
-                  <label class="pdp-swatch">
+                  <label class="pdp-tile pdp-swatch">
                     <input
                       class="pdp-swatch__input sr-only"
                       type="radio"
-                      name="pdp-colour"
+                      name="pdp-color"
                       value="black-leather"
-                      data-colour="Refine leather black"
+                      data-color="Refine leather black"
                       data-variant="Black refine leather, black legs"
                       data-price="7 349 kr"
                       data-stores="2 stores"
@@ -452,7 +450,7 @@
                       data-alt="Cover Side Chair in black refine leather"
                     />
                     <img
-                      class="pdp-swatch__img"
+                      class="pdp-tile__img"
                       src="/assets/images/products/cover-side-chair-black-leather-400.webp"
                       alt=""
                       loading="lazy"
@@ -463,63 +461,73 @@
                 </div>
               </fieldset>
 
-              <div class="pdp-buy__buy">
-                <div class="pdp-buy__actions">
-                  <div class="input number-field number-field--lg pdp-buy__qty" data-number-field>
-                    <label class="input__label sr-only" for="pdp-qty">Quantity</label>
-                    <span class="input__container number-field__control">
-                      <button
-                        class="number-field__step"
-                        type="button"
-                        data-step="-1"
-                        aria-label="Decrease quantity"
+              <!-- Add to cart and Save sit on one row, which holds both
+                   both the button and the quantity field, one hidden at a time.
+                   Clicking Add to cart swaps in the field, pill-shaped so the swap
+                   reads as the same object changing rather than a button being
+                   replaced by a form; the field takes only the width it needs, so
+                   Save grows into what the button gives up. Stepping back down to
+                   0 puts the button back. product.js owns the swap. -->
+              <div class="pdp-buy__actions">
+                <button class="button button--primary pdp-cart__add" type="button" data-pdp-add>
+                  Add to cart
+                </button>
+                <div
+                  class="input number-field number-field--lg pdp-cart__qty"
+                  data-number-field
+                  data-pdp-qty
+                  hidden
+                >
+                  <label class="input__label sr-only" for="pdp-qty">Quantity in cart</label>
+                  <span class="input__container number-field__control pdp-cart__control">
+                    <button
+                      class="number-field__step pdp-cart__step"
+                      type="button"
+                      data-step="-1"
+                      aria-label="Decrease quantity"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
                       >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="M5 12l14 0" />
-                        </svg>
-                      </button>
-                      <input
-                        class="input__element number-field__input"
-                        id="pdp-qty"
-                        type="text"
-                        inputmode="numeric"
-                        value="1"
-                        data-min="1"
-                        data-max="12"
-                        data-step="1"
-                      />
-                      <button
-                        class="number-field__step"
-                        type="button"
-                        data-step="1"
-                        aria-label="Increase quantity"
+                        <path d="M5 12l14 0" />
+                      </svg>
+                    </button>
+                    <input
+                      class="input__element number-field__input"
+                      id="pdp-qty"
+                      type="text"
+                      inputmode="numeric"
+                      value="1"
+                      data-min="0"
+                      data-max="12"
+                      data-step="1"
+                    />
+                    <button
+                      class="number-field__step pdp-cart__step"
+                      type="button"
+                      data-step="1"
+                      aria-label="Increase quantity"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
                       >
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          aria-hidden="true"
-                        >
-                          <path d="M12 5l0 14" />
-                          <path d="M5 12l14 0" />
-                        </svg>
-                      </button>
-                    </span>
-                  </div>
-                  <button class="button button--primary pdp-buy__cart" type="button">
-                    Add to cart
-                  </button>
+                        <path d="M12 5l0 14" />
+                        <path d="M5 12l14 0" />
+                      </svg>
+                    </button>
+                  </span>
                 </div>
 
                 <button
@@ -615,7 +623,7 @@
                     <div class="accordion__body">
                       <p>
                         Shell in moulded veneer, lacquered or stained; legs in solid oak. The
-                        leather colourways use a semi-aniline hide that darkens a little with use.
+                        leather colorways use a semi-aniline hide that darkens a little with use.
                       </p>
                       <p>
                         Wipe with a damp cloth and dry straight after. Keep out of direct sun, which
@@ -630,7 +638,7 @@
                     </summary>
                     <div class="accordion__body">
                       <p>
-                        Stock colours leave the warehouse in 2-4 days. Leather is made to order and
+                        Stock colors leave the warehouse in 2-4 days. Leather is made to order and
                         ships in 6-8 weeks. Delivery is free over 2 000 kr, otherwise 199 kr.
                       </p>
                       <p>
@@ -690,6 +698,7 @@
            row can't drift from the Shop page. -->
         <section class="pdp-related">
           <div class="pdp-wrap">
+            <hr class="separator pdp-related__rule" />
             <h2 class="pdp-heading">Goes well with</h2>
             <div class="shop__grid pdp-related__grid">
               <a class="shop-card" href="/demo/example/shop/product/">

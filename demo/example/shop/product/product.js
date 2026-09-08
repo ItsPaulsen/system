@@ -7,7 +7,7 @@
   if (!inputs.length) return;
 
   const out = {
-    colour: document.querySelector("[data-pdp-colour]"),
+    color: document.querySelector("[data-pdp-color]"),
     variant: document.querySelector("[data-pdp-variant]"),
     price: document.querySelector("[data-pdp-price]"),
     stores: document.querySelector("[data-pdp-stores]"),
@@ -31,7 +31,7 @@
 
   const render = (input) => {
     const d = input.dataset;
-    set(out.colour, d.colour);
+    set(out.color, d.color);
     set(out.variant, d.variant);
     set(out.price, d.price);
     set(out.stores, d.stores);
@@ -66,8 +66,42 @@
     })
   );
 
-  // Deep link from a Shop card: ?colour=<slug> opens on that colourway.
-  const asked = new URLSearchParams(location.search).get("colour");
+  // Add to cart swaps the button for the quantity field in the same slot: the two
+  // are the same pill, so what changes is the control's contents. Stepping the
+  // quantity back to 0 is what removes it again, and focus returns to the button
+  // then, since the control the user just pressed has left the page.
+  const add = document.querySelector("[data-pdp-add]");
+  const qty = document.querySelector("[data-pdp-qty]");
+  const qtyInput = qty && qty.querySelector(".number-field__input");
+
+  if (add && qty && qtyInput) {
+    const show = (inCart) => {
+      add.hidden = inCart;
+      qty.hidden = !inCart;
+    };
+
+    add.addEventListener("click", () => {
+      qtyInput.value = "1";
+      // The steppers were disabled against a value of 0, so let the component
+      // re-read the new one.
+      qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
+      show(true);
+      // No focus move: adding to the cart finished the action. Stepping the
+      // quantity is the user's call, not a prompt.
+    });
+
+    // initNumberFields fires `change` on every step; blur covers a typed 0.
+    const check = () => {
+      if (Number(qtyInput.value) > 0) return;
+      show(false);
+      add.focus();
+    };
+    qtyInput.addEventListener("change", check);
+    qtyInput.addEventListener("blur", check);
+  }
+
+  // Deep link from a Shop card: ?color=<slug> opens on that colourway.
+  const asked = new URLSearchParams(location.search).get("color");
   const wanted = asked && inputs.find((i) => i.value === asked);
   if (wanted && !wanted.checked) {
     wanted.checked = true;

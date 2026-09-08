@@ -4439,7 +4439,6 @@
     background: transparent;
     color: var(--ink-primary);
     cursor: pointer;
-    transition: background var(--motion-default);
   }
 
   .number-field--sm .number-field__step {
@@ -4455,8 +4454,8 @@
     height: 20px;
   }
 
-  /* Round the outer corners so the hover fill follows the container radius (the
-   container can't clip with overflow:hidden, it would cut the focus box-shadow). */
+  /* Round the outer corners so the focus ring follows the container radius (the
+   container can't clip with overflow:hidden, it would cut that ring off). */
   .number-field__step:first-child {
     border-start-start-radius: calc(var(--radius-sm) - var(--border-width));
     border-end-start-radius: calc(var(--radius-sm) - var(--border-width));
@@ -4490,15 +4489,9 @@
     cursor: not-allowed;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .number-field__step:not(:disabled):hover {
-      background: var(--fill-quaternary-hover);
-    }
-  }
-
-  .number-field__step:not(:disabled):active {
-    background: var(--fill-quaternary-active);
-  }
+  /* No hover or press fill on a stepper: it's a strip inside a rounded field, so
+   any fill draws a square-ish block that fights the field's corners (badly on the
+   pill variant the product page uses). The value changing is the feedback. */
 
   /* The field hugs its content rather than filling a fixed width. */
   .number-field {

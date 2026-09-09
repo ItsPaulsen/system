@@ -394,6 +394,7 @@
   const next = shelf?.querySelector(".carousel__control--next");
 
   const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
+  const DRAG = 5; // px of travel before a press counts as a drag rather than a click
 
   let down = false;
   let startX = 0;
@@ -471,6 +472,9 @@
 
   row.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 || e.pointerType !== "mouse") return;
+    // A row that fits has nothing to drag, and arming the gesture anyway is what
+    // made a press on a card get thrown away as though it had been one.
+    if (row.scrollWidth - row.clientWidth < 1) return;
     cancelAnimationFrame(frame); // taking hold of a row still settling
     down = true;
     moved = false;
@@ -484,13 +488,17 @@
   row.addEventListener("pointermove", (e) => {
     if (!down) return;
     const dx = e.clientX - startX;
-    if (Math.abs(dx) > 3) moved = true;
     const max = row.scrollWidth - row.clientWidth;
     const want = startLeft - dx;
     const to = Math.max(0, Math.min(max, want));
     row.scrollLeft = to;
     // Whatever the scroll couldn't take is the overpull, resisted.
     setPull((to - want) * RESIST);
+    // A drag is a gesture that took the shelf somewhere, not a pointer that
+    // wandered. Hand-holding a mouse through a click moves it a few pixels, and
+    // counting that as a drag is what made the cards need several tries: the row
+    // hadn't gone anywhere, but the click was swallowed as if it had.
+    if (Math.abs(dx) > DRAG && (row.scrollLeft !== startLeft || pull)) moved = true;
   });
 
   const endDrag = (e) => {

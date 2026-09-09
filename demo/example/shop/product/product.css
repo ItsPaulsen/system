@@ -1223,8 +1223,14 @@
   }
 
   /* No plate at this width: it would paint the whole window, and in dark it would
-     paint it white. The photographs carry their own white ground. */
-  .pdp-zoom .pdp-gallery__slide {
+     paint it white. The photographs carry their own white ground.
+
+     :not([hidden]), the same guard the rail takes below: this sets a display, and
+     a display set anywhere beats the UA rule that makes [hidden] disappear. A
+     colourway with fewer shots than the markup holds leaves the spare slides
+     hidden, and without this they came back inside the panel still carrying the
+     last colour's picture. */
+  .pdp-zoom .pdp-gallery__slide:not([hidden]) {
     display: grid;
     justify-items: center;
     background: none;

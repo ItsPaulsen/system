@@ -4902,7 +4902,11 @@
 
    data-carousel-loop on the root makes the controls wrap rather than stop: prev on
    the first goes to the last, and neither control ever disables. It's read live,
-   so a page can turn it on for one context only.
+   so a page can turn it on for one context only. The wrap works by carrying the
+   slide you've left round to the far side while it's off screen, so it needs the
+   set to be wider than the window by a slide to have anywhere to put it: a set of
+   two is doubled with copies (data-carousel-clone, aria-hidden, never counted or
+   landed on) to make that room. A set of one doesn't loop, whatever the flag says.
 
    Any element inside the root with data-carousel-goto="<index>" jumps to that
    slide, and carries aria-current="true" while it's the current one — that's how
@@ -4910,6 +4914,11 @@
    listens for a `carousel:goto` (detail: { index, animate }) from a page that has
    to move it — `animate: false` places the slide rather than sliding to it, which
    is what a reset wants.
+
+   Slides can be hidden ([hidden]) and the carousel sits them out: they're not
+   counted, not landed on, and not stops. A page that shows or hides them, or
+   turns the loop on or off, then fires `carousel:refresh` on the root, which
+   re-measures and rebuilds the loop's copies from what the slides hold now.
 
    <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="…">
      <button class="carousel__control carousel__control--prev" …>…</button>

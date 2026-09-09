@@ -3317,8 +3317,46 @@ function initCarousel() {
     // is display:none, so it has no width and no offset, and counting it left the
     // track able to travel to a slide that was not there: past the last shot of a
     // two-shot colour lay a third, blank.
-    const visible = () => Array.from(track.children).filter((el) => !el.hidden);
-    if (!visible().length) return;
+    //
+    // Two lists, because a looping track can hold more slides than it has content
+    // (see refresh): `slots` is what the track is made of and what the geometry
+    // measures, `reals` is what the set actually contains and what a person is
+    // told they are looking at.
+    const slots = () => Array.from(track.children).filter((el) => !el.hidden);
+    const reals = () => slots().filter((el) => el.dataset.carouselClone === undefined);
+    if (!slots().length) return;
+
+    // The wrap moves the slide you have left round to the far side while it is off
+    // screen, and it needs the set to be wider than the window by a slide to have
+    // anywhere to put it. Two slides give it none: the one being left still shows
+    // a sliver on one edge exactly when it is wanted on the other. So a short set
+    // that wants to loop gets copies appended until it is three wide. A copy is
+    // scenery: it carries no name, takes no focus, and is never counted or landed
+    // on by name (see sync/goTo, where an index past the real ones folds back).
+    const MIN_LOOP = 3;
+    const refresh = () => {
+      track.querySelectorAll("[data-carousel-clone]").forEach((el) => el.remove());
+      if (!looping()) return;
+      const source = reals();
+      if (source.length < 2 || source.length >= MIN_LOOP) return;
+      // Whole sets, never a part of one: padding two slides to three would put a
+      // copy of the first straight after the last, and the same picture would
+      // slide past twice at the seam. Doubling keeps the order the set is in, so
+      // two shots read A B A B the way three read A B C A B C.
+      //
+      // Counted in slots, not children: the track can be holding slides this
+      // colour has no picture for, and those are already sitting out.
+      while (slots().length < MIN_LOOP) {
+        source.forEach((el) => {
+          const copy = el.cloneNode(true);
+          copy.dataset.carouselClone = "";
+          copy.setAttribute("aria-hidden", "true");
+          copy.removeAttribute("id");
+          copy.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
+          track.append(copy);
+        });
+      }
+    };
 
     // Optional jump-to-slide controls inside the root (thumbnails, dots): each
     // carries data-carousel-goto="<index>". The current one gets aria-current,
@@ -3356,7 +3394,7 @@ function initCarousel() {
     const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
     const points = () => {
       const m = maxScroll();
-      const list = visible();
+      const list = slots();
       const base = list[0].offsetLeft;
       return list.map((it) => Math.min(it.offsetLeft - base, m));
     };
@@ -3381,12 +3419,17 @@ function initCarousel() {
     // One slide's worth of travel, and the whole set's. Unclamped, unlike points()
     // above: a looping track has no end to clamp against.
     const stride = () => {
-      const list = visible();
+      const list = slots();
       return list.length > 1 ? list[1].offsetLeft - list[0].offsetLeft : viewport.clientWidth;
     };
-    const span = () => stride() * visible().length;
-    const count = () => visible().length;
-    const wrap = (i) => ((i % count()) + count()) % count();
+    // Everything the track is made of, copies included: the wrap has to carry them
+    // round with the rest or they would sit where they were appended.
+    const size = () => slots().length;
+    const span = () => stride() * size();
+    const wrap = (i) => ((i % size()) + size()) % size();
+    // What the set actually holds. A slot past the last real one is a copy of the
+    // one this many from the start, which is what makes the fold a modulo.
+    const count = () => reals().length;
 
     // What makes the wrap read as a slide rather than a jump: each item carries its
     // own offset of a whole set width, chosen so it sits in or beside the window.
@@ -3403,7 +3446,7 @@ function initCarousel() {
       // Cleared on every child first: a slide that was carrying a cycle offset
       // when it was hidden would still have it when it comes back.
       Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
-      visible().forEach((it, j) => {
+      slots().forEach((it, j) => {
         const k = Math.round((-pos - j * s) / t);
         if (k) it.style.translate = `${k * t}px`;
         else it.style.removeProperty("translate");
@@ -3433,9 +3476,12 @@ function initCarousel() {
       // aria-current on the wrong thumbnail.
       const i = current();
       at = i;
-      if (status) status.textContent = `Slide ${i + 1} of ${count()}`;
+      // The slot is where the track is; the slide is what that slot shows. On a
+      // copy the two differ, and everything a person reads follows the slide.
+      const slide = i % Math.max(1, count());
+      if (status) status.textContent = `Slide ${slide + 1} of ${count()}`;
       nav.forEach((el, n) => {
-        if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
+        if (navIndex(el, n) === slide) el.setAttribute("aria-current", "true");
         else el.removeAttribute("aria-current");
       });
     };
@@ -3454,7 +3500,7 @@ function initCarousel() {
         const pts = points();
         return settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
       }
-      const n = count();
+      const n = size();
       let d = wrap(i) - current();
       if (d > n / 2) d -= n;
       if (d < -n / 2) d += n;
@@ -3474,6 +3520,16 @@ function initCarousel() {
     // colour arriving from the side).
     root.addEventListener("carousel:goto", (e) => {
       goTo(Number(e.detail?.index) || 0, e.detail?.animate !== false);
+    });
+
+    // The set changed under it: slides shown or hidden, or the loop turned on or
+    // off. Copies are rebuilt from what the slides hold now, so a page that
+    // swapped their pictures first gets copies of the new ones.
+    root.addEventListener("carousel:refresh", () => {
+      refresh();
+      at = Math.max(0, Math.min(at, size() - 1));
+      if (looping()) settle(at * stride(), false);
+      else goTo(at, false);
     });
     root.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
@@ -3573,6 +3629,9 @@ function initCarousel() {
       });
     });
 
+    // A set that already wants to loop and is too short to gets its copies now,
+    // without waiting for a page to say anything.
+    refresh();
     render(false);
     sync();
   });

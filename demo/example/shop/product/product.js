@@ -100,29 +100,27 @@
     const views = 1 + stems.length;
     if (gallery) {
       gallery.dataset.pdpViews = String(views);
-      // Wrapping needs three shots, not two. The loop works by moving the slide
-      // you have left round to the far side while it is off screen, and with two
-      // slides there is no moment when it is: the one you are leaving still has a
-      // sliver on one edge exactly when it is needed on the other, so it vanishes
-      // in view. Three gives it half a slide of clearance. A colour with two shots
-      // has ends, like a colour with one has no arrows at all.
-      if (views > 2) gallery.dataset.carouselLoop = "";
+      // Wrapping is worth having wherever there's more than one shot: the rail
+      // says where you are, so an end carries no information, and the arrows stop
+      // vanishing under the pointer. At one view there is nowhere to go, and a
+      // loop would leave two arrows that do nothing. Two shots don't have the room
+      // to wrap on their own; the Carousel copies a slide to make it (see
+      // carousel:refresh), which is why the flag can just say "more than one".
+      if (views > 1) gallery.dataset.carouselLoop = "";
       else delete gallery.dataset.carouselLoop;
-    }
 
-    // Back to the pack shot: the colour that was picked is the one to show, and a
-    // track left translated onto a slide that has just been hidden would park the
-    // gallery on nothing. Placed, not slid: animating it reads as the new colour
-    // arriving from the side rather than as the gallery resetting.
-    if (gallery) {
+      // Told after the slides and the loop flag, so it rebuilds its copies from
+      // the pictures this colour just put in them.
+      gallery.dispatchEvent(new CustomEvent("carousel:refresh"));
+
+      // Back to the pack shot: the colour that was picked is the one to show, and
+      // a track left translated onto a slide that has just been hidden would park
+      // the gallery on nothing. Placed, not slid: animating it reads as the new
+      // colour arriving from the side rather than as the gallery resetting.
       gallery.dispatchEvent(
         new CustomEvent("carousel:goto", { detail: { index: 0, animate: false } })
       );
     }
-
-    // The carousel measures its track live but only re-reads it on resize, so the
-    // slides that just appeared or left need one to be counted.
-    window.dispatchEvent(new Event("resize"));
   };
 
   inputs.forEach((input) =>

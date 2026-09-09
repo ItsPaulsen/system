@@ -396,6 +396,13 @@
   const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
   const DRAG = 5; // px of travel before a press counts as a drag rather than a click
 
+  // A card's width is a sixth of the content cap, which doesn't divide evenly, so
+  // a row of six that is meant to fit exactly can report a pixel or two of
+  // overflow. That isn't somewhere to go, and treating it as somewhere to go put
+  // a live Next arrow over the last product with nothing behind it to reach.
+  const SLACK = 4;
+  const scrollable = () => row.scrollWidth - row.clientWidth > SLACK;
+
   let down = false;
   let startX = 0;
   let startLeft = 0;
@@ -420,8 +427,9 @@
     if (!prev || !next) return;
     const max = row.scrollWidth - row.clientWidth;
     const at = row.scrollLeft;
-    prev.hidden = max <= 1 || at <= 1;
-    next.hidden = max <= 1 || at >= max - 1;
+    const stuck = !scrollable();
+    prev.hidden = stuck || at <= SLACK;
+    next.hidden = stuck || at >= max - SLACK;
   };
 
   // Where each card sits in the scroll, measured from the first one so the row's
@@ -474,7 +482,7 @@
     if (e.button !== 0 || e.pointerType !== "mouse") return;
     // A row that fits has nothing to drag, and arming the gesture anyway is what
     // made a press on a card get thrown away as though it had been one.
-    if (row.scrollWidth - row.clientWidth < 1) return;
+    if (!scrollable()) return;
     cancelAnimationFrame(frame); // taking hold of a row still settling
     down = true;
     moved = false;

@@ -511,10 +511,11 @@
     margin-block-start: var(--space-4);
   }
 
-  /* Clamped to two lines with an ellipsis, and nothing is reserved for a second:
-     a one-line title leaves the card a line shorter, and its price comes up to
-     meet it. */
-  .shop-card__title {
+  /* The maker, set as the card's loudest line: it's what a furniture listing is
+     scanned by. Clamped to two lines with an ellipsis, and nothing is reserved
+     for a second: a one-line brand leaves the card a line shorter, and its price
+     comes up to meet it. */
+  .shop-card__brand {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;

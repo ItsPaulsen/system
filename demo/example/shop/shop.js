@@ -70,10 +70,10 @@
   const popularity = new Map(cards.map((card, i) => [card, i]));
 
   const num = (card, attr) => Number(card.dataset[attr]) || 0;
-  // The title is the brand, so the brand filter reads it straight off the card
-  // rather than a parallel attribute that could disagree with what's on screen.
+  // The brand is on the card, so the filter reads it straight off rather than a
+  // parallel attribute that could disagree with what's on screen.
   const brandOf = (card) =>
-    card.querySelector(".shop-card__title")?.textContent.trim().toLowerCase() || "";
+    card.querySelector(".shop-card__brand")?.textContent.trim().toLowerCase() || "";
 
   const SORTS = {
     popular: (a, b) => popularity.get(a) - popularity.get(b),

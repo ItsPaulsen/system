@@ -3395,13 +3395,13 @@ function initCarousel() {
     // only decides which cycle each item is drawn in.
     const place = () => {
       if (!looping()) {
-        // Every child, not just the shown ones: a slide that was carrying a cycle
-        // offset when it was hidden would still have it when it comes back.
         Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
         return;
       }
       const s = stride();
       const t = span();
+      // Cleared on every child first: a slide that was carrying a cycle offset
+      // when it was hidden would still have it when it comes back.
       Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
       visible().forEach((it, j) => {
         const k = Math.round((-pos - j * s) / t);

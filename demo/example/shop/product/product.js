@@ -100,11 +100,13 @@
     const views = 1 + stems.length;
     if (gallery) {
       gallery.dataset.pdpViews = String(views);
-      // Wrapping is worth having wherever there's more than one shot: the rail (or
-      // the dots) says where you are, so an end carries no information, and the
-      // arrows stop vanishing under the pointer. At one view there is nowhere to
-      // go, and a loop would leave two arrows that do nothing.
-      if (views > 1) gallery.dataset.carouselLoop = "";
+      // Wrapping needs three shots, not two. The loop works by moving the slide
+      // you have left round to the far side while it is off screen, and with two
+      // slides there is no moment when it is: the one you are leaving still has a
+      // sliver on one edge exactly when it is needed on the other, so it vanishes
+      // in view. Three gives it half a slide of clearance. A colour with two shots
+      // has ends, like a colour with one has no arrows at all.
+      if (views > 2) gallery.dataset.carouselLoop = "";
       else delete gallery.dataset.carouselLoop;
     }
 

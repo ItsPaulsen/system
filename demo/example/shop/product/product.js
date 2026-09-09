@@ -424,6 +424,7 @@
   let moved = false;
   let frame;
   let pull = 0;
+  let pointer = null;
   let swallow = false; // the drag's own trailing click, still to be spent
 
   // How far the cards sit past where the scroll can go. The scroller is clamped by
@@ -507,7 +508,7 @@
     swallow = false;
     startX = e.clientX;
     startLeft = row.scrollLeft;
-    row.setPointerCapture(e.pointerId);
+    pointer = e.pointerId;
     row.classList.add("is-dragging");
   });
 
@@ -532,13 +533,22 @@
     // wandered. Hand-holding a mouse through a click moves it a few pixels, and
     // counting that as a drag is what made the cards need several tries: the row
     // hadn't gone anywhere, but the click was swallowed as if it had.
-    if (Math.abs(dx) > DRAG && (row.scrollLeft !== startLeft || pull)) moved = true;
+    if (!moved && Math.abs(dx) > DRAG && (row.scrollLeft !== startLeft || pull)) {
+      moved = true;
+      // Captured only now that it is a drag, never on the press itself. While the
+      // row holds the pointer, the mouse events the click is built from are
+      // retargeted to the row, so the click lands on the container and a card's
+      // link is never followed: taking it up front made every card on a
+      // scrollable row unopenable. A drag has no link to follow, so from here it
+      // is free, and it keeps the gesture once the pointer leaves the row.
+      row.setPointerCapture(pointer);
+    }
   });
 
   const endDrag = (e) => {
     if (!down) return;
     down = false;
-    row.releasePointerCapture?.(e.pointerId);
+    if (row.hasPointerCapture?.(e.pointerId)) row.releasePointerCapture(e.pointerId);
     row.classList.remove("is-dragging");
     if (!moved) {
       if (pull) glide(row.scrollLeft);

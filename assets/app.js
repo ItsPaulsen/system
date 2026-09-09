@@ -3312,8 +3312,13 @@ function initCarousel() {
     const next = root.querySelector(".carousel__control--next");
     const status = root.querySelector("[data-carousel-status]");
     if (!viewport || !track) return;
-    const items = Array.from(track.children);
-    if (!items.length) return;
+    // Read fresh, not captured: a page can hide slides, and the product gallery
+    // does (a colourway carries fewer shots than the markup holds). A hidden slide
+    // is display:none, so it has no width and no offset, and counting it left the
+    // track able to travel to a slide that was not there: past the last shot of a
+    // two-shot colour lay a third, blank.
+    const visible = () => Array.from(track.children).filter((el) => !el.hidden);
+    if (!visible().length) return;
 
     // Optional jump-to-slide controls inside the root (thumbnails, dots): each
     // carries data-carousel-goto="<index>". The current one gets aria-current,
@@ -3351,8 +3356,9 @@ function initCarousel() {
     const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
     const points = () => {
       const m = maxScroll();
-      const base = items[0].offsetLeft;
-      return items.map((it) => Math.min(it.offsetLeft - base, m));
+      const list = visible();
+      const base = list[0].offsetLeft;
+      return list.map((it) => Math.min(it.offsetLeft - base, m));
     };
     const nearestIndex = (scroll) => {
       const pts = points();
@@ -3374,10 +3380,13 @@ function initCarousel() {
 
     // One slide's worth of travel, and the whole set's. Unclamped, unlike points()
     // above: a looping track has no end to clamp against.
-    const stride = () =>
-      items.length > 1 ? items[1].offsetLeft - items[0].offsetLeft : viewport.clientWidth;
-    const span = () => stride() * items.length;
-    const wrap = (i) => ((i % items.length) + items.length) % items.length;
+    const stride = () => {
+      const list = visible();
+      return list.length > 1 ? list[1].offsetLeft - list[0].offsetLeft : viewport.clientWidth;
+    };
+    const span = () => stride() * visible().length;
+    const count = () => visible().length;
+    const wrap = (i) => ((i % count()) + count()) % count();
 
     // What makes the wrap read as a slide rather than a jump: each item carries its
     // own offset of a whole set width, chosen so it sits in or beside the window.
@@ -3386,12 +3395,15 @@ function initCarousel() {
     // only decides which cycle each item is drawn in.
     const place = () => {
       if (!looping()) {
-        items.forEach((it) => it.style.removeProperty("translate"));
+        // Every child, not just the shown ones: a slide that was carrying a cycle
+        // offset when it was hidden would still have it when it comes back.
+        Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
         return;
       }
       const s = stride();
       const t = span();
-      items.forEach((it, j) => {
+      Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
+      visible().forEach((it, j) => {
         const k = Math.round((-pos - j * s) / t);
         if (k) it.style.translate = `${k * t}px`;
         else it.style.removeProperty("translate");
@@ -3421,7 +3433,7 @@ function initCarousel() {
       // aria-current on the wrong thumbnail.
       const i = current();
       at = i;
-      if (status) status.textContent = `Slide ${i + 1} of ${items.length}`;
+      if (status) status.textContent = `Slide ${i + 1} of ${count()}`;
       nav.forEach((el, n) => {
         if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
         else el.removeAttribute("aria-current");
@@ -3442,7 +3454,7 @@ function initCarousel() {
         const pts = points();
         return settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
       }
-      const n = items.length;
+      const n = count();
       let d = wrap(i) - current();
       if (d > n / 2) d -= n;
       if (d < -n / 2) d += n;

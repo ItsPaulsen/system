@@ -492,10 +492,19 @@
 
      Title and its variant are one block rather than two rows, so a product with
      no variant needs no different card. Consecutive lines, no gap: same
-     treatment as the price and its store count. */
+     treatment as the price and its store count.
+
+     The block is the heading, not the brand inside it: as an <h3> on the brand
+     alone, a row of one maker's products gave a screen reader six headings that
+     all said the same word. Heading the pair names each card. Its own type is
+     reset to nothing, so the two lines keep the sizes and weights they set for
+     themselves. */
   .shop-card__head {
     display: flex;
     flex-direction: column;
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
 
     /* The card's row-gap is 8, which is what title to price wants. Tile to title
        wants 12, so it makes up the 4 itself. */
@@ -506,7 +515,6 @@
      a one-line title leaves the card a line shorter, and its price comes up to
      meet it. */
   .shop-card__title {
-    margin: 0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;

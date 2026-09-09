@@ -13,6 +13,7 @@
     stores: document.querySelector("[data-pdp-stores]"),
     badge: document.querySelector("[data-pdp-stock-badge]"),
     stock: document.querySelector("[data-pdp-stock-label]"),
+    status: document.querySelector("[data-pdp-status]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -37,6 +38,10 @@
     if (el) el.textContent = text;
   };
 
+  // Flipped once the opening colourway is on the page, so the status region only
+  // speaks for changes the user made.
+  let started = false;
+
   const render = (input) => {
     const d = input.dataset;
     set(out.color, d.color);
@@ -54,6 +59,10 @@
       out.badge.classList.remove("badge--green", "badge--amber");
       out.badge.classList.add(stock.skin);
     }
+    // Three things moved at once and the radio only announces itself, so say the
+    // rest. Not on the first render: the page hasn't changed yet, it has arrived,
+    // and a region populated at load can read itself out over the page.
+    if (out.status && started) set(out.status, `${d.color}, ${d.price}, ${stock.label}`);
 
     // One stem per colourway, the widths appended here: the same files the shop
     // card serves, so a colour change costs no new download on a page the listing
@@ -185,6 +194,11 @@
         add.classList.add("is-added", "button--with-start-icon");
         // Written past the idle guard: this *is* the state.
         addLabel.textContent = "Added";
+        // The button says it, but a press with a mouse may not have put focus
+        // there, and a button's name changing under nobody is a change nobody
+        // hears. Same region the colour change uses.
+        const n = Number(qtyInput.value);
+        set(out.status, n > 1 ? `${n} items added to cart` : "Added to cart");
 
         setTimeout(() => {
           add.classList.remove("is-added", "button--with-start-icon");
@@ -377,6 +391,7 @@
   if (wanted) wanted.checked = true;
   const current = inputs.find((i) => i.checked);
   if (current) render(current);
+  started = true;
 })();
 
 // The related row is a scroll container rather than a carousel: its cards are the

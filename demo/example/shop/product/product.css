@@ -301,6 +301,30 @@
     z-index: 1;
     inset-block-end: var(--space-12);
     inset-inline-end: var(--space-12);
+
+    /* The one control here that doesn't follow the theme. The plate under it is
+       fixed white in both (--ex-plate), so a surface read from the theme turns
+       into a dark chip on a white photograph the moment the page does, while the
+       arrows get away with it by only appearing under a pointer. This one is
+       always there.
+
+       Black at 80% over that plate lands on a near-black that a white icon reads
+       against at 15:1, and the same two values hold in either theme because
+       neither the plate nor the ink moves. */
+    border: 0;
+    background: color-mix(in srgb, var(--neutral-black) 80%, transparent);
+    color: var(--neutral-white);
+    transition: background var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-gallery__zoom:hover {
+      background: color-mix(in srgb, var(--neutral-black) 88%, transparent);
+    }
+  }
+
+  .pdp-gallery__zoom:active {
+    background: color-mix(in srgb, var(--neutral-black) 94%, transparent);
   }
 
   /* The photograph is a trigger of its own, so say so. */
@@ -628,8 +652,54 @@
 
   /* No gap: the brand reads as the first line of the product's name, so the two
      sit on their own line-heights. */
+
+  /* The name takes the row and Favorite sits at the end of it, top-aligned so it
+     lines up with the brand rather than drifting down a two-line title. */
   .pdp-buy__head {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-12);
+  }
+
+  .pdp-buy__naming {
+    display: grid;
+  }
+
+  /* Sized off the brand line it sits beside rather than the row of buy controls:
+     at the button's own 48 it out-weighed the title it's meant to sit quietly
+     next to.
+
+     Nothing but the heart at rest, so the name is what the block is; the surface
+     is the hover, and it's the neutral one because the buy column already sits on
+     the secondary surface. Flat's own accent ink and accent-soft fill would make
+     a heart at rest read as a state it isn't in. */
+  .pdp-buy__save {
+    --button-size: 40px;
+
+    color: var(--ink-secondary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-buy__save:not(:disabled):hover {
+      background: var(--background-secondary-hover);
+    }
+  }
+
+  .pdp-buy__save:not(:disabled):active {
+    background: var(--background-secondary-active);
+  }
+
+  /* Favorited: the heart fills and comes up to the title's ink. A filled shape is
+     the state, so it survives a palette that can't tell two greys apart, and it
+     needs no colour the page doesn't already use. The attribute beats the SVG's
+     own fill="none", which is a presentation attribute. */
+  .pdp-buy__save[aria-pressed="true"] {
+    color: var(--ink-primary);
+  }
+
+  .pdp-buy__save[aria-pressed="true"] .pdp-buy__heart {
+    fill: currentcolor;
   }
 
   .pdp-buy__info {
@@ -768,36 +838,43 @@
     gap: var(--space-12);
   }
 
-  /* The two share the row evenly: basis 0, so what they get is the whole row split
-     between them rather than their own content widths plus an equal share of
-     what's left over (which is what left them different widths). The 10rem floor
-     is what makes them wrap to their own lines instead of squeezing the labels on
-     a narrow phone. */
-  .pdp-cart__add,
-  .pdp-buy__save {
+  /* Add to cart takes whatever the field leaves: basis 0, so it's the row minus
+     the quantity rather than its own label plus a share. The 10rem floor is what
+     makes it wrap to its own line instead of squeezing the label on a narrow
+     phone, and that label grows by a word or two once the count is in it. */
+  .pdp-cart__add {
     flex: 1 1 0;
     min-width: 10rem;
   }
 
-  /* The quantity field is the component at its own width: adding to the cart is
-     the moment the row gives its space to Save, which grows into it, rather than
-     holding a wide field nobody asked to use. */
+  /* The button holds all three states at once and shows one: the Spinner belongs
+     to the component's own loading state, the check to the confirmation after it.
+     Hidden rather than injected, so the width is settled before the press and the
+     button can't reflow under the pointer. */
+  .pdp-cart__add:not(.button--loading) .spinner,
+  .pdp-cart__add:not(.is-added) .pdp-cart__check {
+    display: none;
+  }
+
+  /* Confirming, not offering: the press has landed and the button is saying so,
+     so a second one in that moment would be the same press counted twice. It
+     comes back on its own (product.js). */
+  .pdp-cart__add.is-added {
+    pointer-events: none;
+  }
+
+  /* The quantity is the component at its own width: it's one number and two
+     steppers, and any more room than that reads as a field waiting to be typed
+     in. */
   .pdp-cart__qty {
     flex: 0 0 auto;
     width: auto;
   }
 
-  /* Both are display:flex/inline-flex, which beat the UA [hidden] rule, so the
-     swap is a no-op without this. */
-  .pdp-cart__add[hidden],
-  .pdp-cart__qty[hidden] {
-    display: none;
-  }
-
   /* The field keeps the button's pill and height (number-field--lg is 48, the
-     default button height), so what changes on the swap is the control, not the
-     shape of the thing in that slot. The component's own corner is the Input's,
-     which is right in a form and wrong in this row. */
+     default button height), so the two read as one row of controls rather than a
+     form field parked beside a button. The component's own corner is the Input's,
+     which is right in a form and wrong here. */
   .pdp-cart__control {
     border-radius: var(--radius-full);
   }
@@ -1091,7 +1168,6 @@
      The arrows come from the Carousel, which gives them a border as well, so this
      drops that and keeps the surface. */
   .pdp-gallery__control,
-  .pdp-gallery__zoom,
   .pdp-zoom__close {
     border: 0;
     background: var(--background-secondary);
@@ -1101,14 +1177,12 @@
 
   @media (hover: hover) and (pointer: fine) {
     .pdp-gallery__control:hover,
-    .pdp-gallery__zoom:hover,
     .pdp-zoom__close:hover {
       background: var(--background-secondary-hover);
     }
   }
 
   .pdp-gallery__control:active,
-  .pdp-gallery__zoom:active,
   .pdp-zoom__close:active {
     background: var(--background-secondary-active);
   }
@@ -1301,6 +1375,12 @@
     .pdp-swatch:has(.pdp-swatch__input:checked) {
       border-color: Highlight;
       border-width: 2px;
+    }
+
+    /* Its fill is the only thing separating it from the shot behind it, and the
+       forced palette drops that. */
+    .pdp-gallery__zoom {
+      border: var(--border-width) solid ButtonText;
     }
   }
 }

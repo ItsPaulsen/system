@@ -135,39 +135,81 @@
     if (checked) set(out.color, checked.dataset.color);
   });
 
-  // Add to cart swaps the button for the quantity field in the same slot: the two
-  // are the same pill, so what changes is the control's contents. Stepping the
-  // quantity back to 0 is what removes it again, and focus returns to the button
-  // then, since the control the user just pressed has left the page.
+  // The button says what pressing it will do, so the quantity beside it reads as
+  // part of the sentence rather than a widget parked next to a button. One is the
+  // resting case and gets the plain label: "Add 1 item to cart" is a number nobody
+  // chose. The count is also the button's accessible name, so it's announced on
+  // focus without anything live.
+  //
+  // Pressing it spends a moment loading and a moment confirming before it offers
+  // itself again. There's no request behind it here, but the shape is the real
+  // one: a cart add is a round trip, and a button that answers instantly teaches
+  // people it didn't do anything.
   const add = document.querySelector("[data-pdp-add]");
   const qty = document.querySelector("[data-pdp-qty]");
   const qtyInput = qty && qty.querySelector(".number-field__input");
+  const addLabel = add && add.querySelector("[data-pdp-add-label]");
 
-  if (add && qty && qtyInput) {
-    const show = (inCart) => {
-      add.hidden = inCart;
-      qty.hidden = !inCart;
+  if (add && qtyInput && addLabel) {
+    const SENDING = 700;
+    const CONFIRMING = 1400;
+
+    const idle = () =>
+      !add.classList.contains("button--loading") && !add.classList.contains("is-added");
+    // initNumberFields fires `change` on every step; `input` covers typing, and
+    // the field clamps a nonsense value on blur, which is a change of its own.
+    // Only while the button is offering: mid-press the label is the state, and
+    // stepping the quantity then shouldn't write over it.
+    const label = () => {
+      if (!idle()) return;
+      const n = Number(qtyInput.value);
+      addLabel.textContent = n > 1 ? `Add ${n} items to cart` : "Add to cart";
     };
+    qtyInput.addEventListener("change", label);
+    qtyInput.addEventListener("input", label);
+    label();
 
+    // No cancelling: the guard means a press can only start from rest, so there is
+    // never a run in flight to interrupt.
     add.addEventListener("click", () => {
-      qtyInput.value = "1";
-      // The steppers were disabled against a value of 0, so let the component
-      // re-read the new one.
-      qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
-      show(true);
-      // No focus move: adding to the cart finished the action. Stepping the
-      // quantity is the user's call, not a prompt.
-    });
+      if (!idle()) return;
+      add.classList.add("button--loading");
+      add.setAttribute("aria-busy", "true");
+      add.setAttribute("aria-disabled", "true");
 
-    // initNumberFields fires `change` on every step; blur covers a typed 0.
-    const check = () => {
-      if (Number(qtyInput.value) > 0) return;
-      show(false);
-      add.focus();
-    };
-    qtyInput.addEventListener("change", check);
-    qtyInput.addEventListener("blur", check);
+      setTimeout(() => {
+        add.classList.remove("button--loading");
+        add.removeAttribute("aria-busy");
+        // The check is a start icon while it's there, so the pair sits on the
+        // same inset as any other icon-and-label button.
+        add.classList.add("is-added", "button--with-start-icon");
+        // Written past the idle guard: this *is* the state.
+        addLabel.textContent = "Added";
+
+        setTimeout(() => {
+          add.classList.remove("is-added", "button--with-start-icon");
+          add.removeAttribute("aria-disabled");
+          label();
+        }, CONFIRMING);
+      }, SENDING);
+    });
   }
+
+  // Favorite is a toggle, so the toast has to be able to say both things. The
+  // shell reads the line and its type off the button when the click reaches
+  // document (assets/app.js), and a listener on the button itself runs first, so
+  // this sets them for the press already in flight rather than the next one.
+  //
+  // Success on the way in and the shell's `removed` on the way out: a green check
+  // for undoing something would congratulate the user for the thing they just
+  // took back, and red would report a deliberate removal as a failure.
+  const save = document.querySelector("[data-pdp-save]");
+  save?.addEventListener("click", () => {
+    const on = save.getAttribute("aria-pressed") !== "true";
+    save.setAttribute("aria-pressed", String(on));
+    save.dataset.toast = on ? "Added to favorites" : "Removed from favorites";
+    save.dataset.toastType = on ? "success" : "removed";
+  });
 
   // The rail's chevrons page it by three tiles. The Scroll Area keeps the wheel,
   // touch and keyboard scrolling; these are the coarse affordance over the tiles,

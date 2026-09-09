@@ -20,7 +20,11 @@ const toast = (() => {
     warning:
       '<path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" /><path d="M12 16h.01" />',
     error:
-      '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" />'
+      '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 8v4" /><path d="M12 16h.01" />',
+    // The counterpart to success: something was taken away, and it worked. Neutral
+    // ink rather than red, which is the failure semantic and would report a
+    // deliberate removal as a problem. Polite, like success, for the same reason.
+    removed: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l6 0" />'
   };
   const svg = (type) =>
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[type]}</svg>`;
@@ -95,6 +99,7 @@ const toast = (() => {
   show.info = (m) => show(m, { type: "info" });
   show.warning = (m) => show(m, { type: "warning" });
   show.error = (m) => show(m, { type: "error" });
+  show.removed = (m) => show(m, { type: "removed" });
   // Loading toast that resolves into success/error; stays until the promise settles.
   show.promise = (p, msgs = {}) => {
     render(msgs.loading || "Loading…", "loading");

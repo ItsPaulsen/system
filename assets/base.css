@@ -1993,6 +1993,9 @@
     color: var(--red);
   }
 
+  /* No colour of its own: a removal is neither good news nor bad, so the glyph
+   sits at the text's own weight and the shape carries the whole meaning. */
+  .toast[data-type="removed"] .toast__icon,
   .toast[data-type="loading"] .toast__icon {
     color: var(--ink-secondary);
   }

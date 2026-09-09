@@ -64,6 +64,8 @@
           <h2 class="subhead">Types</h2>
           <p class="section-note">
             A default message, the semantic types, and a promise that resolves loading to done.
+            <code>removed</code> is the counterpart to <code>success</code>: something was taken
+            away and it worked, so the glyph stays at the text's own weight rather than going red.
           </p>
           <div class="example" data-example>
             <div class="component-preview" style="flex-wrap: wrap; gap: 0.5rem">
@@ -102,6 +104,14 @@
               >
                 Error
               </button>
+              <button
+                class="button button--secondary"
+                type="button"
+                data-toast="Removed from favorites"
+                data-toast-type="removed"
+              >
+                Removed
+              </button>
               <button class="button button--secondary" type="button" data-toast-promise>
                 Promise
               </button>
@@ -125,6 +135,9 @@
               <Button variant="secondary" onClick={() => toast.error("Couldn't save")}>
                 Error
               </Button>
+              <Button variant="secondary" onClick={() => toast.removed("Removed from favorites")}>
+                Removed
+              </Button>
               <Button
                 variant="secondary"
                 onClick={() =>
@@ -146,7 +159,8 @@
           <p class="section-note">
             Mount <code>&lt;Toaster /&gt;</code> once near the root, then call
             <code>toast()</code> (or
-            <code>toast.success</code>/<code>error</code>/<code>promise</code>) from anywhere.
+            <code>toast.success</code>/<code>error</code>/<code>removed</code>/<code>promise</code>)
+            from anywhere.
           </p>
           <div data-source="/react/Toaster.jsx"></div>
         </section>

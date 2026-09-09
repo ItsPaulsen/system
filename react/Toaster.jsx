@@ -3,17 +3,20 @@ import {
   IconInfoCircle,
   IconCircleCheck,
   IconAlertTriangle,
-  IconAlertCircle
+  IconAlertCircle,
+  IconCircleMinus
 } from "@tabler/icons-react";
 
 // Toast notifications. Mount <Toaster /> once near the root, then call toast(message) from
-// anywhere. Typed helpers (toast.success/info/warning/error) add a matching icon; toast.promise
-// shows a loading toast that resolves to success or error. One reused pill, like the vanilla.
+// anywhere. Typed helpers (toast.success/info/warning/error/removed) add a matching icon;
+// toast.promise shows a loading toast that resolves to success or error. One reused pill,
+// like the vanilla.
 const ICON = {
   info: IconInfoCircle,
   success: IconCircleCheck,
   warning: IconAlertTriangle,
-  error: IconAlertCircle
+  error: IconAlertCircle,
+  removed: IconCircleMinus
 };
 
 // Tiny bridge so the imperative toast() can reach the mounted <Toaster />.
@@ -26,6 +29,7 @@ toast.success = (m) => toast(m, { type: "success" });
 toast.info = (m) => toast(m, { type: "info" });
 toast.warning = (m) => toast(m, { type: "warning" });
 toast.error = (m) => toast(m, { type: "error" });
+toast.removed = (m) => toast(m, { type: "removed" });
 toast.promise = (p, msgs = {}) => {
   toast(msgs.loading || "Loading…", { type: "loading", duration: Infinity });
   Promise.resolve(p).then(

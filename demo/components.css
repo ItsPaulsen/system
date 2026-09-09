@@ -1525,7 +1525,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    min-height: 24px;
+    min-height: 20px;
     padding-inline: 8px;
     border: 0;
     border-radius: var(--radius-full);
@@ -1538,12 +1538,16 @@
     white-space: nowrap;
   }
 
+  /* The same 8 the label gets. A glyph here is drawn to the edges of its box,
+     not letter-shaped with its own side bearings, so the 4 these used to pull it
+     in to read as an optical match landed as the icon crowding the badge's
+     corner instead. */
   .badge--with-start-icon {
-    padding-inline-start: 4px;
+    padding-inline-start: 8px;
   }
 
   .badge--with-end-icon {
-    padding-inline-end: 4px;
+    padding-inline-end: 8px;
   }
 
   .badge svg {

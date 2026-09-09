@@ -335,10 +335,46 @@
                    the space between groups. -->
               <div class="pdp-buy__intro">
                 <div class="pdp-buy__head">
-                  <a class="pdp-buy__brand" href="/demo/example/shop/?brand=Muuto">Muuto</a>
-                  <h1 class="pdp-buy__title">
-                    Cover Side Chair<span class="pdp-buy__variant" data-pdp-variant>, oak</span>
-                  </h1>
+                  <div class="pdp-buy__naming">
+                    <a class="pdp-buy__brand" href="/demo/example/shop/?brand=Muuto">Muuto</a>
+                    <h1 class="pdp-buy__title">
+                      Cover Side Chair<span class="pdp-buy__variant" data-pdp-variant>, oak</span>
+                    </h1>
+                  </div>
+
+                  <!-- Beside the name rather than under the buy row: it acts on the
+                       product, not on the purchase, and at full width down there it
+                       read as a peer of Add to cart. Icon-only, so the label is the
+                       accessible name, and aria-pressed carries the state rather
+                       than the label swapping under it.
+
+                       data-toast is the shell's own hook (assets/app.js); product.js
+                       rewrites the line and its type before the click reaches it,
+                       so the toast says which way the toggle went. -->
+                  <button
+                    class="button button--flat button--icon pdp-buy__save"
+                    type="button"
+                    aria-label="Favorite"
+                    aria-pressed="false"
+                    data-pdp-save
+                    data-toast="Added to favorites"
+                    data-toast-type="success"
+                  >
+                    <svg
+                      class="pdp-buy__heart"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"
+                      />
+                    </svg>
+                  </button>
                 </div>
 
                 <p class="pdp-buy__price">
@@ -526,24 +562,20 @@
                 </fieldset>
               </div>
 
-              <!-- Add to cart and Save sit on one row, which holds both
-                   both the button and the quantity field, one hidden at a time.
-                   Clicking Add to cart swaps in the field, pill-shaped so the swap
-                   reads as the same object changing rather than a button being
-                   replaced by a form; the field takes only the width it needs, so
-                   Save grows into what the button gives up. Stepping back down to
-                   0 puts the button back. product.js owns the swap. -->
+              <!-- How many, then the commitment: the quantity is a parameter of
+                   the press rather than something to correct afterwards, so the
+                   cart never changes before the number is settled. The field is
+                   pill-shaped to sit as a peer of the button beside it, and takes
+                   only the width it needs. The button's label carries the count
+                   back (product.js), which is what keeps the two a sentence
+                   rather than a widget and a button. -->
               <div class="pdp-buy__actions">
-                <button class="button button--primary pdp-cart__add" type="button" data-pdp-add>
-                  Add to cart
-                </button>
                 <div
                   class="input number-field number-field--lg pdp-cart__qty"
                   data-number-field
                   data-pdp-qty
-                  hidden
                 >
-                  <label class="input__label sr-only" for="pdp-qty">Quantity in cart</label>
+                  <label class="input__label sr-only" for="pdp-qty">Quantity</label>
                   <span class="input__container number-field__control pdp-cart__control">
                     <button
                       class="number-field__step"
@@ -569,7 +601,7 @@
                       type="text"
                       inputmode="numeric"
                       value="1"
-                      data-min="0"
+                      data-min="1"
                       data-max="12"
                       data-step="1"
                     />
@@ -595,30 +627,13 @@
                   </span>
                 </div>
 
-                <button
-                  class="button button--secondary button--with-start-icon pdp-buy__save"
-                  type="button"
-                >
+                <!-- Three states in one button, all of them in the markup so the
+                     press never rebuilds it: the label, the check it leads with
+                     once the item is in, and the Spinner for the moment between.
+                     product.js reveals one at a time (see .pdp-cart__add). -->
+                <button class="button button--primary pdp-cart__add" type="button" data-pdp-add>
                   <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"
-                    />
-                  </svg>
-                  Favorite
-                </button>
-              </div>
-
-              <p class="pdp-buy__stock">
-                <span class="badge badge--green badge--with-start-icon" data-pdp-stock-badge>
-                  <svg
+                    class="pdp-cart__check"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -629,6 +644,33 @@
                   >
                     <path d="M5 12l5 5l10 -10" />
                   </svg>
+                  <span class="button__label" data-pdp-add-label>Add to cart</span>
+                  <svg class="spinner" aria-hidden="true" viewBox="0 0 50 50">
+                    <circle
+                      class="spinner__track"
+                      cx="25"
+                      cy="25"
+                      r="20"
+                      fill="none"
+                      stroke-width="5"
+                    />
+                    <circle
+                      class="spinner__arc"
+                      cx="25"
+                      cy="25"
+                      r="20"
+                      fill="none"
+                      stroke-width="5"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <p class="pdp-buy__stock">
+                <!-- No glyph: the skin already carries the state and the label
+                     already names it, so an icon here is a third telling of the
+                     same thing. -->
+                <span class="badge badge--green" data-pdp-stock-badge>
                   <span data-pdp-stock-label>In stock</span>
                 </span>
                 <span class="pdp-buy__lead" data-pdp-lead>Ships in 2-4 days</span>

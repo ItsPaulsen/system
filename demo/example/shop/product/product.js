@@ -424,6 +424,7 @@
   let moved = false;
   let frame;
   let pull = 0;
+  let swallow = false; // the drag's own trailing click, still to be spent
 
   // How far the cards sit past where the scroll can go. The scroller is clamped by
   // the browser, so this is drawn by shifting the children (see product.css).
@@ -501,12 +502,22 @@
     cancelAnimationFrame(frame); // taking hold of a row still settling
     down = true;
     moved = false;
+    // A fresh press is never the tail of the last one, whatever became of that
+    // gesture's click.
+    swallow = false;
     startX = e.clientX;
     startLeft = row.scrollLeft;
     row.setPointerCapture(e.pointerId);
     row.classList.add("is-dragging");
-    e.preventDefault(); // the cards are links: stop the native drag-and-drop
   });
+
+  // What the pointerdown used to prevent. Cancelling that default is the blunt
+  // way to stop a card being dragged off as a link, and it also suppresses the
+  // mouse events the click is built from, which browsers resolve differently:
+  // that was a press going nowhere for no visible reason. This cancels the one
+  // thing it was ever for, and the pressed row stops selecting text through the
+  // .is-dragging class instead.
+  row.addEventListener("dragstart", (e) => e.preventDefault());
 
   row.addEventListener("pointermove", (e) => {
     if (!down) return;
@@ -534,16 +545,26 @@
       return;
     }
     settle();
-    // Let go over a card and the click would follow its link. preventDefault
-    // alone wouldn't do: the cards are anchors, but a page could bind a listener
-    // to them too, so stop the event as well (same as the carousel's own guard).
-    const swallow = (c) => {
-      c.preventDefault();
-      c.stopPropagation();
-    };
-    row.addEventListener("click", swallow, { capture: true });
-    requestAnimationFrame(() => row.removeEventListener("click", swallow, { capture: true }));
+    // Let go over a card and the click would follow its link, so the drag's own
+    // trailing click is spent here. A flag rather than a listener that takes
+    // itself off a frame later: whether that frame beat the click was a race, and
+    // losing it left a live swallow to eat the next honest press.
+    swallow = true;
   };
+
+  // Exactly one click, and only the one the drag itself produced. The cards are
+  // anchors, but a page could bind a listener to them too, so the event is
+  // stopped as well as defaulted (same as the carousel's own guard).
+  row.addEventListener(
+    "click",
+    (e) => {
+      if (!swallow) return;
+      swallow = false;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    { capture: true }
+  );
 
   row.addEventListener("pointerup", endDrag);
   row.addEventListener("pointercancel", endDrag);

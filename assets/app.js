@@ -3373,17 +3373,21 @@ function initCarousel() {
 
     // What a release does. Two ways to commit: the drag crossed 30% of the window,
     // whatever its speed, because a slow drag that far is deliberate and should
-    // land; or it was a flick, which has to be both far enough to mean it and fast
-    // enough to be a throw.
+    // land; or it was a flick, meaning it went far enough to mean it and ended
+    // soon enough to be a throw rather than a drag that stopped.
     //
-    // Both halves, because either alone is wrong. Distance alone would ask for a
-    // sweep where a thumb wants to flick. Time alone (a release inside the
-    // settle's own duration, which this used to use) meant a 6px twitch inside a
-    // third of a second changed the picture, and on a phone a thumb rolls that far
-    // resting on the glass.
+    // Both halves of the flick, because either alone is wrong. Distance alone
+    // asks for a sweep where a thumb wants to flick. Time alone let a 6px twitch
+    // change the picture, and a thumb rolls that far resting on the glass.
+    //
+    // A window rather than a speed: a phone swipe is often slower than it feels
+    // (a gentle 60px over 300ms is 0.2px/ms), and gating on speed left the set
+    // refusing perfectly ordinary swipes. And a window of its own rather than the
+    // settle's duration, which this used to read: that duration drops to 1ms
+    // under reduced motion, which would have meant no flick ever commits.
     const COMMIT = 0.3; // of the viewport
     const FLICK = 24; // px, under which a release is a press that wobbled
-    const THROW = 0.35; // px/ms, the speed that makes a short move a flick
+    const THROW = 500; // ms, after which a release is a drag that stopped
     const DRAG = 3; // px of travel before a press is a drag rather than a click
     let pos = 0;
 
@@ -3608,8 +3612,8 @@ function initCarousel() {
       // crossed none of them asks the two rules above.
       const crossed = Math.round(-dx / s);
       const travel = Math.abs(dx);
-      const speed = travel / Math.max(1, e.timeStamp - startT);
-      const commit = travel > COMMIT * viewport.clientWidth || (travel > FLICK && speed > THROW);
+      const spent = e.timeStamp - startT;
+      const commit = travel > COMMIT * viewport.clientWidth || (travel > FLICK && spent < THROW);
       const delta = crossed || (commit ? -Math.sign(dx) : 0);
       if (looping()) settle((Math.round(-startPos / s) + delta) * s);
       else goTo(startAt + delta);

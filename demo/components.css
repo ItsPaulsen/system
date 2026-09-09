@@ -3489,6 +3489,8 @@
   }
 
   .pagination__link {
+    /* Tapped in sequence to walk pages. */
+    touch-action: manipulation;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4122,6 +4124,8 @@
   }
 
   .calendar__nav {
+    /* Held down to page through months. */
+    touch-action: manipulation;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4196,6 +4200,8 @@
   }
 
   .calendar__day {
+    /* Two taps in a row land on neighbouring days often enough to zoom. */
+    touch-action: manipulation;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4453,6 +4459,11 @@
    three parts either: they are one control, and rules between them only chop it
    up. */
   .number-field__step {
+    /* Repeat-tapping a stepper on a phone is the whole point of it, and two taps
+     in the same spot is also the double-tap-zoom gesture, so counting up zoomed
+     the page instead. Opting out also drops the ~300ms wait before the tap
+     registers, the same as .button. */
+    touch-action: manipulation;
     display: inline-flex;
     position: relative;
     flex-shrink: 0;
@@ -4990,6 +5001,8 @@
 
   /* Round icon buttons flanking the viewport, vertically centred by the flex row. */
   .carousel__control {
+    /* Tapped repeatedly to walk a set, so it can't be a double-tap zoom. */
+    touch-action: manipulation;
     flex: 0 0 auto;
     display: inline-flex;
     align-items: center;

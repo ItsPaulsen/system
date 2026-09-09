@@ -3393,8 +3393,9 @@ function initCarousel() {
     // offsetLeft, clamped so the last items settle at the end rather than beyond it).
     const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
     const points = () => {
-      const m = maxScroll();
       const list = slots();
+      if (!list.length) return [0];
+      const m = maxScroll();
       const base = list[0].offsetLeft;
       return list.map((it) => Math.min(it.offsetLeft - base, m));
     };
@@ -3426,7 +3427,10 @@ function initCarousel() {
     // round with the rest or they would sit where they were appended.
     const size = () => slots().length;
     const span = () => stride() * size();
-    const wrap = (i) => ((i % size()) + size()) % size();
+    const wrap = (i) => {
+      const n = size();
+      return n ? ((i % n) + n) % n : 0;
+    };
     // What the set actually holds. A slot past the last real one is a copy of the
     // one this many from the start, which is what makes the fold a modulo.
     const count = () => reals().length;
@@ -3437,19 +3441,15 @@ function initCarousel() {
     // has been moved a set width back. The track keeps its single position; this
     // only decides which cycle each item is drawn in.
     const place = () => {
-      if (!looping()) {
-        Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
-        return;
-      }
+      // Every child, hidden ones included: a slide that was carrying a cycle
+      // offset when it was hidden would still have it when it comes back.
+      Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
+      if (!looping()) return;
       const s = stride();
       const t = span();
-      // Cleared on every child first: a slide that was carrying a cycle offset
-      // when it was hidden would still have it when it comes back.
-      Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
       slots().forEach((it, j) => {
         const k = Math.round((-pos - j * s) / t);
         if (k) it.style.translate = `${k * t}px`;
-        else it.style.removeProperty("translate");
       });
     };
 

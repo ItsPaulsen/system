@@ -3569,6 +3569,15 @@ function initCarousel() {
       startAt = at;
       startT = e.timeStamp;
       pointer = e.pointerId;
+      // A finger needs the capture from the first moment. Without it the browser
+      // keeps the right to take the gesture back the instant the touch moves, and
+      // it does: the track stops following and the set reads as stuck. A mouse
+      // must not have it yet, because a captured pointer retargets the click to
+      // the element holding it, and a press on the photograph would resolve to
+      // the track instead of reaching what it opens. So the finger takes it now
+      // and the mouse takes it only once the press has become a drag, which is a
+      // press with nothing left to open.
+      if (e.pointerType !== "mouse") viewport.setPointerCapture(pointer);
       viewport.classList.add("is-dragging");
     });
 
@@ -3583,12 +3592,8 @@ function initCarousel() {
       const dx = e.clientX - startX;
       if (!moved && Math.abs(dx) > DRAG) {
         moved = true;
-        // Captured only now that it is a drag, never on the press itself: while
-        // the viewport holds the pointer, the mouse events a click is built from
-        // are retargeted to it, and a press on a slide would resolve to the track
-        // instead of the picture. A drag has nothing to open, so from here it is
-        // free, and it keeps the gesture once the pointer leaves.
-        viewport.setPointerCapture(pointer);
+        // The mouse's turn to take it (see pointerdown); a finger already has.
+        if (!viewport.hasPointerCapture?.(pointer)) viewport.setPointerCapture(pointer);
       }
       let p = startPos + dx;
       if (!looping()) {

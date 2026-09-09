@@ -1345,8 +1345,8 @@
      the gesture is a swipe.
 
      The set wraps on the page too now, so neither arrow disables anywhere; a
-     colourway with one shot switches the loop off instead (product.js), and both
-     arrows disable into nothing as before. */
+     colourway with one shot has them gone by data-pdp-views, above, rather than
+     by waiting for both to disable. */
   .pdp-zoom .pdp-gallery__control {
     position: fixed;
 
@@ -1363,6 +1363,15 @@
 
   .pdp-zoom .carousel__control--next.pdp-gallery__control {
     inset-inline-end: var(--space-8);
+  }
+
+  /* One shot, so the arrows go the way the rail does. They disable themselves at
+     both ends of a one-slide set and a disabled control here is already
+     display:none, but that's a runtime state arriving after a measurement, and in
+     the panel the rules above pin them on regardless. This is the same
+     declarative fact the rail reads, and it is last so it beats both. */
+  .pdp-gallery[data-pdp-views="1"] .pdp-gallery__control {
+    display: none;
   }
 
   /* Nothing to zoom into from inside the panel. */

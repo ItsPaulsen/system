@@ -3550,22 +3550,44 @@ function initCarousel() {
     let startAt = 0;
     let moved = false;
     let startT = 0;
+    let pointer = null;
+    let swallow = false; // the drag's own trailing click, still to be spent
     viewport.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
-      if (e.pointerType === "mouse") e.preventDefault(); // stop native text/image drag
+      // One slide is nowhere to go, and a set that can't move shouldn't take the
+      // gesture: the resistance is there to say "no further", which over a single
+      // shot is a boundary that doesn't exist. It also leaves the press free to be
+      // what it is, which on the product page is the photograph opening larger.
+      if (size() < 2) return;
       down = true;
       moved = false;
+      swallow = false; // a fresh press is never the tail of the last one
       startX = e.clientX;
       startPos = pos;
       startAt = at;
       startT = e.timeStamp;
-      viewport.setPointerCapture(e.pointerId);
+      pointer = e.pointerId;
       viewport.classList.add("is-dragging");
     });
+
+    // What the pointerdown used to prevent by cancelling its own default. That
+    // also suppresses the mouse events a click is assembled from, which browsers
+    // resolve differently; this cancels the one thing it was for, and the pressed
+    // track stops selecting text through .is-dragging.
+    viewport.addEventListener("dragstart", (e) => e.preventDefault());
+
     viewport.addEventListener("pointermove", (e) => {
       if (!down) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 3) moved = true;
+      if (!moved && Math.abs(dx) > 3) {
+        moved = true;
+        // Captured only now that it is a drag, never on the press itself: while
+        // the viewport holds the pointer, the mouse events a click is built from
+        // are retargeted to it, and a press on a slide would resolve to the track
+        // instead of the picture. A drag has nothing to open, so from here it is
+        // free, and it keeps the gesture once the pointer leaves.
+        viewport.setPointerCapture(pointer);
+      }
       let p = startPos + dx;
       if (!looping()) {
         // Past an end the extra travel is resisted; a looping set has no end.
@@ -3579,7 +3601,7 @@ function initCarousel() {
     const endDrag = (e) => {
       if (!down) return;
       down = false;
-      viewport.releasePointerCapture?.(e.pointerId);
+      if (viewport.hasPointerCapture?.(e.pointerId)) viewport.releasePointerCapture(e.pointerId);
       viewport.classList.remove("is-dragging");
       const s = stride();
       const dx = pos - startPos;
@@ -3593,21 +3615,26 @@ function initCarousel() {
       const delta = crossed || (commit ? -Math.sign(dx) : 0);
       if (looping()) settle((Math.round(-startPos / s) + delta) * s);
       else goTo(startAt + delta);
-      if (moved) {
-        // Both, and not just preventDefault: that stops a slide's link being
-        // followed but a click listener on the slide still runs, so a drag would
-        // fire whatever the page has bound there (the product page opens its
-        // larger view on a click).
-        const swallow = (c) => {
-          c.preventDefault();
-          c.stopPropagation();
-        };
-        viewport.addEventListener("click", swallow, { capture: true });
-        requestAnimationFrame(() =>
-          viewport.removeEventListener("click", swallow, { capture: true })
-        );
-      }
+      // The drag's own trailing click is spent here. A flag rather than a listener
+      // that takes itself off a frame later: whether that frame beat the click was
+      // a race, and losing it left a live swallow to eat the next honest press.
+      swallow = moved;
     };
+
+    // Exactly one click, and only the one the drag itself produced. Stopped as
+    // well as defaulted: preventDefault stops a slide's link being followed but a
+    // click listener on the slide still runs, so a drag would fire whatever the
+    // page has bound there (the product page opens its larger view on a click).
+    viewport.addEventListener(
+      "click",
+      (e) => {
+        if (!swallow) return;
+        swallow = false;
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      { capture: true }
+    );
     viewport.addEventListener("pointerup", endDrag);
     viewport.addEventListener("pointercancel", endDrag);
     viewport.addEventListener("lostpointercapture", endDrag);

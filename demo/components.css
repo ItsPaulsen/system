@@ -4915,6 +4915,10 @@
    to move it — `animate: false` places the slide rather than sliding to it, which
    is what a reset wants.
 
+   A set of one takes no drag at all: there is nowhere to go, so there is no
+   resistance to feel and the press stays whatever the page made it (a link, a
+   dialog, a photograph opening larger).
+
    Slides can be hidden ([hidden]) and the carousel sits them out: they're not
    counted, not landed on, and not stops. A page that shows or hides them, or
    turns the loop on or off, then fires `carousel:refresh` on the root, which

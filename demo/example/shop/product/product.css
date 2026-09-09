@@ -873,9 +873,7 @@
      next one peeking at the edge.
 
      Column flow with auto columns rather than a fixed count, so the row follows
-     however many cards the markup carries. The cards' three subgrid rows still
-     resolve: each one spans the same three implicit rows, so titles and prices
-     stay on their shared lines. */
+     however many cards the markup carries. */
   .pdp-related__grid {
     grid-auto-flow: column;
     grid-auto-columns: var(--pdp-related-card);
@@ -923,12 +921,6 @@
     .pdp-related__grid {
       padding-inline: var(--grid-margin, 1rem);
     }
-  }
-
-  /* The cards are the listing's own, so all they need here is to drop the bottom
-     margin they carry for the next product row (there isn't one). */
-  .pdp-related__grid .shop-card {
-    margin-bottom: 0;
   }
 
   /* ── Related arrows ───────────────────────────────────────────────────────

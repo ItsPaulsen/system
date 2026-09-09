@@ -339,16 +339,17 @@
     grid-template-columns: repeat(2, 1fr);
 
     /* Two intents, named once each: the rhythm inside a card, and the space
-       between product rows. Because the cards are a subgrid (see .shop-card),
-       the parent's row-gap is the *internal* one, and the card derives its
-       bottom margin from the difference. Change either value and the other
-       stays correct. Columns sit 20 apart, tighter than the layout gutter: the
-       rows are the reading rhythm here, so they get the wider space. */
+       between product rows. Each lands where it belongs, the card's on the card
+       and the row's on the grid. Columns sit tighter than the layout gutter: the
+       rows are the reading rhythm here, so they get the wider space. 16 while the
+       grid is two-up, where the columns are narrowest and the seam between two
+       shots reads wider than it measures; 20 from md (see the responsive
+       block). */
     --shop-card-gap: var(--space-8);
     --shop-row-gap: var(--space-32);
 
-    column-gap: var(--space-20);
-    row-gap: var(--shop-card-gap);
+    column-gap: var(--space-16);
+    row-gap: var(--shop-row-gap);
   }
 
   /* Grid and flex items floor at their content's min-content width, so one long
@@ -365,21 +366,13 @@
   /* Cards are the anchor itself: a white media tile, then the text on the band
      (no card surface behind it), in three rows: tile, title, meta.
 
-     Those rows are a `subgrid` of .shop__grid rather than the card's own, which
-     is what makes a row of cards share them: the tallest title in a row sets the
-     title row's height for every card beside it, so prices and store counts line
-     up across the row without any card reserving space it doesn't need. It also
-     re-groups itself for free when filtering hides cards and the rows re-flow.
-
-     The gap between tile, title and price is the parent's row-gap, and the
-     card's bottom margin makes up the difference to --shop-row-gap so product
-     rows still separate by 20.
-
-     That compensating margin is the price of row-following titles: a subgrid
-     takes every vertical gap from the one parent value, so the two distances
-     can't both live in the grid. The alternative is a self-contained card that
-     owns its own gaps and a flat grid, which is tidier to read but puts every
-     card back to reserving two title lines whether its row needs them or not. */
+     The card owns those rows, rather than taking them as a `subgrid` of
+     .shop__grid: the price follows its own product's name down, sitting the same
+     distance under a one-line title as under a two-line one. A subgrid would put
+     every price in a row on a shared line instead, which reads as a table of
+     products rather than a set of them, and leaves a gap of nothing under the
+     short names. Nothing is reserved either way: a card with a one-line title is
+     simply shorter than the one beside it. */
   .shop-card {
     /* The media tile is a fixed white plate in BOTH themes (--ex-plate, shared
        with the product page's gallery). That makes the plate a light-theme
@@ -393,11 +386,8 @@
 
     position: relative; /* containing block for the badge */
     display: grid;
-    grid-row: span 3;
-    grid-template-rows: subgrid;
-
-    /* Tops up the inherited row-gap to --shop-row-gap between product rows. */
-    margin-bottom: calc(var(--shop-row-gap) - var(--shop-card-gap));
+    align-content: start;
+    row-gap: var(--shop-card-gap);
     color: var(--ink-primary);
     text-decoration: none;
   }
@@ -500,24 +490,21 @@
      height, two lines = 44) and a shared 20 keeps every line under it on one
      rhythm. Font sizes stay on the tokens; only the leading is tuned.
 
-     Title and its variant are one block sharing the subgrid's title row, rather
-     than the variant taking a row of its own. That keeps the card at `span 3`,
-     so a product with no variant needs no different card, and the row still
-     equalises on whichever card's block is tallest. Consecutive lines, no gap:
-     same treatment as the price and its store count. */
+     Title and its variant are one block rather than two rows, so a product with
+     no variant needs no different card. Consecutive lines, no gap: same
+     treatment as the price and its store count. */
   .shop-card__head {
     display: flex;
     flex-direction: column;
-    align-self: start;
 
-    /* The subgrid takes every internal gap from one row-gap, now 8 for title to
-       price. Tile to title wants 12, so it makes up the 4 itself. */
+    /* The card's row-gap is 8, which is what title to price wants. Tile to title
+       wants 12, so it makes up the 4 itself. */
     margin-block-start: var(--space-4);
   }
 
-  /* Clamped to two lines with an ellipsis. No reserved height any more: the
-     subgrid row equalises a row of cards, so a row of one-line titles stays one
-     line tall instead of every card paying for a second. */
+  /* Clamped to two lines with an ellipsis, and nothing is reserved for a second:
+     a one-line title leaves the card a line shorter, and its price comes up to
+     meet it. */
   .shop-card__title {
     margin: 0;
     display: -webkit-box;
@@ -659,6 +646,7 @@
 
     .shop__grid {
       grid-template-columns: repeat(3, 1fr);
+      column-gap: var(--space-20);
     }
 
     .shop__foot {

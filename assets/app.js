@@ -3371,22 +3371,19 @@ function initCarousel() {
     // inherits the property, so the inline var() resolves against the root.
     const EASE = "transform var(--carousel-slide)";
 
-    // The same duration in milliseconds, for the flick window below. Read from the
-    // property rather than restated here, so the stylesheet stays the one place
-    // the feel is set.
-    const slideMs = () => {
-      const m = /([\d.]+)(ms|s)/.exec(getComputedStyle(root).getPropertyValue("--carousel-slide"));
-      return m ? Number(m[1]) * (m[2] === "s" ? 1000 : 1) : 0;
-    };
-
     // What a release does. Two ways to commit: the drag crossed 30% of the window,
-    // or it was let go inside the settle's own duration having moved at all. The
-    // second is the flick, and it's time rather than speed: a 40px twitch and a
-    // 400px sweep both commit if they end quickly, and only a short, slow drag
-    // comes back. Speed alone can't do that, a slow drag that covers half the
-    // window reads as deliberate and should land.
+    // whatever its speed, because a slow drag that far is deliberate and should
+    // land; or it was a flick, which has to be both far enough to mean it and fast
+    // enough to be a throw.
+    //
+    // Both halves, because either alone is wrong. Distance alone would ask for a
+    // sweep where a thumb wants to flick. Time alone (a release inside the
+    // settle's own duration, which this used to use) meant a 6px twitch inside a
+    // third of a second changed the picture, and on a phone a thumb rolls that far
+    // resting on the glass.
     const COMMIT = 0.3; // of the viewport
-    const NUDGE = 5; // px, under which a release is a click that wobbled
+    const FLICK = 24; // px, under which a release is a press that wobbled
+    const THROW = 0.35; // px/ms, the speed that makes a short move a flick
     let pos = 0;
 
     // How far the track can travel, and each item's aligned scroll offset (its
@@ -3609,9 +3606,9 @@ function initCarousel() {
       // mostly showing, whatever the release looked like. Only a drag that
       // crossed none of them asks the two rules above.
       const crossed = Math.round(-dx / s);
-      const commit =
-        Math.abs(dx) > COMMIT * viewport.clientWidth ||
-        (Math.abs(dx) > NUDGE && e.timeStamp - startT < slideMs());
+      const travel = Math.abs(dx);
+      const speed = travel / Math.max(1, e.timeStamp - startT);
+      const commit = travel > COMMIT * viewport.clientWidth || (travel > FLICK && speed > THROW);
       const delta = crossed || (commit ? -Math.sign(dx) : 0);
       if (looping()) settle((Math.round(-startPos / s) + delta) * s);
       else goTo(startAt + delta);

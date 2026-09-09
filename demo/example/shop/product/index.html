@@ -848,11 +848,13 @@
           </div>
         </section>
 
-        <!-- Related products are the listing's own card and grid (shop.css), so the
-           row can't drift from the Shop page. -->
+        <!-- The listing's own card and grid (shop.css), so the row can't drift from
+           the Shop page, and each card deep-links the colourway it shows: this is
+           the one product the example has a page for, so a row of other products
+           would be six cards that all land on the same default. -->
         <section class="pdp-related">
           <div class="pdp-wrap">
-            <h2 class="pdp-heading">Goes well with</h2>
+            <h2 class="pdp-heading">Other colours</h2>
             <!-- The arrows sit over the row rather than beside it: the content column
                has no room for a pair of gutters, and the row already bleeds to the
                page edges on a phone. -->
@@ -877,20 +879,20 @@
                 </svg>
               </button>
               <div class="shop__grid pdp-related__grid">
-                <a class="shop-card" href="/demo/example/shop/product/">
+                <a class="shop-card" href="/demo/example/shop/product/?color=black">
                   <span class="shop-card__media">
                     <picture>
                       <source
                         type="image/webp"
                         srcset="
-                          /assets/images/products/cover-armchair-oak-400.webp 400w,
-                          /assets/images/products/cover-armchair-oak-640.webp 640w
+                          /assets/images/products/cover-side-chair-black-400.webp 400w,
+                          /assets/images/products/cover-side-chair-black-640.webp 640w
                         "
                         sizes="240px"
                       />
                       <img
                         class="ex-ph shop-card__img"
-                        src="/assets/images/products/cover-armchair-oak-640.jpg"
+                        src="/assets/images/products/cover-side-chair-black-640.jpg"
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -899,28 +901,28 @@
                   </span>
                   <div class="shop-card__head">
                     <h3 class="shop-card__title">Muuto</h3>
-                    <span class="shop-card__variant">Cover Armchair, oak</span>
+                    <span class="shop-card__variant">Cover Side Chair, black</span>
                   </div>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">5 249 kr</span>
+                    <span class="shop-card__price">5 295 kr</span>
                     <span class="shop-card__stores">4 stores</span>
                   </span>
                 </a>
 
-                <a class="shop-card" href="/demo/example/shop/product/">
+                <a class="shop-card" href="/demo/example/shop/product/?color=dark-beige">
                   <span class="shop-card__media">
                     <picture>
                       <source
                         type="image/webp"
                         srcset="
-                          /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
-                          /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
+                          /assets/images/products/cover-side-chair-dark-beige-400.webp 400w,
+                          /assets/images/products/cover-side-chair-dark-beige-640.webp 640w
                         "
                         sizes="240px"
                       />
                       <img
                         class="ex-ph shop-card__img"
-                        src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
+                        src="/assets/images/products/cover-side-chair-dark-beige-640.jpg"
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -929,30 +931,28 @@
                   </span>
                   <div class="shop-card__head">
                     <h3 class="shop-card__title">Muuto</h3>
-                    <span class="shop-card__variant"
-                      >Cover Armchair, refine leather cognac/oak</span
-                    >
+                    <span class="shop-card__variant">Cover Side Chair, dark beige</span>
                   </div>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">7 449 kr</span>
-                    <span class="shop-card__stores">5 stores</span>
+                    <span class="shop-card__price">5 295 kr</span>
+                    <span class="shop-card__stores">4 stores</span>
                   </span>
                 </a>
 
-                <a class="shop-card" href="/demo/example/shop/product/">
+                <a class="shop-card" href="/demo/example/shop/product/?color=dark-brown">
                   <span class="shop-card__media">
                     <picture>
                       <source
                         type="image/webp"
                         srcset="
-                          /assets/images/products/ch36-dining-chair-soaped-oak-400.webp 400w,
-                          /assets/images/products/ch36-dining-chair-soaped-oak-640.webp 640w
+                          /assets/images/products/cover-side-chair-dark-brown-400.webp 400w,
+                          /assets/images/products/cover-side-chair-dark-brown-640.webp 640w
                         "
                         sizes="240px"
                       />
                       <img
                         class="ex-ph shop-card__img"
-                        src="/assets/images/products/ch36-dining-chair-soaped-oak-640.jpg"
+                        src="/assets/images/products/cover-side-chair-dark-brown-640.jpg"
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -960,61 +960,59 @@
                     </picture>
                   </span>
                   <div class="shop-card__head">
-                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                    <span class="shop-card__variant">CH36 Dining Chair, soaped oak</span>
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant">Cover Side Chair, stained dark brown</span>
                   </div>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">10 507 kr</span>
+                    <span class="shop-card__price">5 295 kr</span>
+                    <span class="shop-card__stores">3 stores</span>
+                  </span>
+                </a>
+
+                <a class="shop-card" href="/demo/example/shop/product/?color=green">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/cover-side-chair-green-400.webp 400w,
+                          /assets/images/products/cover-side-chair-green-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/cover-side-chair-green-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant">Cover Side Chair, green</span>
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">5 295 kr</span>
                     <span class="shop-card__stores">2 stores</span>
                   </span>
                 </a>
 
-                <a class="shop-card" href="/demo/example/shop/product/">
+                <a class="shop-card" href="/demo/example/shop/product/?color=cognac">
                   <span class="shop-card__media">
                     <picture>
                       <source
                         type="image/webp"
                         srcset="
-                          /assets/images/products/ch24-wishbone-chair-soaped-beech-400.webp 400w,
-                          /assets/images/products/ch24-wishbone-chair-soaped-beech-640.webp 640w
+                          /assets/images/products/cover-side-chair-cognac-oak-400.webp 400w,
+                          /assets/images/products/cover-side-chair-cognac-oak-640.webp 640w
                         "
                         sizes="240px"
                       />
                       <img
                         class="ex-ph shop-card__img"
-                        src="/assets/images/products/ch24-wishbone-chair-soaped-beech-640.jpg"
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </picture>
-                  </span>
-                  <div class="shop-card__head">
-                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                    <span class="shop-card__variant"
-                      >CH24 Wishbone Chair, soaped beech/natural</span
-                    >
-                  </div>
-                  <span class="shop-card__meta">
-                    <span class="shop-card__price">7 321 kr</span>
-                    <span class="shop-card__stores">5 stores</span>
-                  </span>
-                </a>
-
-                <a class="shop-card" href="/demo/example/shop/product/">
-                  <span class="shop-card__media">
-                    <picture>
-                      <source
-                        type="image/webp"
-                        srcset="
-                          /assets/images/products/cover-armchair-black-400.webp 400w,
-                          /assets/images/products/cover-armchair-black-640.webp 640w
-                        "
-                        sizes="240px"
-                      />
-                      <img
-                        class="ex-ph shop-card__img"
-                        src="/assets/images/products/cover-armchair-black-640.jpg"
+                        src="/assets/images/products/cover-side-chair-cognac-oak-640.jpg"
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -1023,28 +1021,30 @@
                   </span>
                   <div class="shop-card__head">
                     <h3 class="shop-card__title">Muuto</h3>
-                    <span class="shop-card__variant">Cover Armchair, black</span>
+                    <span class="shop-card__variant"
+                      >Cover Side Chair, refine leather cognac/oak</span
+                    >
                   </div>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">5 249 kr</span>
-                    <span class="shop-card__stores">6 stores</span>
+                    <span class="shop-card__price">7 349 kr</span>
+                    <span class="shop-card__stores">3 stores</span>
                   </span>
                 </a>
 
-                <a class="shop-card" href="/demo/example/shop/product/">
+                <a class="shop-card" href="/demo/example/shop/product/?color=black-leather">
                   <span class="shop-card__media">
                     <picture>
                       <source
                         type="image/webp"
                         srcset="
-                          /assets/images/products/ch25-lounge-chair-oak-400.webp 400w,
-                          /assets/images/products/ch25-lounge-chair-oak-640.webp 640w
+                          /assets/images/products/cover-side-chair-black-leather-400.webp 400w,
+                          /assets/images/products/cover-side-chair-black-leather-640.webp 640w
                         "
                         sizes="240px"
                       />
                       <img
                         class="ex-ph shop-card__img"
-                        src="/assets/images/products/ch25-lounge-chair-oak-640.jpg"
+                        src="/assets/images/products/cover-side-chair-black-leather-640.jpg"
                         alt=""
                         loading="lazy"
                         decoding="async"
@@ -1052,11 +1052,13 @@
                     </picture>
                   </span>
                   <div class="shop-card__head">
-                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                    <span class="shop-card__variant">CH25 Lounge Chair, oak</span>
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant"
+                      >Cover Side Chair, refine leather black/black</span
+                    >
                   </div>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">27 493 kr</span>
+                    <span class="shop-card__price">7 349 kr</span>
                     <span class="shop-card__stores">2 stores</span>
                   </span>
                 </a>

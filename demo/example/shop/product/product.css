@@ -1046,10 +1046,17 @@
       display: inline-flex;
       opacity: 0;
       transition: opacity var(--motion-default);
+
+      /* Invisible is not gone: at opacity 0 the arrow still answers the pointer,
+         and it sits dead centre of the first and last product shots, so a press
+         on either card was landing on a button nobody could see instead of
+         following the card's link. */
+      pointer-events: none;
     }
 
     .pdp-related__shelf:hover .pdp-related__control {
       opacity: 1;
+      pointer-events: auto;
     }
   }
 

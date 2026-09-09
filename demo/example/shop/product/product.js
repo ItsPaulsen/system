@@ -380,10 +380,9 @@
 })();
 
 // The related row is a scroll container rather than a carousel: its cards are the
-// listing's own, and their three subgrid rows (what keeps titles and prices on
-// shared lines) only resolve inside a grid, which a flex track isn't. Touch
-// already scrolls it, so this is the pointer drag and the hover arrows, so it
-// answers a mouse the way the gallery does. Neither one snaps mid-move: a
+// listing's own, and a grid is what they are built for. Touch already scrolls it,
+// so this is the pointer drag and the hover arrows, so it answers a mouse the way
+// the gallery does. Neither one snaps mid-move: a
 // fixed-width shelf is pushed along, not stepped between slides. Both only tidy
 // up at the end, landing on the nearest card boundary.
 (function () {

@@ -3384,6 +3384,7 @@ function initCarousel() {
     const COMMIT = 0.3; // of the viewport
     const FLICK = 24; // px, under which a release is a press that wobbled
     const THROW = 0.35; // px/ms, the speed that makes a short move a flick
+    const DRAG = 3; // px of travel before a press is a drag rather than a click
     let pos = 0;
 
     // How far the track can travel, and each item's aligned scroll offset (its
@@ -3576,7 +3577,7 @@ function initCarousel() {
     viewport.addEventListener("pointermove", (e) => {
       if (!down) return;
       const dx = e.clientX - startX;
-      if (!moved && Math.abs(dx) > 3) {
+      if (!moved && Math.abs(dx) > DRAG) {
         moved = true;
         // Captured only now that it is a drag, never on the press itself: while
         // the viewport holds the pointer, the mouse events a click is built from

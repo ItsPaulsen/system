@@ -340,12 +340,17 @@
 // The related row is a scroll container rather than a carousel: its cards are the
 // listing's own, and their three subgrid rows (what keeps titles and prices on
 // shared lines) only resolve inside a grid, which a flex track isn't. Touch
-// already scrolls it, so this is the pointer drag, so it answers a mouse the way
-// the gallery does. Nothing here snaps: a fixed-width row of six is a shelf to
-// push along, not a set of slides to land on.
+// already scrolls it, so this is the pointer drag and the hover arrows, so it
+// answers a mouse the way the gallery does. Neither one snaps mid-move: a
+// fixed-width shelf is pushed along, not stepped between slides. Both only tidy
+// up at the end, landing on the nearest card boundary.
 (function () {
   const row = document.querySelector(".pdp-related__grid");
   if (!row) return;
+
+  const shelf = row.closest(".pdp-related__shelf");
+  const prev = shelf?.querySelector(".carousel__control--prev");
+  const next = shelf?.querySelector(".carousel__control--next");
 
   const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
 
@@ -361,6 +366,20 @@
   const setPull = (px) => {
     pull = px;
     row.style.setProperty("--pdp-related-pull", `${px}px`);
+  };
+
+  // An arrow is only there while it has somewhere to go: hidden at the end it
+  // points to, and both hidden when the window is wide enough to show every card
+  // (the six-column case, where the row has nothing to scroll). Hiding rather
+  // than disabling, because the row is hover chrome: a dimmed arrow over the
+  // first product would be something to read and dismiss, and there is nothing
+  // to explain.
+  const sync = () => {
+    if (!prev || !next) return;
+    const max = row.scrollWidth - row.clientWidth;
+    const at = row.scrollLeft;
+    prev.hidden = max <= 1 || at <= 1;
+    next.hidden = max <= 1 || at >= max - 1;
   };
 
   // Where each card sits in the scroll, measured from the first one so the row's
@@ -457,4 +476,30 @@
   row.addEventListener("pointerup", endDrag);
   row.addEventListener("pointercancel", endDrag);
   row.addEventListener("lostpointercapture", endDrag);
+
+  // A press moves the row by what's on screen, then lands on a card boundary the
+  // way a release does, so the arrows and the drag leave the shelf in the same
+  // kind of position. The last step is short by whatever the row has left, which
+  // is the end clamp doing its job rather than a case to special-case.
+  const page = (dir) => {
+    cancelAnimationFrame(frame);
+    const max = row.scrollWidth - row.clientWidth;
+    const want = row.scrollLeft + dir * row.clientWidth;
+    const near = stops().reduce(
+      (best, o) => (Math.abs(o - want) < Math.abs(best - want) ? o : best),
+      0
+    );
+    glide(Math.max(0, Math.min(max, near)));
+  };
+
+  prev?.addEventListener("click", () => page(-1));
+  next?.addEventListener("click", () => page(1));
+
+  // Every move the row makes -- a drag, a glide, a trackpad, a tab into a card
+  // off screen -- lands as a scroll event, including the ones set from here, so
+  // this one listener is the whole story. Resize, because how much there is to
+  // scroll changes with the window.
+  row.addEventListener("scroll", sync, { passive: true });
+  window.addEventListener("resize", sync);
+  sync();
 })();

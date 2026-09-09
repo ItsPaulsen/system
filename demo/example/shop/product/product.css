@@ -849,13 +849,28 @@
     width: 33%;
   }
 
+  /* The shelf holds the row's two measurements, because the arrows sit outside
+     the row and take their vertical centre from a card's width. It's also their
+     containing block: the row they step is the thing that scrolls, so anything
+     inside it would travel with the cards.
+
+     The gap is tighter than the listing's 20. There it separates rows of products
+     that wrap; here it is the seam in one continuous shelf. The card width comes
+     off the same value, so six cards and five gaps still come to exactly the
+     content cap: the widest window shows those six and has nothing left to
+     scroll (a flat 240 overshot it by 4 and left the row twitching), and a phone
+     shows one and a half. Derived from the cap rather than typed out, so it stays
+     true on a page at the narrower xl tier. */
+  .pdp-related__shelf {
+    --pdp-related-gap: var(--space-16);
+    --pdp-related-card: calc((var(--container-max) - 5 * var(--pdp-related-gap)) / 6);
+
+    position: relative;
+  }
+
   /* One scrolling row at every width instead of the listing's column ladder: the
-     cards hold a fixed width and the window decides how many you see, with the
-     next one peeking at the edge. The width is exactly what six columns come to
-     inside the content cap, so the widest window shows those six and has nothing
-     left to scroll (a flat 240 overshot it by 4 and left the row twitching); a
-     phone shows one and a half and scrolls. Derived from the cap rather than typed
-     out, so it stays true on a page at the narrower xl tier.
+     cards hold that fixed width and the window decides how many you see, with the
+     next one peeking at the edge.
 
      Column flow with auto columns rather than a fixed count, so the row follows
      however many cards the markup carries. The cards' three subgrid rows still
@@ -863,8 +878,9 @@
      stay on their shared lines. */
   .pdp-related__grid {
     grid-auto-flow: column;
-    grid-auto-columns: calc((var(--container-max) - 5 * var(--space-20)) / 6);
+    grid-auto-columns: var(--pdp-related-card);
     grid-template-columns: none;
+    column-gap: var(--pdp-related-gap);
     overflow-x: auto;
 
     /* No bar: the peeking card is the affordance, and the row is dragged rather
@@ -893,12 +909,18 @@
 
   /* Below md the row runs to both window edges: on a phone the scroll is the whole
      point, and stopping it at the content column left a strip of dead surface the
-     cards never reach. It gives back the wrap's own margin as padding, so the
-     first card still starts on the page's left edge and the last one can scroll
-     clear of the right. */
+     cards never reach.
+
+     The pull past the column is the shelf's, not the row's, so the arrows measure
+     from the same edges the cards do; the row gives the margin back as its own
+     padding, so the first card still starts on the page's left edge and the last
+     one can scroll clear of the right. */
   @media (max-width: 767.98px) {
-    .pdp-related__grid {
+    .pdp-related__shelf {
       margin-inline: calc(-1 * var(--grid-margin, 1rem));
+    }
+
+    .pdp-related__grid {
       padding-inline: var(--grid-margin, 1rem);
     }
   }
@@ -907,6 +929,65 @@
      margin they carry for the next product row (there isn't one). */
   .pdp-related__grid .shop-card {
     margin-bottom: 0;
+  }
+
+  /* ── Related arrows ───────────────────────────────────────────────────────
+     Centred on the shot, not on the card: the card carries a title and a price
+     under its tile, and an arrow halfway down all three sits below the
+     photograph it is stepping through. The tile is square, so half a card's
+     width is half its height.
+
+     40 rather than the component's 32, the same as the gallery's: they're
+     overlaid on photography rather than sitting in chrome. */
+  .pdp-related__control {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top: calc(var(--pdp-related-card) / 2);
+    width: 40px;
+    height: 40px;
+    translate: 0 -50%;
+  }
+
+  .pdp-related__control svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .carousel__control--prev.pdp-related__control {
+    inset-inline-start: var(--space-24);
+  }
+
+  .carousel__control--next.pdp-related__control {
+    inset-inline-end: var(--space-24);
+  }
+
+  /* Pointer only, and only while the row is under it. Touch drags the row
+     already, and a shelf at rest shouldn't carry chrome over its first and last
+     product.
+
+     Nothing brings them back for the keyboard: they're tabindex="-1", because
+     tabbing a card scrolls it into view, which is the same journey. They stay
+     real buttons for the pointer and for assistive tech.
+
+     product.js hides whichever arrow has nothing left to reach, and both of them
+     when every card is already showing, so the hover reveals only what's live. */
+  @media (hover: hover) and (pointer: fine) {
+    .pdp-related__control {
+      display: inline-flex;
+      opacity: 0;
+      transition: opacity var(--motion-default);
+    }
+
+    .pdp-related__shelf:hover .pdp-related__control {
+      opacity: 1;
+    }
+  }
+
+  /* Beats the display in the hover query: an attribute selector outranks the
+     class, and a media query adds no specificity of its own. */
+  .pdp-related__control[hidden] {
+    display: none;
   }
 
   /* ── Larger view ──────────────────────────────────────────────────────────

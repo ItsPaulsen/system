@@ -811,186 +811,233 @@
         <section class="pdp-related">
           <div class="pdp-wrap">
             <h2 class="pdp-heading">Goes well with</h2>
-            <div class="shop__grid pdp-related__grid">
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/cover-armchair-oak-400.webp 400w,
-                        /assets/images/products/cover-armchair-oak-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/cover-armchair-oak-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Muuto</h3>
-                  <span class="shop-card__variant">Cover Armchair, oak</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">5 249 kr</span>
-                  <span class="shop-card__stores">4 stores</span>
-                </span>
-              </a>
+            <!-- The arrows sit over the row rather than beside it: the content column
+               has no room for a pair of gutters, and the row already bleeds to the
+               page edges on a phone. -->
+            <div class="pdp-related__shelf">
+              <button
+                class="carousel__control carousel__control--prev pdp-related__control"
+                type="button"
+                aria-label="Previous products"
+                tabindex="-1"
+                hidden
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M15 6l-6 6l6 6" />
+                </svg>
+              </button>
+              <div class="shop__grid pdp-related__grid">
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/cover-armchair-oak-400.webp 400w,
+                          /assets/images/products/cover-armchair-oak-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/cover-armchair-oak-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant">Cover Armchair, oak</span>
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">5 249 kr</span>
+                    <span class="shop-card__stores">4 stores</span>
+                  </span>
+                </a>
 
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
-                        /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Muuto</h3>
-                  <span class="shop-card__variant">Cover Armchair, refine leather cognac/oak</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">7 449 kr</span>
-                  <span class="shop-card__stores">5 stores</span>
-                </span>
-              </a>
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
+                          /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant"
+                      >Cover Armchair, refine leather cognac/oak</span
+                    >
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">7 449 kr</span>
+                    <span class="shop-card__stores">5 stores</span>
+                  </span>
+                </a>
 
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/ch36-dining-chair-soaped-oak-400.webp 400w,
-                        /assets/images/products/ch36-dining-chair-soaped-oak-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/ch36-dining-chair-soaped-oak-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                  <span class="shop-card__variant">CH36 Dining Chair, soaped oak</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">10 507 kr</span>
-                  <span class="shop-card__stores">2 stores</span>
-                </span>
-              </a>
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/ch36-dining-chair-soaped-oak-400.webp 400w,
+                          /assets/images/products/ch36-dining-chair-soaped-oak-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/ch36-dining-chair-soaped-oak-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
+                    <span class="shop-card__variant">CH36 Dining Chair, soaped oak</span>
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">10 507 kr</span>
+                    <span class="shop-card__stores">2 stores</span>
+                  </span>
+                </a>
 
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/ch24-wishbone-chair-soaped-beech-400.webp 400w,
-                        /assets/images/products/ch24-wishbone-chair-soaped-beech-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/ch24-wishbone-chair-soaped-beech-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                  <span class="shop-card__variant">CH24 Wishbone Chair, soaped beech/natural</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">7 321 kr</span>
-                  <span class="shop-card__stores">5 stores</span>
-                </span>
-              </a>
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/ch24-wishbone-chair-soaped-beech-400.webp 400w,
+                          /assets/images/products/ch24-wishbone-chair-soaped-beech-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/ch24-wishbone-chair-soaped-beech-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
+                    <span class="shop-card__variant"
+                      >CH24 Wishbone Chair, soaped beech/natural</span
+                    >
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">7 321 kr</span>
+                    <span class="shop-card__stores">5 stores</span>
+                  </span>
+                </a>
 
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/cover-armchair-black-400.webp 400w,
-                        /assets/images/products/cover-armchair-black-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/cover-armchair-black-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Muuto</h3>
-                  <span class="shop-card__variant">Cover Armchair, black</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">5 249 kr</span>
-                  <span class="shop-card__stores">6 stores</span>
-                </span>
-              </a>
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/cover-armchair-black-400.webp 400w,
+                          /assets/images/products/cover-armchair-black-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/cover-armchair-black-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Muuto</h3>
+                    <span class="shop-card__variant">Cover Armchair, black</span>
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">5 249 kr</span>
+                    <span class="shop-card__stores">6 stores</span>
+                  </span>
+                </a>
 
-              <a class="shop-card" href="/demo/example/shop/product/">
-                <span class="shop-card__media">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcset="
-                        /assets/images/products/ch25-lounge-chair-oak-400.webp 400w,
-                        /assets/images/products/ch25-lounge-chair-oak-640.webp 640w
-                      "
-                      sizes="240px"
-                    />
-                    <img
-                      class="ex-ph shop-card__img"
-                      src="/assets/images/products/ch25-lounge-chair-oak-640.jpg"
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                </span>
-                <div class="shop-card__head">
-                  <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
-                  <span class="shop-card__variant">CH25 Lounge Chair, oak</span>
-                </div>
-                <span class="shop-card__meta">
-                  <span class="shop-card__price">27 493 kr</span>
-                  <span class="shop-card__stores">2 stores</span>
-                </span>
-              </a>
+                <a class="shop-card" href="/demo/example/shop/product/">
+                  <span class="shop-card__media">
+                    <picture>
+                      <source
+                        type="image/webp"
+                        srcset="
+                          /assets/images/products/ch25-lounge-chair-oak-400.webp 400w,
+                          /assets/images/products/ch25-lounge-chair-oak-640.webp 640w
+                        "
+                        sizes="240px"
+                      />
+                      <img
+                        class="ex-ph shop-card__img"
+                        src="/assets/images/products/ch25-lounge-chair-oak-640.jpg"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </span>
+                  <div class="shop-card__head">
+                    <h3 class="shop-card__title">Carl Hansen &amp; Søn</h3>
+                    <span class="shop-card__variant">CH25 Lounge Chair, oak</span>
+                  </div>
+                  <span class="shop-card__meta">
+                    <span class="shop-card__price">27 493 kr</span>
+                    <span class="shop-card__stores">2 stores</span>
+                  </span>
+                </a>
+              </div>
+              <button
+                class="carousel__control carousel__control--next pdp-related__control"
+                type="button"
+                aria-label="Next products"
+                tabindex="-1"
+                hidden
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 6l6 6l-6 6" />
+                </svg>
+              </button>
             </div>
           </div>
         </section>

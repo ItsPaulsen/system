@@ -538,7 +538,13 @@
   /* Where New sits, because a product is either just in or on its way out and
      never both. Red rather than the plate's blue: this one is a claim about the
      price and it should read as one from across the grid. The plate is a fixed
-     white in both themes, so the ink is too. */
+     white in both themes, so the ink is too.
+
+     It says Offer and not a percentage. A reduction may only be advertised
+     against the prior price, so a chair that has been on offer once already can
+     honestly claim -5% and nothing louder, which reads as less of an offer than
+     it is. The word makes no claim about size, and the lines under the price
+     carry each percentage against its own base. */
   .shop-card__badge--sale {
     background-image: linear-gradient(
       rgb(from var(--shop-plate-tint-red) r g b / 0.12),
@@ -557,7 +563,7 @@
     flex-direction: column;
     color: var(--ink-secondary);
     font-size: var(--font-caption-small-size);
-    line-height: 18px;
+    line-height: 16px;
   }
 
   .shop-card__term {
@@ -570,9 +576,9 @@
     color: var(--red);
   }
 
-  /* Price and store count are consecutive lines of one block, no gap: their
-     line-heights already separate them, and the 12 above the price belongs to
-     the pair, not to the price alone. */
+  /* The price and whatever names it (its prior prices, then where it's in
+     stock) as one block. The 12 above it belongs to the block, not to the price
+     alone. */
   .shop-card__meta {
     display: flex;
     flex-direction: column;
@@ -592,8 +598,12 @@
     color: var(--red);
   }
 
+  /* Stock is its own fact, not a footnote to the price, so it keeps the card's
+     ink and stands off from it. A margin rather than the block's gap: the
+     prior-price lines below the price want none. Off the scale at 6, because
+     the line above it is 16 and 8 opened a hole in a three-line stack. */
   .shop-card__stores {
-    color: var(--ink-secondary);
+    margin-block-start: 6px;
     font-size: var(--font-caption-medium-size);
     line-height: 20px;
   }

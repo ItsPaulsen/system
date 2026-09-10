@@ -384,12 +384,21 @@
   started = true;
 })();
 
-// The related row is a scroll container rather than a carousel: its cards are the
-// listing's own, and a grid is what they are built for. Touch already scrolls it,
-// so this is the pointer drag and the hover arrows, so it answers a mouse the way
-// the gallery does. Neither one snaps mid-move: a
-// fixed-width shelf is pushed along, not stepped between slides. Both only tidy
-// up at the end, landing on the nearest card boundary.
+// The related row is a scroll container, and that is all it is. It was a scroll
+// container with a drag engine bolted on: a pointer model, a rubber band, a
+// settle, and a swallowed click, which between them accounted for most of a
+// week's bugs on this page (cards that needed several presses, cards that needed
+// none, an arrow answering the pointer from behind a photograph).
+//
+// The browser already scrolls a row of things horizontally, on every input a
+// desktop has: a trackpad's two fingers, shift and a wheel, a tab into a card off
+// screen. Snap points land it on a card boundary the way the settle used to, and
+// on a phone that is the platform's own momentum. What is left for JS is the two
+// arrows, which exist because a mouse has no obvious way to say "further right".
+//
+// The Carousel component was the other option, and its semantics are wrong here:
+// it announces "Slide 3 of 6" and calls itself a carousel, which is right for a
+// set of views of one product and wrong for six links to six others.
 (function () {
   const row = document.querySelector(".pdp-related__grid");
   if (!row) return;
@@ -397,201 +406,33 @@
   const shelf = row.closest(".pdp-related__shelf");
   const prev = shelf?.querySelector(".carousel__control--prev");
   const next = shelf?.querySelector(".carousel__control--next");
-
-  const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
-  const DRAG = 5; // px of travel before a press counts as a drag rather than a click
+  if (!prev || !next) return;
 
   // A card's width is a sixth of the content cap, which doesn't divide evenly, so
   // a row of six that is meant to fit exactly can report a pixel or two of
   // overflow. That isn't somewhere to go, and treating it as somewhere to go put
   // a live Next arrow over the last product with nothing behind it to reach.
   const SLACK = 4;
-  const scrollable = () => row.scrollWidth - row.clientWidth > SLACK;
-
-  let down = false;
-  let startX = 0;
-  let startLeft = 0;
-  let moved = false;
-  let frame;
-  let pull = 0;
-  let pointer = null;
-  let swallow = false; // the drag's own trailing click, still to be spent
-
-  // How far the cards sit past where the scroll can go. The scroller is clamped by
-  // the browser, so this is drawn by shifting the children (see product.css).
-  const setPull = (px) => {
-    pull = px;
-    row.style.setProperty("--pdp-related-pull", `${px}px`);
-  };
 
   // An arrow is only there while it has somewhere to go: hidden at the end it
-  // points to, and both hidden when the window is wide enough to show every card
-  // (the six-column case, where the row has nothing to scroll). Hiding rather
-  // than disabling, because the row is hover chrome: a dimmed arrow over the
-  // first product would be something to read and dismiss, and there is nothing
-  // to explain.
+  // points to, and both hidden when the window is wide enough to show every card.
+  // Hiding rather than disabling, because these are hover chrome over a
+  // photograph: a dimmed arrow would be something to read and dismiss, and there
+  // is nothing to explain.
   const sync = () => {
-    if (!prev || !next) return;
     const max = row.scrollWidth - row.clientWidth;
     const at = row.scrollLeft;
-    const stuck = !scrollable();
+    const stuck = max <= SLACK;
     prev.hidden = stuck || at <= SLACK;
     next.hidden = stuck || at >= max - SLACK;
   };
 
-  // Where each card sits in the scroll, measured from the first one so the row's
-  // own start padding (it bleeds to the window edge below md) counts as zero.
-  const stops = () => {
-    const base = row.firstElementChild?.offsetLeft || 0;
-    return [...row.children].map((c) => c.offsetLeft - base);
-  };
+  // A windowful at a time, and the snap points land it on a card. Smooth, because
+  // this is the browser's scroll and it has a curve for exactly this.
+  const page = (dir) => row.scrollBy({ left: dir * row.clientWidth, behavior: "smooth" });
 
-  // Ease out, and short: this is a correction of at most a card's width, not a
-  // slide crossing the window, so it lands rather than travels. Any overpull
-  // unwinds on the same curve, so the row arrives and straightens as one move.
-  const glide = (to) => {
-    const fromScroll = row.scrollLeft;
-    const fromPull = pull;
-    const dist = to - fromScroll;
-    if (Math.abs(dist) < 1 && Math.abs(fromPull) < 1) return;
-    const ms = Math.min(420, 140 + Math.max(Math.abs(dist), Math.abs(fromPull)) * 0.6);
-    const t0 = performance.now();
-    const step = (now) => {
-      const p = Math.min(1, (now - t0) / ms);
-      const eased = 1 - (1 - p) ** 3;
-      row.scrollLeft = fromScroll + dist * eased;
-      setPull(fromPull * (1 - eased));
-      if (p < 1) frame = requestAnimationFrame(step);
-    };
-    cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(step);
-  };
-
-  // Let go and the nearest card lands flush with the row's start, so what you see
-  // is whole cards and one peeking. At either end it stays where it is: the row is
-  // already against something, and pulling it off that edge to align a card would
-  // undo the drag. It still glides, to let any overpull go.
-  const settle = () => {
-    const max = row.scrollWidth - row.clientWidth;
-    const at = row.scrollLeft;
-    if (at <= 1 || at >= max - 1) {
-      glide(at);
-      return;
-    }
-    const near = stops().reduce(
-      (best, o) => (Math.abs(o - at) < Math.abs(best - at) ? o : best),
-      0
-    );
-    glide(Math.max(0, Math.min(max, near)));
-  };
-
-  row.addEventListener("pointerdown", (e) => {
-    if (e.button !== 0 || e.pointerType !== "mouse") return;
-    // A row that fits has nothing to drag, and arming the gesture anyway is what
-    // made a press on a card get thrown away as though it had been one.
-    if (!scrollable()) return;
-    cancelAnimationFrame(frame); // taking hold of a row still settling
-    down = true;
-    moved = false;
-    // A fresh press is never the tail of the last one, whatever became of that
-    // gesture's click.
-    swallow = false;
-    startX = e.clientX;
-    startLeft = row.scrollLeft;
-    pointer = e.pointerId;
-    row.classList.add("is-dragging");
-  });
-
-  // What the pointerdown used to prevent. Cancelling that default is the blunt
-  // way to stop a card being dragged off as a link, and it also suppresses the
-  // mouse events the click is built from, which browsers resolve differently:
-  // that was a press going nowhere for no visible reason. This cancels the one
-  // thing it was ever for, and the pressed row stops selecting text through the
-  // .is-dragging class instead.
-  row.addEventListener("dragstart", (e) => e.preventDefault());
-
-  row.addEventListener("pointermove", (e) => {
-    if (!down) return;
-    const dx = e.clientX - startX;
-    const max = row.scrollWidth - row.clientWidth;
-    const want = startLeft - dx;
-    const to = Math.max(0, Math.min(max, want));
-    row.scrollLeft = to;
-    // Whatever the scroll couldn't take is the overpull, resisted.
-    setPull((to - want) * RESIST);
-    // A drag is a gesture that took the shelf somewhere, not a pointer that
-    // wandered. Hand-holding a mouse through a click moves it a few pixels, and
-    // counting that as a drag is what made the cards need several tries: the row
-    // hadn't gone anywhere, but the click was swallowed as if it had.
-    if (!moved && Math.abs(dx) > DRAG && (row.scrollLeft !== startLeft || pull)) {
-      moved = true;
-      // Captured only now that it is a drag, never on the press itself. While the
-      // row holds the pointer, the mouse events the click is built from are
-      // retargeted to the row, so the click lands on the container and a card's
-      // link is never followed: taking it up front made every card on a
-      // scrollable row unopenable. A drag has no link to follow, so from here it
-      // is free, and it keeps the gesture once the pointer leaves the row.
-      row.setPointerCapture(pointer);
-    }
-  });
-
-  const endDrag = (e) => {
-    if (!down) return;
-    down = false;
-    if (row.hasPointerCapture?.(e.pointerId)) row.releasePointerCapture(e.pointerId);
-    row.classList.remove("is-dragging");
-    if (!moved) {
-      if (pull) glide(row.scrollLeft);
-      return;
-    }
-    settle();
-    // Let go over a card and the click would follow its link, so the drag's own
-    // trailing click is spent here. A flag rather than a listener that takes
-    // itself off a frame later: whether that frame beat the click was a race, and
-    // losing it left a live swallow to eat the next honest press.
-    swallow = true;
-  };
-
-  // Exactly one click, and only the one the drag itself produced. The cards are
-  // anchors, but a page could bind a listener to them too, so the event is
-  // stopped as well as defaulted (same as the carousel's own guard).
-  row.addEventListener(
-    "click",
-    (e) => {
-      if (!swallow) return;
-      swallow = false;
-      e.preventDefault();
-      e.stopPropagation();
-    },
-    { capture: true }
-  );
-
-  row.addEventListener("pointerup", endDrag);
-  row.addEventListener("pointercancel", endDrag);
-  row.addEventListener("lostpointercapture", endDrag);
-
-  // A press moves the row by what's on screen, then lands on a card boundary the
-  // way a release does, so the arrows and the drag leave the shelf in the same
-  // kind of position. The last step is short by whatever the row has left, which
-  // is the end clamp doing its job rather than a case to special-case.
-  const page = (dir) => {
-    cancelAnimationFrame(frame);
-    const max = row.scrollWidth - row.clientWidth;
-    const want = row.scrollLeft + dir * row.clientWidth;
-    const near = stops().reduce(
-      (best, o) => (Math.abs(o - want) < Math.abs(best - want) ? o : best),
-      0
-    );
-    glide(Math.max(0, Math.min(max, near)));
-  };
-
-  prev?.addEventListener("click", () => page(-1));
-  next?.addEventListener("click", () => page(1));
-
-  // Every move the row makes -- a drag, a glide, a trackpad, a tab into a card
-  // off screen -- lands as a scroll event, including the ones set from here, so
-  // this one listener is the whole story. Resize, because how much there is to
-  // scroll changes with the window.
+  prev.addEventListener("click", () => page(-1));
+  next.addEventListener("click", () => page(1));
   row.addEventListener("scroll", sync, { passive: true });
   window.addEventListener("resize", sync);
   sync();

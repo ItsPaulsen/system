@@ -384,17 +384,19 @@
                          so this is empty and hidden for the rest. <s> because the price
                          is no longer the one being asked, which is what the element is
                          for. -->
-                    <s class="pdp-buy__was" data-pdp-was hidden></s>
+                    <!-- The word is not struck, only the figure: the line means the
+                       price no longer applies, and the label saying so still does. -->
+                    <span class="pdp-buy__was" data-pdp-was hidden>
+                      Was: <s data-pdp-was-amount></s>
+                    </span>
                   </p>
 
-                  <!-- The offer's terms, hidden as one block with the offer. The
-                       first line is required beside an advertised reduction, not
-                       decoration: the rule is the lowest price actually charged in
-                       the 30 days before it, and the struck figure above has to be
-                       that one. The second is required once the offer is described
-                       as running out, which is what a date does. -->
+                  <!-- Required once the offer is described as running out, which
+                       is what a date does. The prior price itself is the struck
+                       figure above: the rule asks for that number, not for a
+                       sentence naming it, so long as it is labelled as what it is
+                       and is the lowest actually charged in the 30 days before. -->
                   <div class="pdp-buy__terms" data-pdp-terms hidden>
-                    <p class="pdp-buy__term" data-pdp-lowest></p>
                     <p class="pdp-buy__term">Offer valid through 30. Sep. 2026.</p>
                   </div>
                 </div>

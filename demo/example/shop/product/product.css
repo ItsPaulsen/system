@@ -238,7 +238,12 @@
       transition: opacity var(--motion-default);
     }
 
-    .pdp-gallery__stage:hover .pdp-gallery__control {
+    /* :has(.is-dragging) as well as :hover, because a drag takes the pointer with
+       it: once the capture is on the viewport the stage stops matching :hover, and
+       past a certain pull the arrows faded out mid-gesture. In the larger view
+       they are pinned on, which is why it only happened on the page. */
+    .pdp-gallery__stage:hover .pdp-gallery__control,
+    .pdp-gallery__stage:has(.is-dragging) .pdp-gallery__control {
       opacity: 1;
     }
   }

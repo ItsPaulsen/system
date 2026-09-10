@@ -481,9 +481,8 @@
             the viewport is a native scroll container with snap points, so the swipe is the
             platform's own momentum rather than an imitation of it. Either way the buttons, arrow
             keys, ends and "Slide N of M" behave the same, and the set has a first and a last: there
-            is no wrap. A release commits on 30% of the viewport at any speed, or on a flick, which
-            has to travel 24px and end inside 500ms. Slides can be hidden; fire
-            <code>carousel:refresh</code> on the root after showing or hiding them.
+            is no wrap. Slides can be hidden; fire <code>carousel:refresh</code> on the root after
+            showing or hiding them.
           </p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">data-carousel</span> <span class="tok-prop">role</span>=<span class="tok-str">"group"</span> <span class="tok-prop">aria-roledescription</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__control carousel__control--prev"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Previous slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>

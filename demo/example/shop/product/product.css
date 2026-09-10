@@ -996,14 +996,10 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  /* The spec sheet is a two-column table, so it stops well short of the page on
-     a wide screen: pairs of short values read badly stretched across 1280. */
-  .pdp-specs__table {
-    max-width: 34rem;
-  }
-
   /* Row headers are the table's <th>, so they take the header fill as a label
-     column. Fixed at a third so the values line up down the table. */
+     column. Fixed at a third so the values line up down the table. The table sits
+     in a section of the buy column now, so it takes the width it is given and
+     needs no cap of its own. */
   .pdp-specs__table th {
     width: 33%;
   }

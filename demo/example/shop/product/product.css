@@ -1036,6 +1036,9 @@
      the maker and the price under the product's name, which is what the shop
      card's own second line is. Own class beside the component's. */
   .pdp-care__meta {
+    /* Primary ink, unlike the Item's own second line: this one carries a price,
+       and the size and the weight already separate it from the name above. */
+    color: var(--ink-primary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
   }

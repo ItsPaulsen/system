@@ -1012,13 +1012,13 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  /* The care suggestion. The row keeps the section's own surface rather than the
-     Item's, since the sections have no fill of their own; the circle is the only
-     mark on it, so it takes a neutral tint rather than an accent, which would be
-     the loudest thing in the quietest part of the page. */
+  /* The care suggestion, ringed rather than filled: the sections have no surface
+     of their own, so a fill would be the only block of colour in the column, and
+     with nothing at all the row floated in the prose above it. A line is enough
+     to say it is a thing you can act on rather than another paragraph. */
   .pdp-care {
     margin-top: var(--space-16);
-    padding-inline: 0;
+    border: var(--border-width) solid var(--fill-tertiary);
     background: none;
   }
 

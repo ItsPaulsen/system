@@ -157,7 +157,7 @@
   // second press counting the same add twice.
   const SENDING = 700;
   const CONFIRMING = 1400;
-  const confirmPress = (btn, { announce, done, restore }) => {
+  const confirmPress = (btn, label, { announce, restore }) => {
     btn.classList.add("button--loading");
     btn.setAttribute("aria-busy", "true");
     btn.setAttribute("aria-disabled", "true");
@@ -165,13 +165,17 @@
     setTimeout(() => {
       btn.classList.remove("button--loading");
       btn.removeAttribute("aria-busy");
-      btn.classList.add("is-added");
-      done();
+      // The check is a start icon while it's there, so the pair sits on the same
+      // inset as any other icon-and-label button.
+      btn.classList.add("is-added", "button--with-start-icon");
+      label.textContent = "Added";
       set(out.status, announce);
 
       setTimeout(() => {
-        btn.classList.remove("is-added");
+        btn.classList.remove("is-added", "button--with-start-icon");
         btn.removeAttribute("aria-disabled");
+        // Only the way back differs: one button says what pressing it will do
+        // next, the other just says Add again.
         restore();
       }, CONFIRMING);
     }, SENDING);
@@ -213,21 +217,12 @@
     add.addEventListener("click", () => {
       if (!idle()) return;
       const n = Number(qtyInput.value);
-      confirmPress(add, {
+      confirmPress(add, addLabel, {
         // The button says it, but a press with a mouse may not have put focus
         // there, and a button's name changing under nobody is a change nobody
         // hears. Same region the colour change uses.
         announce: n > 1 ? `${n} items added to cart` : "Added to cart",
-        // This one fills its row, so its width is the row's and its label can be
-        // written; the check joins it as a start icon while it is there.
-        done: () => {
-          add.classList.add("button--with-start-icon");
-          addLabel.textContent = "Added";
-        },
-        restore: () => {
-          add.classList.remove("button--with-start-icon");
-          label();
-        }
+        restore: label
       });
     });
   }
@@ -242,14 +237,9 @@
     careAdd.addEventListener("click", () => {
       if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
         return;
-      confirmPress(careAdd, {
+      confirmPress(careAdd, careLabel, {
         announce: "Wood oil added to cart",
-        done: () => {
-          careAdd.classList.add("button--with-start-icon");
-          careLabel.textContent = "Added";
-        },
         restore: () => {
-          careAdd.classList.remove("button--with-start-icon");
           careLabel.textContent = "Add";
         }
       });

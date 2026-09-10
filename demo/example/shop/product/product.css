@@ -723,11 +723,6 @@
     fill: currentcolor;
   }
 
-  .pdp-buy__info {
-    display: grid;
-    gap: var(--space-16);
-  }
-
   /* The brand reads as the first line of the product's name, so it takes the
      title's weight and ink and differs only in size. Link-like, so hover and a
      focus ring are the whole state model; the underline appears on hover and the

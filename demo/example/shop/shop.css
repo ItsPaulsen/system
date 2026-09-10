@@ -380,11 +380,18 @@
        blue kept here rather than read from --blue, which inverts for dark
        surfaces and would leave light-blue text on a near-white badge. Light
        theme's blue anchor, and the red beside it for the sale badge; page
-       one-offs, not tokens. */
+       one-offs, not tokens.
+
+       New is the component's secondary skin, spelled out against white rather
+       than read from the tokens, which follow the theme's own background: the
+       card's own ink on a wash of it. It marks a shelf date, a fact and not a
+       claim, and with a red badge in the same corner of the next card along,
+       colour on both left the grid arguing with itself. Red is the only one that
+       says anything about the price. */
     --shop-plate: var(--ex-plate);
-    --shop-plate-blue: 25 80 200;
+    --shop-plate-neutral: rgb(var(--anchor-neutral));
     --shop-plate-red: 185 28 28;
-    --shop-plate-tint: color-mix(in oklab, rgb(var(--shop-plate-blue)), white 20%);
+    --shop-plate-tint: color-mix(in oklab, var(--shop-plate-neutral), white 20%);
     --shop-plate-tint-red: color-mix(in oklab, rgb(var(--shop-plate-red)), white 20%);
 
     position: relative; /* containing block for the badge */
@@ -440,12 +447,13 @@
   /* Positioned against the card, not the tile, so the tile's hover scale leaves
      it alone: a label that grows with the photo reads as part of the artwork.
 
-     It carries its whole skin here rather than taking .badge--blue, because none
-     of that variant would survive: its tint is alpha, so on the plate it would
-     pick up the product shot behind it and read as translucent, and its ink
-     inverts for dark surfaces. So: an opaque plate-coloured base with the tint
-     laid over it as an image layer, and the plate's own fixed blue for the text.
-     Base .badge still gives the shape, size and type. */
+     It carries its whole skin here rather than taking .badge--secondary, because
+     none of that variant would survive: its fill is alpha, so on the plate it
+     would pick up the product shot behind it and read as translucent, and its
+     ink inverts for dark surfaces. So the same skin spelled out: an opaque
+     plate-coloured base with the wash laid over it as an image layer, and the
+     card's ink held to its light value. Base .badge still gives the shape, size
+     and type. */
   .shop-card__badge {
     position: absolute;
     z-index: 1;
@@ -456,7 +464,7 @@
       rgb(from var(--shop-plate-tint) r g b / 0.12),
       rgb(from var(--shop-plate-tint) r g b / 0.12)
     );
-    color: rgb(var(--shop-plate-blue));
+    color: var(--shop-plate-neutral);
   }
 
   /* <picture> is inline by default, so block it out for the img's width: 100%
@@ -536,9 +544,9 @@
   }
 
   /* Where New sits, because a product is either just in or on its way out and
-     never both. Red rather than the plate's blue: this one is a claim about the
-     price and it should read as one from across the grid. The plate is a fixed
-     white in both themes, so the ink is too.
+     never both. Red rather than the neutral: this one is a claim about the price
+     and it should read as one from across the grid. The plate is a fixed white in
+     both themes, so the ink is too.
 
      It says Offer and not a percentage. A reduction may only be advertised
      against the prior price, so a chair that has been on offer once already can

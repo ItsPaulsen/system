@@ -125,6 +125,14 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--grid-margin);
     }
+
+    /* Starts a little below the photograph rather than level with it: the plate's
+       top edge is a hard line and the brand sitting exactly on it read as the two
+       being one block. Only where they're side by side; stacked, the gap already
+       separates them. */
+    .pdp-buy {
+      padding-block-start: var(--space-16);
+    }
   }
 
   /* Seven and five from lg: the media side takes the extra, since it holds a

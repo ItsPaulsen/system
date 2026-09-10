@@ -1029,8 +1029,8 @@
      white the gallery and the shop cards give theirs, so the can sits on the
      surface it was photographed against in either theme. */
   .pdp-care__media {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     border-radius: var(--radius-sm);
     background: var(--ex-plate);
   }

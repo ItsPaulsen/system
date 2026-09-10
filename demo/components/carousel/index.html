@@ -50,6 +50,56 @@
         font-weight: 600;
       }
 
+      /* The thumbnails example. A dot row rather than picture tiles, because the
+         slides here are numbers: the hook is the same either way, the button just
+         draws whatever the set is made of. The pill is the current one, and the
+         tap target reaches past the shape through ::after so a 8px dot is still
+         24 to press. */
+      .carousel--demo-dots {
+        flex-wrap: wrap;
+      }
+
+      .demo-dots {
+        flex-basis: 100%;
+        display: flex;
+        justify-content: center;
+        gap: var(--space-8);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .demo-dot {
+        position: relative;
+        width: var(--space-8);
+        height: var(--space-8);
+        padding: 0;
+        border: 0;
+        border-radius: var(--radius-full);
+        background: var(--fill-primary);
+        cursor: pointer;
+        touch-action: manipulation;
+        transition:
+          background var(--motion-default),
+          width var(--motion-default);
+      }
+
+      .demo-dot::after {
+        content: "";
+        position: absolute;
+        inset: -8px;
+      }
+
+      .demo-dot[aria-current="true"] {
+        width: 20px;
+        background: var(--ink-primary);
+      }
+
+      .demo-dot:focus-visible {
+        outline: var(--focus-ring-width) solid var(--focus);
+        outline-offset: var(--focus-ring-offset);
+      }
+
       /* The multi-up example: 2 slides on phones, 3 on desktop (never fewer than 2). */
       .carousel--demo-multi {
         --carousel-cols: 2;
@@ -182,6 +232,125 @@
                 ))}
               />
             </script>
+          </div>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">Jump to a slide</h2>
+          <p class="section-note">
+            Any element inside the root with <code>data-carousel-goto="&lt;index&gt;"</code> goes to
+            that slide, and carries <code>aria-current="true"</code> while it's the current one, so
+            the styling hangs off state rather than a class you maintain. Dots here; a rail of
+            thumbnails is the same hook with a picture in the button. Vanilla only:
+            <code>&lt;Carousel /&gt;</code> has no slot for it yet.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview" style="flex-direction: column; gap: 1rem">
+              <div
+                class="carousel carousel--demo-dots"
+                data-carousel
+                role="group"
+                aria-roledescription="carousel"
+                aria-label="Slides with dots"
+              >
+                <button
+                  class="carousel__control carousel__control--prev"
+                  type="button"
+                  aria-label="Previous slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M15 6l-6 6l6 6" />
+                  </svg>
+                </button>
+                <div class="carousel__viewport">
+                  <ul class="carousel__track">
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      1
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      2
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      3
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      4
+                    </li>
+                    <li class="demo-slide carousel__item" role="group" aria-roledescription="slide">
+                      5
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="carousel__control carousel__control--next"
+                  type="button"
+                  aria-label="Next slide"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 6l6 6l-6 6" />
+                  </svg>
+                </button>
+                <span class="sr-only" aria-live="polite" data-carousel-status></span>
+                <ul class="demo-dots">
+                  <li>
+                    <button
+                      class="demo-dot"
+                      type="button"
+                      data-carousel-goto="0"
+                      aria-label="Slide 1"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      class="demo-dot"
+                      type="button"
+                      data-carousel-goto="1"
+                      aria-label="Slide 2"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      class="demo-dot"
+                      type="button"
+                      data-carousel-goto="2"
+                      aria-label="Slide 3"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      class="demo-dot"
+                      type="button"
+                      data-carousel-goto="3"
+                      aria-label="Slide 4"
+                    ></button>
+                  </li>
+                  <li>
+                    <button
+                      class="demo-dot"
+                      type="button"
+                      data-carousel-goto="4"
+                      aria-label="Slide 5"
+                    ></button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 

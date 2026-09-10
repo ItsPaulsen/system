@@ -57,6 +57,11 @@
          24 to press. */
       .carousel--demo-dots {
         flex-wrap: wrap;
+
+        /* The dots wrap onto their own line, so this is the distance from the
+           slide to them: 8, because a dot is a small mark and the row's own 16
+           left it floating. The column gap stays 16 for the arrows. */
+        row-gap: var(--space-8);
       }
 
       .demo-dots {

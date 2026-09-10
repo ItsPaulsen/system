@@ -1041,6 +1041,20 @@
     align-self: center;
   }
 
+  /* One line each, faded out at the end rather than wrapped. The button beside
+     them changes width as it answers a press, and the text is what gives way: a
+     name that rewraps mid-press moves the whole block. Masked rather than
+     ellipsed, because a row this short rarely overflows at all, and where it does
+     the fade says there is more without spending a character on saying it. Over
+     empty space the last 8px fade nothing, so a short line is untouched. */
+  .pdp-care__title,
+  .pdp-care__meta,
+  .pdp-care__price {
+    overflow: hidden;
+    white-space: nowrap;
+    mask-image: linear-gradient(to right, #000 calc(100% - 8px), transparent);
+  }
+
   /* The same leading the shop cards tune for the same three lines: 22 on the
      name, 18 under it. A row this dense is a stack of short lines where the exact
      line box is what holds them together, so the leading is set in px while the
@@ -1074,32 +1088,10 @@
   }
 
   /* Same three states as Add to cart (product.js), so the two buttons on the page
-     answer the same way. Unlike that one, this button is beside the text rather
-     than filling a row, so a button that grew from Add to Added took width off
-     the words and rewrapped them mid-press.
-     
-     So it holds its widest state at rest: the check keeps its place in the layout
-     and only stops being drawn, and both words share one grid cell, which sizes
-     to the longer of them whichever is showing. */
-  .pdp-care__add:not(.button--loading) .spinner {
-    display: none;
-  }
-
+     answer the same way. */
+  .pdp-care__add:not(.button--loading) .spinner,
   .pdp-care__add:not(.is-added) .pdp-care__check {
-    visibility: hidden;
-  }
-
-  .pdp-care__label {
-    display: grid;
-  }
-
-  .pdp-care__label > span {
-    grid-area: 1 / 1;
-  }
-
-  .pdp-care__add:not(.is-added) [data-care-done],
-  .pdp-care__add.is-added [data-care-idle] {
-    visibility: hidden;
+    display: none;
   }
 
   .pdp-care__add.is-added {

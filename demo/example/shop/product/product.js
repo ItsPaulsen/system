@@ -237,18 +237,24 @@
   // that has to be opened, and the column's primary one, both saying what they
   // did where the eye already is rather than sending a toast after the fact.
   const careAdd = document.querySelector("[data-pdp-care-add]");
-  careAdd?.addEventListener("click", () => {
-    if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
-      return;
-    // Nothing to write or put back: this button holds both words at once and the
-    // is-added class picks which one is drawn (see product.css), so its width
-    // never moves and the text beside it never rewraps.
-    confirmPress(careAdd, {
-      announce: "Wood oil added to cart",
-      done: () => {},
-      restore: () => {}
+  const careLabel = careAdd && careAdd.querySelector("[data-pdp-care-label]");
+  if (careAdd && careLabel) {
+    careAdd.addEventListener("click", () => {
+      if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
+        return;
+      confirmPress(careAdd, {
+        announce: "Wood oil added to cart",
+        done: () => {
+          careAdd.classList.add("button--with-start-icon");
+          careLabel.textContent = "Added";
+        },
+        restore: () => {
+          careAdd.classList.remove("button--with-start-icon");
+          careLabel.textContent = "Add";
+        }
+      });
     });
-  });
+  }
 
   // Favorite is a toggle, so the toast has to be able to say both things. The
   // shell reads the line and its type off the button when the click reaches

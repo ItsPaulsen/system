@@ -932,11 +932,10 @@
   }
 
   .pdp-detail {
-    /* Kept from the component, not for the corner it no longer has: these are
-       flex items, and a flex item's automatic minimum size is its min-content
-       unless its overflow is something other than visible. Made visible, opening
-       a section grew the whole buy column to fit its prose. */
-    overflow: hidden;
+    /* Nothing to clip: the corner and the fill are gone, and the open animation
+       clips itself (::details-content). Visible, so the ring below isn't cut off
+       at the row's edge. */
+    overflow: visible;
     border-top: var(--border-width) solid var(--fill-tertiary);
     border-radius: 0;
     background: none;
@@ -944,6 +943,15 @@
 
   .pdp-detail:last-child {
     border-bottom: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  /* The ring goes round the heading, not the whole section. On a card the item is
+     the thing you reached, and ringing it is right; here the row is, and a ring
+     round an open section draws a box the page does not otherwise have. Rounded,
+     like the filter's own heads, because a square ring on a row with no edges
+     reads as a stray rectangle. */
+  .pdp-detail:has(.accordion__summary:focus-visible) {
+    outline: none;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -979,6 +987,13 @@
        the filter gives its own group headings. */
     font-size: var(--font-body-small-emphasized-size);
     line-height: var(--font-body-small-emphasized-lh);
+  }
+
+  .pdp-detail .accordion__summary:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+    animation: focus-ring-converge var(--motion-default);
   }
 
   .pdp-detail .accordion__body {

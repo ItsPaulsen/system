@@ -16,6 +16,7 @@
     care: document.querySelector("[data-pdp-care]"),
 
     terms: document.querySelector("[data-pdp-terms]"),
+    regularLabel: document.querySelector("[data-pdp-regular-label]"),
     regular: document.querySelector("[data-pdp-regular]"),
     regularOff: document.querySelector("[data-pdp-regular-off]"),
     lowestLine: document.querySelector("[data-pdp-lowest-line]"),
@@ -63,6 +64,10 @@
     // Labelled, not just struck: the rule wants the prior price identifiable as
     // one, and a bare crossed-out number leaves the reader to guess what it is.
     if (d.regular) {
+      // Normal price alone, Original beside a lower one: on its own it is what
+      // the thing usually costs, and above a lowest recent price it is where the
+      // run of offers started rather than what anyone was charged last.
+      set(out.regularLabel, d.lowest ? "Original" : "Normal price");
       set(out.regular, d.regular);
       set(out.regularOff, d.regularOff);
     }

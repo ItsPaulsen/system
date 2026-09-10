@@ -392,8 +392,12 @@
                        the lowest actually charged in the 30 days before. The date is
                        required once an offer is described as running out. -->
                   <div class="pdp-buy__terms" data-pdp-terms hidden>
+                    <!-- Normal price on its own, Original once a lowest recent
+                         price appears under it: alone it is what the thing usually
+                         costs, and beside a lower figure it is where the run of
+                         offers started. product.js writes whichever applies. -->
                     <p class="pdp-buy__term">
-                      Regular price: <s data-pdp-regular></s>
+                      <span data-pdp-regular-label></span>: <s data-pdp-regular></s>
                       <span class="pdp-buy__off" data-pdp-regular-off></span>
                     </p>
                     <!-- Only where the two differ. A colourway that has not been on

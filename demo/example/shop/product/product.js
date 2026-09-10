@@ -319,12 +319,12 @@
     // has long since run, so its data-carousel is never initialised. inert and
     // aria-hidden keep it out of the tab order, the accessibility tree, and the
     // delegated open handler its viewport would otherwise still match.
-    // The panel and the page are one carousel, so the slide you leave the panel on
-    // is the slide the page comes back to. It used to be put back to whichever one
-    // you opened from, on the reading that a larger view is a look rather than a
-    // change; but you watch the page move to the shot you just left, which reads
-    // as the page undoing you rather than staying put.
+    // Where the page was when the panel opened. The panel is one carousel with the
+    // page, so without this the slide you left it on came back with it: open on
+    // the pack shot, look through to the third, and the page had moved to the
+    // third too. The larger view is a look at the set, not a change to the page.
     let from = 0;
+    let left = 0;
     let stand = null;
 
     // Which slide the gallery is on, and putting it back on one. A transform track
@@ -333,10 +333,6 @@
     // all, so neither survives being carried about. The index does, and the
     // carousel knows how to land on it either way.
     const viewportOf = (el) => el.querySelector(".carousel__viewport");
-    const current = () => {
-      const dot = gallery.querySelector('[data-carousel-goto][aria-current="true"]');
-      return dot ? Number(dot.dataset.carouselGoto) : 0;
-    };
     const place = (i) =>
       // After the resize the remeasure just fired: that handler defers to a frame,
       // and this one is queued behind it, so it is the last word on where the set
@@ -352,8 +348,9 @@
       // click on it in there matches too. Without this that click stood a second
       // copy up on the page, and only the newest one was ever taken down again.
       if (gallery.parentNode === slot) return;
-      from = current();
-      const left = viewportOf(gallery)?.scrollLeft || 0;
+      const current = gallery.querySelector('[data-carousel-goto][aria-current="true"]');
+      from = current ? Number(current.dataset.carouselGoto) : 0;
+      left = viewportOf(gallery)?.scrollLeft || 0;
       stand = gallery.cloneNode(true);
       stand.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
       stand.inert = true;
@@ -368,48 +365,21 @@
       remeasure();
       place(from);
     };
-    // Put the still copy on the page onto the slide the panel is showing, measured
-    // in the page's own layout: it is the same width the gallery will come back to.
-    const matchStand = () => {
-      const vp = stand && viewportOf(stand);
-      if (!vp) return;
-      const slides = [...stand.querySelectorAll(".pdp-gallery__slide")].filter((el) => !el.hidden);
-      const want = slides[current()];
-      if (!want) return;
-      const to = Math.max(
-        0,
-        Math.min(vp.scrollWidth - vp.clientWidth, want.offsetLeft - slides[0].offsetLeft)
-      );
-      // Both engines, because the copy is never initialised and doesn't know which
-      // one it is: a scrolling track answers to scrollLeft and a transformed one to
-      // the inline style it was cloned with. Setting the idle one costs nothing.
-      vp.scrollLeft = to;
-      const track = stand.querySelector(".carousel__track");
-      if (track) track.style.transform = `translate3d(${-to}px, 0, 0)`;
-    };
-
     const leave = () => {
-      const showing = current();
       home.insertBefore(gallery, next);
-      // In the same breath as the move, because the index gets there a frame later
-      // and in that frame the row sits at nought and tells the dots so: the
-      // photograph held still while the dot under it went to the first and back.
-      // The pixels are the page's own, so they're measured after the move, off the
-      // slides themselves.
+      // Straight back to where the page was, in the same breath as the move. The
+      // index would get there too, but a frame later, and in that frame the row
+      // has scrolled to nought and told the dots so: the picture held still and
+      // the dot under it went to the first and back. The page's own width hasn't
+      // changed since it left, so the pixels it left on are still the right ones.
       const back = viewportOf(gallery);
-      const slides = [...gallery.querySelectorAll(".pdp-gallery__slide")].filter(
-        (el) => !el.hidden
-      );
-      if (back && slides[showing]) {
-        const want = slides[showing].offsetLeft - slides[0].offsetLeft;
-        back.scrollLeft = Math.max(0, Math.min(back.scrollWidth - back.clientWidth, want));
-      }
+      if (back) back.scrollLeft = left;
       stand?.remove();
       stand = null;
       remeasure();
-      // Placed rather than slid: the page shouldn't animate to a slide it is
-      // already showing.
-      place(showing);
+      // Placed rather than slid: the page shouldn't animate to a slide it never
+      // left. The larger view is a look at the set, not a change to the page.
+      place(from);
     };
 
     // The panel fades out as well as in, so the gallery leaves on the fade's tail
@@ -426,12 +396,6 @@
     });
 
     zoom.addEventListener("close", () => {
-      // The stand-in catches up before the fade, not after it. It has been holding
-      // the shot the panel opened from, so the panel used to fade away onto the
-      // wrong photograph and the page corrected itself once the gallery was back:
-      // a jump, at the one moment the eye is on it. Matching it here means there
-      // is nothing left to correct, and nothing to slide.
-      matchStand();
       const secs = parseFloat(getComputedStyle(zoom).transitionDuration) || 0;
       clearTimeout(back);
       back = setTimeout(leave, secs * 1000);

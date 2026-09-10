@@ -339,10 +339,21 @@
     // put it back a frame later. Two frames, crossing and returning: too quick to
     // read as the photograph moving, and just slow enough to read as the dot under
     // it blinking. Said first, the re-snap agrees and there is nothing to undo.
-    const place = (i) =>
+    const place = (i) => {
+      // Silence the rail across the move. Placing a slide makes one dot current
+      // and the last one stop being current, and the one stopping animates its
+      // background out over --motion-default. That animation is still running when
+      // the gallery lands on the page, whichever direction the panel went in, and
+      // it is the whole of what reads as a blink. Two frames is the same guard
+      // setTheme uses for the same reason.
+      gallery.classList.add("pdp-gallery--placing");
       gallery.dispatchEvent(
         new CustomEvent("carousel:goto", { detail: { index: i, animate: false } })
       );
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => gallery.classList.remove("pdp-gallery--placing"))
+      );
+    };
 
     const enter = () => {
       // Already in the panel: the photograph carries the open hook with it, so a

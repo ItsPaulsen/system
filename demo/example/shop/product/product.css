@@ -643,6 +643,13 @@
     display: none;
   }
 
+  /* Set while the gallery is being placed (product.js): a tile or dot that stops
+     being current animates its way back, and that animation outlives the move
+     into or out of the larger view. */
+  .pdp-gallery--placing .pdp-thumb {
+    transition: none;
+  }
+
   .pdp-gallery[data-pdp-views="1"] {
     grid-template-columns: minmax(0, 1fr);
   }

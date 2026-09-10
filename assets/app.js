@@ -3401,7 +3401,11 @@ function initCarousel() {
 
     // How far the track can travel, and each item's aligned scroll offset (its
     // offsetLeft, clamped so the last items settle at the end rather than beyond it).
-    const maxScroll = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
+    // Scrolling asks the scroller, not the thing inside it: the two agree while the
+    // track is the viewport's only child, and only one of them stays true if that
+    // ever stops being so.
+    const maxScroll = () =>
+      Math.max(0, (native() ? viewport.scrollWidth : track.scrollWidth) - viewport.clientWidth);
     const points = () => {
       const list = slots();
       if (!list.length) return [0];
@@ -3704,10 +3708,7 @@ function initCarousel() {
       () => {
         if (!native()) return;
         cancelAnimationFrame(syncFrame);
-        syncFrame = requestAnimationFrame(() => {
-          at = current();
-          sync();
-        });
+        syncFrame = requestAnimationFrame(sync); // sync() reads the scroll and sets `at`
       },
       { passive: true }
     );

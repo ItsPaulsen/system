@@ -285,10 +285,14 @@
         <section class="preview-block" data-lang="html">
           <h2 class="subhead">Component</h2>
           <p class="section-note">
-            <code>initCarousel()</code> translates the track: pointer drag (mouse and touch) with a
-            rubber-band past the ends, plus the buttons, arrow keys, and the "Slide N of M" region.
-            A release commits if it crossed 30% of the viewport or was quick, so a slow drag that
-            covers half the window lands and a short flick still counts.
+            <code>initCarousel()</code> runs one of two engines on the same markup. On a pointer it
+            translates the track and owns the drag, with a rubber band past the ends; under a finger
+            the viewport is a native scroll container with snap points, so the swipe is the
+            platform's own momentum rather than an imitation of it. Either way the buttons, arrow
+            keys, ends and "Slide N of M" behave the same, and the set has a first and a last: there
+            is no wrap. A release commits on 30% of the viewport at any speed, or on a flick, which
+            has to travel 24px and end inside 500ms. Slides can be hidden; fire
+            <code>carousel:refresh</code> on the root after showing or hiding them.
           </p>
           <pre><code><span class="tok-key">&lt;div</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">data-carousel</span> <span class="tok-prop">role</span>=<span class="tok-str">"group"</span> <span class="tok-prop">aria-roledescription</span>=<span class="tok-str">"carousel"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Highlights"</span><span class="tok-key">&gt;</span>
   <span class="tok-key">&lt;button</span> <span class="tok-prop">class</span>=<span class="tok-str">"carousel__control carousel__control--prev"</span> <span class="tok-prop">aria-label</span>=<span class="tok-str">"Previous slide"</span><span class="tok-key">&gt;</span>…<span class="tok-key">&lt;/button&gt;</span>

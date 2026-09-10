@@ -547,23 +547,27 @@
     color: rgb(var(--shop-plate-red));
   }
 
-  /* What it cost before, beside what it costs now: the meta is a column, so the
-     pair share a row of their own rather than the old price taking a line under
-     the new one. Secondary ink, so the struck figure reads as a footnote rather
-     than a second price to weigh up. */
-  .shop-card__prices {
+  /* The prior prices, named, the way the product page names them: what it used to
+     cost, and where a product has been on offer inside the window, the lowest it
+     actually went. 12, because a card is already three lines of text and these are
+     the smallest facts on it; secondary ink rather than tertiary, since they still
+     have to be read. */
+  .shop-card__terms {
     display: flex;
-    align-items: baseline;
-    gap: var(--space-8);
+    flex-direction: column;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-small-size);
+    line-height: 18px;
   }
 
-  .shop-card__was {
-    /* 14 against the price's 16: it is the smaller fact of the two, and at the
-       same size the pair read as a choice rather than a change. */
-    color: var(--ink-secondary);
-    font-size: var(--font-caption-medium-size);
-    line-height: 18px;
+  .shop-card__term {
     white-space: nowrap;
+  }
+
+  /* The reduction each struck figure stands for. Red, the one thing in the line
+     anyone is scanning for. */
+  .shop-card__off {
+    color: var(--red);
   }
 
   /* Price and store count are consecutive lines of one block, no gap: their
@@ -584,7 +588,7 @@
   /* Red where there is a prior price to compare it with, so a reduced card reads
      as one from across the grid rather than only on its badge. :has, so nothing
      in the markup has to say twice that the product is on offer. */
-  .shop-card__prices:has(.shop-card__was) .shop-card__price {
+  .shop-card__meta:has(.shop-card__terms) .shop-card__price {
     color: var(--red);
   }
 

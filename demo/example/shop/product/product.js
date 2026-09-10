@@ -333,14 +333,15 @@
     // all, so neither survives being carried about. The index does, and the
     // carousel knows how to land on it either way.
     const viewportOf = (el) => el.querySelector(".carousel__viewport");
+    // Before the remeasure, never after it. A move resets a scrolling track to
+    // nought, and the carousel's own idea of which slide it is on comes from where
+    // it has just been, so the resize the move fires re-snapped to that and this
+    // put it back a frame later. Two frames, crossing and returning: too quick to
+    // read as the photograph moving, and just slow enough to read as the dot under
+    // it blinking. Said first, the re-snap agrees and there is nothing to undo.
     const place = (i) =>
-      // After the resize the remeasure just fired: that handler defers to a frame,
-      // and this one is queued behind it, so it is the last word on where the set
-      // sits rather than a position the re-snap then overrides.
-      requestAnimationFrame(() =>
-        gallery.dispatchEvent(
-          new CustomEvent("carousel:goto", { detail: { index: i, animate: false } })
-        )
+      gallery.dispatchEvent(
+        new CustomEvent("carousel:goto", { detail: { index: i, animate: false } })
       );
 
     const enter = () => {
@@ -362,8 +363,8 @@
       const standing = viewportOf(stand);
       if (standing) standing.scrollLeft = left;
       slot.append(gallery);
-      remeasure();
       place(from);
+      remeasure();
     };
     const leave = () => {
       home.insertBefore(gallery, next);
@@ -376,10 +377,10 @@
       if (back) back.scrollLeft = left;
       stand?.remove();
       stand = null;
-      remeasure();
       // Placed rather than slid: the page shouldn't animate to a slide it never
       // left. The larger view is a look at the set, not a change to the page.
       place(from);
+      remeasure();
     };
 
     // The panel fades out as well as in, so the gallery leaves on the fade's tail

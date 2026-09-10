@@ -14,12 +14,13 @@
     stock: document.querySelector("[data-pdp-stock-label]"),
     status: document.querySelector("[data-pdp-status]"),
     care: document.querySelector("[data-pdp-care]"),
-    wasAmount: document.querySelector("[data-pdp-was-amount]"),
+
     terms: document.querySelector("[data-pdp-terms]"),
-    off: document.querySelector("[data-pdp-off]"),
-    regularLine: document.querySelector("[data-pdp-regular-line]"),
     regular: document.querySelector("[data-pdp-regular]"),
     regularOff: document.querySelector("[data-pdp-regular-off]"),
+    lowestLine: document.querySelector("[data-pdp-lowest-line]"),
+    lowest: document.querySelector("[data-pdp-lowest]"),
+    lowestOff: document.querySelector("[data-pdp-lowest-off]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -61,21 +62,22 @@
     // there.
     // Labelled, not just struck: the rule wants the prior price identifiable as
     // one, and a bare crossed-out number leaves the reader to guess what it is.
-    if (d.was) {
-      set(out.wasAmount, d.was);
-      set(out.off, d.off);
-    }
-    if (out.terms) out.terms.hidden = d.was === undefined;
-    // The price itself carries the offer, not just the small print under it.
-    if (out.price) out.price.classList.toggle("is-reduced", d.was !== undefined);
-    // The ordinary price, where a colourway has been on offer inside the window
-    // and its prior price is therefore lower than its usual one. Plain, not
-    // struck: one crossed-out figure is the price that no longer applies, two
-    // start competing to be read as the discount.
-    if (out.regularLine) out.regularLine.hidden = d.regular === undefined;
     if (d.regular) {
       set(out.regular, d.regular);
       set(out.regularOff, d.regularOff);
+    }
+    // A regular price is what marks a colourway as reduced: it is the figure the
+    // current price is being compared with, so there is no offer without one.
+    const reduced = d.regular !== undefined;
+    if (out.terms) out.terms.hidden = !reduced;
+    // The price itself carries the offer, not just the small print under it.
+    if (out.price) out.price.classList.toggle("is-reduced", reduced);
+    // And the second line only where the colourway has been on offer inside the
+    // window, which is what makes its prior price lower than its regular one.
+    if (out.lowestLine) out.lowestLine.hidden = d.lowest === undefined;
+    if (d.lowest) {
+      set(out.lowest, d.lowest);
+      set(out.lowestOff, d.lowestOff);
     }
 
     const stock = STOCK[d.stock] || STOCK.in;
@@ -91,7 +93,7 @@
     if (out.status && started)
       set(
         out.status,
-        `${d.color}, ${d.price}${d.was ? `, reduced from ${d.was}` : ""}, ${stock.label}`
+        `${d.color}, ${d.price}${d.regular ? `, reduced from ${d.lowest || d.regular}` : ""}, ${stock.label}`
       );
     // The oil is for a bare oak base, so it only belongs to the colourways that
     // have one; the lacquered and stained shells are not oiled and the leather

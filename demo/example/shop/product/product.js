@@ -325,6 +325,23 @@
     // third too. The larger view is a look at the set, not a change to the page.
     let from = 0;
     let stand = null;
+
+    // Which slide the gallery is on, and putting it back on one. A transform track
+    // carries its position in an inline style and a scrolling one carries it in
+    // scrollLeft, which a move through the DOM resets and a clone doesn't copy at
+    // all, so neither survives being carried about. The index does, and the
+    // carousel knows how to land on it either way.
+    const viewportOf = (el) => el.querySelector(".carousel__viewport");
+    const place = (i) =>
+      // After the resize the remeasure just fired: that handler defers to a frame,
+      // and this one is queued behind it, so it is the last word on where the set
+      // sits rather than a position the re-snap then overrides.
+      requestAnimationFrame(() =>
+        gallery.dispatchEvent(
+          new CustomEvent("carousel:goto", { detail: { index: i, animate: false } })
+        )
+      );
+
     const enter = () => {
       // Already in the panel: the photograph carries the open hook with it, so a
       // click on it in there matches too. Without this that click stood a second
@@ -332,25 +349,29 @@
       if (gallery.parentNode === slot) return;
       const current = gallery.querySelector('[data-carousel-goto][aria-current="true"]');
       from = current ? Number(current.dataset.carouselGoto) : 0;
+      const left = viewportOf(gallery)?.scrollLeft || 0;
       stand = gallery.cloneNode(true);
       stand.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
       stand.inert = true;
       stand.setAttribute("aria-hidden", "true");
       home.insertBefore(stand, next);
+      // The stand-in has to look like what it replaces, and a clone of a scrolling
+      // track comes back at nought: it stood the first shot in for the third, so
+      // the page flashed a different photograph as the panel came up.
+      const standing = viewportOf(stand);
+      if (standing) standing.scrollLeft = left;
       slot.append(gallery);
       remeasure();
+      place(from);
     };
     const leave = () => {
       home.insertBefore(gallery, next);
       stand?.remove();
       stand = null;
       remeasure();
-      // After the move, so the track is measured against the page's own width, and
-      // placed rather than slid: the page shouldn't animate to a slide it never
-      // left. This also puts the index the resize re-snaps to back where it was.
-      gallery.dispatchEvent(
-        new CustomEvent("carousel:goto", { detail: { index: from, animate: false } })
-      );
+      // Placed rather than slid: the page shouldn't animate to a slide it never
+      // left. The larger view is a look at the set, not a change to the page.
+      place(from);
     };
 
     // The panel fades out as well as in, so the gallery leaves on the fade's tail

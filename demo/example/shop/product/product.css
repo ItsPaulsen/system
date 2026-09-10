@@ -958,23 +958,42 @@
     column-gap: var(--pdp-related-gap);
     overflow-x: auto;
 
-    /* The browser scrolls this on every input there is, so the snap points are
-       what land it on a card boundary: a trackpad's two fingers, shift and a
-       wheel, a tab into a card off screen, a thumb. Nothing in JS lands it.
-
-       Proximity, not mandatory: a shelf of products is pushed along rather than
-       stepped through, so a scroll that means to travel shouldn't be caught by
-       every card it passes. */
-    scroll-snap-type: x proximity;
-
-    /* No bar: the peeking card is the affordance, and the arrows are there for a
-       mouse. Tabbing a card still scrolls it into view, so nothing depends on the
-       bar being there. */
+    /* No bar: the peeking card is the affordance, and the row is dragged rather
+       than scrolled by hand. Tabbing a card still scrolls it into view, so nothing
+       depends on the bar being there. */
     scrollbar-width: none;
   }
 
   .pdp-related__grid > * {
-    scroll-snap-align: start;
+    /* Pulled past an end, the cards move rather than the scroller: a scroll
+       container is clamped by the browser, so the resistance has to be drawn.
+       Shifting the children keeps the clip box (and the page edges it lines up
+       with) where it is. product.js sets the distance and eases it back to nothing
+       on release. */
+    translate: var(--pdp-related-pull, 0);
+  }
+
+  /* Dragging shouldn't select the titles it passes over. */
+  .pdp-related__grid.is-dragging {
+    user-select: none;
+  }
+
+  /* Snap only where nothing else lands the row. The drag in product.js is
+     mouse-only and lands itself, and snap points would be a second thing pulling
+     at a scrollLeft it is already setting frame by frame. Under a finger there is
+     no drag, so the platform scrolls it and these land it on a card.
+
+     Proximity, not mandatory: a shelf of products is pushed along rather than
+     stepped through, so a swipe that means to travel shouldn't be caught by every
+     card it passes. */
+  @media (hover: none) and (pointer: coarse) {
+    .pdp-related__grid {
+      scroll-snap-type: x proximity;
+    }
+
+    .pdp-related__grid > * {
+      scroll-snap-align: start;
+    }
   }
 
   .pdp-related__grid::-webkit-scrollbar {

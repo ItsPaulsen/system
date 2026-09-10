@@ -166,7 +166,11 @@
   .pdp-gallery {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-16);
+
+    /* The distance from the picture to the dots under it. 8, because a dot is a
+       small mark and 16 left it floating away from what it belongs to. Beside the
+       image from lg the rail is a column, and takes its own 16 there. */
+    gap: var(--space-8);
     align-content: start;
 
     /* .carousel is a flex row that centres its items, and only `display` was

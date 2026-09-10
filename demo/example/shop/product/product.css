@@ -1017,6 +1017,9 @@
      with nothing at all the row floated in the prose above it. A line is enough
      to say it is a thing you can act on rather than another paragraph. */
   .pdp-care {
+    /* Three lines of content against a 56 plate, so the two start together
+       rather than the picture floating against the middle of the words. */
+    align-items: start;
     margin-top: var(--space-16);
     border: var(--border-width) solid var(--fill-tertiary);
     background: none;
@@ -1041,6 +1044,16 @@
     color: var(--ink-primary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
+  }
+
+  /* The price on its own line, in the weight the shop cards give theirs: it is
+     the one thing in the row you decide on, and sharing a line with the maker
+     made it read as part of the description. */
+  .pdp-care__price {
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
   }
 
   .pdp-care__img {

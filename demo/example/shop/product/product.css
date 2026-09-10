@@ -927,6 +927,10 @@
     background: none;
   }
 
+  .pdp-detail:last-child {
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .pdp-detail:not([open]) .accordion__summary:hover {
       background: none;

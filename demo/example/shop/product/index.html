@@ -387,10 +387,16 @@
                     <s class="pdp-buy__was" data-pdp-was hidden></s>
                   </p>
 
-                  <!-- Required beside an advertised reduction, not decoration: the
-                       rule is the lowest price actually charged in the 30 days
-                       before it, and the struck figure above has to be that one. -->
-                  <p class="pdp-buy__lowest" data-pdp-lowest hidden></p>
+                  <!-- The offer's terms, hidden as one block with the offer. The
+                       first line is required beside an advertised reduction, not
+                       decoration: the rule is the lowest price actually charged in
+                       the 30 days before it, and the struck figure above has to be
+                       that one. The second is required once the offer is described
+                       as running out, which is what a date does. -->
+                  <div class="pdp-buy__terms" data-pdp-terms hidden>
+                    <p class="pdp-buy__term" data-pdp-lowest></p>
+                    <p class="pdp-buy__term">Offer valid until 30 September 2026.</p>
+                  </div>
                 </div>
 
                 <!-- Colour: native radios, so the group keeps its arrow-key

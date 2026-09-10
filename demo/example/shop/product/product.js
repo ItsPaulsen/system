@@ -16,6 +16,7 @@
     care: document.querySelector("[data-pdp-care]"),
     was: document.querySelector("[data-pdp-was]"),
     lowest: document.querySelector("[data-pdp-lowest]"),
+    terms: document.querySelector("[data-pdp-terms]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -62,10 +63,8 @@
     // The same figure again, named. A struck price says what it was; the rule
     // asks for what the lowest was over the 30 days before the offer, and here
     // they are the same number because the price had not moved.
-    if (out.lowest) {
-      out.lowest.hidden = d.was === undefined;
-      if (d.was) set(out.lowest, `Lowest price in the last 30 days: ${d.was}`);
-    }
+    if (out.terms) out.terms.hidden = d.was === undefined;
+    if (out.lowest && d.was) set(out.lowest, `Lowest price in the last 30 days: ${d.was}`);
 
     const stock = STOCK[d.stock] || STOCK.in;
     set(out.stock, stock.label);

@@ -818,17 +818,18 @@
     display: none;
   }
 
-  /* A line of small print under the price, not part of it: it belongs to the
-     offer rather than to the thing being sold. */
-  .pdp-buy__lowest {
+  /* Small print under the price, not part of it: it belongs to the offer rather
+     than to the thing being sold. Consecutive lines, no gap between them: their
+     leading already separates them, the way the price and its store count do. */
+  .pdp-buy__terms[hidden] {
+    display: none;
+  }
+
+  .pdp-buy__term {
     margin: 0;
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
-  }
-
-  .pdp-buy__lowest[hidden] {
-    display: none;
   }
 
   .pdp-buy__amount {

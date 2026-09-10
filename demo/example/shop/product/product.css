@@ -933,25 +933,33 @@
 
   .pdp-detail {
     /* Nothing to clip: the corner and the fill are gone, and the open animation
-       clips itself (::details-content). Visible, so the ring below isn't cut off
-       at the row's edge. */
+       clips itself (::details-content). Visible, so the ring isn't cut off. */
     overflow: visible;
-    border-top: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 0;
+    position: relative;
     background: none;
+
+    /* A radius with no corner to draw, kept for the focus ring: the component
+       rings the whole section, the way every other focusable block on the site
+       is ringed, and a square ring on a row with no edges reads as a stray
+       rectangle. */
+    border-radius: var(--radius-sm);
   }
 
-  .pdp-detail:last-child {
-    border-bottom: var(--border-width) solid var(--fill-tertiary);
+  /* Drawn rather than bordered, because a border would take the radius with it
+     and hook down at both ends of what should be a straight line. */
+  .pdp-detail::before,
+  .pdp-detail:last-child::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: var(--border-width);
+    background: var(--fill-tertiary);
   }
 
-  /* The ring goes round the heading, not the whole section. On a card the item is
-     the thing you reached, and ringing it is right; here the row is, and a ring
-     round an open section draws a box the page does not otherwise have. Rounded,
-     like the filter's own heads, because a square ring on a row with no edges
-     reads as a stray rectangle. */
-  .pdp-detail:has(.accordion__summary:focus-visible) {
-    outline: none;
+  .pdp-detail:last-child::after {
+    top: auto;
+    bottom: 0;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -987,13 +995,6 @@
        the filter gives its own group headings. */
     font-size: var(--font-body-small-emphasized-size);
     line-height: var(--font-body-small-emphasized-lh);
-  }
-
-  .pdp-detail .accordion__summary:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: var(--focus-ring-offset);
-    border-radius: var(--radius-sm);
-    animation: focus-ring-converge var(--motion-default);
   }
 
   .pdp-detail .accordion__body {

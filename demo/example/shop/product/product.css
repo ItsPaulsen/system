@@ -321,6 +321,16 @@
     background: var(--ex-plate);
   }
 
+  /* Held back while the page arrives on a colourway the markup doesn't carry (the
+     head script sets the flag off ?color=, product.js drops it once the shots are
+     the right colour and decoded). Hidden rather than removed, so the plate above
+     stands in and the gallery keeps its size: the reader waits a frame for the
+     photograph instead of watching the wrong one turn into it. */
+  [data-pdp-deep-link] .pdp-gallery__img,
+  [data-pdp-deep-link] [data-pdp-thumb] {
+    visibility: hidden;
+  }
+
   /* The trigger for the larger view, bottom-right of the plate like the arrows are
      at its sides. Unlike them it stays: a click on the photograph opens it too
      (see product.js), but this button is the only way in from the keyboard, so it

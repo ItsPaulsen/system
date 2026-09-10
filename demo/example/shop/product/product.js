@@ -522,6 +522,16 @@
   const current = inputs.find((i) => i.checked);
   if (current) render(current);
   started = true;
+
+  // And the shots the head script covered for that link come back, once the first
+  // of them has decoded: what appears is then the photograph rather than the
+  // empty frame it would uncover a moment early.
+  const root = document.documentElement;
+  if (root.dataset.pdpDeepLink !== undefined) {
+    const show = () => delete root.dataset.pdpDeepLink;
+    if (images[0]?.decode) images[0].decode().then(show, show);
+    else show();
+  }
 })();
 
 // The related row is a scroll container rather than a carousel: its cards are the

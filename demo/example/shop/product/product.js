@@ -400,6 +400,7 @@
 
   const RESIST = 0.3; // the fraction of an overpull that shows, as in the carousel
   const DRAG = 5; // px of travel before a press counts as a drag rather than a click
+  const COAST = 260; // ms of travel a release is worth, at the speed it was let go
 
   // A card's width is a sixth of the content cap, which doesn't divide evenly, so
   // a row of six that is meant to fit exactly can report a pixel or two of
@@ -416,6 +417,9 @@
   let pull = 0;
   let pointer = null;
   let swallow = false; // the drag's own trailing click, still to be spent
+  let vx = 0; // px/ms, smoothed over the move events
+  let lastX = 0;
+  let lastT = 0;
 
   // How far the cards sit past where the scroll can go. The scroller is clamped by
   // the browser, so this is drawn by shifting the children (see product.css).
@@ -454,7 +458,7 @@
     const fromPull = pull;
     const dist = to - fromScroll;
     if (Math.abs(dist) < 1 && Math.abs(fromPull) < 1) return;
-    const ms = Math.min(420, 140 + Math.max(Math.abs(dist), Math.abs(fromPull)) * 0.6);
+    const ms = Math.min(700, 160 + Math.max(Math.abs(dist), Math.abs(fromPull)) * 0.5);
     const t0 = performance.now();
     const step = (now) => {
       const p = Math.min(1, (now - t0) / ms);
@@ -467,10 +471,15 @@
     frame = requestAnimationFrame(step);
   };
 
-  // Let go and the nearest card lands flush with the row's start, so what you see
-  // is whole cards and one peeking. At either end it stays where it is: the row is
-  // already against something, and pulling it off that edge to align a card would
-  // undo the drag. It still glides, to let any overpull go.
+  // Let go and the row carries on, then lands with a card flush to the start, so
+  // what you see is whole cards and one peeking. The throw is the point: a shelf
+  // that only ever corrected itself by half a card felt like it was resisting the
+  // hand, however hard you pushed. Where it would have coasted to is speed times a
+  // fixed time, and the nearest card to that is where it lands.
+  //
+  // At either end it stays where it is: the row is already against something, and
+  // pulling it off that edge to align a card would undo the drag. It still glides,
+  // to let any overpull go.
   const settle = () => {
     const max = row.scrollWidth - row.clientWidth;
     const at = row.scrollLeft;
@@ -478,8 +487,9 @@
       glide(at);
       return;
     }
+    const thrown = at - vx * COAST;
     const near = stops().reduce(
-      (best, o) => (Math.abs(o - at) < Math.abs(best - at) ? o : best),
+      (best, o) => (Math.abs(o - thrown) < Math.abs(best - thrown) ? o : best),
       0
     );
     glide(Math.max(0, Math.min(max, near)));
@@ -498,6 +508,9 @@
     swallow = false;
     startX = e.clientX;
     startLeft = row.scrollLeft;
+    vx = 0;
+    lastX = e.clientX;
+    lastT = e.timeStamp;
     pointer = e.pointerId;
     row.classList.add("is-dragging");
   });
@@ -519,6 +532,14 @@
     row.scrollLeft = to;
     // Whatever the scroll couldn't take is the overpull, resisted.
     setPull((to - want) * RESIST);
+    // Smoothed, because a single frame's reading is noise: the last events before
+    // a release are what the hand was doing, not the whole drag.
+    const dt = e.timeStamp - lastT;
+    if (dt > 0) {
+      vx = vx * 0.7 + ((e.clientX - lastX) / dt) * 0.3;
+      lastX = e.clientX;
+      lastT = e.timeStamp;
+    }
     // A drag is a gesture that took the shelf somewhere, not a pointer that
     // wandered. Hand-holding a mouse through a click moves it a few pixels, and
     // counting that as a drag is what made the cards need several tries: the row

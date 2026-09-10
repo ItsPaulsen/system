@@ -989,6 +989,11 @@
   @media (hover: none) and (pointer: coarse) {
     .pdp-related__grid {
       scroll-snap-type: x proximity;
+
+      /* Snapping aligns a card to the scrollport's edge, which is the row's
+         padding box, so without this it landed the first card flush against the
+         window and ate the page margin the row is padded by. */
+      scroll-padding-inline: var(--grid-margin, 1rem);
     }
 
     .pdp-related__grid > * {

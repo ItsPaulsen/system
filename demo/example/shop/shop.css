@@ -581,6 +581,13 @@
     white-space: nowrap;
   }
 
+  /* Red where there is a prior price to compare it with, so a reduced card reads
+     as one from across the grid rather than only on its badge. :has, so nothing
+     in the markup has to say twice that the product is on offer. */
+  .shop-card__prices:has(.shop-card__was) .shop-card__price {
+    color: var(--red);
+  }
+
   .shop-card__stores {
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);

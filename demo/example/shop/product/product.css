@@ -813,6 +813,12 @@
     display: none;
   }
 
+  /* A reduced price is red, the way the reductions under it are: the figure is
+     the offer, and leaving it in ink made the small print the only sign of one. */
+  .pdp-buy__amount.is-reduced {
+    color: var(--red);
+  }
+
   /* The reduction each struck figure stands for, in red: it is the one word in
      the small print anyone is scanning for, and against a line of grey it has to
      find the eye on its own. */

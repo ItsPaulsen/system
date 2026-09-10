@@ -66,6 +66,8 @@
       set(out.off, d.off);
     }
     if (out.terms) out.terms.hidden = d.was === undefined;
+    // The price itself carries the offer, not just the small print under it.
+    if (out.price) out.price.classList.toggle("is-reduced", d.was !== undefined);
     // The ordinary price, where a colourway has been on offer inside the window
     // and its prior price is therefore lower than its usual one. Plain, not
     // struck: one crossed-out figure is the price that no longer applies, two

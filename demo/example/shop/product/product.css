@@ -140,17 +140,16 @@
         minmax(0, 1fr)
         minmax(0, calc(5 * var(--pdp-col) + 4 * var(--grid-gutter)));
     }
-  }
 
-  /* From xl the span has room to spare, so the column stops filling it and sits
-     at 480 in the middle of what is left. The gap and the page margin are the
-     same 32, so a column that fills its span already has equal air either side;
-     capping it only keeps that true, splitting the slack rather than leaving it
-     all on one edge.
+    /* Past 480 the column stops filling its span and sits in the middle of what
+       is left. No breakpoint for it: the span passes 480 somewhere around 1240,
+       and gating it on a round number instead took 15 off the column the moment
+       the query fired. Under 480 the cap is inert and the centring has nothing to
+       centre, so this is the whole rule.
 
-     It waits until here because at lg the span is under 500 and the column needs
-     all of it: the quantity and the button have to stay on one line. */
-  @media (min-width: 1280px) {
+       The gap and the page margin are the same, so a column that fills its span
+       already has equal air either side; the cap only keeps that true by
+       splitting the slack rather than leaving it all on one edge. */
     .pdp-buy {
       max-width: 480px;
       margin-inline: auto;

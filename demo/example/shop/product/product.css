@@ -788,11 +788,11 @@
   }
 
   /* The offer's small print belongs to the price, not to the column: its own
-     wrapper with its own gap, so it sits 8 under the figure rather than taking
-     the 16 the intro puts between its groups. */
+     wrapper, and no gap at all. The terms are 12 on a 1.5 leading, so the line
+     box already carries its own air; adding to it read as a separate thing under
+     the price rather than the rest of the same sentence. */
   .pdp-buy__pricing {
     display: grid;
-    gap: var(--space-8);
   }
 
   /* The price and what it was on one baseline: the struck figure is a note on

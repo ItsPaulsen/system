@@ -151,6 +151,12 @@
        already has equal air either side; the cap only keeps that true by
        splitting the slack rather than leaving it all on one edge. */
     .pdp-buy {
+      /* width, and not just the cap: an auto inline margin turns off a grid
+         item's stretch, so the column started sizing to its own content. It was
+         440 with the sections closed and 480 once one was open, growing as the
+         prose arrived. Stated at 100%, it is the track or the cap, whichever is
+         smaller, and the margins only have the leftover to share. */
+      width: 100%;
       max-width: 480px;
       margin-inline: auto;
     }

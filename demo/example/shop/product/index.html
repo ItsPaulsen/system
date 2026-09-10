@@ -380,29 +380,31 @@
                 <div class="pdp-buy__pricing">
                   <p class="pdp-buy__price">
                     <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
-                    <!-- Only the colourways on offer carry data-was (see the swatches),
-                         so this is empty and hidden for the rest. <s> because the price
-                         is no longer the one being asked, which is what the element is
-                         for. -->
-                    <!-- The word is not struck, only the figure: the line means the
-                       price no longer applies, and the label saying so still does. -->
-                    <span class="pdp-buy__was" data-pdp-was hidden>
-                      Was: <s data-pdp-was-amount></s>
-                    </span>
                   </p>
 
-                  <!-- Required once the offer is described as running out, which
-                       is what a date does. The prior price itself is the struck
-                       figure above: the rule asks for that number, not for a
-                       sentence naming it, so long as it is labelled as what it is
-                       and is the lowest actually charged in the 30 days before. -->
+                  <!-- The whole block belongs to the offer and goes with it. Under
+                       the price rather than beside it: two figures on one line read
+                       as a choice between them, and there can be a second one. Only
+                       the figure is struck, since the line means the price no longer
+                       applies while the label still does.
+
+                       The first line is the prior price the rule asks for, which is
+                       the lowest actually charged in the 30 days before. The date is
+                       required once an offer is described as running out. -->
                   <div class="pdp-buy__terms" data-pdp-terms hidden>
+                    <p class="pdp-buy__term">
+                      Was: <s data-pdp-was-amount></s>
+                      <span class="pdp-buy__off" data-pdp-off></span>
+                    </p>
                     <!-- Only where the two differ. A colourway that has been on
                          offer inside the window has a prior price lower than its
                          ordinary one, and the ordinary one is context rather than
                          the figure the rule asks for. -->
-                    <p class="pdp-buy__term" data-pdp-regular hidden></p>
-                    <p class="pdp-buy__term">Offer valid through 30. Sep. 2026.</p>
+                    <p class="pdp-buy__term" data-pdp-regular-line hidden>
+                      Regular price: <s data-pdp-regular></s>
+                      <span class="pdp-buy__off" data-pdp-regular-off></span>
+                    </p>
+                    <p class="pdp-buy__term">Offer valid through 30. Sep. 2026</p>
                   </div>
                 </div>
 
@@ -449,6 +451,7 @@
                         name="pdp-color"
                         value="black"
                         data-big="1440"
+                        data-off="-20%"
                         data-was="5 295 kr"
                         data-color="Black"
                         data-price="4 236 kr"
@@ -570,6 +573,8 @@
                         name="pdp-color"
                         value="black-leather"
                         data-big="1440"
+                        data-off="-5%"
+                        data-regular-off="-20%"
                         data-regular="7 349 kr"
                         data-was="6 199 kr"
                         data-color="Refine leather black"

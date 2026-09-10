@@ -806,24 +806,18 @@
     margin: 0;
   }
 
-  /* What it cost before, beside what it costs now. Secondary ink and body size,
-     so the struck line reads as a footnote to the price rather than competing
-     with it; the row baseline-aligns them (see .pdp-buy__price). */
-  .pdp-buy__was {
-    color: var(--ink-secondary);
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
-  }
-
-  .pdp-buy__was[hidden] {
-    display: none;
-  }
-
   /* Small print under the price, not part of it: it belongs to the offer rather
      than to the thing being sold. Consecutive lines, no gap between them: their
      leading already separates them, the way the price and its store count do. */
   .pdp-buy__terms[hidden] {
     display: none;
+  }
+
+  /* The reduction each struck figure stands for, in red: it is the one word in
+     the small print anyone is scanning for, and against a line of grey it has to
+     find the eye on its own. */
+  .pdp-buy__off {
+    color: var(--red);
   }
 
   .pdp-buy__term[hidden] {

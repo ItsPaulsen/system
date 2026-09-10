@@ -125,17 +125,23 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--grid-gutter);
     }
+
+    /* A gutter alone is tight between a photograph and a column of prose, so the
+       buy column adds its own inside its span, the way it does at lg (see below).
+       20 here rather than 40: the column is only about 350 wide and the quantity
+       and the button have to sit on one line. */
+    .pdp-buy {
+      padding-inline-start: var(--space-20);
+    }
   }
 
   /* Seven and five from lg: the media side takes the extra, since it holds a
      square plate and an even split made it much the taller of the two.
 
-     A gutter alone is tight between two blocks of content, so the buy column adds
-     40 of its own inside its span: the air comes from the column, not from the
-     gap, which is exactly what IKEA does (`grid-column: 8 / span 5` with
-     `padding-inline-start: 2.5rem` on a 12-column grid). It waits until lg
-     because at md the column is only ~350 wide and the two buttons need all of
-     it. */
+     The buy column's own inset opens from 20 to 40 here, so the space between the
+     two reads as 60. The air comes from the column, not from the gap, which stays
+     the grid's gutter: any other value and neither column lands on a boundary, so
+     the gallery would stop lining up with the cards further down. */
   @media (min-width: 1024px) {
     .pdp__split {
       --pdp-col: calc((100% - 11 * var(--grid-gutter)) / 12);

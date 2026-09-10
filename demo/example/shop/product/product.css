@@ -1035,6 +1035,12 @@
     background: var(--ex-plate);
   }
 
+  /* The row starts its three lines and its plate together, but the button belongs
+     to the row rather than to its first line. */
+  .pdp-care__actions {
+    align-self: center;
+  }
+
   /* The same leading the shop cards tune for the same three lines: 22 on the
      name, 18 under it. A row this dense is a stack of short lines where the exact
      line box is what holds them together, so the leading is set in px while the

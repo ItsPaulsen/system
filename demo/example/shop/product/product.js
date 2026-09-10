@@ -367,6 +367,15 @@
       remeasure();
     };
     const leave = () => {
+      // Put it back on its slide while it is still in the panel, so it arrives on
+      // the page already correct. Coming back on the panel's slide and being
+      // corrected in the same frame sounds free, and is for the photograph, but a
+      // dot carries a background transition: the one the panel left current
+      // arrived painted dark and then spent 150ms fading out. Nothing paints
+      // between the two, so the only thing anyone saw was that fade, and only
+      // where the rail is dots (a thumbnail's current state is a ring, which
+      // isn't transitioned).
+      place(from);
       home.insertBefore(gallery, next);
       // Straight back to where the page was, in the same breath as the move. The
       // index would get there too, but a frame later, and in that frame the row
@@ -377,9 +386,8 @@
       if (back) back.scrollLeft = left;
       stand?.remove();
       stand = null;
-      // Placed rather than slid: the page shouldn't animate to a slide it never
-      // left. The larger view is a look at the set, not a change to the page.
-      place(from);
+      // The page's own width is what the set has to be measured against, and the
+      // re-snap this fires lands on the slide already set above.
       remeasure();
     };
 

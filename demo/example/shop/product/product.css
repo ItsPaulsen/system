@@ -1032,6 +1032,14 @@
     background: var(--ex-plate);
   }
 
+  /* 14, not the Item's own 16: two lines at the same size read flat, and this is
+     the maker and the price under the product's name, which is what the shop
+     card's own second line is. Own class beside the component's. */
+  .pdp-care__meta {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
   .pdp-care__img {
     width: 100%;
     height: 100%;

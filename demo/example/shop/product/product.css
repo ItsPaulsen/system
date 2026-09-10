@@ -963,6 +963,17 @@
     column-gap: var(--pdp-related-gap);
     overflow-x: auto;
 
+    /* Room for a focus ring inside the clip. A scroll container clips on both
+       axes, so a card's ring was cut off the moment it was tabbed to: top and
+       bottom always, and against the ends on the inline axis. The padding gives
+       the ring somewhere to be drawn and the negative margin gives the space back,
+       so nothing moves and the cards still line up with the column.
+
+       --pdp-focus-room is the ring's width plus its offset, the same measure the
+       thumbnail rail reserves for its own. */
+    padding: var(--pdp-focus-room);
+    margin: calc(-1 * var(--pdp-focus-room));
+
     /* No bar: the peeking card is the affordance, and the row is dragged rather
        than scrolled by hand. Tabbing a card still scrolls it into view, so nothing
        depends on the bar being there. */
@@ -998,7 +1009,7 @@
       /* Snapping aligns a card to the scrollport's edge, which is the row's
          padding box, so without this it landed the first card flush against the
          window and ate the page margin the row is padded by. */
-      scroll-padding-inline: var(--grid-margin, 1rem);
+      scroll-padding-inline: calc(var(--grid-margin, 1rem) + var(--pdp-focus-room));
     }
 
     .pdp-related__grid > * {
@@ -1023,8 +1034,11 @@
       margin-inline: calc(-1 * var(--grid-margin, 1rem));
     }
 
+    /* The ring's room is already on both sides (see the base rule); this is the
+       page margin on top of it, so the first card still starts on the page's left
+       edge. */
     .pdp-related__grid {
-      padding-inline: var(--grid-margin, 1rem);
+      padding-inline: calc(var(--grid-margin, 1rem) + var(--pdp-focus-room));
     }
   }
 

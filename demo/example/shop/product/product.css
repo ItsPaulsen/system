@@ -672,20 +672,21 @@
 
   /* ── Buy column ───────────────────────────────────────────────────────────
      Groups rather than a flat stack: each wrapper owns its internal gap and the
-     column owns the space between them, so no element carries a margin. */
+     column owns the space between them, so no element carries a margin. One
+     distance throughout, the column's and the intro group's alike: two values
+     that close meant the group read as inconsistent rather than as a group, so
+     the extra step earned nothing. What holds the name, price and colour
+     together is that they come in that order. */
   .pdp-buy {
     display: flex;
     flex-direction: column;
-    gap: var(--space-24);
+    gap: var(--space-20);
     min-width: 0;
   }
 
-  /* Name, price and colour belong closer together than to anything below them, so
-     they're one group with its own gap rather than a margin on any of them: the
-     column keeps 24 between groups and this holds 16 inside. */
   .pdp-buy__intro {
     display: grid;
-    gap: var(--space-16);
+    gap: var(--space-20);
   }
 
   /* No gap: the brand reads as the first line of the product's name, so the two

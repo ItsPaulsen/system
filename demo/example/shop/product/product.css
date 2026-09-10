@@ -112,10 +112,10 @@
     gap: 2.5rem;
   }
 
-  /* Side by side from md, and always on the page's own 12-column grid, which is
-     why the gap is the grid's gutter and nothing else: any other value and neither
-     column lands on a boundary, so the gallery would stop lining up with the cards
-     further down.
+  /* Side by side from md. The space between them is the page's own side margin,
+     so the distance from the photograph to the column reads as the same distance
+     the column keeps from the edge of the page: 24 here, 32 from lg, following
+     --grid-margin rather than being stated twice.
 
      Six and six here. A tablet is wide enough for the two to sit together, and
      the alternative is a full-width photograph with everything worth reading
@@ -123,25 +123,15 @@
   @media (min-width: 768px) {
     .pdp__split {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--grid-gutter);
-    }
-
-    /* A gutter alone is tight between a photograph and a column of prose, so the
-       buy column adds its own inside its span, the way it does at lg (see below).
-       20 here rather than 40: the column is only about 350 wide and the quantity
-       and the button have to sit on one line. */
-    .pdp-buy {
-      padding-inline-start: var(--space-20);
+      gap: var(--grid-margin);
     }
   }
 
   /* Seven and five from lg: the media side takes the extra, since it holds a
      square plate and an even split made it much the taller of the two.
 
-     The buy column's own inset opens from 20 to 40 here, so the space between the
-     two reads as 60. The air comes from the column, not from the gap, which stays
-     the grid's gutter: any other value and neither column lands on a boundary, so
-     the gallery would stop lining up with the cards further down. */
+     The gap follows --grid-margin up to 32 here on its own; nothing else is
+     needed to hold the column off the photograph. */
   @media (min-width: 1024px) {
     .pdp__split {
       --pdp-col: calc((100% - 11 * var(--grid-gutter)) / 12);
@@ -150,26 +140,20 @@
         minmax(0, 1fr)
         minmax(0, calc(5 * var(--pdp-col) + 4 * var(--grid-gutter)));
     }
-
-    /* Inside the span, so the column edge is still on the grid. */
-    .pdp-buy {
-      padding-inline-start: 2.5rem;
-    }
   }
 
-  /* From xl the span has room to spare, so the column stops filling it: 480 of
-     content, with the same 40 either side, centred in what is left. Equal
-     insets are the point. With 40 on the reading side and nothing on the other,
-     centring the box still left the column sitting closer to the page's edge
-     than to the photograph, which reads as drift rather than as a column.
+  /* From xl the span has room to spare, so the column stops filling it and sits
+     at 480 in the middle of what is left. The gap and the page margin are the
+     same 32, so a column that fills its span already has equal air either side;
+     capping it only keeps that true, splitting the slack rather than leaving it
+     all on one edge.
 
      It waits until here because at lg the span is under 500 and the column needs
      all of it: the quantity and the button have to stay on one line. */
   @media (min-width: 1280px) {
     .pdp-buy {
-      max-width: calc(480px + 2 * 2.5rem);
+      max-width: 480px;
       margin-inline: auto;
-      padding-inline: 2.5rem;
     }
   }
 

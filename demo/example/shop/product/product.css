@@ -1035,15 +1035,21 @@
     background: var(--ex-plate);
   }
 
-  /* 14, not the Item's own 16: two lines at the same size read flat, and this is
-     the maker and the price under the product's name, which is what the shop
-     card's own second line is. Own class beside the component's. */
+  /* The same leading the shop cards tune for the same three lines: 22 on the
+     name, 18 under it. A row this dense is a stack of short lines where the exact
+     line box is what holds them together, so the leading is set in px while the
+     sizes stay on the tokens. */
+  .pdp-care__title {
+    line-height: 22px;
+  }
+
   .pdp-care__meta {
-    /* Primary ink, unlike the Item's own second line: this one carries a price,
-       and the size and the weight already separate it from the name above. */
+    /* 14 and primary ink, unlike the Item's own second line, which is 16 and
+       secondary: this is a variant under a name, which is what the shop card sets
+       at 14 too. Own class beside the component's. */
     color: var(--ink-primary);
     font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
+    line-height: 18px;
   }
 
   /* The price on its own line, in the weight the shop cards give theirs: it is

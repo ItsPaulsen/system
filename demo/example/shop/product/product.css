@@ -1206,16 +1206,30 @@
     padding-bottom: calc(var(--space-16) + var(--pdp-zoom-rail));
   }
 
-  /* The sheet close button's box as well as its skin: 40, round, so the surface
-     under the pointer is the same size and shape wherever a panel is closed, and
-     the same as the arrows beside it. */
+  /* Says "Close", the way the menu's does, rather than leaving an X to be read.
+     It takes the same --ex-control-* pair as the topbar's Menu and the sheet's
+     Close, so it is 40 tall below lg and 48 from it, and its label steps up with
+     them. The skin is the panel's own (see the fill rule below), not the Button's:
+     what is shared here is the size and the wording. */
   .pdp-zoom__close {
-    --button-size: 40px;
+    --button-size: var(--ex-control-h);
+    --button-px: var(--ex-control-px);
 
     position: absolute;
     z-index: 1;
     top: var(--space-16);
     inset-inline-end: var(--space-16);
+  }
+
+  .pdp-zoom__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (min-width: 1024px) {
+    .pdp-zoom__close {
+      --button-font: var(--font-body-medium-emphasized-size);
+    }
   }
 
   /* Every round control over the photography: no border, but it does carry the

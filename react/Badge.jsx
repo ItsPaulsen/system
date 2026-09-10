@@ -8,15 +8,7 @@ const decorative = (icon) =>
   isValidElement(icon) ? cloneElement(icon, { "aria-hidden": "true" }) : icon;
 
 export default function Badge({ variant, startIcon, endIcon, children, className, ...rest }) {
-  const cls = [
-    "badge",
-    variant && `badge--${variant}`,
-    startIcon && "badge--with-start-icon",
-    endIcon && "badge--with-end-icon",
-    className
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const cls = ["badge", variant && `badge--${variant}`, className].filter(Boolean).join(" ");
   return (
     <span className={cls} {...rest}>
       {decorative(startIcon)}

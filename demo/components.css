@@ -1514,8 +1514,12 @@
 
   /* Structure:
    <span class="badge badge--{primary|secondary|outline|red|amber|green|blue|fuchsia}
-                            [badge--with-start-icon | badge--with-end-icon]">
+">
      [<svg>…</svg>] Label [<svg>…</svg>]
+
+   An icon just goes in: it takes the gap and the same 8 the label gets, because a
+   glyph is drawn to the edges of its box rather than letter-shaped with its own
+   side bearings, so there is nothing to pull it in by.
    </span>
 
    Fixed size, badges don't scale with data-size. */
@@ -1536,18 +1540,6 @@
     font-weight: var(--font-caption-medium-weight);
     line-height: 1;
     white-space: nowrap;
-  }
-
-  /* The same 8 the label gets. A glyph here is drawn to the edges of its box,
-     not letter-shaped with its own side bearings, so the 4 these used to pull it
-     in to read as an optical match landed as the icon crowding the badge's
-     corner instead. */
-  .badge--with-start-icon {
-    padding-inline-start: 8px;
-  }
-
-  .badge--with-end-icon {
-    padding-inline-end: 8px;
   }
 
   .badge svg {

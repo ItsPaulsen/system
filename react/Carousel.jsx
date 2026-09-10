@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 
-// Transform-driven carousel (like Embla, no native scroll underneath so the two
-// coordinate systems can't fight). A ref holds `pos`, the track's translateX in
-// [−maxScroll, 0]. The pointer drags it (mouse and touch) with a rubber-band past the
-// ends; release settles to the nearest item. Buttons/keys step one item. `items` are
-// the slide nodes; `cols`/`gap` drive CSS custom props.
+// Two engines, one API, split on the same media query the stylesheet uses. On a
+// pointer a ref holds `pos`, the track's translateX in [−maxScroll, 0], dragged with
+// a rubber-band past the ends and settled to the nearest item. Under a finger the
+// viewport is a native scroll container with snap points and the drag stays out of
+// it, because a phone's own momentum beats any reimplementation of it. The set has
+// ends either way. `items` are the slide nodes; `cols`/`gap` drive CSS custom props.
+const TOUCH = "(hover: none) and (pointer: coarse)";
 const RESIST = 0.3;
-const EASE = "transform 350ms var(--motion-ease-out)";
+const EASE = "transform var(--carousel-slide)";
+const COMMIT = 0.3; // of the viewport
+const FLICK = 24; // px, under which a release is a press that wobbled
+const THROW = 500; // ms, after which a release is a drag that stopped
+const DRAG = 3; // px of travel before a press is a drag rather than a click
 
 export default function Carousel({
   items,
@@ -31,11 +37,19 @@ export default function Carousel({
     const tr = track.current;
     if (!vp || !tr) return;
 
-    const maxScroll = () => Math.max(0, tr.scrollWidth - vp.clientWidth);
+    const native = () => window.matchMedia(TOUCH).matches;
+    // Hidden slides have no width and no offset, so counting them would let the
+    // track travel to a slide that isn't there.
+    const slots = () => Array.from(tr.children).filter((el) => !el.hidden);
+    const maxScroll = () =>
+      Math.max(0, (native() ? vp.scrollWidth : tr.scrollWidth) - vp.clientWidth);
+    const scrollNow = () => (native() ? vp.scrollLeft : -pos.current);
     const points = () => {
+      const list = slots();
+      if (!list.length) return [0];
       const m = maxScroll();
-      const base = tr.children[0].offsetLeft;
-      return Array.from(tr.children).map((it) => Math.min(it.offsetLeft - base, m));
+      const base = list[0].offsetLeft;
+      return list.map((it) => Math.min(it.offsetLeft - base, m));
     };
     const nearestIndex = (scroll) => {
       let bi = 0;
@@ -48,47 +62,77 @@ export default function Carousel({
       });
       return bi;
     };
+    const currentIndex = () => nearestIndex(scrollNow());
     const render = (animate) => {
+      if (native()) {
+        // The track is laid out, not moved: leave it to the stylesheet.
+        tr.style.removeProperty("transition");
+        tr.style.removeProperty("transform");
+        return;
+      }
       tr.style.transition = animate ? EASE : "none";
       tr.style.transform = `translate3d(${pos.current}px, 0, 0)`;
     };
     const sync = () => {
-      const scroll = -pos.current;
+      const scroll = scrollNow();
       const m = maxScroll();
       setAtStart(scroll <= 0.5);
       setAtEnd(scroll >= m - 0.5);
       setCurrent(nearestIndex(scroll) + 1);
     };
-    const settle = (scroll) => {
-      pos.current = -Math.max(0, Math.min(maxScroll(), scroll));
-      render(true);
+    const settle = (to, animate = true) => {
+      const clamped = Math.max(0, Math.min(maxScroll(), to));
+      if (native()) {
+        vp.scrollTo({ left: clamped, behavior: animate ? "smooth" : "auto" });
+        sync();
+        return;
+      }
+      pos.current = -clamped;
+      render(animate);
       sync();
     };
-    const goTo = (i) => {
+    const goTo = (i, animate = true) => {
       const pts = points();
-      settle(pts[Math.max(0, Math.min(pts.length - 1, i))]);
+      settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
     };
-    const current = () => nearestIndex(-pos.current);
-    api.current = { goTo, current };
+    api.current = { goTo, current: currentIndex };
 
     let down = false;
     let startX = 0;
     let startPos = 0;
+    let startAt = 0;
+    let startT = 0;
     let moved = false;
+    let pointer = null;
+    let swallow = false;
     const onDown = (e) => {
       if (e.button !== 0) return;
-      if (e.pointerType === "mouse") e.preventDefault();
+      // The platform is doing this itself under a finger, and one slide is nowhere
+      // to go.
+      if (native() || slots().length < 2) return;
       down = true;
       moved = false;
+      swallow = false;
       startX = e.clientX;
       startPos = pos.current;
-      vp.setPointerCapture(e.pointerId);
+      startAt = currentIndex();
+      startT = e.timeStamp;
+      pointer = e.pointerId;
       vp.classList.add("is-dragging");
     };
+    // The one thing cancelling the pointerdown default was for; cancelling that
+    // also suppresses the mouse events a click is assembled from.
+    const onDragStart = (e) => e.preventDefault();
     const onMove = (e) => {
       if (!down) return;
       const dx = e.clientX - startX;
-      if (Math.abs(dx) > 3) moved = true;
+      if (!moved && Math.abs(dx) > DRAG) {
+        moved = true;
+        // Only now: a captured pointer retargets the click to the element holding
+        // it, so a press on a slide would never reach what it opens. A drag has
+        // nothing to open.
+        if (!vp.hasPointerCapture?.(pointer)) vp.setPointerCapture(pointer);
+      }
       const min = -maxScroll();
       let p = startPos + dx;
       if (p > 0) p *= RESIST;
@@ -99,32 +143,69 @@ export default function Carousel({
     const onUp = (e) => {
       if (!down) return;
       down = false;
-      vp.releasePointerCapture?.(e.pointerId);
+      if (vp.hasPointerCapture?.(e.pointerId)) vp.releasePointerCapture(e.pointerId);
       vp.classList.remove("is-dragging");
-      goTo(nearestIndex(Math.max(0, Math.min(maxScroll(), -pos.current))));
-      if (moved) {
-        const swallow = (c) => c.preventDefault();
-        vp.addEventListener("click", swallow, { capture: true });
-        requestAnimationFrame(() => vp.removeEventListener("click", swallow, { capture: true }));
-      }
+      const s = slots();
+      const stride = s.length > 1 ? s[1].offsetLeft - s[0].offsetLeft : vp.clientWidth;
+      const dx = pos.current - startPos;
+      const travel = Math.abs(dx);
+      const spent = e.timeStamp - startT;
+      // A drag past 30% of the window lands at any speed; a flick has to go far
+      // enough to mean it and end soon enough to be a throw.
+      const commit = travel > COMMIT * vp.clientWidth || (travel > FLICK && spent < THROW);
+      const crossed = Math.round(-dx / stride);
+      goTo(startAt + (crossed || (commit ? -Math.sign(dx) : 0)));
+      // Spent by the next click. A listener removed a frame later is a race, and
+      // losing it eats the next honest press.
+      swallow = moved;
     };
-    const onResize = () => goTo(current());
+    const onClick = (e) => {
+      if (!swallow) return;
+      swallow = false;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+    // Scrolled by the finger rather than moved by us, coalesced to a frame.
+    let syncFrame;
+    const onScroll = () => {
+      if (!native()) return;
+      cancelAnimationFrame(syncFrame);
+      syncFrame = requestAnimationFrame(sync);
+    };
+    const mq = window.matchMedia(TOUCH);
+    // A rotation can change which engine this is.
+    const onMode = () => {
+      pos.current = 0;
+      render(false);
+      goTo(Math.max(0, Math.min(nearestIndex(scrollNow()), slots().length - 1)), false);
+    };
+
+    const onResize = () => goTo(currentIndex(), false);
 
     vp.addEventListener("pointerdown", onDown);
+    vp.addEventListener("dragstart", onDragStart);
     vp.addEventListener("pointermove", onMove);
     vp.addEventListener("pointerup", onUp);
     vp.addEventListener("pointercancel", onUp);
     vp.addEventListener("lostpointercapture", onUp);
+    vp.addEventListener("click", onClick, { capture: true });
+    vp.addEventListener("scroll", onScroll, { passive: true });
+    mq.addEventListener?.("change", onMode);
     window.addEventListener("resize", onResize);
     render(false);
     sync();
     return () => {
       vp.removeEventListener("pointerdown", onDown);
+      vp.removeEventListener("dragstart", onDragStart);
       vp.removeEventListener("pointermove", onMove);
       vp.removeEventListener("pointerup", onUp);
       vp.removeEventListener("pointercancel", onUp);
       vp.removeEventListener("lostpointercapture", onUp);
+      vp.removeEventListener("click", onClick, { capture: true });
+      vp.removeEventListener("scroll", onScroll);
+      mq.removeEventListener?.("change", onMode);
       window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(syncFrame);
     };
   }, [items.length]);
 

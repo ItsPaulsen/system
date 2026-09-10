@@ -937,6 +937,18 @@
     }
   }
 
+  /* The mark, not a button holding it. The component's toggle is a soft-primary
+     disc, which suits a panel where it is the one control on a card; on a ruled
+     row it was the loudest thing in a block whose whole point is to be quiet.
+     Ink-secondary rather than tertiary, because it reports the row's state and
+     wants 3:1 against the surface, the same call the filter's chevron makes. */
+  .pdp-detail .accordion__toggle {
+    width: 20px;
+    height: 20px;
+    background: none;
+    color: var(--ink-secondary);
+  }
+
   /* The row is the whole width now, so its padding is vertical only: a heading
      that starts 16 in from a column edge nothing else is inset from reads as a
      panel that has lost its fill. */

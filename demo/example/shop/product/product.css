@@ -1012,12 +1012,29 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  /* Row headers are the table's <th>, so they take the header fill as a label
-     column. Fixed at a third so the values line up down the table. The table sits
-     in a section of the buy column now, so it takes the width it is given and
-     needs no cap of its own. */
-  .pdp-specs__table th {
-    width: 33%;
+  /* Pairs in columns, not a table: five short measurements laid out as ruled rows
+     of label and value made a heavier block than the thing it describes. The
+     label leads and the value follows under it. Three across in a 480 column, two
+     on a phone, off the one track rule. */
+  .pdp-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: var(--space-16);
+    margin: 0;
+  }
+
+  .pdp-specs dt {
+    color: var(--ink-primary);
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .pdp-specs dd {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
   }
 
   /* The shelf holds the row's two measurements, because the arrows sit outside

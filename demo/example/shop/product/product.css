@@ -789,11 +789,11 @@
   }
 
   /* The offer's small print belongs to the price, not to the column: its own
-     wrapper with 4, against the column's 20. Enough to part the terms from the
+     wrapper with 2, against the column's 20. Enough to part the terms from the
      figure, far too little to read as the next thing down. */
   .pdp-buy__pricing {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--space-2);
   }
 
   /* The price and what it was on one baseline: the struck figure is a note on

@@ -238,12 +238,10 @@
         <section class="preview-block">
           <h2 class="subhead">Jump to a slide</h2>
           <p class="section-note">
-            Any element inside the root with <code>data-carousel-goto="&lt;index&gt;"</code> goes to
-            that slide, and carries <code>aria-current="true"</code> while it's the current one, so
-            the styling hangs off state rather than a class you maintain. Dots here; a rail of
-            thumbnails is the same hook with a picture in the button. In React it's the
-            <code>nav</code> prop, which hands you the count, the current index and a way to jump,
-            because there the state is already yours to read.
+            Any element inside the root with <code>data-carousel-goto</code> jumps to that slide and
+            carries <code>aria-current</code> while it's current, so the styling hangs off state
+            rather than a class you maintain. Dots here; a thumbnail rail is the same hook with a
+            picture in the button. In React, the <code>nav</code> prop.
           </p>
           <div class="example" data-example>
             <div class="component-preview">

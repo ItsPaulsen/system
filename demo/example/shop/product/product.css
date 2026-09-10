@@ -1012,10 +1012,47 @@
     font-weight: var(--font-title-small-weight);
   }
 
+  /* The care suggestion. The row keeps the section's own surface rather than the
+     Item's, since the sections have no fill of their own; the circle is the only
+     mark on it, so it takes a neutral tint rather than an accent, which would be
+     the loudest thing in the quietest part of the page. */
+  .pdp-care {
+    margin-top: var(--space-16);
+    padding-inline: 0;
+    background: none;
+  }
+
+  /* A plate, not an icon circle: it holds a product shot, and the same fixed
+     white the gallery and the shop cards give theirs, so the can sits on the
+     surface it was photographed against in either theme. */
+  .pdp-care__media {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+  }
+
+  .pdp-care__img {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Same three states as Add to cart (product.js), so the two buttons on the page
+     answer the same way. */
+  .pdp-care__add:not(.button--loading) .spinner,
+  .pdp-care__add:not(.is-added) .pdp-care__check {
+    display: none;
+  }
+
+  .pdp-care__add.is-added {
+    pointer-events: none;
+  }
+
   /* Pairs in columns, not a table: five short measurements laid out as ruled rows
      of label and value made a heavier block than the thing it describes. The
      label leads and the value follows under it. Three across in a 480 column, two
      on a phone, off the one track rule. */
+
   .pdp-specs {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));

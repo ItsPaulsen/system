@@ -132,6 +132,38 @@
     if (checked) set(out.color, checked.dataset.color);
   });
 
+  // A press that takes a moment and then says so: loading, then a check and a
+  // word, then back to what it was. There is no request behind either of them
+  // here, but the shape is the real one, and a button that answers instantly
+  // teaches people it did nothing.
+  //
+  // aria-disabled and pointer-events rather than `disabled`, so the skin and the
+  // spinner's currentcolor survive; the guard at each call site is what stops a
+  // second press counting the same add twice.
+  const SENDING = 700;
+  const CONFIRMING = 1400;
+  const confirmPress = (btn, label, { announce, restore }) => {
+    btn.classList.add("button--loading");
+    btn.setAttribute("aria-busy", "true");
+    btn.setAttribute("aria-disabled", "true");
+
+    setTimeout(() => {
+      btn.classList.remove("button--loading");
+      btn.removeAttribute("aria-busy");
+      // The check is a start icon while it's there, so the pair sits on the same
+      // inset as any other icon-and-label button.
+      btn.classList.add("is-added", "button--with-start-icon");
+      label.textContent = "Added";
+      set(out.status, announce);
+
+      setTimeout(() => {
+        btn.classList.remove("is-added", "button--with-start-icon");
+        btn.removeAttribute("aria-disabled");
+        restore();
+      }, CONFIRMING);
+    }, SENDING);
+  };
+
   // The button says what pressing it will do, so the quantity beside it reads as
   // part of the sentence rather than a widget parked next to a button. One is the
   // resting case and gets the plain label: "Add 1 item to cart" is a number nobody
@@ -148,9 +180,6 @@
   const addLabel = add && add.querySelector("[data-pdp-add-label]");
 
   if (add && qtyInput && addLabel) {
-    const SENDING = 700;
-    const CONFIRMING = 1400;
-
     const idle = () =>
       !add.classList.contains("button--loading") && !add.classList.contains("is-added");
     // initNumberFields fires `change` on every step; `input` covers typing, and
@@ -170,30 +199,33 @@
     // never a run in flight to interrupt.
     add.addEventListener("click", () => {
       if (!idle()) return;
-      add.classList.add("button--loading");
-      add.setAttribute("aria-busy", "true");
-      add.setAttribute("aria-disabled", "true");
-
-      setTimeout(() => {
-        add.classList.remove("button--loading");
-        add.removeAttribute("aria-busy");
-        // The check is a start icon while it's there, so the pair sits on the
-        // same inset as any other icon-and-label button.
-        add.classList.add("is-added", "button--with-start-icon");
-        // Written past the idle guard: this *is* the state.
-        addLabel.textContent = "Added";
+      const n = Number(qtyInput.value);
+      confirmPress(add, addLabel, {
         // The button says it, but a press with a mouse may not have put focus
         // there, and a button's name changing under nobody is a change nobody
         // hears. Same region the colour change uses.
-        const n = Number(qtyInput.value);
-        set(out.status, n > 1 ? `${n} items added to cart` : "Added to cart");
+        announce: n > 1 ? `${n} items added to cart` : "Added to cart",
+        restore: label
+      });
+    });
+  }
 
-        setTimeout(() => {
-          add.classList.remove("is-added", "button--with-start-icon");
-          add.removeAttribute("aria-disabled");
-          label();
-        }, CONFIRMING);
-      }, SENDING);
+  // The care suggestion under Materials and care. The same press, so the two
+  // buttons on this page answer the same way: a small secondary one in a section
+  // that has to be opened, and the column's primary one, both saying what they
+  // did where the eye already is rather than sending a toast after the fact.
+  const careAdd = document.querySelector("[data-pdp-care-add]");
+  const careLabel = careAdd && careAdd.querySelector(".button__label");
+  if (careAdd && careLabel) {
+    careAdd.addEventListener("click", () => {
+      if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
+        return;
+      confirmPress(careAdd, careLabel, {
+        announce: "Wood oil added to cart",
+        restore: () => {
+          careLabel.textContent = "Add";
+        }
+      });
     });
   }
 

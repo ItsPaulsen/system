@@ -241,8 +241,9 @@
             Any element inside the root with <code>data-carousel-goto="&lt;index&gt;"</code> goes to
             that slide, and carries <code>aria-current="true"</code> while it's the current one, so
             the styling hangs off state rather than a class you maintain. Dots here; a rail of
-            thumbnails is the same hook with a picture in the button. Vanilla only:
-            <code>&lt;Carousel /&gt;</code> has no slot for it yet.
+            thumbnails is the same hook with a picture in the button. In React it's the
+            <code>nav</code> prop, which hands you the count, the current index and a way to jump,
+            because there the state is already yours to read.
           </p>
           <div class="example" data-example>
             <div class="component-preview" style="flex-direction: column; gap: 1rem">
@@ -351,6 +352,29 @@
                 </ul>
               </div>
             </div>
+            <script type="text/plain" class="example__react">
+              <Carousel
+                aria-label="Slides with dots"
+                items={[1, 2, 3, 4, 5].map((n) => (
+                  <div className="demo-slide">{n}</div>
+                ))}
+                nav={({ count, current, goTo }) => (
+                  <ul className="demo-dots">
+                    {Array.from({ length: count }, (_, i) => (
+                      <li key={i}>
+                        <button
+                          className="demo-dot"
+                          type="button"
+                          aria-label={`Slide ${i + 1}`}
+                          aria-current={i === current ? "true" : undefined}
+                          onClick={() => goTo(i)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              />
+            </script>
           </div>
         </section>
 
@@ -445,8 +469,8 @@
           <h2 class="subhead">Component</h2>
           <p class="section-note">
             <code>items</code> are the slide nodes; <code>cols</code> and <code>gap</code> drive the
-            CSS custom props. Prev/next, arrow keys, the disabled ends and the live count are built
-            in.
+            CSS custom props, and <code>nav</code> renders a rail or dots off the current index.
+            Prev/next, arrow keys, the disabled ends and the live count are built in.
           </p>
           <div data-source="/react/Carousel.jsx"></div>
         </section>

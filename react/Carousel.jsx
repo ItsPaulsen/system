@@ -6,6 +6,10 @@ import { useEffect, useRef, useState } from "react";
 // viewport is a native scroll container with snap points and the drag stays out of
 // it, because a phone's own momentum beats any reimplementation of it. The set has
 // ends either way. `items` are the slide nodes; `cols`/`gap` drive CSS custom props.
+// `nav` renders a thumbnail rail or a row of dots: it is handed the count, the
+// current index and a way to jump, and returns whatever markup the set wants. The
+// vanilla hook (data-carousel-goto) has to find those controls and manage
+// aria-current on them; here you already hold the state, so it just hands it over.
 const TOUCH = "(hover: none) and (pointer: coarse)";
 const RESIST = 0.3;
 const EASE = "transform var(--carousel-slide)";
@@ -20,6 +24,7 @@ export default function Carousel({
   // meant to be set by class or breakpoint.
   cols,
   gap,
+  nav,
   className,
   "aria-label": ariaLabel
 }) {
@@ -210,6 +215,7 @@ export default function Carousel({
   }, [items.length]);
 
   const step = (dir) => api.current.goTo(api.current.current() + dir);
+  const goTo = (i) => api.current.goTo(i);
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowLeft") {
@@ -260,6 +266,7 @@ export default function Carousel({
       <span className="sr-only" aria-live="polite" data-carousel-status>
         Slide {current} of {items.length}
       </span>
+      {nav?.({ count: items.length, current: current - 1, goTo })}
     </div>
   );
 }

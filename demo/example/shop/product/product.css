@@ -908,22 +908,45 @@
     border-radius: var(--radius-full);
   }
 
-  /* The pickup row (.item--muted) and the accordion both take the recessed skin:
-     the buy column sits on the secondary surface, so a default (secondary) panel
-     would be the page. Own class beside the component's, not a descendant. */
+  /* Rules rather than panels, the way the filter's groups read. A panel is a
+     thing on a surface, which is right in a sheet where each group is a card, and
+     wrong at the foot of a buy column where the reference material should recede
+     until it's asked for. So no fill, no corner, and a line between each: the
+     heading is the whole of what shows when it's closed.
+
+     No hover surface either. The whole row is the toggle, and a fill on it reads
+     like a menu item; the +/- reports the state and the cursor carries the rest. */
+  .pdp-details {
+    gap: 0;
+  }
+
   .pdp-detail {
-    background: var(--background-primary);
+    overflow: visible;
+    border-top: var(--border-width) solid var(--fill-tertiary);
+    border-radius: 0;
+    background: none;
+  }
+
+  .pdp-detail:last-child {
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .pdp-detail:not([open]) .accordion__summary:hover {
-      background: var(--background-primary-hover);
+      background: none;
     }
   }
 
-  .pdp-buy__pickup-icon {
-    background: var(--primary-soft);
-    color: var(--primary-foreground);
+  /* The row is the whole width now, so its padding is vertical only: a heading
+     that starts 16 in from a column edge nothing else is inset from reads as a
+     panel that has lost its fill. */
+  .pdp-detail .accordion__summary {
+    padding-inline: 0;
+  }
+
+  .pdp-detail .accordion__body {
+    padding-inline: 0;
+    padding-bottom: var(--space-20);
   }
 
   /* ── Specs and related ────────────────────────────────────────────────────

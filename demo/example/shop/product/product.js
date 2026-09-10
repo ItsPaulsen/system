@@ -10,7 +10,6 @@
     color: document.querySelector("[data-pdp-color]"),
     variant: document.querySelector("[data-pdp-variant]"),
     price: document.querySelector("[data-pdp-price]"),
-    stores: document.querySelector("[data-pdp-stores]"),
     badge: document.querySelector("[data-pdp-stock-badge]"),
     stock: document.querySelector("[data-pdp-stock-label]"),
     status: document.querySelector("[data-pdp-status]"),
@@ -50,7 +49,6 @@
     // the same string capitalised.
     set(out.variant, `, ${d.color}`);
     set(out.price, d.price);
-    set(out.stores, d.stores);
 
     const stock = STOCK[d.stock] || STOCK.in;
     set(out.stock, stock.label);

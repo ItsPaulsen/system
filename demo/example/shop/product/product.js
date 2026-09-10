@@ -324,6 +324,7 @@
     // the pack shot, look through to the third, and the page had moved to the
     // third too. The larger view is a look at the set, not a change to the page.
     let from = 0;
+    let left = 0;
     let stand = null;
 
     // Which slide the gallery is on, and putting it back on one. A transform track
@@ -349,7 +350,7 @@
       if (gallery.parentNode === slot) return;
       const current = gallery.querySelector('[data-carousel-goto][aria-current="true"]');
       from = current ? Number(current.dataset.carouselGoto) : 0;
-      const left = viewportOf(gallery)?.scrollLeft || 0;
+      left = viewportOf(gallery)?.scrollLeft || 0;
       stand = gallery.cloneNode(true);
       stand.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
       stand.inert = true;
@@ -366,6 +367,13 @@
     };
     const leave = () => {
       home.insertBefore(gallery, next);
+      // Straight back to where the page was, in the same breath as the move. The
+      // index would get there too, but a frame later, and in that frame the row
+      // has scrolled to nought and told the dots so: the picture held still and
+      // the dot under it went to the first and back. The page's own width hasn't
+      // changed since it left, so the pixels it left on are still the right ones.
+      const back = viewportOf(gallery);
+      if (back) back.scrollLeft = left;
       stand?.remove();
       stand = null;
       remeasure();

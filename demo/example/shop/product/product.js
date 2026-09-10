@@ -368,6 +368,26 @@
       remeasure();
       place(from);
     };
+    // Put the still copy on the page onto the slide the panel is showing, measured
+    // in the page's own layout: it is the same width the gallery will come back to.
+    const matchStand = () => {
+      const vp = stand && viewportOf(stand);
+      if (!vp) return;
+      const slides = [...stand.querySelectorAll(".pdp-gallery__slide")].filter((el) => !el.hidden);
+      const want = slides[current()];
+      if (!want) return;
+      const to = Math.max(
+        0,
+        Math.min(vp.scrollWidth - vp.clientWidth, want.offsetLeft - slides[0].offsetLeft)
+      );
+      // Both engines, because the copy is never initialised and doesn't know which
+      // one it is: a scrolling track answers to scrollLeft and a transformed one to
+      // the inline style it was cloned with. Setting the idle one costs nothing.
+      vp.scrollLeft = to;
+      const track = stand.querySelector(".carousel__track");
+      if (track) track.style.transform = `translate3d(${-to}px, 0, 0)`;
+    };
+
     const leave = () => {
       const showing = current();
       home.insertBefore(gallery, next);
@@ -406,6 +426,12 @@
     });
 
     zoom.addEventListener("close", () => {
+      // The stand-in catches up before the fade, not after it. It has been holding
+      // the shot the panel opened from, so the panel used to fade away onto the
+      // wrong photograph and the page corrected itself once the gallery was back:
+      // a jump, at the one moment the eye is on it. Matching it here means there
+      // is nothing left to correct, and nothing to slide.
+      matchStand();
       const secs = parseFloat(getComputedStyle(zoom).transitionDuration) || 0;
       clearTimeout(back);
       back = setTimeout(leave, secs * 1000);

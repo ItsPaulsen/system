@@ -543,7 +543,12 @@
   }
 
   .shop-card__was {
+    /* 14 against the price's 16: it is the smaller fact of the two, and at the
+       same size the pair read as a choice rather than a change. */
     color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: 18px;
+    white-space: nowrap;
   }
 
   /* Price and store count are consecutive lines of one block, no gap: their

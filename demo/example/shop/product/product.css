@@ -151,17 +151,25 @@
         minmax(0, calc(5 * var(--pdp-col) + 4 * var(--grid-gutter)));
     }
 
-    /* Inside the span, so the column edge is still on the grid.
-
-       Capped and centred in what the span gives it: past about 1400 the column
-       is wide enough that the price, the swatches and the buy row start to sit
-       apart from each other rather than reading as one block. 480 of content, so
-       the cap counts the inset in. Below that the cap is inert and the inset is
-       still what holds it off the photograph. */
+    /* Inside the span, so the column edge is still on the grid. */
     .pdp-buy {
-      max-width: calc(480px + 2.5rem);
-      margin-inline: auto;
       padding-inline-start: 2.5rem;
+    }
+  }
+
+  /* From xl the span has room to spare, so the column stops filling it: 480 of
+     content, with the same 40 either side, centred in what is left. Equal
+     insets are the point. With 40 on the reading side and nothing on the other,
+     centring the box still left the column sitting closer to the page's edge
+     than to the photograph, which reads as drift rather than as a column.
+
+     It waits until here because at lg the span is under 500 and the column needs
+     all of it: the quantity and the button have to stay on one line. */
+  @media (min-width: 1280px) {
+    .pdp-buy {
+      max-width: calc(480px + 2 * 2.5rem);
+      margin-inline: auto;
+      padding-inline: 2.5rem;
     }
   }
 
@@ -929,7 +937,11 @@
   }
 
   .pdp-detail {
-    overflow: visible;
+    /* Kept from the component, not for the corner it no longer has: these are
+       flex items, and a flex item's automatic minimum size is its min-content
+       unless its overflow is something other than visible. Made visible, opening
+       a section grew the whole buy column to fit its prose. */
+    overflow: hidden;
     border-top: var(--border-width) solid var(--fill-tertiary);
     border-radius: 0;
     background: none;

@@ -1082,9 +1082,13 @@
     font-weight: var(--font-body-small-emphasized-weight);
   }
 
+  /* The radius is stated here as well as on the plate: the <img> sits inside a
+     <picture>, which has none of its own, and the shot's white corners were
+     covering the plate's. Same as the shop card's own image. */
   .pdp-care__img {
     width: 100%;
     height: 100%;
+    border-radius: var(--radius-sm);
   }
 
   /* Same three states as Add to cart (product.js), so the two buttons on the page

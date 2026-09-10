@@ -955,6 +955,10 @@
   .pdp-detail .accordion__summary {
     padding-inline: 0;
 
+    /* 56, not the panel's 64: a row without a fill needs less around its label
+       to read as its own line. */
+    min-height: 56px;
+
     /* 16 rather than the panel's 18: on a card the heading is the card's title,
        here it is one line in a column of reference material, and the same size
        the filter gives its own group headings. */

@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-// Two engines, one API, split on the same media query the stylesheet uses. On a
-// pointer a ref holds `pos`, the track's translateX in [−maxScroll, 0], dragged with
-// a rubber-band past the ends and settled to the nearest item. Under a finger the
-// viewport is a native scroll container with snap points and the drag stays out of
-// it, because a phone's own momentum beats any reimplementation of it. The set has
-// ends either way. `items` are the slide nodes; `cols`/`gap` drive CSS custom props.
-// `nav` renders a thumbnail rail or a row of dots: it is handed the count, the
-// current index and a way to jump, and returns whatever markup the set wants. The
-// vanilla hook (data-carousel-goto) has to find those controls and manage
-// aria-current on them; here you already hold the state, so it just hands it over.
+// One slide set, one API, and two engines under it: a transform drag on a pointer,
+// native scroll-snap under a finger (the split, and why, is in components.css).
+// The set has ends either way. `items` are the slide nodes; `cols`/`gap` drive the
+// CSS custom props; `nav` renders a thumbnail rail or a row of dots, handed the
+// count, the current index and a way to jump.
 const TOUCH = "(hover: none) and (pointer: coarse)";
 const RESIST = 0.3;
 const EASE = "transform var(--carousel-slide)";

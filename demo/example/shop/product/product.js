@@ -386,9 +386,15 @@
       if (back) back.scrollLeft = left;
       stand?.remove();
       stand = null;
-      // The page's own width is what the set has to be measured against, and the
-      // re-snap this fires lands on the slide already set above.
+      // The page's own width is what the set has to be measured against, and then
+      // the slide is named again in that layout. The call above is what stops a
+      // dot arriving stale, but it is measured against the panel, which is a
+      // different width; this is the one that is right about pixels. Saying it
+      // rather than leaving it to the re-snap the resize happens to fire: nothing
+      // paints between the two, so it costs a frame of nothing and owes no debt to
+      // another handler's timing.
       remeasure();
+      place(from);
     };
 
     // The panel fades out as well as in, so the gallery leaves on the fade's tail

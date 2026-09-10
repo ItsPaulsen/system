@@ -954,6 +954,12 @@
      panel that has lost its fill. */
   .pdp-detail .accordion__summary {
     padding-inline: 0;
+
+    /* 16 rather than the panel's 18: on a card the heading is the card's title,
+       here it is one line in a column of reference material, and the same size
+       the filter gives its own group headings. */
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
   }
 
   .pdp-detail .accordion__body {

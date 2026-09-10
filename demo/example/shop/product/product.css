@@ -151,8 +151,16 @@
         minmax(0, calc(5 * var(--pdp-col) + 4 * var(--grid-gutter)));
     }
 
-    /* Inside the span, so the column edge is still on the grid. */
+    /* Inside the span, so the column edge is still on the grid.
+
+       Capped and centred in what the span gives it: past about 1400 the column
+       is wide enough that the price, the swatches and the buy row start to sit
+       apart from each other rather than reading as one block. 480 of content, so
+       the cap counts the inset in. Below that the cap is inert and the inset is
+       still what holds it off the photograph. */
     .pdp-buy {
+      max-width: calc(480px + 2.5rem);
+      margin-inline: auto;
       padding-inline-start: 2.5rem;
     }
   }

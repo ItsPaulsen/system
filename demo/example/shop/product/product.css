@@ -980,6 +980,15 @@
     scrollbar-width: none;
   }
 
+  /* The ring's converge animation starts 6 out and travels in, which is further
+     than a ring at rest reaches and further than the row reserves, so its first
+     frames were clipped by the scroller. The row keeps room for the ring, not for
+     a flourish arriving from outside it: here the ring simply appears where it
+     lands. Same place it ends up either way. */
+  .pdp-related__grid .shop-card:focus-visible {
+    animation: none;
+  }
+
   .pdp-related__grid > * {
     /* Pulled past an end, the cards move rather than the scroller: a scroll
        container is clamped by the browser, so the resistance has to be drawn.

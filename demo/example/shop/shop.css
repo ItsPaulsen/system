@@ -379,10 +379,13 @@
        island, and anything drawn on it needs theme-fixed colour too, hence the
        blue kept here rather than read from --blue, which inverts for dark
        surfaces and would leave light-blue text on a near-white badge. Light
-       theme's blue anchor; a page one-off, not a token. */
+       theme's blue anchor, and the red beside it for the sale badge; page
+       one-offs, not tokens. */
     --shop-plate: var(--ex-plate);
     --shop-plate-blue: 25 80 200;
+    --shop-plate-red: 185 28 28;
     --shop-plate-tint: color-mix(in oklab, rgb(var(--shop-plate-blue)), white 20%);
+    --shop-plate-tint-red: color-mix(in oklab, rgb(var(--shop-plate-red)), white 20%);
 
     position: relative; /* containing block for the badge */
     display: grid;
@@ -530,6 +533,18 @@
   .shop-card__variant {
     font-size: var(--font-caption-medium-size);
     line-height: 18px;
+  }
+
+  /* Where New sits, because a product is either just in or on its way out and
+     never both. Red rather than the plate's blue: this one is a claim about the
+     price and it should read as one from across the grid. The plate is a fixed
+     white in both themes, so the ink is too. */
+  .shop-card__badge--sale {
+    background-image: linear-gradient(
+      rgb(from var(--shop-plate-tint-red) r g b / 0.12),
+      rgb(from var(--shop-plate-tint-red) r g b / 0.12)
+    );
+    color: rgb(var(--shop-plate-red));
   }
 
   /* What it cost before, beside what it costs now: the meta is a column, so the

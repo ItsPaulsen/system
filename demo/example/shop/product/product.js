@@ -13,6 +13,7 @@
     badge: document.querySelector("[data-pdp-stock-badge]"),
     stock: document.querySelector("[data-pdp-stock-label]"),
     status: document.querySelector("[data-pdp-status]"),
+    care: document.querySelector("[data-pdp-care]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -61,6 +62,10 @@
     // rest. Not on the first render: the page hasn't changed yet, it has arrived,
     // and a region populated at load can read itself out over the page.
     if (out.status && started) set(out.status, `${d.color}, ${d.price}, ${stock.label}`);
+    // The oil is for a bare oak base, so it only belongs to the colourways that
+    // have one; the lacquered and stained shells are not oiled and the leather
+    // ones are only oak underneath when the swatch says so (data-care).
+    if (out.care) out.care.hidden = d.care === undefined;
 
     // One stem per colourway, the widths appended here: the same files the shop
     // card serves, so a colour change costs no new download on a page the listing

@@ -1059,6 +1059,13 @@
     pointer-events: none;
   }
 
+  /* .item is display:flex, which beats the UA rule that makes [hidden] disappear
+     (see the Item's own [hidden] handling): the colourways with no oak base hide
+     the row entirely. */
+  .pdp-care[hidden] {
+    display: none;
+  }
+
   /* Pairs in columns, not a table: five short measurements laid out as ruled rows
      of label and value made a heavier block than the thing it describes. The
      label leads and the value follows under it. Three across in a 480 column, two

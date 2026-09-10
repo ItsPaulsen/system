@@ -3322,6 +3322,14 @@ function initCarousel() {
     // (see refresh): `slots` is what the track is made of and what the geometry
     // measures, `reals` is what the set actually contains and what a person is
     // told they are looking at.
+    // The same query the stylesheet branches on (see .carousel__viewport). Under a
+    // finger the viewport is a scroll container and the platform owns the swipe,
+    // so everything here that moves the track scrolls it instead, and the drag
+    // that reimplements momentum stays out of the way. Read live, because a
+    // window can change what it is.
+    const touch = window.matchMedia("(hover: none) and (pointer: coarse)");
+    const native = () => touch.matches;
+
     const slots = () => Array.from(track.children).filter((el) => !el.hidden);
     const reals = () => slots().filter((el) => el.dataset.carouselClone === undefined);
     if (!slots().length) return;
@@ -3417,7 +3425,11 @@ function initCarousel() {
     // data-carousel-loop: the set has no ends. Read live rather than at init, so a
     // page can turn it on for one context and off again (the product page loops
     // only in its larger view).
-    const looping = () => root.dataset.carouselLoop !== undefined;
+    // Scrolling has ends. A scroll container can't be given a cycle without cloning
+    // the set into a strip and jumping it back, which is the momentum-stealing
+    // trick native scrolling exists to avoid, so a set that loops on a pointer
+    // simply has a first and a last under a finger.
+    const looping = () => !native() && root.dataset.carouselLoop !== undefined;
 
     // One slide's worth of travel, and the whole set's. Unclamped, unlike points()
     // above: a looping track has no end to clamp against.
@@ -3446,7 +3458,7 @@ function initCarousel() {
       // Every child, hidden ones included: a slide that was carrying a cycle
       // offset when it was hidden would still have it when it comes back.
       Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
-      if (!looping()) return;
+      if (native() || !looping()) return;
       const s = stride();
       const t = span();
       slots().forEach((it, j) => {
@@ -3456,23 +3468,31 @@ function initCarousel() {
     };
 
     const render = (animate) => {
+      if (native()) {
+        // Left where the stylesheet expects it: the track is laid out, not moved.
+        track.style.removeProperty("transition");
+        track.style.removeProperty("transform");
+        place();
+        return;
+      }
       track.style.transition = animate ? EASE : "none";
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
       place();
     };
 
-    const current = () => (looping() ? wrap(Math.round(-pos / stride())) : nearestIndex(-pos));
+    const scroll = () => (native() ? viewport.scrollLeft : -pos);
+    const current = () => (looping() ? wrap(Math.round(-pos / stride())) : nearestIndex(scroll()));
 
     // The slide sync() last settled on. Kept because it survives a resize: the
     // pixel position doesn't, since the stride changes with the viewport.
     let at = 0;
 
     const sync = () => {
-      const scroll = -pos;
+      const at0 = scroll();
       const m = maxScroll();
       const loop = looping();
-      if (prev) prev.disabled = !loop && scroll <= 0.5;
-      if (next) next.disabled = !loop && scroll >= m - 0.5;
+      if (prev) prev.disabled = !loop && at0 <= 0.5;
+      if (next) next.disabled = !loop && at0 >= m - 0.5;
       // current(), not nearestIndex(): the latter clamps to the track's ends, so a
       // looping drag past the first slide reported the first one and left
       // aria-current on the wrong thumbnail.
@@ -3488,8 +3508,17 @@ function initCarousel() {
       });
     };
 
-    const settle = (scroll, animate = true) => {
-      pos = looping() ? -scroll : -Math.max(0, Math.min(maxScroll(), scroll));
+    const settle = (to, animate = true) => {
+      if (native()) {
+        // The browser's own scroll, so the snap points do the landing.
+        viewport.scrollTo({
+          left: Math.max(0, Math.min(maxScroll(), to)),
+          behavior: animate ? "smooth" : "auto"
+        });
+        sync();
+        return;
+      }
+      pos = looping() ? -to : -Math.max(0, Math.min(maxScroll(), to));
       render(animate);
       sync();
     };
@@ -3556,6 +3585,9 @@ function initCarousel() {
     let swallow = false; // the drag's own trailing click, still to be spent
     viewport.addEventListener("pointerdown", (e) => {
       if (e.button !== 0) return;
+      // The platform is doing this itself under a finger, and two engines pulling
+      // the same track is neither.
+      if (native()) return;
       // One slide is nowhere to go, and a set that can't move shouldn't take the
       // gesture: the resistance is there to say "no further", which over a single
       // shot is a boundary that doesn't exist. It also leaves the press free to be
@@ -3661,6 +3693,33 @@ function initCarousel() {
         if (looping()) settle(at * stride(), false);
         else goTo(at, false);
       });
+    });
+
+    // Scrolled by the finger rather than moved by us, so the thumbnails, the
+    // status and the end states follow the scroll. Coalesced to a frame: a native
+    // scroll fires far more often than there is anything to say.
+    let syncFrame;
+    viewport.addEventListener(
+      "scroll",
+      () => {
+        if (!native()) return;
+        cancelAnimationFrame(syncFrame);
+        syncFrame = requestAnimationFrame(() => {
+          at = current();
+          sync();
+        });
+      },
+      { passive: true }
+    );
+
+    // Rotating a phone, or dragging a window across a screen boundary, can change
+    // which engine this is. Hand the track back to the stylesheet, or take it
+    // again, and put the slide it was on back under the window.
+    touch.addEventListener?.("change", () => {
+      refresh();
+      pos = 0;
+      render(false);
+      goTo(Math.max(0, Math.min(at, size() - 1)), false);
     });
 
     // A set that already wants to loop and is too short to gets its copies now,

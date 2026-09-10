@@ -4911,8 +4911,15 @@
    exactly. Override the vars on the root (or per breakpoint) for a multi-up view.
    --carousel-slide times the settle, and app.js reads it from the root.
 
+   Under a finger (hover:none and pointer:coarse) the viewport is a native scroll
+   container with snap points instead, so the swipe is the platform's own momentum
+   and rubber band rather than a reimplementation of them. The controls, the
+   thumbnails, the status and carousel:goto all behave the same; what changes is
+   that the set has ends there, since a scroll container can't be given a cycle
+   without the jump that native scrolling exists to avoid.
+
    data-carousel-loop on the root makes the controls wrap rather than stop: prev on
-   the first goes to the last, and neither control ever disables. It's read live,
+   the first goes to the last, and neither control ever disables (on a pointer). It's read live,
    so a page can turn it on for one context only. The wrap works by carrying the
    slide you've left round to the far side while it's off screen, so it needs the
    set to be wider than the window by a slide to have anywhere to put it: a set of
@@ -4968,14 +4975,47 @@
     }
   }
 
-  /* The window. The track inside is moved by JS (initCarousel) via a translate3d
-   transform, so overflow is simply clipped. touch-action pan-y lets the page still
-   scroll vertically while horizontal drags belong to the carousel. */
+  /* The window. On a pointer the track inside is moved by JS (initCarousel) via a
+   translate3d transform, so overflow is simply clipped, and touch-action pan-y
+   lets the page still scroll vertically while horizontal drags belong to the
+   carousel. */
   .carousel__viewport {
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
     touch-action: pan-y;
+  }
+
+  /* Under a finger it is a scroll container instead, and the swipe is the
+   platform's: its momentum, its rubber band at the ends, its snap curve. A
+   transform engine has to reimplement all three from a pointer's position and a
+   clock, and the approximation is what a thumb notices. app.js reads the same
+   media query and hands the movement over (it scrolls rather than transforms, and
+   its drag doesn't arm), so the arrows, the thumbnails and the status keep
+   working the same way.
+
+   No bar: the slides themselves say where you are, and the platforms that use
+   this are the ones with overlay scrollbars anyway. */
+  @media (hover: none) and (pointer: coarse) {
+    .carousel__viewport {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+
+      /* Both axes belong to the browser now: it is scrolling either way. */
+      touch-action: pan-x pan-y;
+    }
+
+    .carousel__viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Start, because that is where the transform engine aligns a slide too (each
+     item's own offsetLeft), so the arrows and the thumbnails land on the same
+     position the swipe snaps to. */
+    .carousel__item {
+      scroll-snap-align: start;
+    }
   }
 
   /* Suppress text/image selection during a drag. */

@@ -532,6 +532,20 @@
     line-height: 18px;
   }
 
+  /* What it cost before, beside what it costs now: the meta is a column, so the
+     pair share a row of their own rather than the old price taking a line under
+     the new one. Secondary ink, so the struck figure reads as a footnote rather
+     than a second price to weigh up. */
+  .shop-card__prices {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-8);
+  }
+
+  .shop-card__was {
+    color: var(--ink-secondary);
+  }
+
   /* Price and store count are consecutive lines of one block, no gap: their
      line-heights already separate them, and the 12 above the price belongs to
      the pair, not to the price alone. */

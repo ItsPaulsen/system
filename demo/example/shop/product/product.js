@@ -14,6 +14,7 @@
     stock: document.querySelector("[data-pdp-stock-label]"),
     status: document.querySelector("[data-pdp-status]"),
     care: document.querySelector("[data-pdp-care]"),
+    was: document.querySelector("[data-pdp-was]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -50,6 +51,13 @@
     // the same string capitalised.
     set(out.variant, `, ${d.color}`);
     set(out.price, d.price);
+    // What it was, struck through, for the colourways on offer. Hidden rather
+    // than emptied, or the price row would keep its gap for a word that isn't
+    // there.
+    if (out.was) {
+      out.was.hidden = d.was === undefined;
+      if (d.was) set(out.was, d.was);
+    }
 
     const stock = STOCK[d.stock] || STOCK.in;
     set(out.stock, stock.label);
@@ -61,7 +69,11 @@
     // Three things moved at once and the radio only announces itself, so say the
     // rest. Not on the first render: the page hasn't changed yet, it has arrived,
     // and a region populated at load can read itself out over the page.
-    if (out.status && started) set(out.status, `${d.color}, ${d.price}, ${stock.label}`);
+    if (out.status && started)
+      set(
+        out.status,
+        `${d.color}, ${d.price}${d.was ? `, reduced from ${d.was}` : ""}, ${stock.label}`
+      );
     // The oil is for a bare oak base, so it only belongs to the colourways that
     // have one; the lacquered and stained shells are not oiled and the leather
     // ones are only oak underneath when the swatch says so (data-care).

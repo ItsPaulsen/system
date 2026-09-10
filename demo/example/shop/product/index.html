@@ -379,6 +379,11 @@
 
                 <p class="pdp-buy__price">
                   <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
+                  <!-- Only the colourways on offer carry data-was (see the swatches),
+                       so this is empty and hidden for the rest. <s> because the price
+                       is no longer the one being asked, which is what the element is
+                       for. -->
+                  <s class="pdp-buy__was" data-pdp-was hidden></s>
                 </p>
 
                 <!-- Colour: native radios, so the group keeps its arrow-key
@@ -424,8 +429,9 @@
                         name="pdp-color"
                         value="black"
                         data-big="1440"
+                        data-was="5 295 kr"
                         data-color="Black"
-                        data-price="5 295 kr"
+                        data-price="4 236 kr"
                         data-stores="4 stores"
                         data-stock="in"
                         data-img="/assets/images/products/cover-side-chair-black"
@@ -544,8 +550,9 @@
                         name="pdp-color"
                         value="black-leather"
                         data-big="1440"
+                        data-was="7 349 kr"
                         data-color="Refine leather black"
-                        data-price="7 349 kr"
+                        data-price="5 879 kr"
                         data-stores="2 stores"
                         data-stock="order"
                         data-img="/assets/images/products/cover-side-chair-black-leather"
@@ -913,7 +920,10 @@
                     <span class="shop-card__variant">Cover Side Chair, black</span>
                   </h3>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">5 295 kr</span>
+                    <span class="shop-card__prices"
+                      ><span class="shop-card__price">4 236 kr</span
+                      ><s class="shop-card__was">5 295 kr</s></span
+                    >
                     <span class="shop-card__stores">4 stores</span>
                   </span>
                 </a>
@@ -1067,7 +1077,10 @@
                     >
                   </h3>
                   <span class="shop-card__meta">
-                    <span class="shop-card__price">7 349 kr</span>
+                    <span class="shop-card__prices"
+                      ><span class="shop-card__price">5 879 kr</span
+                      ><s class="shop-card__was">7 349 kr</s></span
+                    >
                     <span class="shop-card__stores">2 stores</span>
                   </span>
                 </a>

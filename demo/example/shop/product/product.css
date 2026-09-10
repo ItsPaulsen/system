@@ -797,6 +797,19 @@
     margin: 0;
   }
 
+  /* What it cost before, beside what it costs now. Secondary ink and body size,
+     so the struck line reads as a footnote to the price rather than competing
+     with it; the row baseline-aligns them (see .pdp-buy__price). */
+  .pdp-buy__was {
+    color: var(--ink-secondary);
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+  }
+
+  .pdp-buy__was[hidden] {
+    display: none;
+  }
+
   .pdp-buy__amount {
     color: var(--ink-primary);
     font-size: var(--font-title-large-size);

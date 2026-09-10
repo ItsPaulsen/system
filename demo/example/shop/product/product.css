@@ -826,6 +826,10 @@
     display: none;
   }
 
+  .pdp-buy__term[hidden] {
+    display: none;
+  }
+
   .pdp-buy__term {
     margin: 0;
     color: var(--ink-secondary);

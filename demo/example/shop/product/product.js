@@ -17,6 +17,7 @@
     was: document.querySelector("[data-pdp-was]"),
     wasAmount: document.querySelector("[data-pdp-was-amount]"),
     terms: document.querySelector("[data-pdp-terms]"),
+    regular: document.querySelector("[data-pdp-regular]"),
     lead: document.querySelector("[data-pdp-lead]")
   };
   const sources = Array.from(document.querySelectorAll("[data-pdp-source]"));
@@ -63,6 +64,14 @@
       if (d.was) set(out.wasAmount, d.was);
     }
     if (out.terms) out.terms.hidden = d.was === undefined;
+    // The ordinary price, where a colourway has been on offer inside the window
+    // and its prior price is therefore lower than its usual one. Plain, not
+    // struck: one crossed-out figure is the price that no longer applies, two
+    // start competing to be read as the discount.
+    if (out.regular) {
+      out.regular.hidden = d.regular === undefined;
+      if (d.regular) set(out.regular, `Regular price ${d.regular}.`);
+    }
 
     const stock = STOCK[d.stock] || STOCK.in;
     set(out.stock, stock.label);

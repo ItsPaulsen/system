@@ -397,6 +397,11 @@
                        sentence naming it, so long as it is labelled as what it is
                        and is the lowest actually charged in the 30 days before. -->
                   <div class="pdp-buy__terms" data-pdp-terms hidden>
+                    <!-- Only where the two differ. A colourway that has been on
+                         offer inside the window has a prior price lower than its
+                         ordinary one, and the ordinary one is context rather than
+                         the figure the rule asks for. -->
+                    <p class="pdp-buy__term" data-pdp-regular hidden></p>
                     <p class="pdp-buy__term">Offer valid through 30. Sep. 2026.</p>
                   </div>
                 </div>
@@ -565,7 +570,8 @@
                         name="pdp-color"
                         value="black-leather"
                         data-big="1440"
-                        data-was="7 349 kr"
+                        data-regular="7 349 kr"
+                        data-was="6 199 kr"
                         data-color="Refine leather black"
                         data-price="5 879 kr"
                         data-stores="2 stores"
@@ -1067,7 +1073,7 @@
                 </a>
 
                 <a class="shop-card" href="/demo/example/shop/product/?color=black-leather">
-                  <span class="badge shop-card__badge shop-card__badge--sale">-20%</span>
+                  <span class="badge shop-card__badge shop-card__badge--sale">-5%</span>
                   <span class="shop-card__media">
                     <picture>
                       <source
@@ -1096,7 +1102,7 @@
                   <span class="shop-card__meta">
                     <span class="shop-card__prices"
                       ><span class="shop-card__price">5 879 kr</span
-                      ><s class="shop-card__was">7 349 kr</s></span
+                      ><s class="shop-card__was">6 199 kr</s></span
                     >
                     <span class="shop-card__stores">2 stores</span>
                   </span>

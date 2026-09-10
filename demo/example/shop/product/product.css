@@ -787,7 +787,15 @@
     text-transform: lowercase;
   }
 
-  /* Price and the excl.-VAT line on one baseline: the second figure is a note on
+  /* The offer's small print belongs to the price, not to the column: its own
+     wrapper with its own gap, so it sits 8 under the figure rather than taking
+     the 16 the intro puts between its groups. */
+  .pdp-buy__pricing {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  /* The price and what it was on one baseline: the struck figure is a note on
      the first, not a second price, so it sits beside it rather than under it. */
   .pdp-buy__price {
     display: flex;
@@ -807,6 +815,19 @@
   }
 
   .pdp-buy__was[hidden] {
+    display: none;
+  }
+
+  /* A line of small print under the price, not part of it: it belongs to the
+     offer rather than to the thing being sold. */
+  .pdp-buy__lowest {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .pdp-buy__lowest[hidden] {
     display: none;
   }
 

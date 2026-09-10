@@ -377,14 +377,21 @@
                   </button>
                 </div>
 
-                <p class="pdp-buy__price">
-                  <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
-                  <!-- Only the colourways on offer carry data-was (see the swatches),
-                       so this is empty and hidden for the rest. <s> because the price
-                       is no longer the one being asked, which is what the element is
-                       for. -->
-                  <s class="pdp-buy__was" data-pdp-was hidden></s>
-                </p>
+                <div class="pdp-buy__pricing">
+                  <p class="pdp-buy__price">
+                    <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
+                    <!-- Only the colourways on offer carry data-was (see the swatches),
+                         so this is empty and hidden for the rest. <s> because the price
+                         is no longer the one being asked, which is what the element is
+                         for. -->
+                    <s class="pdp-buy__was" data-pdp-was hidden></s>
+                  </p>
+
+                  <!-- Required beside an advertised reduction, not decoration: the
+                       rule is the lowest price actually charged in the 30 days
+                       before it, and the struck figure above has to be that one. -->
+                  <p class="pdp-buy__lowest" data-pdp-lowest hidden></p>
+                </div>
 
                 <!-- Colour: native radios, so the group keeps its arrow-key
                      behaviour and its selected state without JS. The swatch is the

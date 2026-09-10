@@ -392,17 +392,18 @@
                        the lowest actually charged in the 30 days before. The date is
                        required once an offer is described as running out. -->
                   <div class="pdp-buy__terms" data-pdp-terms hidden>
-                    <p class="pdp-buy__term">
-                      Was: <s data-pdp-was-amount></s>
-                      <span class="pdp-buy__off" data-pdp-off></span>
-                    </p>
                     <!-- Only where the two differ. A colourway that has been on
                          offer inside the window has a prior price lower than its
                          ordinary one, and the ordinary one is context rather than
-                         the figure the rule asks for. -->
+                         the figure the rule asks for. Above it, because it is the
+                         bigger number and the one being explained away. -->
                     <p class="pdp-buy__term" data-pdp-regular-line hidden>
-                      Regular price: <s data-pdp-regular></s>
+                      Original: <s data-pdp-regular></s>
                       <span class="pdp-buy__off" data-pdp-regular-off></span>
+                    </p>
+                    <p class="pdp-buy__term">
+                      Lowest recent price: <s data-pdp-was-amount></s>
+                      <span class="pdp-buy__off" data-pdp-off></span>
                     </p>
                     <p class="pdp-buy__term">Offer valid through 30. Sep. 2026</p>
                   </div>

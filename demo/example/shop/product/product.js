@@ -1,6 +1,6 @@
 // Product page: the colour swatches own the variant, so everything that differs
-// between colourways (name, price, stock, store count, and every image in the
-// gallery) is read off the checked radio rather than kept in a table here. The
+// between colourways (name, price, stock, and every image in the gallery) is
+// read off the checked radio rather than kept in a table here. The
 // radios do the selection themselves; this only renders what follows from it.
 (function () {
   const inputs = Array.from(document.querySelectorAll(".pdp-swatch__input"));

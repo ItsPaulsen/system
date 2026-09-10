@@ -2656,7 +2656,11 @@
     color: var(--ink-primary);
   }
 
-  .table tbody tr:last-child td {
+  /* Both cell types, not just td: a table with row headers (<th scope="row">) has
+     one in every row, so clearing the last row's data cells alone left a line
+     under the label column and nothing beside it. */
+  .table tbody tr:last-child td,
+  .table tbody tr:last-child th {
     border-bottom: 0;
   }
 

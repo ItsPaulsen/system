@@ -680,12 +680,14 @@
     min-width: 0;
   }
 
-  /* Name, price and colour belong closer together than to anything below them, so
-     they're one group with its own gap rather than a margin on any of them: the
-     column keeps 24 between groups and this holds 16 inside. */
+  /* Name, price and colour are still one group with its own gap rather than a
+     margin on any of them, but at the column's own 24: the price grew a couple of
+     lines of terms under it, and at 16 those ran into the swatches below. The
+     group holds together on the order it reads in rather than on being tighter
+     than everything else. */
   .pdp-buy__intro {
     display: grid;
-    gap: var(--space-16);
+    gap: var(--space-24);
   }
 
   /* No gap: the brand reads as the first line of the product's name, so the two

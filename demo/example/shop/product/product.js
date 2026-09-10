@@ -66,6 +66,16 @@
     // have one; the lacquered and stained shells are not oiled and the leather
     // ones are only oak underneath when the swatch says so (data-care).
     if (out.care) out.care.hidden = d.care === undefined;
+    // And the sections close with it. A colour change rewrites the page under
+    // whatever is open, and the care row is in one of them: it appears or leaves
+    // mid-read depending on the base. The gallery already goes back to the first
+    // shot, so this is the same reset. Not on the first render, which is the page
+    // arriving rather than changing.
+    if (started) {
+      document.querySelectorAll(".pdp-detail[open]").forEach((el) => {
+        el.open = false;
+      });
+    }
 
     // One stem per colourway, the widths appended here: the same files the shop
     // card serves, so a colour change costs no new download on a page the listing
@@ -147,7 +157,7 @@
   // second press counting the same add twice.
   const SENDING = 700;
   const CONFIRMING = 1400;
-  const confirmPress = (btn, label, { announce, restore }) => {
+  const confirmPress = (btn, { announce, done, restore }) => {
     btn.classList.add("button--loading");
     btn.setAttribute("aria-busy", "true");
     btn.setAttribute("aria-disabled", "true");
@@ -155,14 +165,12 @@
     setTimeout(() => {
       btn.classList.remove("button--loading");
       btn.removeAttribute("aria-busy");
-      // The check is a start icon while it's there, so the pair sits on the same
-      // inset as any other icon-and-label button.
-      btn.classList.add("is-added", "button--with-start-icon");
-      label.textContent = "Added";
+      btn.classList.add("is-added");
+      done();
       set(out.status, announce);
 
       setTimeout(() => {
-        btn.classList.remove("is-added", "button--with-start-icon");
+        btn.classList.remove("is-added");
         btn.removeAttribute("aria-disabled");
         restore();
       }, CONFIRMING);
@@ -205,12 +213,21 @@
     add.addEventListener("click", () => {
       if (!idle()) return;
       const n = Number(qtyInput.value);
-      confirmPress(add, addLabel, {
+      confirmPress(add, {
         // The button says it, but a press with a mouse may not have put focus
         // there, and a button's name changing under nobody is a change nobody
         // hears. Same region the colour change uses.
         announce: n > 1 ? `${n} items added to cart` : "Added to cart",
-        restore: label
+        // This one fills its row, so its width is the row's and its label can be
+        // written; the check joins it as a start icon while it is there.
+        done: () => {
+          add.classList.add("button--with-start-icon");
+          addLabel.textContent = "Added";
+        },
+        restore: () => {
+          add.classList.remove("button--with-start-icon");
+          label();
+        }
       });
     });
   }
@@ -220,19 +237,18 @@
   // that has to be opened, and the column's primary one, both saying what they
   // did where the eye already is rather than sending a toast after the fact.
   const careAdd = document.querySelector("[data-pdp-care-add]");
-  const careLabel = careAdd && careAdd.querySelector(".button__label");
-  if (careAdd && careLabel) {
-    careAdd.addEventListener("click", () => {
-      if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
-        return;
-      confirmPress(careAdd, careLabel, {
-        announce: "Wood oil added to cart",
-        restore: () => {
-          careLabel.textContent = "Add";
-        }
-      });
+  careAdd?.addEventListener("click", () => {
+    if (careAdd.classList.contains("button--loading") || careAdd.classList.contains("is-added"))
+      return;
+    // Nothing to write or put back: this button holds both words at once and the
+    // is-added class picks which one is drawn (see product.css), so its width
+    // never moves and the text beside it never rewraps.
+    confirmPress(careAdd, {
+      announce: "Wood oil added to cart",
+      done: () => {},
+      restore: () => {}
     });
-  }
+  });
 
   // Favorite is a toggle, so the toast has to be able to say both things. The
   // shell reads the line and its type off the button when the click reaches

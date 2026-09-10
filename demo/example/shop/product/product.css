@@ -1074,10 +1074,32 @@
   }
 
   /* Same three states as Add to cart (product.js), so the two buttons on the page
-     answer the same way. */
-  .pdp-care__add:not(.button--loading) .spinner,
-  .pdp-care__add:not(.is-added) .pdp-care__check {
+     answer the same way. Unlike that one, this button is beside the text rather
+     than filling a row, so a button that grew from Add to Added took width off
+     the words and rewrapped them mid-press.
+     
+     So it holds its widest state at rest: the check keeps its place in the layout
+     and only stops being drawn, and both words share one grid cell, which sizes
+     to the longer of them whichever is showing. */
+  .pdp-care__add:not(.button--loading) .spinner {
     display: none;
+  }
+
+  .pdp-care__add:not(.is-added) .pdp-care__check {
+    visibility: hidden;
+  }
+
+  .pdp-care__label {
+    display: grid;
+  }
+
+  .pdp-care__label > span {
+    grid-area: 1 / 1;
+  }
+
+  .pdp-care__add:not(.is-added) [data-care-done],
+  .pdp-care__add.is-added [data-care-idle] {
+    visibility: hidden;
   }
 
   .pdp-care__add.is-added {

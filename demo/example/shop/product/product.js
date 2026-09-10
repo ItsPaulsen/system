@@ -100,17 +100,7 @@
     const views = 1 + stems.length;
     if (gallery) {
       gallery.dataset.pdpViews = String(views);
-      // Wrapping is worth having wherever there's more than one shot: the rail
-      // says where you are, so an end carries no information, and the arrows stop
-      // vanishing under the pointer. At one view there is nowhere to go, and a
-      // loop would leave two arrows that do nothing. Two shots don't have the room
-      // to wrap on their own; the Carousel copies a slide to make it (see
-      // carousel:refresh), which is why the flag can just say "more than one".
-      if (views > 1) gallery.dataset.carouselLoop = "";
-      else delete gallery.dataset.carouselLoop;
-
-      // Told after the slides and the loop flag, so it rebuilds its copies from
-      // the pictures this colour just put in them.
+      // Told after the slides, so it re-measures a set that is a different size.
       gallery.dispatchEvent(new CustomEvent("carousel:refresh"));
 
       // Back to the pack shot: the colour that was picked is the one to show, and

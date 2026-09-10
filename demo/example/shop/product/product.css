@@ -1360,17 +1360,18 @@
 
   /* The arrows stay put in the panel: it's the one place where they're the whole
      way through the set, so hiding them until the pointer moves would be hiding
-     the controls. They wrap rather than disable (product.js), so neither ever
-     needs the greyed-out end state either.
+     the controls.
+
+     The set has ends, so each arrow leaves at the end it points to, here as on
+     the page (.pdp-gallery__control:disabled). One vanishing under the pointer is
+     the price of that, and the alternative was a whole wrapping engine to save an
+     end the rail already shows you.
 
      Fixed, not absolute: in the panel they belong to the window's edges rather
      than to the photograph's, and a fixed child of a modal positions against the
      viewport. They stay off phones, where the base rule already drops them and
-     the gesture is a swipe.
-
-     The set wraps on the page too now, so neither arrow disables anywhere; a
-     colourway with one shot has them gone by data-pdp-views, above, rather than
-     by waiting for both to disable. */
+     the gesture is a swipe. A colourway with one shot has them gone by
+     data-pdp-views, above, rather than by waiting for both to disable. */
   .pdp-zoom .pdp-gallery__control {
     position: fixed;
 

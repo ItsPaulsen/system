@@ -3312,16 +3312,7 @@ function initCarousel() {
     const next = root.querySelector(".carousel__control--next");
     const status = root.querySelector("[data-carousel-status]");
     if (!viewport || !track) return;
-    // Read fresh, not captured: a page can hide slides, and the product gallery
-    // does (a colourway carries fewer shots than the markup holds). A hidden slide
-    // is display:none, so it has no width and no offset, and counting it left the
-    // track able to travel to a slide that was not there: past the last shot of a
-    // two-shot colour lay a third, blank.
-    //
-    // Two lists, because a looping track can hold more slides than it has content
-    // (see refresh): `slots` is what the track is made of and what the geometry
-    // measures, `reals` is what the set actually contains and what a person is
-    // told they are looking at.
+
     // The same query the stylesheet branches on (see .carousel__viewport). Under a
     // finger the viewport is a scroll container and the platform owns the swipe,
     // so everything here that moves the track scrolls it instead, and the drag
@@ -3330,41 +3321,13 @@ function initCarousel() {
     const touch = window.matchMedia("(hover: none) and (pointer: coarse)");
     const native = () => touch.matches;
 
+    // Read fresh, not captured: a page can hide slides, and the product gallery
+    // does (a colourway carries fewer shots than the markup holds). A hidden slide
+    // is display:none, so it has no width and no offset, and counting it would let
+    // the track travel to a slide that isn't there.
     const slots = () => Array.from(track.children).filter((el) => !el.hidden);
-    const reals = () => slots().filter((el) => el.dataset.carouselClone === undefined);
-    if (!slots().length) return;
-
-    // The wrap moves the slide you have left round to the far side while it is off
-    // screen, and it needs the set to be wider than the window by a slide to have
-    // anywhere to put it. Two slides give it none: the one being left still shows
-    // a sliver on one edge exactly when it is wanted on the other. So a short set
-    // that wants to loop gets copies appended until it is three wide. A copy is
-    // scenery: it carries no name, takes no focus, and is never counted or landed
-    // on by name (see sync/goTo, where an index past the real ones folds back).
-    const MIN_LOOP = 3;
-    const refresh = () => {
-      track.querySelectorAll("[data-carousel-clone]").forEach((el) => el.remove());
-      if (!looping()) return;
-      const source = reals();
-      if (source.length < 2 || source.length >= MIN_LOOP) return;
-      // Whole sets, never a part of one: padding two slides to three would put a
-      // copy of the first straight after the last, and the same picture would
-      // slide past twice at the seam. Doubling keeps the order the set is in, so
-      // two shots read A B A B the way three read A B C A B C.
-      //
-      // Counted in slots, not children: the track can be holding slides this
-      // colour has no picture for, and those are already sitting out.
-      while (slots().length < MIN_LOOP) {
-        source.forEach((el) => {
-          const copy = el.cloneNode(true);
-          copy.dataset.carouselClone = "";
-          copy.setAttribute("aria-hidden", "true");
-          copy.removeAttribute("id");
-          copy.querySelectorAll("[id]").forEach((node) => node.removeAttribute("id"));
-          track.append(copy);
-        });
-      }
-    };
+    const size = () => slots().length;
+    if (!size()) return;
 
     // Optional jump-to-slide controls inside the root (thumbnails, dots): each
     // carries data-carousel-goto="<index>". The current one gets aria-current,
@@ -3388,9 +3351,9 @@ function initCarousel() {
     // asks for a sweep where a thumb wants to flick. Time alone let a 6px twitch
     // change the picture, and a thumb rolls that far resting on the glass.
     //
-    // A window rather than a speed: a phone swipe is often slower than it feels
-    // (a gentle 60px over 300ms is 0.2px/ms), and gating on speed left the set
-    // refusing perfectly ordinary swipes. And a window of its own rather than the
+    // A window rather than a speed: a swipe is often slower than it feels (a
+    // gentle 60px over 300ms is 0.2px/ms), and gating on speed left the set
+    // refusing perfectly ordinary drags. And a window of its own rather than the
     // settle's duration, which this used to read: that duration drops to 1ms
     // under reduced motion, which would have meant no flick ever commits.
     const COMMIT = 0.3; // of the viewport
@@ -3426,49 +3389,10 @@ function initCarousel() {
       return bi;
     };
 
-    // data-carousel-loop: the set has no ends. Read live rather than at init, so a
-    // page can turn it on for one context and off again (the product page loops
-    // only in its larger view).
-    // Scrolling has ends. A scroll container can't be given a cycle without cloning
-    // the set into a strip and jumping it back, which is the momentum-stealing
-    // trick native scrolling exists to avoid, so a set that loops on a pointer
-    // simply has a first and a last under a finger.
-    const looping = () => !native() && root.dataset.carouselLoop !== undefined;
-
-    // One slide's worth of travel, and the whole set's. Unclamped, unlike points()
-    // above: a looping track has no end to clamp against.
+    // One slide's worth of travel, for reading how many a drag crossed.
     const stride = () => {
       const list = slots();
       return list.length > 1 ? list[1].offsetLeft - list[0].offsetLeft : viewport.clientWidth;
-    };
-    // Everything the track is made of, copies included: the wrap has to carry them
-    // round with the rest or they would sit where they were appended.
-    const size = () => slots().length;
-    const span = () => stride() * size();
-    const wrap = (i) => {
-      const n = size();
-      return n ? ((i % n) + n) % n : 0;
-    };
-    // What the set actually holds. A slot past the last real one is a copy of the
-    // one this many from the start, which is what makes the fold a modulo.
-    const count = () => reals().length;
-
-    // What makes the wrap read as a slide rather than a jump: each item carries its
-    // own offset of a whole set width, chosen so it sits in or beside the window.
-    // Drag left off the first slide and the last one is already there, because it
-    // has been moved a set width back. The track keeps its single position; this
-    // only decides which cycle each item is drawn in.
-    const place = () => {
-      // Every child, hidden ones included: a slide that was carrying a cycle
-      // offset when it was hidden would still have it when it comes back.
-      Array.from(track.children).forEach((it) => it.style.removeProperty("translate"));
-      if (native() || !looping()) return;
-      const s = stride();
-      const t = span();
-      slots().forEach((it, j) => {
-        const k = Math.round((-pos - j * s) / t);
-        if (k) it.style.translate = `${k * t}px`;
-      });
     };
 
     const render = (animate) => {
@@ -3476,16 +3400,14 @@ function initCarousel() {
         // Left where the stylesheet expects it: the track is laid out, not moved.
         track.style.removeProperty("transition");
         track.style.removeProperty("transform");
-        place();
         return;
       }
       track.style.transition = animate ? EASE : "none";
       track.style.transform = `translate3d(${pos}px, 0, 0)`;
-      place();
     };
 
     const scroll = () => (native() ? viewport.scrollLeft : -pos);
-    const current = () => (looping() ? wrap(Math.round(-pos / stride())) : nearestIndex(scroll()));
+    const current = () => nearestIndex(scroll());
 
     // The slide sync() last settled on. Kept because it survives a resize: the
     // pixel position doesn't, since the stride changes with the viewport.
@@ -3494,20 +3416,13 @@ function initCarousel() {
     const sync = () => {
       const at0 = scroll();
       const m = maxScroll();
-      const loop = looping();
-      if (prev) prev.disabled = !loop && at0 <= 0.5;
-      if (next) next.disabled = !loop && at0 >= m - 0.5;
-      // current(), not nearestIndex(): the latter clamps to the track's ends, so a
-      // looping drag past the first slide reported the first one and left
-      // aria-current on the wrong thumbnail.
+      if (prev) prev.disabled = at0 <= 0.5;
+      if (next) next.disabled = at0 >= m - 0.5;
       const i = current();
       at = i;
-      // The slot is where the track is; the slide is what that slot shows. On a
-      // copy the two differ, and everything a person reads follows the slide.
-      const slide = i % Math.max(1, count());
-      if (status) status.textContent = `Slide ${slide + 1} of ${count()}`;
+      if (status) status.textContent = `Slide ${i + 1} of ${size()}`;
       nav.forEach((el, n) => {
-        if (navIndex(el, n) === slide) el.setAttribute("aria-current", "true");
+        if (navIndex(el, n) === i) el.setAttribute("aria-current", "true");
         else el.removeAttribute("aria-current");
       });
     };
@@ -3522,27 +3437,19 @@ function initCarousel() {
         sync();
         return;
       }
-      pos = looping() ? -to : -Math.max(0, Math.min(maxScroll(), to));
+      pos = -Math.max(0, Math.min(maxScroll(), to));
       render(animate);
       sync();
     };
 
-    // Looping, an index names a slide rather than a place on the track, so go to
-    // whichever copy of it is nearest: from the last to the first is one step
-    // forward, not the whole set backwards.
+    // An index names a place on the track, and the ends are ends: a step past
+    // either is clamped to it, and the control that got you there has left.
     const goTo = (i, animate = true) => {
-      if (!looping()) {
-        const pts = points();
-        return settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
-      }
-      const n = size();
-      let d = wrap(i) - current();
-      if (d > n / 2) d -= n;
-      if (d < -n / 2) d += n;
-      return settle(-pos + d * stride(), animate);
+      const pts = points();
+      return settle(pts[Math.max(0, Math.min(pts.length - 1, i))], animate);
     };
 
-    const step = (dir) => goTo(looping() ? current() + dir : current() + dir);
+    const step = (dir) => goTo(current() + dir);
 
     prev?.addEventListener("click", () => step(-1));
     next?.addEventListener("click", () => step(1));
@@ -3557,14 +3464,10 @@ function initCarousel() {
       goTo(Number(e.detail?.index) || 0, e.detail?.animate !== false);
     });
 
-    // The set changed under it: slides shown or hidden, or the loop turned on or
-    // off. Copies are rebuilt from what the slides hold now, so a page that
-    // swapped their pictures first gets copies of the new ones.
+    // Slides were shown or hidden under it, so the set is a different size and the
+    // slide it was on may not be there any more.
     root.addEventListener("carousel:refresh", () => {
-      refresh();
-      at = Math.max(0, Math.min(at, size() - 1));
-      if (looping()) settle(at * stride(), false);
-      else goTo(at, false);
+      goTo(Math.max(0, Math.min(at, size() - 1)), false);
     });
     root.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
@@ -3632,12 +3535,10 @@ function initCarousel() {
         if (!viewport.hasPointerCapture?.(pointer)) viewport.setPointerCapture(pointer);
       }
       let p = startPos + dx;
-      if (!looping()) {
-        // Past an end the extra travel is resisted; a looping set has no end.
-        const min = -maxScroll();
-        if (p > 0) p *= RESIST;
-        else if (p < min) p = min + (p - min) * RESIST;
-      }
+      // Past an end the extra travel is resisted.
+      const min = -maxScroll();
+      if (p > 0) p *= RESIST;
+      else if (p < min) p = min + (p - min) * RESIST;
       pos = p;
       render(false);
     });
@@ -3656,8 +3557,7 @@ function initCarousel() {
       const spent = e.timeStamp - startT;
       const commit = travel > COMMIT * viewport.clientWidth || (travel > FLICK && spent < THROW);
       const delta = crossed || (commit ? -Math.sign(dx) : 0);
-      if (looping()) settle((Math.round(-startPos / s) + delta) * s);
-      else goTo(startAt + delta);
+      goTo(startAt + delta);
       // The drag's own trailing click is spent here. A flag rather than a listener
       // that takes itself off a frame later: whether that frame beat the click was
       // a race, and losing it left a live swallow to eat the next honest press.
@@ -3690,12 +3590,10 @@ function initCarousel() {
     window.addEventListener("resize", () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        // From the remembered index, not the old position: looping leaves `pos`
-        // unbounded, so re-deriving the index from it against the *new* stride
-        // could name a different slide, and settling on the old pixel offset left
-        // the track sliding around while the window scaled.
-        if (looping()) settle(at * stride(), false);
-        else goTo(at, false);
+        // From the remembered index, not the old pixel offset, which named a
+        // different place once the stride changed and left the track sliding
+        // around while the window scaled.
+        goTo(at, false);
       });
     });
 
@@ -3717,15 +3615,11 @@ function initCarousel() {
     // which engine this is. Hand the track back to the stylesheet, or take it
     // again, and put the slide it was on back under the window.
     touch.addEventListener?.("change", () => {
-      refresh();
       pos = 0;
       render(false);
       goTo(Math.max(0, Math.min(at, size() - 1)), false);
     });
 
-    // A set that already wants to loop and is too short to gets its copies now,
-    // without waiting for a page to say anything.
-    refresh();
     render(false);
     sync();
   });

@@ -91,10 +91,6 @@
     line-height: var(--font-caption-medium-lh);
   }
 
-  .blog-card__dot {
-    color: var(--ink-tertiary);
-  }
-
   .blog-card__title {
     /* Both card gaps live here on the middle element: 12 above (meta → title),
      24 below (title → category). The category itself carries no spacing (its

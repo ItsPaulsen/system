@@ -25,6 +25,7 @@
   const detail = panel.querySelector("[data-stores-detail]");
   const back = panel.querySelector("[data-stores-back]");
   const scroll = panel.querySelector(".stores-panel__scroll");
+  const detailScroll = panel.querySelector(".stores-detail__scroll");
 
   // Each card's home list, captured before anything moves, so leaving results
   // mode puts every card back in its own region and in its original order.
@@ -467,6 +468,9 @@
 
   const snapTo = (i, velocity) => {
     snap = Math.min(snaps.length - 1, Math.max(0, i));
+    // Drives the scroll lock in stores.css: the list only scrolls at the full
+    // snap, so below it the sheet can take a drag started anywhere on it.
+    panel.dataset.snap = snap === 0 ? "full" : "partial";
     springStart(snaps[snap], velocity || 0);
   };
 
@@ -546,35 +550,36 @@
   grab.addEventListener("pointerup", onUp);
   grab.addEventListener("pointercancel", onUp);
 
-  // Pulling the list down when it is already at the top drags the sheet instead
-  // of doing nothing, which is the behaviour a sheet is expected to have.
-  scroll?.addEventListener(
-    "pointerdown",
-    (e) => {
-      if (desktop.matches || e.pointerType === "mouse" || scroll.scrollTop > 0) return;
-      dragFrom = e.clientY;
-      dragStart = springAt;
-      lastY = e.clientY;
-      lastT = e.timeStamp;
-      velocity = 0;
-    },
-    { passive: true }
-  );
+  // The sheet is draggable by its whole surface, not just the handle, and in both
+  // views: the list and the detail each have their own scroller. Below the full
+  // snap neither is scrolling (stores.css locks them), so a drag starting
+  // anywhere belongs to the sheet. At the full snap the scroller owns the
+  // gesture, except a pull down from the very top, which is how you close it.
+  [scroll, detailScroll].filter(Boolean).forEach((el) => {
+    el.addEventListener(
+      "pointerdown",
+      (e) => {
+        if (desktop.matches || e.pointerType === "mouse") return;
+        if (snap === 0 && el.scrollTop > 0) return;
+        startDrag(e);
+      },
+      { passive: true }
+    );
 
-  scroll?.addEventListener(
-    "pointermove",
-    (e) => {
-      if (dragFrom === null) return;
-      if (e.clientY - dragFrom > 4) {
-        panel.setAttribute("data-dragging", "");
+    el.addEventListener(
+      "pointermove",
+      (e) => {
+        if (dragFrom === null) return;
+        // At full, only a downward pull counts; scrolling back up is the list's.
+        if (snap === 0 && e.clientY - dragFrom <= 4) return;
         onMove(e);
-      }
-    },
-    { passive: true }
-  );
+      },
+      { passive: true }
+    );
 
-  scroll?.addEventListener("pointerup", onUp, { passive: true });
-  scroll?.addEventListener("pointercancel", onUp, { passive: true });
+    el.addEventListener("pointerup", onUp, { passive: true });
+    el.addEventListener("pointercancel", onUp, { passive: true });
+  });
 
   const resize = () => {
     measure();

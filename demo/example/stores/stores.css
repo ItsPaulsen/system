@@ -313,9 +313,17 @@
     flex-direction: column;
     gap: var(--space-16);
     height: 100%;
-    padding: 0 var(--space-16) var(--space-32);
+
+    /* Deep bottom padding on this tier: the browser's own bottom bar sits over
+       the sheet, and the home indicator under that, so the last row needs room
+       to clear both. env() covers the indicator, the 80 covers the bar. */
+    padding: 0 var(--space-16) calc(var(--space-80) + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
-    overscroll-behavior: contain; /* the page behind must not take over the fling */
+
+    /* none, not contain: contain stops the fling reaching the page behind but
+       leaves the scroller its own elastic bounce, which runs at the same time as
+       the sheet's rubber and reads as two things moving separately. */
+    overscroll-behavior: none;
   }
 
   /* ── Regions and results ──────────────────────────────────────────────────
@@ -403,6 +411,13 @@
     animation: none;
   }
 
+  /* Pressed keeps its resting surface too: .card's tint fills a flush row edge to
+     edge, which on touch means tapping anywhere in the list flashes a grey block
+     across the box. */
+  button.stores-card:not(:disabled):active {
+    background: var(--background-secondary);
+  }
+
   .stores-list > li:last-child > button.stores-card {
     border-bottom: 0;
   }
@@ -432,8 +447,7 @@
      hover query so a touch screen can't leave either stuck on. Pressed keeps the
      component's own surface, since that one is feedback for an actual click. */
 
-  /* Hover is the chevron only. .card's surface tint fills a flush row edge to
-     edge, which lands as a grey block across the box. */
+  /* Hover is the chevron only, same reason. */
   @media (hover: hover) and (pointer: fine) {
     button.stores-card:not(:disabled):hover {
       background: var(--background-secondary);
@@ -524,9 +538,9 @@
   .stores-detail__scroll {
     flex: 1;
     min-height: 0;
-    padding: 0 var(--space-16) var(--space-32);
+    padding: 0 var(--space-16) calc(var(--space-80) + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
-    overscroll-behavior: contain;
+    overscroll-behavior: none;
   }
 
   /* A scroll container is focusable in its own right, so tabbing through lands
@@ -536,6 +550,15 @@
   .stores-panel__scroll:focus-visible,
   .stores-detail__scroll:focus-visible {
     outline: none;
+  }
+
+  /* Below the full snap the list doesn't scroll, so the sheet can be dragged by
+     any part of it. touch-action keeps the browser from claiming the gesture
+     first, which is what made the list and the sheet move as two things. */
+  .stores-panel[data-snap="partial"] .stores-panel__scroll,
+  .stores-panel[data-snap="partial"] .stores-detail__scroll {
+    overflow-y: hidden;
+    touch-action: none;
   }
 
   /* The Button's flat skin rather than a link: this is the control you leave by,

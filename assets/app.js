@@ -126,32 +126,6 @@ async function copyText(text, label) {
   }
 }
 
-// Extract only the CSS custom-property declarations whose names start with any
-// of the given prefixes, from every :root (or :root[data-theme="…"]) rule.
-// Comma-separated prefixes: "shadow,radius" keeps --shadow-* and --radius-*.
-function filterTokens(cssText, prefixList) {
-  const prefixes = prefixList
-    .split(",")
-    .map((p) => p.trim())
-    .filter(Boolean);
-  const isMatch = (name) => prefixes.some((p) => name === `--${p}` || name.startsWith(`--${p}-`));
-  const rulePattern = /(:root(?:\[data-theme="(?:dark|light)"\])?)\s*\{([\s\S]*?)\}/g;
-  const declPattern = /(--[a-z0-9-]+)\s*:\s*([^;]+);/g;
-  const blocks = [];
-  let m;
-  while ((m = rulePattern.exec(cssText))) {
-    const selector = m[1];
-    const body = m[2];
-    const kept = [];
-    let d;
-    while ((d = declPattern.exec(body))) {
-      if (isMatch(d[1])) kept.push(`  ${d[1]}: ${d[2].trim()};`);
-    }
-    if (kept.length) blocks.push(`${selector} {\n${kept.join("\n")}\n}`);
-  }
-  return blocks.join("\n\n");
-}
-
 /* ── Theme ─────────────────────────────────────────────────────────────── */
 
 function currentTheme() {
@@ -4162,23 +4136,11 @@ function init() {
     const cssBtn = event.target.closest("[data-copy-css]");
     if (cssBtn) {
       const src = cssBtn.dataset.copyCss;
-      const filter = cssBtn.dataset.copyTokens; // optional: comma-list of prefixes
       const section = cssBtn.dataset.copySection; // optional: a components.css section
-      const label = section
-        ? "Copied CSS"
-        : filter
-          ? "Copied variables"
-          : `Copied ${src.split("/").pop()}`;
+      const label = section ? "Copied CSS" : `Copied ${src.split("/").pop()}`;
       fetch(src)
         .then((r) => r.text())
-        .then((text) => {
-          const out = section
-            ? extractSection(text, section)
-            : filter
-              ? filterTokens(text, filter)
-              : text.trim();
-          copyText(out, label);
-        })
+        .then((text) => copyText(section ? extractSection(text, section) : text.trim(), label))
         .catch(() => toast("Copy failed"));
       return;
     }

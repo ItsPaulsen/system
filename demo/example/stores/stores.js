@@ -70,13 +70,15 @@
   // every fit and fly pads for whichever one is in the way. Otherwise "zoom to
   // this store" lands the pin underneath the sheet.
   const padding = () => {
-    const desktop = matchMedia("(min-width: 1024px)").matches;
-    if (desktop) {
+    if (matchMedia("(min-width: 1024px)").matches) {
       const box = panel.getBoundingClientRect();
       return { paddingTopLeft: [box.right + 24, 24], paddingBottomRight: [24, 24] };
     }
-    const visible = window.innerHeight - panel.getBoundingClientRect().top;
-    return { paddingTopLeft: [24, 24], paddingBottomRight: [24, Math.max(24, visible + 24)] };
+    // How much the sheet will cover once it has settled, not how much it covers
+    // right now: the view is framed in the same breath as the sheet is told to
+    // move, so its current rect is the position it is leaving.
+    const covered = panel.offsetHeight - snaps[snap];
+    return { paddingTopLeft: [24, 24], paddingBottomRight: [24, Math.max(24, covered + 24)] };
   };
 
   const mapEl = document.getElementById("stores-map");
@@ -361,8 +363,9 @@
     setActive(card);
 
     opened = card;
-    frameStores([card], 15);
+    // Snap first: padding() frames against where the sheet is going.
     if (!desktop.matches) snapTo(1);
+    frameStores([card], 15);
     detail.querySelector("[data-detail-name]").focus({ preventScroll: true });
   };
 

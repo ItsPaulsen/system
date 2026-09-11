@@ -207,6 +207,19 @@
     transform: translate3d(0, var(--sheet-y), 0);
   }
 
+  /* A skirt of the same surface below the sheet. The panel's own height stops at
+     the viewport bottom, so an overdrag lifts its bottom edge and shows the map
+     through the gap; this rides along and keeps the surface unbroken. Also
+     covers the strip iOS reveals as its bottom bar collapses. */
+  .stores-panel::after {
+    content: "";
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 160px;
+    background: var(--background-primary);
+    pointer-events: none;
+  }
+
   .stores-panel:focus-visible {
     outline: none;
   }
@@ -838,6 +851,12 @@
     /* A rail, not a floating card: flush to the left edge and running the full
        height of the map, so it reads as part of the page's frame. Square,
        because there is no gap around it for a corner to sit in. */
+
+    /* The rail runs to the viewport bottom and never moves, so no skirt. */
+    .stores-panel::after {
+      content: none;
+    }
+
     .stores-panel {
       position: absolute;
       inset: 0 auto 0 0;

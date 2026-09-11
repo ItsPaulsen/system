@@ -86,11 +86,6 @@
     line-height: var(--font-caption-medium-lh);
   }
 
-  /* Same separator the listing cards use between date and reading time. */
-  .article-kicker__dot {
-    color: var(--ink-tertiary);
-  }
-
   .article-kicker svg {
     flex: none;
     width: 20px;
@@ -140,11 +135,20 @@
     font-weight: var(--font-body-small-emphasized-weight);
   }
 
+  /* Date, then reading time behind the same middle dot the listing cards use
+     between the two, so both places pair the pair the same way. */
   .article-byline__date {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
     color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
     font-weight: var(--font-caption-medium-weight);
+  }
+
+  .article-byline__dot {
+    color: var(--ink-tertiary);
   }
 
   .article-cover {

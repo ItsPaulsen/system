@@ -440,7 +440,7 @@
 // Filter sheet: when a filter changed while the sheet was open, closing it lands
 // on the top of the results.
 //
-// Filtering shortens the grid, so a reader scrolled deep into 34 products can
+// Filtering shortens the grid, so a reader scrolled deep into 33 products can
 // close the sheet on a result of 3 and be left looking at the footer, with no
 // products in view; the browser's own scroll anchoring can't help when the page
 // shrinks that far. So one movement, once, at the moment the results become

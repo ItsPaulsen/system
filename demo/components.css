@@ -186,8 +186,14 @@
     opacity: 0;
   }
 
+  /* Checked is the state, so the tick is drawn here and the animation only
+   plays it on. It used to rely on the animation's forwards fill to hold the
+   end values, which left the tick on a checked box at the mercy of the
+   animation actually running to completion. */
   .checkbox__input:checked ~ .checkbox__check path {
-    animation: checkbox-draw 0.2s ease-out forwards;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    animation: checkbox-draw 0.2s ease-out;
   }
 
   @keyframes checkbox-draw {
@@ -209,8 +215,6 @@
   @media (prefers-reduced-motion: reduce) {
     .checkbox__input:checked ~ .checkbox__check path {
       animation: none;
-      stroke-dashoffset: 0;
-      opacity: 1;
     }
   }
 

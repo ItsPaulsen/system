@@ -153,8 +153,36 @@
     display: none;
   }
 
+  /* The flat skin rests at the brand colour and tints with it; here the control
+     is a surface of its own, so the glyphs are ink and the states are neutral. */
   .stores-map__zoom-button {
-    box-shadow: var(--shadow-sm);
+    position: relative;
+    color: var(--ink-secondary);
+  }
+
+  /* A short centred rule, not a border across the full width: on a pill the
+     edges of a full-width line run into the curve. */
+  .stores-map__zoom-button + .stores-map__zoom-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 32px;
+    height: 1px;
+    background: var(--fill-tertiary);
+    translate: -50% 0;
+  }
+
+  /* The glyph carries the states; the surface is the control's shape, not its
+     feedback. */
+  .stores-map__zoom-button:not(:disabled):hover {
+    background: none;
+    color: var(--ink-primary);
+  }
+
+  .stores-map__zoom-button:not(:disabled):active {
+    background: none;
+    color: var(--ink-primary-active);
   }
 
   /* ── Panel, as a sheet ────────────────────────────────────────────────────
@@ -544,7 +572,7 @@
 
   .stores-detail__address {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
   }
 
@@ -707,6 +735,9 @@
     /* Bottom-right, lifted clear of Leaflet's attribution row (which owns that
        same corner) rather than fighting it for the space. Stacked rather than
        joined so each button is the Button component untouched. */
+
+    /* One control, not two buttons: the pair shares a surface, and the divider
+       between them is what separates the halves. */
     .stores-map__zoom {
       position: absolute;
       right: var(--stores-inset);
@@ -714,7 +745,9 @@
       z-index: 400; /* over Leaflet's own panes */
       display: flex;
       flex-direction: column;
-      gap: var(--space-8);
+      border-radius: var(--radius-md);
+      background: var(--background-secondary);
+      box-shadow: var(--shadow-sm);
     }
 
     /* A rail, not a floating card: flush to the left edge and running the full

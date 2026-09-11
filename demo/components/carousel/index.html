@@ -504,6 +504,16 @@
 <span class="tok-com">/* Show more than one at a time by overriding the col count, per breakpoint: */</span>
 <span class="tok-key">.carousel</span> <span class="tok-key">{</span> <span class="tok-prop">--carousel-cols</span>: <span class="tok-str">3</span>; <span class="tok-key">}</span></code></pre>
         </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Drives the track: pointer drags, the controls, jumps from
+            <code>data-carousel-goto</code>, and the live region that names the current slide. Under
+            a finger it hands over to native scroll-snap instead of driving the transform.
+          </p>
+          <div data-source="/assets/app.js" data-fn="initCarousel"></div>
+        </section>
       </div>
     </main>
     <script src="/assets/app.js" defer></script>

@@ -105,6 +105,8 @@
              current session flagged, and an IP tooltip on the location. -->
         <div class="card settings-subcard">
           <h2 class="settings-subcard__title">Your active logins</h2>
+          <p class="login-empty" hidden>No active logins.</p>
+
           <ul class="login-list">
             <li class="login">
               <div class="login__head">
@@ -126,7 +128,13 @@
                 </svg>
                 <span class="login__name">iOS-app</span>
                 <span class="login__version">5.53.2</span>
-                <button class="button button--destructive login__logout" type="button">
+                <button
+                  class="button button--destructive login__logout"
+                  type="button"
+                  data-dialog-open="logout-dialog"
+                  data-logout-title="Log out of iOS-app?"
+                  data-logout-text="The app will ask you to sign in again before it can use this account."
+                >
                   Log out
                 </button>
               </div>
@@ -174,7 +182,13 @@
                 </svg>
                 <span class="login__name">Web</span>
                 <span class="badge badge--green">This device</span>
-                <button class="button button--destructive login__logout" type="button">
+                <button
+                  class="button button--destructive login__logout"
+                  type="button"
+                  data-dialog-open="logout-dialog"
+                  data-logout-title="Log out of this device?"
+                  data-logout-text="You'll be signed out here and sent back to the login page."
+                >
                   Log out
                 </button>
               </div>
@@ -223,6 +237,36 @@
 
         <!-- Confirmation modal for the destructive action (shared .dialog; app.js
              wires data-dialog-open/close, backdrop click and Esc). -->
+        <!-- Shared by both Log out buttons; privacy.js copies the pressed row's
+             own title and text in, so the copy lives in the markup beside the
+             session it describes rather than in the script. -->
+        <dialog class="dialog" id="logout-dialog">
+          <div class="dialog__inner" data-scroll-area>
+            <div class="scroll-area__viewport dialog__scroll">
+              <h2 class="dialog__title" data-logout-title-slot>Log out?</h2>
+              <p class="dialog__text" data-logout-text-slot></p>
+              <div class="dialog__actions">
+                <button class="button button--secondary" type="button" data-dialog-close>
+                  Cancel
+                </button>
+                <button
+                  class="button button--destructive"
+                  type="button"
+                  data-dialog-close
+                  data-logout-confirm
+                  data-toast="Logged out"
+                  data-toast-type="removed"
+                >
+                  Log out
+                </button>
+              </div>
+            </div>
+            <div class="scroll-area__bar" aria-hidden="true">
+              <div class="scroll-area__thumb"></div>
+            </div>
+          </div>
+        </dialog>
+
         <dialog class="dialog" id="delete-account-dialog">
           <div class="dialog__inner" data-scroll-area>
             <div class="scroll-area__viewport dialog__scroll">
@@ -256,5 +300,6 @@
 
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/settings/privacy/privacy.js" defer></script>
   </body>
 </html>

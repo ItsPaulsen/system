@@ -60,6 +60,15 @@
   /* ── Your active logins ─────────────────────────────────────────────────────
      Each row: a header line (device, name, status, Log out) then metadata lines
      4 apart. */
+
+  /* Shown once every session has been signed out. No display of its own, so
+     [hidden] alone governs it (see privacy.js). */
+  .login-empty {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
+
   .login-list {
     margin: 0;
     padding: 0;

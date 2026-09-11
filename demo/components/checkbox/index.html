@@ -133,42 +133,50 @@
           </p>
           <div class="example" data-example>
             <div class="component-preview">
-              <label class="checkbox">
-                <span class="checkbox__box">
-                  <input name="check-3" type="checkbox" class="checkbox__input" disabled />
-                  <svg
-                    class="checkbox__check"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12l5 5l10 -10" pathLength="1" />
-                  </svg>
-                </span>
-                <span class="checkbox__label">Email me updates</span>
-              </label>
-              <label class="checkbox">
-                <span class="checkbox__box">
-                  <input name="check-4" type="checkbox" class="checkbox__input" checked disabled />
-                  <svg
-                    class="checkbox__check"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12l5 5l10 -10" pathLength="1" />
-                  </svg>
-                </span>
-                <span class="checkbox__label">Required by your plan</span>
-              </label>
+              <div class="checkbox-group">
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input name="check-3" type="checkbox" class="checkbox__input" disabled />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Email me updates</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input
+                      name="check-4"
+                      type="checkbox"
+                      class="checkbox__input"
+                      checked
+                      disabled
+                    />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Required by your plan</span>
+                </label>
+              </div>
             </div>
             <script type="text/plain" class="example__react">
               <Checkbox disabled>Email me updates</Checkbox>
@@ -180,9 +188,8 @@
         <section class="preview-block">
           <h2 class="subhead">Group hint</h2>
           <p class="section-note">
-            Guidance for the whole group, before anything has gone wrong: a
-            <code>checkbox-group__hint</code> named by the group's <code>aria-describedby</code>. An
-            error replaces it rather than stacking under it, so only one message is ever read out.
+            An error replaces the hint rather than stacking under it, so a reader hears one message
+            about the group, not two.
           </p>
           <div class="example" data-example>
             <div class="component-preview">

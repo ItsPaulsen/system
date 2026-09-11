@@ -125,6 +125,95 @@
         </section>
 
         <section class="preview-block">
+          <h2 class="subhead">Group error</h2>
+          <p class="section-note">
+            The error belongs to the whole group, not one box: put
+            <code>aria-invalid</code> + <code>aria-describedby</code> on the group and add a
+            <code>checkbox-group__error</code> message.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="checkbox-group"
+                role="group"
+                aria-label="Topics"
+                aria-invalid="true"
+                aria-describedby="checkbox-topics-error"
+              >
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input name="topic" type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Product updates</span>
+                </label>
+                <label class="checkbox">
+                  <span class="checkbox__box">
+                    <input name="topic-2" type="checkbox" class="checkbox__input" />
+                    <svg
+                      class="checkbox__check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12l5 5l10 -10" pathLength="1" />
+                    </svg>
+                  </span>
+                  <span class="checkbox__label">Research invitations</span>
+                </label>
+                <span class="checkbox-group__error" id="checkbox-topics-error">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                  Pick at least one topic.
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <div
+                className="checkbox-group"
+                role="group"
+                aria-label="Topics"
+                aria-invalid="true"
+                aria-describedby="topics-error"
+              >
+                <Checkbox>Product updates</Checkbox>
+                <Checkbox>Research invitations</Checkbox>
+                <span className="checkbox-group__error" id="topics-error">
+                  <IconAlertCircle />
+                  Pick at least one topic.
+                </span>
+              </div>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h2 class="subhead">Disabled</h2>
           <p class="section-note">
             Empty and disabled fills the box instead of outlining it, so it still reads as a control

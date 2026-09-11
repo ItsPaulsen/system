@@ -166,8 +166,6 @@
                         data-store="old-town"
                         data-lat="59.9123"
                         data-lng="10.7459"
-                        data-type="flagship"
-                        data-type-label="Flagship"
                         data-open="true"
                         data-distance="1.2"
                         data-city="Old Town"
@@ -209,8 +207,6 @@
                         data-store="midtown"
                         data-lat="59.9165"
                         data-lng="10.7325"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="true"
                         data-distance="2.4"
                         data-city="Midtown"
@@ -252,8 +248,6 @@
                         data-store="harbour"
                         data-lat="59.908"
                         data-lng="10.7233"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="false"
                         data-distance="3.1"
                         data-city="Harbour"
@@ -310,8 +304,6 @@
                         data-store="eastgate"
                         data-lat="59.9155"
                         data-lng="10.802"
-                        data-type="flagship"
-                        data-type-label="Flagship"
                         data-open="true"
                         data-distance="4.6"
                         data-city="Eastgate"
@@ -353,8 +345,6 @@
                         data-store="parkside"
                         data-lat="59.9268"
                         data-lng="10.788"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="true"
                         data-distance="5.0"
                         data-city="Parkside"
@@ -396,8 +386,6 @@
                         data-store="elmwood"
                         data-lat="59.905"
                         data-lng="10.826"
-                        data-type="pickup"
-                        data-type-label="Pickup point"
                         data-open="false"
                         data-distance="6.8"
                         data-city="Elmwood"
@@ -454,8 +442,6 @@
                         data-store="northgate"
                         data-lat="59.9605"
                         data-lng="10.758"
-                        data-type="flagship"
-                        data-type-label="Flagship"
                         data-open="true"
                         data-distance="7.4"
                         data-city="Northgate"
@@ -497,8 +483,6 @@
                         data-store="hillcrest"
                         data-lat="59.9482"
                         data-lng="10.786"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="false"
                         data-distance="6.2"
                         data-city="Hillcrest"
@@ -540,8 +524,6 @@
                         data-store="lakeview"
                         data-lat="59.9702"
                         data-lng="10.721"
-                        data-type="pickup"
-                        data-type-label="Pickup point"
                         data-open="true"
                         data-distance="9.1"
                         data-city="Lakeview"
@@ -598,8 +580,6 @@
                         data-store="southbank"
                         data-lat="59.888"
                         data-lng="10.762"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="true"
                         data-distance="3.9"
                         data-city="Southbank"
@@ -641,8 +621,6 @@
                         data-store="stonebridge"
                         data-lat="59.8752"
                         data-lng="10.788"
-                        data-type="pickup"
-                        data-type-label="Pickup point"
                         data-open="false"
                         data-distance="8.3"
                         data-city="Stonebridge"
@@ -699,8 +677,6 @@
                         data-store="westfield"
                         data-lat="59.923"
                         data-lng="10.68"
-                        data-type="flagship"
-                        data-type-label="Flagship"
                         data-open="true"
                         data-distance="5.5"
                         data-city="Westfield"
@@ -742,8 +718,6 @@
                         data-store="riverside"
                         data-lat="59.935"
                         data-lng="10.657"
-                        data-type="standard"
-                        data-type-label="Standard"
                         data-open="true"
                         data-distance="7.9"
                         data-city="Riverside"
@@ -785,8 +759,6 @@
                         data-store="greenfield"
                         data-lat="59.9034"
                         data-lng="10.6368"
-                        data-type="pickup"
-                        data-type-label="Pickup point"
                         data-open="false"
                         data-distance="9.6"
                         data-city="Greenfield"
@@ -841,70 +813,74 @@
              the panel never holds fourteen copies of this. -->
         <div class="stores-detail" data-stores-detail hidden>
           <div class="stores-detail__scroll" data-stores-detail-scroll>
-            <button
-              class="button button--flat button--with-start-icon stores-detail__back"
-              type="button"
-              data-stores-back
-            >
-              <svg
-                viewBox="0 0 24 24"
-                width="20"
-                height="20"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
+            <div class="stores-detail__head">
+              <button
+                class="button button--flat button--with-start-icon stores-detail__back"
+                type="button"
+                data-stores-back
               >
-                <path d="M5 12l14 0" />
-                <path d="M5 12l6 6" />
-                <path d="M5 12l6 -6" />
-              </svg>
-              Back
-            </button>
+                <svg
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12l14 0" />
+                  <path d="M5 12l6 6" />
+                  <path d="M5 12l6 -6" />
+                </svg>
+                Back
+              </button>
+            </div>
 
-            <h2 class="stores-detail__name" data-detail-name tabindex="-1">Store</h2>
-            <p class="stores-detail__address" data-detail-address></p>
+            <div class="stores-detail__card">
+              <h2 class="stores-detail__name" data-detail-name tabindex="-1">Store</h2>
+              <p class="stores-detail__address" data-detail-address></p>
 
-            <details class="stores-detail__hours">
-              <summary class="stores-detail__hours-summary">
-                <span class="stores-detail__hours-text">
-                  <span class="stores-detail__hours-label">Opening hours</span>
-                  <span class="stores-detail__hours-line">
-                    <span class="stores-detail__hours-now" data-detail-status></span>
-                    <svg
-                      class="stores-detail__hours-chevron"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M6 9l6 6l6 -6" />
-                    </svg>
+              <details class="stores-detail__hours">
+                <summary class="stores-detail__hours-summary">
+                  <span class="stores-detail__hours-text">
+                    <span class="stores-detail__hours-label">Opening hours</span>
+                    <span class="stores-detail__hours-line">
+                      <span class="stores-detail__hours-now" data-detail-status></span>
+                      <svg
+                        class="stores-detail__hours-chevron"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M6 9l6 6l6 -6" />
+                      </svg>
+                    </span>
                   </span>
-                </span>
-              </summary>
-              <dl class="stores-detail__hours-list" data-detail-hours></dl>
-            </details>
+                </summary>
+                <dl class="stores-detail__hours-list" data-detail-hours></dl>
+              </details>
 
-            <dl class="stores-detail__rows">
-              <div class="stores-detail__row">
-                <dt>Website</dt>
-                <dd><a class="link" href="/demo/example/" data-detail-site></a></dd>
-              </div>
-              <div class="stores-detail__row">
-                <dt>Phone</dt>
-                <dd><a class="link" href="#" data-detail-phone></a></dd>
-              </div>
-              <div class="stores-detail__row">
-                <dt>E-mail</dt>
-                <dd><a class="link" href="#" data-detail-email></a></dd>
-              </div>
-            </dl>
+              <dl class="stores-detail__rows">
+                <div class="stores-detail__row">
+                  <dt>Website</dt>
+                  <dd><a class="link" href="/demo/example/" data-detail-site></a></dd>
+                </div>
+                <div class="stores-detail__row">
+                  <dt>Phone</dt>
+                  <dd><a class="link" href="#" data-detail-phone></a></dd>
+                </div>
+                <div class="stores-detail__row">
+                  <dt>E-mail</dt>
+                  <dd><a class="link" href="#" data-detail-email></a></dd>
+                </div>
+              </dl>
+            </div>
 
             <a class="button button--primary stores-detail__cta" href="/demo/example/shop/">
               See what's in stock

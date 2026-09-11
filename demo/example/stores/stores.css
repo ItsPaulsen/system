@@ -2,8 +2,8 @@
 
    The panel is a single node in both layouts. Below 1024 it is a bottom sheet
    sitting on the map, dragged between three snap points by stores.js; from 1024
-   the same node becomes a floating card pinned to the map's top-left. Nothing is
-   relocated or rebuilt across the breakpoint, only positioned differently.
+   the same node is a rail flush to the left edge. Nothing is relocated or
+   rebuilt across the breakpoint, only positioned differently.
 
    Mobile is the base here, so the sheet rules come first and the desktop panel
    is the min-width override. */
@@ -12,9 +12,9 @@
    unlayered sheet outranking every layer. Same as shop.css. */
 @layer components {
   .stores-page {
-    /* Panel width at the desktop tier, and the inset it floats by. One place so
-       the map's zoom control and the panel can't drift apart. */
-    --stores-panel-w: 448px; /* 400 of content inside the 24 side padding */
+    /* Panel width at the desktop tier, and the inset the map's own controls sit
+       by. One place so they can't drift apart. */
+    --stores-panel-w: 448px; /* 416 of content inside the 16 side padding */
     --stores-inset: var(--space-16);
 
     /* Snap offset, in px, written by stores.js. The 22% start is what the sheet
@@ -524,7 +524,7 @@
   .stores-detail__scroll {
     flex: 1;
     min-height: 0;
-    padding: var(--space-8) var(--space-16) var(--space-32);
+    padding: 0 var(--space-16) var(--space-32);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -541,10 +541,30 @@
   /* The Button's flat skin rather than a link: this is the control you leave by,
      and it behaves like a button. Pulled left by its own inline padding so the
      label still starts on the panel's content edge. */
+
+  /* A header row holding a button of its own height, rather than a button
+     stretched to fill it. On the sheet it hugs the button: the grab handle
+     directly above is already the top spacing, so the row's own would double it.
+     The rail has no handle, so it takes the taller row (below). */
+  .stores-detail__head {
+    display: flex;
+    align-items: center;
+    height: var(--button-size, 48px);
+  }
+
   .stores-detail__back {
-    align-self: flex-start;
-    margin-inline-start: calc(-1 * var(--button-px));
+    /* Pulled back by its own inline padding, less the card's 16, so the label
+       starts on the same edge as the store name inside the card below. */
+    margin-inline-start: calc(var(--space-16) - var(--button-px));
     color: var(--primary-foreground);
+  }
+
+  /* The ring goes inside and doesn't converge: the button fills its header row,
+     which sits against the scroller's top edge, so an offset ring is clipped and
+     the converge starts 6px further out still. */
+  .stores-detail__back:focus-visible {
+    outline-offset: -3px;
+    animation: none;
   }
 
   /* No plate behind it: the label and arrow carry the states themselves, so the
@@ -559,8 +579,18 @@
     color: var(--primary-foreground-active);
   }
 
+  /* The store's record on the same surface everything else in this panel uses,
+     so the detail view reads as the panel showing one store rather than as a
+     different screen. Back sits above it and the action below, both on the page
+     rather than inside the record. */
+  .stores-detail__card {
+    padding: var(--space-16);
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+  }
+
   .stores-detail__name {
-    margin: var(--space-16) 0 var(--space-4);
+    margin: 0;
     font-size: var(--font-title-small-size);
     font-weight: var(--font-title-small-weight);
     line-height: var(--font-title-small-lh);
@@ -577,7 +607,7 @@
   }
 
   .stores-detail__hours {
-    margin-top: var(--space-24);
+    margin-top: var(--space-16);
     border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
@@ -587,7 +617,8 @@
     gap: var(--space-8);
 
     /* 12 below, matching the list's row gap, so the first day is spaced off the
-       summary the same as every day is off the one before it. */
+       summary the same as every day is off the one before it. Closed there is no
+       list, so it takes the 16 every other field row has. */
     padding-block: var(--space-16) var(--space-12);
     cursor: pointer;
     list-style: none;
@@ -597,9 +628,17 @@
     display: none;
   }
 
+  /* The ring goes round the whole disclosure, not just its summary, so focus
+     frames what the control governs once it is open. Same shape the Accordion
+     uses for its items. */
   .stores-detail__hours-summary:focus-visible {
+    outline: none;
+  }
+
+  .stores-detail__hours:has(.stores-detail__hours-summary:focus-visible) {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
   }
 
   /* Label over value, the same shape the website/phone/e-mail rows below use, so
@@ -645,11 +684,18 @@
     transform: rotate(180deg);
   }
 
+  .stores-detail__hours:not([open]) .stores-detail__hours-summary {
+    padding-bottom: var(--space-16);
+  }
+
   .stores-detail__hours-list {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-12) var(--space-16);
-    margin: 0 0 var(--space-16);
+
+    /* No bottom margin: the next field's own padding is the space below, and a
+       margin here would sit inside the focus ring as dead room. */
+    margin: 0;
     color: var(--ink-primary);
     font-size: var(--font-body-small-size);
   }
@@ -681,6 +727,13 @@
     margin: 0;
   }
 
+  /* Open, the gap above the next divider lives here rather than on the hours
+     list, where it would sit inside the focus ring as dead room. Closed, the
+     summary's own padding is already that space. */
+  .stores-detail__hours[open] + .stores-detail__rows {
+    margin-top: var(--space-16);
+  }
+
   .stores-detail__row {
     display: flex;
     flex-direction: column;
@@ -691,6 +744,12 @@
 
   .stores-detail__row:first-child {
     border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  /* The box's own edge closes the list. */
+  .stores-detail__row:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
   }
 
   .stores-detail__row dt {
@@ -704,8 +763,11 @@
   }
 
   .stores-detail__cta {
-    width: 100%;
-    margin-top: var(--space-24);
+    /* Full width, 32 clear of the panel edges: the scroller's own 16 plus 16
+       here. display:flex because .button is inline-flex, which hugs its label
+       however the width is written. */
+    display: flex;
+    margin: var(--space-24) var(--space-16) 0;
   }
 
   /* Mode switch. Both halves are display rules, so both sides need stating: the
@@ -772,9 +834,17 @@
       display: none;
     }
 
-    .stores-panel__scroll,
-    .stores-detail__scroll {
+    .stores-panel__scroll {
       padding: var(--space-16);
+    }
+
+    .stores-detail__head {
+      height: 64px;
+    }
+
+    /* No top padding here: the header row owns that space. */
+    .stores-detail__scroll {
+      padding: 0 var(--space-16) var(--space-16);
     }
   }
 

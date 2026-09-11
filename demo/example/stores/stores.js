@@ -147,12 +147,13 @@
     else map.flyToBounds(at, opts);
   };
 
+  const pinOf = (card) => markers.get(card)?.getElement()?.firstElementChild;
+
   const setActive = (card) => {
     cards.forEach((c) => {
       const on = c === card;
       c.toggleAttribute("data-active", on);
-      const pin = markers.get(c)?.getElement()?.firstElementChild;
-      if (pin) pin.classList.toggle("stores-pin--active", on);
+      pinOf(c)?.classList.toggle("stores-pin--active", on);
     });
   };
 
@@ -160,12 +161,12 @@
   const matches = (card, query) => {
     if (openNow.checked && card.dataset.open !== "true") return false;
     if (!query) return true;
-    // Name and place only, which is what the field offers. The whole card's text
-    // would drag the opening hours in with it, so "open" would match every store
-    // that prints a closing time.
+    // Name, street and place, which is what the field offers. The whole card's
+    // text would drag the opening hours in with it, so "open" would match every
+    // store that prints a closing time.
     return `${card.querySelector(".stores-card__name").textContent} ${
-      card.querySelector(".stores-card__city").textContent
-    }`
+      card.querySelector(".stores-card__address").textContent
+    } ${card.dataset.city}`
       .toLowerCase()
       .includes(query);
   };
@@ -206,8 +207,12 @@
     panel.dataset.mode = filtered ? "results" : "regions";
 
     empty.hidden = shown.length > 0;
-    count.textContent = filtered
-      ? `${shown.length} ${shown.length === 1 ? "store" : "stores"}${query ? ` for "${search.value.trim()}"` : ""}`
+
+    // Counted only for a search, where the number answers "did that find
+    // anything". The chips don't need it: Near me sorts rather than filters, and
+    // Open now leaves a list you can read the length of.
+    count.textContent = query
+      ? `${shown.length} ${shown.length === 1 ? "store" : "stores"} for "${search.value.trim()}"`
       : "";
 
     // Marker churn is what makes the map blink: re-adding a layer rebuilds its
@@ -244,7 +249,10 @@
   const openDetail = (card) => {
     const d = card.dataset;
     fill("[data-detail-name]", card.querySelector(".stores-card__name").textContent.trim());
-    fill("[data-detail-address]", d.address);
+    fill(
+      "[data-detail-address]",
+      `${card.querySelector(".stores-card__address").textContent.trim()}, ${d.city}`
+    );
     fill("[data-detail-type]", d.typeLabel);
     fill("[data-detail-status]", card.querySelector(".stores-card__status").textContent.trim());
 
@@ -515,7 +523,15 @@
   });
 
   // ── Wiring ────────────────────────────────────────────────────────────────
-  cards.forEach((card) => card.addEventListener("click", () => openDetail(card)));
+  cards.forEach((card) => {
+    card.addEventListener("click", () => openDetail(card));
+
+    // Hovering a row grows its pin, so the list and the map point at each other.
+    // mouseenter/mouseleave rather than the pointer events: a tap fires those
+    // too and would leave a pin stuck at hover size on a touch screen.
+    card.addEventListener("mouseenter", () => pinOf(card)?.classList.add("stores-pin--hover"));
+    card.addEventListener("mouseleave", () => pinOf(card)?.classList.remove("stores-pin--hover"));
+  });
   back.addEventListener("click", closeDetail);
 
   // Focusing the search below 1024 opens the sheet: you are about to type and

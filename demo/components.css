@@ -2523,6 +2523,11 @@
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
+
+    /* The hover below is the only interactive surface in this component, and it
+       was the one that snapped: everything else on a page with an accordion
+       (cards, chips, buttons) eases its background over the same duration. */
+    transition: background var(--motion-default);
   }
 
   .accordion__summary::-webkit-details-marker {

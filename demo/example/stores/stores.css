@@ -109,6 +109,13 @@
     background: currentcolor;
   }
 
+  /* Set from the list: hovering a card grows its pin to the same size hovering
+     the pin does, so the two halves of the page point at each other. Declared
+     before --active so the open pin keeps its own size while hovered. */
+  .stores-pin--hover {
+    transform: scale(calc(44 / 36));
+  }
+
   /* Leaflet positions the icon by its top-left, so growth has to come out of the
      centre or the pin walks off its coordinate. */
   .stores-pin--active {
@@ -256,7 +263,7 @@
   .stores-panel__scroll {
     display: flex;
     flex-direction: column;
-    gap: var(--space-12);
+    gap: var(--space-16);
     height: 100%;
     padding: 0 var(--space-16) var(--space-32);
     overflow-y: auto;
@@ -269,6 +276,24 @@
      flattens the list without moving a node. */
   .stores-regions {
     border: 0;
+  }
+
+  /* Same treatment the product page gives its detail rows: 16 rather than the
+     panel's 18, and the toggle as a plain mark instead of the component's
+     soft-primary disc, which is the loudest thing in a list this quiet.
+     Ink-secondary because it reports the row's state and wants 3:1 against the
+     surface. The white box stays; only the label and the mark change. */
+  .stores-region > .accordion__summary {
+    min-height: 56px;
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+  }
+
+  .stores-region .accordion__toggle {
+    width: 20px;
+    height: 20px;
+    background: none;
+    color: var(--ink-secondary);
   }
 
   /* The region ring has the same problem against the scroller's edges. */
@@ -286,16 +311,37 @@
     list-style: none;
   }
 
-  .stores-card {
+  /* The whole row is the control, so the chevron inside it is a glyph and not a
+     second button: one focus stop, one target, and the card's own text is the
+     accessible name. */
+
+  /* Typed selector on purpose: button.card resets padding to 0, so a plain
+     .stores-card loses on specificity and the inset silently disappears. */
+  button.stores-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
     width: 100%;
+
+    /* The card owns its inset and the gap to the chevron; the children carry no
+       padding of their own. .card__content is off the content span on purpose:
+       it exists to supply 20px of padding, which is the one thing this row
+       doesn't want. */
+    padding: var(--space-12);
     box-shadow: inset 0 0 0 var(--border-width) var(--fill-tertiary);
-    text-align: left;
+
+    /* .card eases its background only, so the rim would snap while the chevron
+       faded. Kept here rather than on .card: no other card animates a rim, and
+       some carry a real shadow that shouldn't move. */
+    transition:
+      background var(--motion-default),
+      box-shadow var(--motion-default);
   }
 
   /* Rows in a tight list, so the ring goes inside the card rather than 2px
      outside it: at 8px apart an offset ring crowds the neighbour above and
      below, and it is the first thing the accordion's overflow clips. The
-     converge animation starts 6px out, which is outside that clip either way.
+     converge animation starts 6px out, which is past that clip either way.
      Same call base.css makes for the linked token rows. */
   button.stores-card:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
@@ -305,9 +351,39 @@
 
   .stores-card__content {
     display: flex;
+    flex: 1;
+    min-width: 0;
     flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-16);
+  }
+
+  /* Just the glyph, in the tone the other chevrons on the site use. */
+  .stores-card__action {
+    display: flex;
+    flex: none;
+    color: var(--ink-tertiary);
+  }
+
+  .stores-card__action svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Hovering the row darkens the chevron and nothing else: .card tints its whole
+     surface on hover, which on a list of these reads as a second selected state
+     next to the open card's rim. The chevron carries it instead. Guarded by the
+     hover query so a touch screen can't leave either stuck on. Pressed keeps the
+     component's own surface, since that one is feedback for an actual click. */
+  @media (hover: hover) and (pointer: fine) {
+    button.stores-card:not(:disabled):hover {
+      /* One step up the same fill ladder (0.12 to 0.2), still a hairline, so it
+         reads as "this row" without approaching the open card's 2px rim. */
+      background: var(--background-secondary);
+      box-shadow: inset 0 0 0 var(--border-width) var(--fill-secondary);
+    }
+
+    .stores-card:hover .stores-card__action {
+      color: var(--ink-primary);
+    }
   }
 
   .stores-card__name {
@@ -316,11 +392,11 @@
     line-height: var(--font-body-small-emphasized-lh);
   }
 
-  .stores-card__city,
+  .stores-card__address,
   .stores-card__status {
     color: var(--ink-secondary);
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
   }
 
   .stores-card__state {
@@ -358,16 +434,15 @@
     display: none;
   }
 
-  /* Results mode: the regions step aside and the flat list takes over. The two
-     lists are the same .stores-list, so a card carries the same 8px gap to its
-     neighbour whichever one it is sitting in.
+  /* Results mode: the regions step aside and the flat list takes over. Both are
+     the same .stores-list, so a card keeps the same 8px gap to its neighbour
+     whichever one it is sitting in.
 
-     This used to be done with display:contents over the region tree, to avoid
-     moving nodes. It doesn't hold up: a <details> still generates a box of its
-     own, so the cards never became children of one flex container. The gap
-     landed between regions instead of between cards, and the `order` used for
-     sorting was being set on elements that were not flex items, so it did
-     nothing at all. Moving the nodes is the honest version. */
+     The cards are moved rather than restyled in place. display:contents over the
+     region tree looked like the cheaper answer and isn't: a <details> still
+     generates a box, so the cards never become children of one flex container,
+     the gap lands between regions instead of between cards, and an `order` set
+     for sorting does nothing because the <li>s are not flex items. */
   .stores-panel[data-mode="results"] .stores-regions {
     display: none;
   }
@@ -539,9 +614,9 @@
     display: none;
   }
 
-  /* ── Desktop: the sheet becomes a floating card ───────────────────────────
-     From 1024 the map is a block in the page again (so the footer can follow
-     it) and the panel floats over its top-left corner at a fixed width. */
+  /* ── Desktop: the sheet becomes a rail ────────────────────────────────────
+     From 1024 the map is a block in the page again and the panel stops moving:
+     a fixed-width column down the left edge, square and flush. */
   @media (min-width: 1024px) {
     .stores-page {
       position: relative;

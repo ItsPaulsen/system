@@ -41,15 +41,15 @@
     <a class="skip-link" href="#stores-panel">Skip to content</a>
     <div data-chrome="topbar"></div>
 
-    <!-- Store finder: one map filling the page and one panel of stores over it.
-         The panel comes first in source so the keyboard reaches the search and
-         the store list before it reaches the map's pins; both are positioned, so
-         the order costs the layout nothing.
-         From 1024 the panel is a floating card pinned to the map's top-left and
-         the page footer sits below the map. Below 1024 the same panel becomes a
-         bottom sheet: the map shrinks to a peek strip behind it, the sheet owns
-         the scrolling, and the footer is dropped entirely (stores.css) because
-         there is no page scroll left to reach it with. -->
+    <!-- Store finder: one map filling the viewport and one panel of stores over
+         it. The panel comes first in source so the keyboard reaches the search
+         and the store list before the map's pins; both are positioned, so the
+         order costs the layout nothing.
+
+         From 1024 the panel is a rail flush to the left edge. Below it the same
+         panel is a bottom sheet over a map that shrinks to a peek strip. The
+         page has no footer at either width: nothing scrolls, so there would be
+         no way to reach one. -->
     <main class="ex stores-page" id="ex-main" tabindex="-1">
       <h1 class="sr-only">Stores</h1>
 
@@ -76,9 +76,8 @@
 
         <div class="stores-panel__body" data-scroll-area>
           <div class="scroll-area__viewport stores-panel__scroll">
-            <!-- Title, search and filters. One box on the desktop rail; on the
-                 sheet the wrapper goes display:contents so the search is a direct
-                 child of the scroller again and can stick for its whole length. -->
+            <!-- Title, search and filters as one box, on the surface the region
+                 accordions use. -->
             <div class="stores-head">
               <h2 class="stores-panel__title">Find a store</h2>
 
@@ -123,7 +122,7 @@
                     class="chip__input"
                     data-stores-nearest
                   />
-                  Nearest you
+                  Near me
                 </label>
                 <label class="chip chip--as-checkbox">
                   <input name="stores-open" type="checkbox" class="chip__input" data-stores-open />
@@ -162,7 +161,7 @@
                         data-type-label="Flagship"
                         data-open="true"
                         data-distance="1.2"
-                        data-address="Market Square 1, Old Town"
+                        data-city="Old Town"
                         data-phone="900 12 345"
                         data-email="oldtown@demo.example"
                         data-site="demo.example/old-town"
@@ -170,14 +169,27 @@
                         data-hours-sat="10:00 - 18:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Old Town</span>
-                          <span class="stores-card__city">Old Town</span>
+                          <span class="stores-card__address">Market Square 1</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 20:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -192,7 +204,7 @@
                         data-type-label="Standard"
                         data-open="true"
                         data-distance="2.4"
-                        data-address="Bridge Street 18, Midtown"
+                        data-city="Midtown"
                         data-phone="900 12 346"
                         data-email="midtown@demo.example"
                         data-site="demo.example/midtown"
@@ -200,14 +212,27 @@
                         data-hours-sat="10:00 - 17:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Midtown</span>
-                          <span class="stores-card__city">Midtown</span>
+                          <span class="stores-card__address">Bridge Street 18</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 19:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -222,7 +247,7 @@
                         data-type-label="Standard"
                         data-open="false"
                         data-distance="3.1"
-                        data-address="Pier Road 4, Harbour"
+                        data-city="Harbour"
                         data-phone="900 12 347"
                         data-email="harbour@demo.example"
                         data-site="demo.example/harbour"
@@ -230,14 +255,27 @@
                         data-hours-sat="11:00 - 16:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Harbour</span>
-                          <span class="stores-card__city">Harbour</span>
+                          <span class="stores-card__address">Pier Road 4</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
                             <span aria-hidden="true">·</span>
                             Opens Tue 11:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -267,7 +305,7 @@
                         data-type-label="Flagship"
                         data-open="true"
                         data-distance="4.6"
-                        data-address="Eastgate Park 7, Eastgate"
+                        data-city="Eastgate"
                         data-phone="900 12 348"
                         data-email="eastgate@demo.example"
                         data-site="demo.example/eastgate"
@@ -275,14 +313,27 @@
                         data-hours-sat="10:00 - 18:00"
                         data-hours-sun="12:00 - 16:00"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Eastgate</span>
-                          <span class="stores-card__city">Eastgate</span>
+                          <span class="stores-card__address">Eastgate Park 7</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 20:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -297,7 +348,7 @@
                         data-type-label="Standard"
                         data-open="true"
                         data-distance="5.0"
-                        data-address="Linden Avenue 22, Parkside"
+                        data-city="Parkside"
                         data-phone="900 12 349"
                         data-email="parkside@demo.example"
                         data-site="demo.example/parkside"
@@ -305,14 +356,27 @@
                         data-hours-sat="10:00 - 17:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Parkside</span>
-                          <span class="stores-card__city">Parkside</span>
+                          <span class="stores-card__address">Linden Avenue 22</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 19:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -327,7 +391,7 @@
                         data-type-label="Pickup point"
                         data-open="false"
                         data-distance="6.8"
-                        data-address="Elmwood Lane 3, Elmwood"
+                        data-city="Elmwood"
                         data-phone="900 12 350"
                         data-email="elmwood@demo.example"
                         data-site="demo.example/elmwood"
@@ -335,14 +399,27 @@
                         data-hours-sat="Closed"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Elmwood</span>
-                          <span class="stores-card__city">Elmwood</span>
+                          <span class="stores-card__address">Elmwood Lane 3</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
                             <span aria-hidden="true">·</span>
                             Opens Tue 08:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -372,7 +449,7 @@
                         data-type-label="Flagship"
                         data-open="true"
                         data-distance="7.4"
-                        data-address="Northgate Road 55, Northgate"
+                        data-city="Northgate"
                         data-phone="900 12 351"
                         data-email="northgate@demo.example"
                         data-site="demo.example/northgate"
@@ -380,14 +457,27 @@
                         data-hours-sat="10:00 - 18:00"
                         data-hours-sun="12:00 - 16:00"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Northgate</span>
-                          <span class="stores-card__city">Northgate</span>
+                          <span class="stores-card__address">Northgate Road 55</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 20:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -402,7 +492,7 @@
                         data-type-label="Standard"
                         data-open="false"
                         data-distance="6.2"
-                        data-address="Hillcrest Terrace 9, Hillcrest"
+                        data-city="Hillcrest"
                         data-phone="900 12 352"
                         data-email="hillcrest@demo.example"
                         data-site="demo.example/hillcrest"
@@ -410,14 +500,27 @@
                         data-hours-sat="Closed"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Hillcrest</span>
-                          <span class="stores-card__city">Hillcrest</span>
+                          <span class="stores-card__address">Hillcrest Terrace 9</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
                             <span aria-hidden="true">·</span>
                             Opens Tue 10:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -432,7 +535,7 @@
                         data-type-label="Pickup point"
                         data-open="true"
                         data-distance="9.1"
-                        data-address="Lakeview Walk 12, Lakeview"
+                        data-city="Lakeview"
                         data-phone="900 12 353"
                         data-email="lakeview@demo.example"
                         data-site="demo.example/lakeview"
@@ -440,14 +543,27 @@
                         data-hours-sat="10:00 - 14:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Lakeview</span>
-                          <span class="stores-card__city">Lakeview</span>
+                          <span class="stores-card__address">Lakeview Walk 12</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 16:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -477,7 +593,7 @@
                         data-type-label="Standard"
                         data-open="true"
                         data-distance="3.9"
-                        data-address="Southbank Quay 2, Southbank"
+                        data-city="Southbank"
                         data-phone="900 12 354"
                         data-email="southbank@demo.example"
                         data-site="demo.example/southbank"
@@ -485,14 +601,27 @@
                         data-hours-sat="10:00 - 17:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Southbank</span>
-                          <span class="stores-card__city">Southbank</span>
+                          <span class="stores-card__address">Southbank Quay 2</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 19:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -507,7 +636,7 @@
                         data-type-label="Pickup point"
                         data-open="false"
                         data-distance="8.3"
-                        data-address="Stonebridge Row 41, Stonebridge"
+                        data-city="Stonebridge"
                         data-phone="900 12 355"
                         data-email="stonebridge@demo.example"
                         data-site="demo.example/stonebridge"
@@ -515,14 +644,27 @@
                         data-hours-sat="Closed"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Stonebridge</span>
-                          <span class="stores-card__city">Stonebridge</span>
+                          <span class="stores-card__address">Stonebridge Row 41</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
                             <span aria-hidden="true">·</span>
                             Opens Tue 08:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -552,7 +694,7 @@
                         data-type-label="Flagship"
                         data-open="true"
                         data-distance="5.5"
-                        data-address="Westfield Green 30, Westfield"
+                        data-city="Westfield"
                         data-phone="900 12 356"
                         data-email="westfield@demo.example"
                         data-site="demo.example/westfield"
@@ -560,14 +702,27 @@
                         data-hours-sat="10:00 - 18:00"
                         data-hours-sun="12:00 - 16:00"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Westfield</span>
-                          <span class="stores-card__city">Westfield</span>
+                          <span class="stores-card__address">Westfield Green 30</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 20:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -582,7 +737,7 @@
                         data-type-label="Standard"
                         data-open="true"
                         data-distance="7.9"
-                        data-address="Riverside Path 6, Riverside"
+                        data-city="Riverside"
                         data-phone="900 12 357"
                         data-email="riverside@demo.example"
                         data-site="demo.example/riverside"
@@ -590,14 +745,27 @@
                         data-hours-sat="10:00 - 17:00"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Riverside</span>
-                          <span class="stores-card__city">Riverside</span>
+                          <span class="stores-card__address">Riverside Path 6</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
                             <span aria-hidden="true">·</span>
                             Closes 19:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>
@@ -612,7 +780,7 @@
                         data-type-label="Pickup point"
                         data-open="false"
                         data-distance="9.6"
-                        data-address="Greenfield Court 14, Greenfield"
+                        data-city="Greenfield"
                         data-phone="900 12 358"
                         data-email="greenfield@demo.example"
                         data-site="demo.example/greenfield"
@@ -620,14 +788,27 @@
                         data-hours-sat="Closed"
                         data-hours-sun="Closed"
                       >
-                        <span class="card__content stores-card__content">
+                        <span class="stores-card__content">
                           <span class="stores-card__name">Demo Greenfield</span>
-                          <span class="stores-card__city">Greenfield</span>
+                          <span class="stores-card__address">Greenfield Court 14</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
                             <span aria-hidden="true">·</span>
                             Opens Tue 08:00
                           </span>
+                        </span>
+                        <span class="stores-card__action" aria-hidden="true">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
                         </span>
                       </button>
                     </li>

@@ -21,7 +21,6 @@
   const nearest = panel.querySelector("[data-stores-nearest]");
   const openNow = panel.querySelector("[data-stores-open]");
   const count = panel.querySelector("[data-stores-count]");
-  const empty = panel.querySelector("[data-stores-empty]");
   const results = panel.querySelector("[data-stores-results]");
   const detail = panel.querySelector("[data-stores-detail]");
   const back = panel.querySelector("[data-stores-back]");
@@ -38,6 +37,7 @@
   // Leaflet comes off a CDN, so everything map-shaped is guarded: if the script
   // never arrives the panel is still a working store list.
   const markers = new Map();
+  let active = null; // store whose pin is open, and the only one shown while it is
   let lastFit = ""; // result set the map was last fitted to, so it isn't re-fitted for free
   let map = null;
   let tiles = null;
@@ -142,19 +142,39 @@
   const centreOn = (card, zoom) => {
     if (!map) return;
     const at = window.L.latLngBounds([latLng(card), latLng(card)]);
-    const opts = { ...padding(), maxZoom: zoom };
+    // Leaflet derives the flight time from the distance travelled, which on a
+    // jump across the map runs long enough to feel like waiting.
+    const opts = { ...padding(), maxZoom: zoom, duration: 0.6 };
     if (reduced.matches) map.fitBounds(at, { ...opts, animate: false });
     else map.flyToBounds(at, opts);
   };
 
   const pinOf = (card) => markers.get(card)?.getElement()?.firstElementChild;
 
+  // Which markers are on the map: the open store alone while one is open, so the
+  // map answers "where is this" instead of "where is everything"; otherwise
+  // whatever the filters left. Membership is touched only when it changes, since
+  // re-adding a layer rebuilds its icon and blinks the map.
+  const syncMarkers = () => {
+    if (!markers.size) return;
+    cards.forEach((card) => {
+      const marker = markers.get(card);
+      if (!marker) return;
+      const show = active ? card === active : !card.hidden;
+      const on = map.hasLayer(marker);
+      if (show && !on) marker.addTo(map);
+      else if (!show && on) marker.remove();
+    });
+  };
+
   const setActive = (card) => {
+    active = card;
     cards.forEach((c) => {
       const on = c === card;
       c.toggleAttribute("data-active", on);
       pinOf(c)?.classList.toggle("stores-pin--active", on);
     });
+    syncMarkers();
   };
 
   // ── Filtering ─────────────────────────────────────────────────────────────
@@ -203,30 +223,28 @@
       results.append(...order.map((card) => home.get(card).li));
     }
 
-    results.hidden = !filtered;
+    // Also hidden when nothing matched: an empty box is still 8px of white
+    // under the count line.
+    results.hidden = !filtered || shown.length === 0;
     panel.dataset.mode = filtered ? "results" : "regions";
-
-    empty.hidden = shown.length > 0;
 
     // Counted only for a search, where the number answers "did that find
     // anything". The chips don't need it: Near me sorts rather than filters, and
     // Open now leaves a list you can read the length of.
-    count.textContent = query
-      ? `${shown.length} ${shown.length === 1 ? "store" : "stores"} for "${search.value.trim()}"`
-      : "";
+    count.textContent = "";
+    if (query) {
+      // Built as nodes rather than a string: the term is whatever was typed, and
+      // it goes in as text, never as markup.
+      const term = document.createElement("strong");
+      term.className = "stores-panel__term";
+      term.textContent = search.value.trim();
+      count.append(`${shown.length} ${shown.length === 1 ? "result" : "results"} for "`, term, '"');
+    }
 
-    // Marker churn is what makes the map blink: re-adding a layer rebuilds its
-    // icon element and re-runs the tile fade. So each marker is only touched
-    // when its membership actually changes, and the map is only re-fitted when
-    // the result set itself is different from last time.
+    // The map is only re-fitted when the result set itself differs from last
+    // time, so typing doesn't re-frame it on every keystroke.
     if (markers.size) {
-      cards.forEach((card) => {
-        const marker = markers.get(card);
-        if (!marker) return;
-        const on = map.hasLayer(marker);
-        if (card.hidden && on) marker.remove();
-        else if (!card.hidden && !on) marker.addTo(map);
-      });
+      syncMarkers();
 
       const key = shown.map((card) => card.dataset.store).join(",");
       if (shown.length && key !== lastFit) {

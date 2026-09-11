@@ -70,9 +70,11 @@
      image marker: a filled circle with a rim that separates it from both the
      water and the land underneath. */
   .stores-pin {
-    /* 36 at rest, 44 hovered, 64 for the open one. Grown with a transform rather
-       than a width, so the pin keeps the centre Leaflet anchored it by; the
-       ratios are written out against the base so the three sizes stay readable. */
+    /* 40 at rest, 44 hovered, 64 for the open one, measured across the rim.
+       Grown with a transform rather than a width, so the pin keeps the centre
+       Leaflet anchored it by. The divisor is 40, not the 36 circle: the 2px rim
+       scales with everything else, so the outer size is what the ratios have to
+       be written against. */
     --stores-pin: 36px;
 
     display: grid;
@@ -113,24 +115,24 @@
      the pin does, so the two halves of the page point at each other. Declared
      before --active so the open pin keeps its own size while hovered. */
   .stores-pin--hover {
-    transform: scale(calc(44 / 36));
+    transform: scale(calc(44 / 40));
   }
 
   /* Leaflet positions the icon by its top-left, so growth has to come out of the
      centre or the pin walks off its coordinate. */
   .stores-pin--active {
     z-index: 1;
-    transform: scale(calc(64 / 36));
+    transform: scale(calc(64 / 40));
   }
 
   @media (hover: hover) and (pointer: fine) {
     .stores-pin:hover {
-      transform: scale(calc(44 / 36));
+      transform: scale(calc(44 / 40));
     }
 
     /* The open pin is already at its own size; hovering it doesn't shrink it. */
     .stores-pin--active:hover {
-      transform: scale(calc(64 / 36));
+      transform: scale(calc(64 / 40));
     }
   }
 
@@ -232,7 +234,11 @@
 
   .stores-panel__count {
     margin: 0;
-    color: var(--ink-secondary);
+
+    /* Nudged in so the line starts inside the radius of the boxes it sits
+       between, rather than against their outermost tangent. */
+    padding-inline: var(--space-8);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
   }
 
@@ -240,6 +246,10 @@
      stores.js has something to put in it. */
   .stores-panel__count:empty {
     display: none;
+  }
+
+  .stores-panel__term {
+    font-weight: var(--font-weight-semibold);
   }
 
   .stores-panel__body {
@@ -278,6 +288,11 @@
     border: 0;
   }
 
+  /* Same as the results box: 4 plus the last row's own 12 reads as 16. */
+  .stores-region > .accordion__body {
+    padding-bottom: var(--space-4);
+  }
+
   /* Same treatment the product page gives its detail rows: 16 rather than the
      panel's 18, and the toggle as a plain mark instead of the component's
      soft-primary disc, which is the loudest thing in a list this quiet.
@@ -302,12 +317,16 @@
     animation: none;
   }
 
+  /* Ruled rows, not a stack of cards: fourteen boxes would say these are
+     fourteen separable objects, and they're lines in one list. The list carries
+     the opening rule and each row the one under it, so the set is closed at both
+     ends. */
   .stores-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
     margin: 0;
     padding: 0;
+    border-top: var(--border-width) solid var(--fill-tertiary);
     list-style: none;
   }
 
@@ -327,15 +346,12 @@
        padding of their own. .card__content is off the content span on purpose:
        it exists to supply 20px of padding, which is the one thing this row
        doesn't want. */
-    padding: var(--space-12);
-    box-shadow: inset 0 0 0 var(--border-width) var(--fill-tertiary);
 
-    /* .card eases its background only, so the rim would snap while the chevron
-       faded. Kept here rather than on .card: no other card animates a rim, and
-       some carry a real shadow that shouldn't move. */
-    transition:
-      background var(--motion-default),
-      box-shadow var(--motion-default);
+    /* Inline padding sits on the box, not the row, so the rules span the box's
+       full inner width and every row's text starts on the box's own inset. */
+    padding: var(--space-12) 0;
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+    border-radius: 0;
   }
 
   /* Rows in a tight list, so the ring goes inside the card rather than 2px
@@ -347,6 +363,10 @@
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: -3px;
     animation: none;
+  }
+
+  .stores-list > li:last-child > button.stores-card {
+    border-bottom: 0;
   }
 
   .stores-card__content {
@@ -373,12 +393,12 @@
      next to the open card's rim. The chevron carries it instead. Guarded by the
      hover query so a touch screen can't leave either stuck on. Pressed keeps the
      component's own surface, since that one is feedback for an actual click. */
+
+  /* Hover is the chevron only. .card's surface tint fills a flush row edge to
+     edge, which lands as a grey block across the box. */
   @media (hover: hover) and (pointer: fine) {
     button.stores-card:not(:disabled):hover {
-      /* One step up the same fill ladder (0.12 to 0.2), still a hairline, so it
-         reads as "this row" without approaching the open card's 2px rim. */
       background: var(--background-secondary);
-      box-shadow: inset 0 0 0 var(--border-width) var(--fill-secondary);
     }
 
     .stores-card:hover .stores-card__action {
@@ -407,10 +427,10 @@
     color: var(--green);
   }
 
-  /* The card matching the open pin. A rim rather than a fill, so the row still
-     reads as a card and the hover background stays available. */
+  /* The row matching the open pin. A tint now the rim is gone: a 2px rim on a
+     flush row would draw the box back around it. */
   .stores-card[data-active] {
-    box-shadow: inset 0 0 0 2px var(--primary);
+    background: var(--accent-soft);
   }
 
   /* Opening a region shifts every card below it, and those cards slide under a
@@ -420,18 +440,6 @@
      the hover without touching the state itself. */
   .stores-panel[data-settling] .stores-card {
     pointer-events: none;
-  }
-
-  .stores-empty {
-    padding-block: var(--space-48);
-  }
-
-  /* .empty sets display:flex, which outranks the hidden attribute, so hiding it
-     has to be said out loud. Without this the "no stores here" copy sits under
-     the collapsed regions on first load, where there is nothing empty about the
-     list at all. */
-  .stores-empty[hidden] {
-    display: none;
   }
 
   /* Results mode: the regions step aside and the flat list takes over. Both are
@@ -445,6 +453,20 @@
      for sorting does nothing because the <li>s are not flex items. */
   .stores-panel[data-mode="results"] .stores-regions {
     display: none;
+  }
+
+  /* The results list is a region box without a header: same surface, same radius,
+     same inset. A card then sits on white wherever it is, so its rim separates
+     it in both modes rather than the rim doing the work in one and the backdrop
+     contrast in the other, which made the same card read as two. */
+  .stores-results {
+    /* 4 rather than 16: with the row's own 12 the effective inset is 16, the same
+       as the sides. No opening rule either, there is no header here for one to
+       separate from. */
+    padding: var(--space-4) var(--space-16);
+    border-top: 0;
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
   }
 
   .stores-results[hidden] {

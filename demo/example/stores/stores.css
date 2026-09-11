@@ -1,0 +1,615 @@
+/* Store finder: a full-bleed map with one panel of stores over it.
+
+   The panel is a single node in both layouts. Below 1024 it is a bottom sheet
+   sitting on the map, dragged between three snap points by stores.js; from 1024
+   the same node becomes a floating card pinned to the map's top-left. Nothing is
+   relocated or rebuilt across the breakpoint, only positioned differently.
+
+   Mobile is the base here, so the sheet rules come first and the desktop panel
+   is the min-width override. */
+
+/* Layered so component CSS stays overridable by specificity, not by an
+   unlayered sheet outranking every layer. Same as shop.css. */
+@layer components {
+  .stores-page {
+    /* Panel width at the desktop tier, and the inset it floats by. One place so
+       the map's zoom control and the panel can't drift apart. */
+    --stores-panel-w: 400px;
+    --stores-inset: var(--space-16);
+
+    /* Snap offset, in px, written by stores.js. The 22% start is what the sheet
+       renders at before JS measures: roughly the map strip in the mock, so the
+       first paint isn't a full-height sheet that then jumps down. */
+    --sheet-y: 22%;
+
+    display: block;
+    padding: 0;
+    gap: 0;
+    background-color: var(--stores-ground); /* not .ex's white, see .stores-body */
+    background-image: none; /* no .ex dot grid, the map is the surface */
+  }
+
+  /* The map fills the viewport at every width and the panel scrolls inside
+     itself, so the document never scrolls: on mobile a page scrolling behind a
+     fixed sheet just drags the topbar away, and on desktop it would carry the
+     floating panel up over the sticky header. That is also why the page has no
+     footer at all (the placeholder is left out of index.html) rather than one
+     hidden below 1024: there is no scroll to reach it with either way. */
+  .stores-body {
+    /* The basemap's own ground colour, sampled off the tiles rather than taken
+       from a surface token: it is what shows while the first tiles are still in
+       flight. Set on the body so the very first paint is already map-coloured
+       instead of the .ex surface's white. Raw values on purpose, they track
+       Esri's canvas styles, not our palette. */
+    --stores-ground: #efefef;
+
+    overflow: hidden;
+    background: var(--stores-ground);
+  }
+
+  /* ── Map ──────────────────────────────────────────────────────────────────
+     Fixed behind the sheet and sized to the viewport below the topbar, so the
+     sheet slides over a map that never moves. */
+  .stores-map {
+    position: fixed;
+    inset: var(--ex-topbar-h) 0 0;
+    z-index: 0;
+    background: var(--stores-ground);
+  }
+
+  .stores-map__canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  :root[data-theme="dark"] .stores-body {
+    --stores-ground: #474749;
+  }
+
+  /* Pin. A divIcon, so it is our markup and our tokens rather than Leaflet's
+     image marker: a filled circle with a rim that separates it from both the
+     water and the land underneath. */
+  .stores-pin {
+    /* 36 at rest, 44 hovered, 64 for the open one. Grown with a transform rather
+       than a width, so the pin keeps the centre Leaflet anchored it by; the
+       ratios are written out against the base so the three sizes stay readable. */
+    --stores-pin: 36px;
+
+    display: grid;
+    place-items: center;
+    width: var(--stores-pin);
+    height: var(--stores-pin);
+    border-radius: var(--radius-full);
+
+    /* Fill is the foreground role, so the pin lifts to a light tint on the dark
+       stage instead of staying a dark violet on a dark map.
+
+       The dot is derived from that fill rather than taken from --accent-on:
+       --accent-on answers "what reads on --accent", and the fill here is
+       --accent-foreground, which in dark is a different colour entirely. Same
+       formula, pointed at the fill actually used, so the dot lands white on the
+       light theme's dark violet and black on the dark theme's light tint.
+
+       The rim stays the theme surface in both: it is what separates the pin
+       from the map, and it reads as a rim either way. */
+    --stores-pin-fill: var(--accent-foreground);
+
+    background: var(--stores-pin-fill);
+    box-shadow:
+      0 0 0 2px var(--background-secondary),
+      0 2px 8px 0 color-mix(in oklab, var(--neutral-black) 30%, transparent);
+    color: oklch(from var(--stores-pin-fill) clamp(0, round(1.15 - l), 1) 0 h);
+    transition: transform var(--motion-default);
+  }
+
+  .stores-pin__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: currentcolor;
+  }
+
+  /* Leaflet positions the icon by its top-left, so growth has to come out of the
+     centre or the pin walks off its coordinate. */
+  .stores-pin--active {
+    z-index: 1;
+    transform: scale(calc(64 / 36));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .stores-pin:hover {
+      transform: scale(calc(44 / 36));
+    }
+
+    /* The open pin is already at its own size; hovering it doesn't shrink it. */
+    .stores-pin--active:hover {
+      transform: scale(calc(64 / 36));
+    }
+  }
+
+  /* Zoom pair. Not on the sheet tier at all: down there the sheet covers the
+     bottom of the map, pinch already zooms, and the mock has no buttons either.
+     It comes back as the desktop override below. */
+  .stores-map__zoom {
+    display: none;
+  }
+
+  .stores-map__zoom-button {
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ── Panel, as a sheet ────────────────────────────────────────────────────
+     Full height under the topbar and pushed back down by the snap offset, so
+     "open the sheet" is one transform and the content never re-lays out. */
+  .stores-panel {
+    position: fixed;
+    inset: var(--ex-topbar-h) 0 0;
+    z-index: 401; /* above Leaflet's panes, and above the topbar for the overdrag */
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: var(--background-primary);
+    box-shadow: var(--shadow-md);
+
+    /* Over the topbar (z-index 20), not under it: an overdrag lifts the sheet
+       past its own top edge and it has to stay visible while it does. Nothing
+       scrolls on this page, so it never meets the header anywhere else.
+
+       No transition: the offset is driven frame by frame by the spring in
+       stores.js, and a transition on top of that would fight it. */
+    transform: translate3d(0, var(--sheet-y), 0);
+  }
+
+  .stores-panel:focus-visible {
+    outline: none;
+  }
+
+  /* Grab handle: a real button, so the sheet can be moved from the keyboard
+     (arrows step through the snaps, Enter toggles full/mid). Its hit area is the
+     full row; only the bar is drawn. */
+  .stores-panel__grab {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: transparent;
+    cursor: grab;
+    touch-action: none; /* the drag is ours, not the browser's scroll */
+  }
+
+  .stores-panel__grab:active {
+    cursor: grabbing;
+  }
+
+  .stores-panel__grab-bar {
+    width: 40px;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--fill-secondary);
+  }
+
+  /* The sheet's own grab handle already says what this panel is, and the page
+     title sits right above it, so a second title here says nothing. It comes
+     back with the desktop card, which has neither. */
+  .stores-panel__title {
+    display: none;
+    margin: 0;
+    font-size: var(--font-body-large-emphasized-size);
+    font-weight: var(--font-body-large-emphasized-weight);
+    line-height: var(--font-body-large-emphasized-lh);
+  }
+
+  /* The search is the one thing that stays put while the list scrolls, so it is
+     a direct child of the scroller: nested inside a wrapper, sticky would stop
+     at that wrapper's bottom edge and come unstuck as soon as the chips left.
+     The negative margin bleeds its background to the panel edges, and its own
+     block padding is what keeps the focus ring clear of the scroller's top. */
+  .stores-search {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin-inline: calc(-1 * var(--space-16));
+    padding: var(--space-8) var(--space-16);
+    background: var(--background-primary);
+  }
+
+  /* data-size="sm" on the row is what puts the chips on the 32 step, with the
+     8px inline padding that comes with that rung. The pill is the one thing the
+     Chip doesn't carry (it rests at --radius-sm), and a pill needs more room at
+     the ends than a rounded rect does, so the padding steps up to the next rung
+     on the same ladder (md's 12) rather than to a number off it. */
+  .stores-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+
+  .stores-filters .chip {
+    --chip-px: 12px; /* md's rung, on sm's height */
+
+    border-radius: var(--radius-full);
+  }
+
+  .stores-panel__count {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
+
+  /* Empty count line would still take a row of space, so it only exists once
+     stores.js has something to put in it. */
+  .stores-panel__count:empty {
+    display: none;
+  }
+
+  .stores-panel__body {
+    position: relative;
+    flex: 1;
+    min-height: 0; /* let the viewport scroll instead of stretching the sheet */
+  }
+
+  /* One scroller for the whole panel, head included, so nothing is pinned above
+     it and the first card's focus ring has no fixed block to disappear behind.
+     It owns the column rhythm too, since the head's wrapper is gone. */
+  .stores-panel__scroll {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    height: 100%;
+    padding: 0 var(--space-16) var(--space-32);
+    overflow-y: auto;
+    overscroll-behavior: contain; /* the page behind must not take over the fling */
+  }
+
+  /* ── Regions and results ──────────────────────────────────────────────────
+     One tree, two readings. In regions mode it is the Accordion it looks like;
+     in results mode the summaries go and every body is forced open, so a search
+     flattens the list without moving a node. */
+  .stores-regions {
+    border: 0;
+  }
+
+  .stores-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stores-card {
+    width: 100%;
+    box-shadow: inset 0 0 0 var(--border-width) var(--fill-tertiary);
+    text-align: left;
+  }
+
+  .stores-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-16);
+  }
+
+  .stores-card__name {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: var(--font-body-small-emphasized-lh);
+  }
+
+  .stores-card__city,
+  .stores-card__status {
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+  }
+
+  .stores-card__state {
+    color: var(--ink-primary);
+  }
+
+  .stores-card__state--open {
+    color: var(--green);
+  }
+
+  /* The card matching the open pin. A rim rather than a fill, so the row still
+     reads as a card and the hover background stays available. */
+  .stores-card[data-active] {
+    box-shadow: inset 0 0 0 2px var(--primary);
+  }
+
+  /* Opening a region shifts every card below it, and those cards slide under a
+     stationary cursor. Each one picks up .card's hover background on the way
+     past and fades it back out, which reads as a highlight sweeping down the
+     list. Taking the cards out of hit-testing while the layout settles removes
+     the hover without touching the state itself. */
+  .stores-panel[data-settling] .stores-card {
+    pointer-events: none;
+  }
+
+  .stores-empty {
+    padding-block: var(--space-48);
+  }
+
+  /* .empty sets display:flex, which outranks the hidden attribute, so hiding it
+     has to be said out loud. Without this the "no stores here" copy sits under
+     the collapsed regions on first load, where there is nothing empty about the
+     list at all. */
+  .stores-empty[hidden] {
+    display: none;
+  }
+
+  /* Results mode: the regions step aside and the flat list takes over. The two
+     lists are the same .stores-list, so a card carries the same 8px gap to its
+     neighbour whichever one it is sitting in.
+
+     This used to be done with display:contents over the region tree, to avoid
+     moving nodes. It doesn't hold up: a <details> still generates a box of its
+     own, so the cards never became children of one flex container. The gap
+     landed between regions instead of between cards, and the `order` used for
+     sorting was being set on elements that were not flex items, so it did
+     nothing at all. Moving the nodes is the honest version. */
+  .stores-panel[data-mode="results"] .stores-regions {
+    display: none;
+  }
+
+  .stores-results[hidden] {
+    display: none; /* .stores-list sets display, which outranks the attribute */
+  }
+
+  /* ── Detail ───────────────────────────────────────────────────────────────
+     Replaces the head and the list rather than covering them, so the sheet keeps
+     one scroll container and Back returns to exactly where the list was. */
+  .stores-detail {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .stores-detail__scroll {
+    flex: 1;
+    min-height: 0;
+    padding: var(--space-8) var(--space-16) var(--space-32);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .stores-detail__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .stores-detail__name {
+    margin: var(--space-16) 0 var(--space-4);
+    font-size: var(--font-title-small-size);
+    font-weight: var(--font-title-small-weight);
+    line-height: var(--font-title-small-lh);
+  }
+
+  .stores-detail__name:focus-visible {
+    outline: none;
+  }
+
+  .stores-detail__address,
+  .stores-detail__type {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
+
+  .stores-detail__type {
+    margin-top: var(--space-4);
+  }
+
+  .stores-detail__hours {
+    margin-top: var(--space-24);
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .stores-detail__hours-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding-block: var(--space-16);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .stores-detail__hours-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .stores-detail__hours-summary:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  .stores-detail__hours-label {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .stores-detail__hours-now {
+    flex: 1;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
+
+  .stores-detail__hours-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    transition: transform var(--motion-default);
+  }
+
+  .stores-detail__hours[open] .stores-detail__hours-chevron {
+    transform: rotate(180deg);
+  }
+
+  .stores-detail__hours-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4) var(--space-16);
+    margin: 0 0 var(--space-16);
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+  }
+
+  .stores-detail__hours-list dt {
+    color: var(--ink-primary);
+  }
+
+  .stores-detail__hours-list dd {
+    margin: 0;
+  }
+
+  .stores-detail__rows {
+    margin: 0;
+  }
+
+  .stores-detail__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding-block: var(--space-16);
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .stores-detail__row:first-child {
+    border-top: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  .stores-detail__row dt {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  .stores-detail__row dd {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+  }
+
+  .stores-detail__cta {
+    width: 100%;
+    margin-top: var(--space-24);
+  }
+
+  /* Mode switch. Both halves are display rules, so both sides need stating: the
+     hidden attribute alone would lose to .stores-detail's own display:flex. */
+  .stores-panel[data-mode="detail"] .stores-panel__body {
+    display: none;
+  }
+
+  .stores-panel:not([data-mode="detail"]) .stores-detail {
+    display: none;
+  }
+
+  /* ── Desktop: the sheet becomes a floating card ───────────────────────────
+     From 1024 the map is a block in the page again (so the footer can follow
+     it) and the panel floats over its top-left corner at a fixed width. */
+  @media (min-width: 1024px) {
+    .stores-page {
+      position: relative;
+    }
+
+    .stores-map {
+      position: relative;
+      inset: auto;
+      height: calc(100dvh - var(--ex-topbar-h));
+    }
+
+    /* Bottom-right, lifted clear of Leaflet's attribution row (which owns that
+       same corner) rather than fighting it for the space. Stacked rather than
+       joined so each button is the Button component untouched. */
+    .stores-map__zoom {
+      position: absolute;
+      right: var(--stores-inset);
+      bottom: calc(var(--stores-inset) + 28px);
+      z-index: 400; /* over Leaflet's own panes */
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    .stores-panel {
+      position: absolute;
+      inset: var(--stores-inset) auto var(--stores-inset) var(--stores-inset);
+      width: var(--stores-panel-w);
+      border-radius: var(--radius-lg);
+      transform: none;
+    }
+
+    .stores-panel__grab {
+      display: none;
+    }
+
+    .stores-panel__title {
+      display: block;
+    }
+
+    /* No sticky on the card: the panel is tall enough here that pinning the
+       field only costs list. */
+    .stores-search {
+      position: static;
+      margin-inline: 0;
+      padding: 0;
+      background: none;
+    }
+
+    .stores-panel__scroll,
+    .stores-detail__scroll {
+      padding-inline: var(--space-24);
+    }
+
+    .stores-panel__scroll {
+      padding-top: var(--space-24);
+    }
+
+    .stores-detail__scroll {
+      padding-top: var(--space-24);
+    }
+  }
+
+  /* A sheet that snaps instantly still communicates the move; what it must not
+     do is slide 600px under someone who asked it not to. */
+  @media (prefers-reduced-motion: reduce) {
+    .stores-pin {
+      transition: none;
+    }
+  }
+}
+
+/* Leaflet's stylesheet is an unlayered <link>, and unlayered CSS outranks every
+   layer, so these overrides have to sit outside @layer components too. In the
+   layer they lose silently: .leaflet-container kept Leaflet's own #ddd, which is
+   the grey the map faded up from on load.
+
+   Kept to the minimum: the container's type and ground, and the attribution,
+   which the tile terms require so it is styled rather than hidden. */
+.leaflet-container {
+  font: inherit;
+  background: var(--stores-ground);
+}
+
+.leaflet-container a {
+  color: var(--ink-secondary);
+}
+
+.leaflet-control-attribution {
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--background-secondary) 82%, transparent);
+  color: var(--ink-tertiary);
+  font-size: var(--font-caption-small-size);
+  line-height: 1.8;
+}

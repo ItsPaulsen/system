@@ -82,6 +82,9 @@ export default function Select({
   // changed since); while the list is up, arrow keys own the highlight.
   useEffect(() => {
     if (open) setActive(Math.max(0, options.indexOf(selected)));
+    // options/selected are read on open, not tracked: listing them would move
+    // the highlight off the key the user just arrowed to.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // The list is portaled to <body> so it escapes clipping ancestors, positioned

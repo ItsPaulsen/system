@@ -296,7 +296,9 @@
           <p class="section-note">
             Optional dirty guard. Add <code>data-dirty-guard</code> to any form and its submit stays
             disabled until a field differs from its default, then reverts on the dialog's close. The
-            submit can live outside the form (associated via <code>form=</code>).
+            submit can live outside the form (associated via <code>form=</code>). Vanilla only, the
+            React <code>Dialog</code> has no dirty guard; compare your own values and set
+            <code>disabled</code>.
           </p>
           <div data-source="/assets/app.js" data-fn="initDirtyForms"></div>
         </section>

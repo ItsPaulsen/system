@@ -325,7 +325,7 @@ const PROJECT_PAGES = {
         { label: "Popover", href: "/demo/components/popover/" },
         { label: "Progress", href: "/demo/components/progress/" },
         { label: "Radio Group", href: "/demo/components/radio/" },
-        { label: "Scroll Area", href: "/demo/components/scroll-area/", new: true },
+        { label: "Scroll Area", href: "/demo/components/scroll-area/" },
         { label: "Select", href: "/demo/components/select/" },
         { label: "Separator", href: "/demo/components/separator/" },
         { label: "Sheet", href: "/demo/components/sheet/" },

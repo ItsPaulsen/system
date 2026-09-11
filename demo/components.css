@@ -221,6 +221,13 @@
   .checkbox__input:disabled,
   .radio__input:disabled {
     cursor: not-allowed;
+  }
+
+  /* Dimmed as a unit. The tick is the input's sibling, not its child, so halving
+   the input alone washes the fill out from under a tick that stays pure white:
+   a disabled checked box came up empty. Dimming the shared cell keeps the two
+   in proportion, so the tick reads against its fill at any opacity. */
+  .checkbox__box:has(.checkbox__input:disabled:checked) {
     opacity: 0.5;
   }
 
@@ -237,6 +244,10 @@
     border-width: 6px;
   }
 
+  .radio__input:disabled:checked {
+    opacity: 0.5;
+  }
+
   /* Disabled and empty: a pale fill takes over from the outline. Opacity alone
    leaves a border-only box as a barely-there outline on a recessed surface,
    where a body still reads as a control that isn't available. Deliberately off
@@ -247,10 +258,6 @@
   .radio__input:disabled:not(:checked) {
     background: var(--fill-secondary);
     border-color: transparent;
-
-    /* The fill is the dimming here, so drop the shared 0.5: halving a pale fill
-     leaves the box nearly gone, which is the problem it solves. */
-    opacity: 1;
   }
 
   /* Dark theme: the deep-violet --primary reads as a muddy fill on a dark

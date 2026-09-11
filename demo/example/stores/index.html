@@ -841,7 +841,11 @@
              the panel never holds fourteen copies of this. -->
         <div class="stores-detail" data-stores-detail hidden>
           <div class="stores-detail__scroll" data-stores-detail-scroll>
-            <button class="link stores-detail__back" type="button" data-stores-back>
+            <button
+              class="button button--flat button--with-start-icon stores-detail__back"
+              type="button"
+              data-stores-back
+            >
               <svg
                 viewBox="0 0 24 24"
                 width="20"
@@ -862,24 +866,27 @@
 
             <h2 class="stores-detail__name" data-detail-name tabindex="-1">Store</h2>
             <p class="stores-detail__address" data-detail-address></p>
-            <p class="stores-detail__type" data-detail-type></p>
 
             <details class="stores-detail__hours">
               <summary class="stores-detail__hours-summary">
-                <span class="stores-detail__hours-label">Opening hours</span>
-                <span class="stores-detail__hours-now" data-detail-status></span>
-                <svg
-                  class="stores-detail__hours-chevron"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6l6 -6" />
-                </svg>
+                <span class="stores-detail__hours-text">
+                  <span class="stores-detail__hours-label">Opening hours</span>
+                  <span class="stores-detail__hours-line">
+                    <span class="stores-detail__hours-now" data-detail-status></span>
+                    <svg
+                      class="stores-detail__hours-chevron"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </span>
+                </span>
               </summary>
               <dl class="stores-detail__hours-list" data-detail-hours></dl>
             </details>

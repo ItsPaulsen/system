@@ -309,22 +309,41 @@
       "[data-detail-address]",
       `${card.querySelector(".stores-card__address").textContent.trim()}, ${d.city}`
     );
-    fill("[data-detail-type]", d.typeLabel);
-    fill("[data-detail-status]", card.querySelector(".stores-card__status").textContent.trim());
+    // Cloned rather than copied as text, so the open/closed word keeps the colour
+    // it carries in the list. What follows the state word is bundled into one
+    // span so the CSS can drop it while the list is open.
+    const status = card.querySelector(".stores-card__status").cloneNode(true);
+    const state = status.querySelector(".stores-card__state");
+    const rest = document.createElement("span");
+    rest.className = "stores-detail__hours-rest";
+    for (let node = state.nextSibling; node;) {
+      const next = node.nextSibling;
+      rest.append(node);
+      node = next;
+    }
+    detail.querySelector("[data-detail-status]").replaceChildren(state, rest);
+
+    // Seven rows starting at today and wrapping round, today set in the emphasized
+    // weight: the row you want is the one you're standing on, and a fixed Mon-Sun
+    // list makes you find it.
+    const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const hoursFor = (i) => (i === 6 ? d.hoursSat : i === 0 ? d.hoursSun : d.hoursWeekday);
+    const today = new Date().getDay();
 
     const hours = detail.querySelector("[data-detail-hours]");
     hours.textContent = "";
-    [
-      ["Mon - Fri", d.hoursWeekday],
-      ["Saturday", d.hoursSat],
-      ["Sunday", d.hoursSun]
-    ].forEach(([day, value]) => {
+    for (let n = 0; n < 7; n += 1) {
+      const i = (today + n) % 7;
       const dt = document.createElement("dt");
-      dt.textContent = day;
+      dt.textContent = DAYS[i];
       const dd = document.createElement("dd");
-      dd.textContent = value;
+      dd.textContent = hoursFor(i);
+      if (n === 0) {
+        dt.className = "stores-detail__today";
+        dd.className = "stores-detail__today";
+      }
       hours.append(dt, dd);
-    });
+    }
 
     const site = detail.querySelector("[data-detail-site]");
     site.textContent = d.site;

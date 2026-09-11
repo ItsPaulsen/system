@@ -390,7 +390,7 @@
   .stores-card__action {
     display: flex;
     flex: none;
-    color: var(--ink-tertiary);
+    color: var(--ink-secondary);
   }
 
   .stores-card__action svg {
@@ -430,7 +430,7 @@
   }
 
   .stores-card__state {
-    color: var(--ink-primary);
+    color: var(--red);
   }
 
   .stores-card__state--open {
@@ -510,15 +510,25 @@
     outline: none;
   }
 
+  /* The Button's flat skin rather than a link: this is the control you leave by,
+     and it behaves like a button. Pulled left by its own inline padding so the
+     label still starts on the panel's content edge. */
   .stores-detail__back {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-    padding: 0;
-    border: 0;
+    align-self: flex-start;
+    margin-inline-start: calc(-1 * var(--button-px));
+    color: var(--primary-foreground);
+  }
+
+  /* No plate behind it: the label and arrow carry the states themselves, so the
+     control stays as quiet as the text it sits above. */
+  .stores-detail__back:not(:disabled):hover {
     background: none;
-    cursor: pointer;
-    font: inherit;
+    color: var(--primary-foreground-hover);
+  }
+
+  .stores-detail__back:not(:disabled):active {
+    background: none;
+    color: var(--primary-foreground-active);
   }
 
   .stores-detail__name {
@@ -532,15 +542,10 @@
     outline: none;
   }
 
-  .stores-detail__address,
-  .stores-detail__type {
+  .stores-detail__address {
     margin: 0;
     color: var(--ink-secondary);
     font-size: var(--font-body-small-size);
-  }
-
-  .stores-detail__type {
-    margin-top: var(--space-4);
   }
 
   .stores-detail__hours {
@@ -552,7 +557,10 @@
     display: flex;
     align-items: center;
     gap: var(--space-8);
-    padding-block: var(--space-16);
+
+    /* 12 below, matching the list's row gap, so the first day is spaced off the
+       summary the same as every day is off the one before it. */
+    padding-block: var(--space-16) var(--space-12);
     cursor: pointer;
     list-style: none;
   }
@@ -566,22 +574,43 @@
     outline-offset: var(--focus-ring-offset);
   }
 
+  /* Label over value, the same shape the website/phone/e-mail rows below use, so
+     the hours read as one more field rather than a control with a caption. */
+  .stores-detail__hours-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
   .stores-detail__hours-label {
     font-size: var(--font-body-small-emphasized-size);
     font-weight: var(--font-body-small-emphasized-weight);
   }
 
+  /* The chevron sits on the status line, right after the words, rather than
+     centred against the two-line block. */
+  .stores-detail__hours-line {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
   .stores-detail__hours-now {
-    flex: 1;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
+  }
+
+  /* Open, the list below answers "until when", so the summary keeps only the
+     state word. */
+  .stores-detail__hours[open] .stores-detail__hours-rest {
+    display: none;
   }
 
   .stores-detail__hours-chevron {
     flex-shrink: 0;
     width: 20px;
     height: 20px;
-    transition: transform var(--motion-default);
+    color: var(--ink-secondary);
   }
 
   .stores-detail__hours[open] .stores-detail__hours-chevron {
@@ -591,18 +620,33 @@
   .stores-detail__hours-list {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-4) var(--space-16);
+    gap: var(--space-12) var(--space-16);
     margin: 0 0 var(--space-16);
-    color: var(--ink-secondary);
-    font-size: var(--font-body-small-size);
-  }
-
-  .stores-detail__hours-list dt {
     color: var(--ink-primary);
+    font-size: var(--font-body-small-size);
   }
 
   .stores-detail__hours-list dd {
     margin: 0;
+  }
+
+  .stores-detail__today {
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  /* Field values rest at the brand colour and shift within it, the same three
+     states Back uses. .link's own hover moves from ink to brand, which is a
+     change of kind rather than feedback, and these already start there. */
+  .stores-detail__row .link {
+    color: var(--primary-foreground);
+  }
+
+  .stores-detail__row .link:hover {
+    color: var(--primary-foreground-hover);
+  }
+
+  .stores-detail__row .link:active {
+    color: var(--primary-foreground-active);
   }
 
   .stores-detail__rows {

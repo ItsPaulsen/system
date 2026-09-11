@@ -3149,9 +3149,12 @@
     transition: color var(--motion-default);
   }
 
+  /* The base foreground, not the -hover variant: this link rests at --ink-primary,
+     so hover is the move to the brand colour itself. The -hover tokens are for
+     something already sitting at the brand, shifting from there. */
   @media (hover: hover) and (pointer: fine) {
     .link:hover {
-      color: var(--primary-foreground-hover);
+      color: var(--primary-foreground);
     }
   }
 

@@ -1298,20 +1298,22 @@
     }
   }
 
-  /* lg ≥1024, taller header with more gutter and the larger brand. */
+  /* lg ≥1024, taller header with more gutter and the larger brand. The height
+     goes through --ex-topbar-h like the other tiers do: anything measuring the
+     header off the token (scroll-margin, --ex-rail-top, the map page's
+     full-height map) was 8px short here while this was hardcoded. */
   @media (min-width: 1024px) {
+    :root {
+      --ex-topbar-h: 80px;
+    }
+
     .ex-topbar {
-      height: 80px;
       padding-inline: 32px;
     }
 
     .ex-topbar__brand {
       width: calc(24px * 90 / 25);
       height: 24px;
-    }
-
-    .ex-menu__head {
-      height: 80px;
     }
   }
 

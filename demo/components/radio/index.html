@@ -143,6 +143,43 @@
         </section>
 
         <section class="preview-block">
+          <h2 class="subhead">Group hint</h2>
+          <p class="section-note">
+            Guidance for the whole group, before anything has gone wrong: a
+            <code>radio-group__hint</code> named by the group's <code>aria-describedby</code>. An
+            error replaces it rather than stacking under it, so only one message is ever read out.
+          </p>
+          <div class="example" data-example>
+            <div class="component-preview">
+              <div
+                class="radio-group"
+                role="radiogroup"
+                aria-label="Billing period"
+                aria-describedby="radio-billing-hint"
+              >
+                <label class="radio">
+                  <input type="radio" name="billing" class="radio__input" />
+                  <span class="radio__label">Monthly</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="billing" class="radio__input" />
+                  <span class="radio__label">Yearly</span>
+                </label>
+                <span class="radio-group__hint" id="radio-billing-hint">
+                  Yearly is billed once and works out cheaper.
+                </span>
+              </div>
+            </div>
+            <script type="text/plain" class="example__react">
+              <RadioGroup label="Billing period" hint="Yearly is billed once and works out cheaper.">
+                <Radio name="billing">Monthly</Radio>
+                <Radio name="billing">Yearly</Radio>
+              </RadioGroup>
+            </script>
+          </div>
+        </section>
+
+        <section class="preview-block">
           <h2 class="subhead">Group error</h2>
           <p class="section-note">
             The error belongs to the whole group, not one option: put

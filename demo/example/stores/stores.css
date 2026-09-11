@@ -583,9 +583,18 @@
      directly above is already the top spacing, so the row's own would double it.
      The rail has no handle, so it takes the taller row (below). */
   .stores-detail__head {
+    /* Pinned: the detail can run long, and the way out shouldn't be something you
+       scroll back up to find. Bleeds to the scroller's edges so the content
+       passes under a full-width surface rather than beside it. */
+    position: sticky;
+    top: 0;
+    z-index: 1;
     display: flex;
     align-items: center;
     height: var(--button-size, 48px);
+    margin-inline: calc(-1 * var(--space-16));
+    padding-inline: var(--space-16);
+    background: var(--background-primary);
   }
 
   .stores-detail__back {

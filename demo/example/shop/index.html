@@ -59,7 +59,7 @@
            2xl surface. The page opts into the 2xl width via data-width on <html>,
            which is what puts five products across at the widest tier. -->
       <section class="shop" aria-label="Products">
-        <div class="shop__inner">
+        <div class="shop__inner" data-ex-filter-rail>
           <!-- Filter rail: price range plus collapsible option groups. Same rail as the
                blog listing: from 1024 it sits here, below that it moves into the
                left sheet (shop.js), so its state survives the move. -->
@@ -536,7 +536,7 @@
             </div>
           </aside>
 
-          <div class="shop__main">
+          <div class="shop__main" data-ex-filter-main>
             <!-- Result count + sort. The count is a live region, so filtering or
                  searching is announced without moving focus. The sort control is
                  the Select component on a bare skin (no border, no fill), the
@@ -1956,7 +1956,7 @@
               </button>
             </header>
             <div class="sheet__body" data-scroll-area>
-              <div class="scroll-area__viewport sheet__scroll" data-shop-filter-slot></div>
+              <div class="scroll-area__viewport sheet__scroll" data-ex-filter-slot></div>
               <div class="scroll-area__bar" aria-hidden="true">
                 <div class="scroll-area__thumb"></div>
               </div>

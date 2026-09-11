@@ -45,7 +45,7 @@
       <!-- Listing band: filter rail + post grid + pagination, on the recessed
            2xl surface. The page opts into the 2xl width via data-width on <html>. -->
       <section class="blog" aria-label="Posts">
-        <div class="blog__inner">
+        <div class="blog__inner" data-ex-filter-rail>
           <!-- Filter rail, collapsible Sort / Category groups. -->
           <aside
             class="scroll-area ex-filter blog-filter"
@@ -175,7 +175,7 @@
           </aside>
 
           <!-- Posts -->
-          <div class="blog__main">
+          <div class="blog__main" data-ex-filter-main>
             <!-- Result count, then the controls. The count is a live region, so
                  filtering is announced without moving focus. Below 1024 the
                  Filter trigger joins the sort control here, since the rail it
@@ -787,7 +787,7 @@
               </button>
             </header>
             <div class="sheet__body" data-scroll-area>
-              <div class="scroll-area__viewport sheet__scroll" data-blog-filter-slot></div>
+              <div class="scroll-area__viewport sheet__scroll" data-ex-filter-slot></div>
               <div class="scroll-area__bar" aria-hidden="true">
                 <div class="scroll-area__thumb"></div>
               </div>

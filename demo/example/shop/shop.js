@@ -1,34 +1,3 @@
-// Filter placement, one source of truth for the filter UI.
-//
-// There's a single .shop-filter node. Above 1024 it sits in the listing grid as
-// the left rail; below 1024 the rail is replaced by a Filter button in the
-// toolbar and the same node is relocated into the left sheet, so its state
-// (open groups, checked boxes, price range) survives the move. Mirrors the
-// 1024px breakpoint in shop.css. The sheet open/close/focus is handled by the
-// generic dialog wiring in app.js. Same arrangement as the blog listing.
-(function () {
-  const filter = document.querySelector(".shop-filter");
-  const rail = document.querySelector(".shop__inner");
-  const main = document.querySelector(".shop__main");
-  const sheetBody = document.querySelector("[data-shop-filter-slot]");
-  if (!filter || !rail || !main || !sheetBody) return;
-
-  const desktop = window.matchMedia("(min-width: 1024px)");
-
-  const place = () => {
-    if (desktop.matches) {
-      // Rail: filter returns to the grid, ahead of the products column.
-      if (filter.parentElement !== rail) rail.insertBefore(filter, main);
-    } else if (filter.parentElement !== sheetBody) {
-      // Drawer: filter lives inside the sheet body.
-      sheetBody.append(filter);
-    }
-  };
-
-  place();
-  desktop.addEventListener("change", place);
-})();
-
 // Search, filter, sort and paging over the products already in the markup.
 //
 // One apply() owns the whole result set: it narrows the cards to the ones
@@ -43,9 +12,9 @@
 // Each facet reads from wherever it already lives, so nothing is stored twice:
 // the brand off the card's own title (it *is* the brand), the category, colors,
 // price and recency off data attributes, since none of those are printed on the
-// card. The one .shop-filter node is relocated between rail and sheet (see
-// above) rather than recreated, so a change listener bound to it survives the
-// move.
+// card. The one .shop-filter node is relocated between rail and sheet by
+// chrome.js rather than recreated, so a change listener bound to it survives
+// the move.
 (function () {
   const PAGE_SIZE = 24;
 

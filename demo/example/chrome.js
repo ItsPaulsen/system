@@ -401,6 +401,42 @@
   applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light", false);
 })();
 
+// Filter placement, one source of truth for the filter UI on both listings.
+//
+// There is a single .ex-filter node per listing. From 1024 it sits in the grid
+// as the left rail; below that the rail is replaced by a Filter button and the
+// same node is relocated into the left sheet, so its state (open groups, checked
+// boxes, price range) survives the move. Mirrors the 1024px breakpoint in
+// shop.css and blog.css. The sheet open/close/focus is handled by the generic
+// dialog wiring in app.js.
+//
+// Lives here rather than in shop.js and blog.js because the two were identical
+// but for their selectors: the pages mark their own rail, main column and sheet
+// slot with data-ex-filter-*, and this reads those rather than knowing either
+// page. A listing that wants the behaviour adds the three hooks and nothing else.
+(function () {
+  const filter = document.querySelector(".ex-filter");
+  const rail = document.querySelector("[data-ex-filter-rail]");
+  const main = document.querySelector("[data-ex-filter-main]");
+  const sheetBody = document.querySelector("[data-ex-filter-slot]");
+  if (!filter || !rail || !main || !sheetBody) return;
+
+  const desktop = window.matchMedia("(min-width: 1024px)");
+
+  const place = () => {
+    if (desktop.matches) {
+      // Rail: filter returns to the grid, ahead of the results column.
+      if (filter.parentElement !== rail) rail.insertBefore(filter, main);
+    } else if (filter.parentElement !== sheetBody) {
+      // Drawer: filter lives inside the sheet body.
+      sheetBody.append(filter);
+    }
+  };
+
+  place();
+  desktop.addEventListener("change", place);
+})();
+
 // Filter sheet: when a filter changed while the sheet was open, closing it lands
 // on the top of the results.
 //

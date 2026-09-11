@@ -2,7 +2,7 @@
   "name": "system",
   "version": "0.0.0",
   "private": true,
-  "description": "Design-system reference site — system.kristianpaulsen.com",
+  "description": "Design-system reference site \u2014 system.kristianpaulsen.com",
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
@@ -10,7 +10,8 @@
     "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
     "lint:js": "eslint .",
     "lint:html": "html-validate \"**/*.html\"",
-    "lint": "npm run format:check && npm run lint:css && npm run lint:js && npm run lint:html"
+    "lint:chrome": "node scripts/lint-chrome-templates.mjs",
+    "lint": "npm run format:check && npm run lint:css && npm run lint:js && npm run lint:html && npm run lint:chrome"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

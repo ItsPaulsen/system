@@ -30,6 +30,19 @@ export default [
     rules: shared
   },
 
+  // Build/lint helpers run in node, not the browser.
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.node
+      }
+    },
+    rules: shared
+  },
+
   // The React track. Without eslint-plugin-react every component referenced
   // only from JSX reads as unused, and without eslint-plugin-react-hooks the
   // exhaustive-deps suppression in Menu.jsx has no rule to suppress.

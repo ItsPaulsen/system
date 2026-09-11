@@ -105,12 +105,12 @@
         outline-offset: var(--focus-ring-offset);
       }
 
-      /* The multi-up example: 2 slides on phones, 3 on desktop (never fewer than 2). */
+      /* The multi-up example: 2 slides on phones, 3 from lg (never fewer than 2). */
       .carousel--demo-multi {
         --carousel-cols: 2;
       }
 
-      @media (min-width: 960px) {
+      @media (min-width: 1024px) {
         .carousel--demo-multi {
           --carousel-cols: 3;
         }

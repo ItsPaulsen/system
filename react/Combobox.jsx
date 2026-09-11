@@ -1,6 +1,11 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { IconChevronDown } from "@tabler/icons-react";
 
+// The global CSS reduced-motion guard sets scroll-behavior, which an explicit
+// JS behavior:"smooth" overrides, so scripted scrolling has to ask as well.
+const scrollBehavior = () =>
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
 // Coalesce scroll/resize repositioning to one update per frame.
 function rafThrottle(fn) {
   let raf = 0;
@@ -93,7 +98,7 @@ export default function Combobox({
     place();
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       requestAnimationFrame(() =>
-        rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })
+        rootRef.current?.scrollIntoView({ block: "start", behavior: scrollBehavior() })
       );
     }
     // Capturing scroll also catches the list's own internal scroll (the active-row

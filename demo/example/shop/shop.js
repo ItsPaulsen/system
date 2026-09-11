@@ -1,10 +1,10 @@
 // Filter placement, one source of truth for the filter UI.
 //
 // There's a single .shop-filter node. Above 1024 it sits in the listing grid as
-// the left rail; at/below 1024 the rail is replaced by a Filter button in the
+// the left rail; below 1024 the rail is replaced by a Filter button in the
 // toolbar and the same node is relocated into the left sheet, so its state
 // (open groups, checked boxes, price range) survives the move. Mirrors the
-// 1025px breakpoint in shop.css. The sheet open/close/focus is handled by the
+// 1024px breakpoint in shop.css. The sheet open/close/focus is handled by the
 // generic dialog wiring in app.js. Same arrangement as the blog listing.
 (function () {
   const filter = document.querySelector(".shop-filter");
@@ -13,7 +13,7 @@
   const sheetBody = document.querySelector("[data-shop-filter-slot]");
   if (!filter || !rail || !main || !sheetBody) return;
 
-  const desktop = window.matchMedia("(min-width: 1025px)");
+  const desktop = window.matchMedia("(min-width: 1024px)");
 
   const place = () => {
     if (desktop.matches) {

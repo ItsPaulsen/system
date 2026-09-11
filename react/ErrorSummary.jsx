@@ -1,5 +1,10 @@
 import { useEffect, useId, useRef } from "react";
 
+// The global CSS reduced-motion guard sets scroll-behavior, which an explicit
+// JS behavior:"smooth" overrides, so scripted scrolling has to ask as well.
+const scrollBehavior = () =>
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
 // Post-submit summary of form errors: a labelled danger box listing each error as a link to its
 // field. Focuses itself when it appears (tabindex=-1 + aria-labelledby the heading) so a screen reader
 // announces it the moment it appears after a failed submit; each link moves focus to the field it
@@ -20,7 +25,7 @@ export default function ErrorSummary({ errors, heading = "There is a problem", c
     const field = document.getElementById(id);
     if (!field) return;
     e.preventDefault();
-    field.scrollIntoView({ block: "center", behavior: "smooth" });
+    field.scrollIntoView({ block: "center", behavior: scrollBehavior() });
     field.focus();
   };
 

@@ -130,8 +130,8 @@
      ─────────────────────────────────────────────────────────────────────────── */
 
   /* ── Filter rail ─────────────────────────────────────────────────────────
-     Hidden at/below 1024, where the Filter button + left sheet replace it.
-     Shown beside the products above 1024 (see the responsive block). */
+     Hidden below 1024, where the Filter button + left sheet replace it.
+     Shown beside the products from 1024 (see the responsive block). */
   .ex-filter {
     display: none;
   }
@@ -315,8 +315,8 @@
   /* No gap: both controls carry their own inline padding, so their pill hover
      surfaces sit side by side without a dead strip between them. */
 
-  /* Up to 1024 the controls own the row: Filter to the start, sort to the end,
-     the biggest targets the width allows. From 1025 they group at the end beside
+  /* Below 1024 the controls own the row: Filter to the start, sort to the end,
+     the biggest targets the width allows. From 1024 they group at the end beside
      the count, with no gap between them so their pill hover surfaces meet. */
   .ex-listing__actions {
     display: flex;
@@ -359,11 +359,11 @@
     font-weight: inherit;
   }
 
-  /* Visually hidden up to 1024, where the row is better spent on the two
+  /* Visually hidden below 1024, where the row is better spent on the two
      controls, but NOT display: none: this is the row's role="status", so it is
      what announces the result when a filter changes, and hiding the box would
      drop that announcement at the width with the least other feedback. Restored
-     to a normal line from 1025 (below).
+     to a normal line from 1024 (below).
 
      Whole line at 500 there, so the number and its noun read as one label rather
      than a figure with a caption. */
@@ -453,7 +453,7 @@
     white-space: nowrap;
   }
 
-  /* >1024: the rail returns beside the items. It scrolls up with them until it
+  /* ≥1024: the rail returns beside the items. It scrolls up with them until it
      reaches its offset under the sticky topbar, then holds while the grid keeps
      going. The rail only *bounds* the height: the Scroll Area viewport inside it
      does the scrolling and owns the bar, so the scrollbar is a real element that
@@ -464,7 +464,7 @@
      sticky offset leaves the page unable to scroll and the rest of the rail
      parked below the viewport, unreachable. Let it chain and the rail sticks as
      soon as the page catches up. */
-  @media (min-width: 1025px) {
+  @media (min-width: 1024px) {
     .ex-filter {
       --ex-rail-top: calc(var(--ex-topbar-h) + var(--space-32));
 
@@ -513,7 +513,7 @@
     }
   }
 
-  /* When JS relocates the filter into the left sheet (≤1024), show it there
+  /* When JS relocates the filter into the left sheet (below 1024), show it there
      (overriding the rail's default hide) and drop its heading, the sheet header
      already reads "Filter". Placed last so specificity stays ascending. */
   .sheet .ex-filter {
@@ -1089,8 +1089,8 @@
   }
 
   /* The pill box, hover surface and transition come from the component; this
-     only rescales it. Type steps down to body-small at ≤1024, back to
-     body-medium above, and the box steps with it via --ex-control-*. The
+     only rescales it. Type steps down to body-small below 1024, back to
+     body-medium from there, and the box steps with it via --ex-control-*. The
      Settings hover dropdown stays body-small (16) at all widths. */
   .ex-topbar__nav .nav-menu__link {
     --nav-link-size: var(--ex-control-h);

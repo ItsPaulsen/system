@@ -30,7 +30,7 @@
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
-    /* Matches the front-page band: 24 top down to the items (→ 48 above 1024),
+    /* Matches the front-page band: 24 top down to the items (→ 48 from 1024),
        96 bottom gray gap before the footer (→ 128 at md). */
     padding-block: var(--space-24) 6rem;
   }
@@ -200,10 +200,10 @@
     }
   }
 
-  /* >1024, the filter rail returns beside the posts (hidden at/below 1024, a
-     sheet trigger will replace it there), the top gap opens to 64, and the
+  /* ≥1024, the filter rail returns beside the posts (hidden below 1024, where a
+     sheet trigger replaces it), the top gap opens to 64, and the
      pagination moves from centre to the right. */
-  @media (min-width: 1025px) {
+  @media (min-width: 1024px) {
     .blog {
       padding-top: var(--space-48);
     }
@@ -223,8 +223,8 @@
     }
   }
 
-  /* >1280, posts reach three columns. */
-  @media (min-width: 1281px) {
+  /* ≥1280, posts reach three columns. */
+  @media (min-width: 1280px) {
     .blog__grid {
       grid-template-columns: repeat(3, 1fr);
     }

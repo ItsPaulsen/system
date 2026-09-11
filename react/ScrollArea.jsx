@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
+// The global CSS reduced-motion guard sets scroll-behavior, which an explicit
+// JS behavior:"smooth" overrides, so scripted scrolling has to ask as well.
+const scrollBehavior = () =>
+  matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
 // A scroll container whose scrollbar is a real element instead of the platform's,
 // so it can be styled and revealed like the rest of the system's affordances. The
 // viewport does the actual scrolling; this only sizes and places the thumb, and
@@ -88,7 +93,7 @@ export default function ScrollArea({ children, className, viewportClassName, ...
     if (!el || !thumb || e.target !== e.currentTarget) return;
     const rect = bar.current.getBoundingClientRect();
     const dir = e.clientY - rect.top < thumb.top ? -1 : 1;
-    el.scrollBy({ top: dir * el.clientHeight * 0.9, behavior: "smooth" });
+    el.scrollBy({ top: dir * el.clientHeight * 0.9, behavior: scrollBehavior() });
   };
 
   const cls = ["scroll-area", scrolling && "is-scrolling", dragging && "is-dragging", className]

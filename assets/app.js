@@ -1212,15 +1212,19 @@ function extractSection(text, names) {
     .join("\n\n");
 }
 
-// A component's behaviour is a top-level init function in app.js: from its
-// declaration to the closing brace sitting in column 0.
+// A component's behaviour is a top-level declaration in app.js: either an init
+// function or a `const` binding holding an IIFE (the toast helper). Both run to
+// the first line that closes in column 0 ("}" for a function, "})();" for the
+// IIFE); everything in between is indented, so nothing closes early.
 function extractFunction(text, name) {
   const lines = text.split("\n");
-  const start = lines.findIndex((l) => l.startsWith(`function ${name}(`));
+  const start = lines.findIndex(
+    (l) => l.startsWith(`function ${name}(`) || l.startsWith(`const ${name} = `)
+  );
   if (start === -1) return "";
   let end = start;
   for (let i = start + 1; i < lines.length; i++) {
-    if (lines[i] === "}") {
+    if (/^[})]/.test(lines[i])) {
       end = i;
       break;
     }
@@ -3178,7 +3182,7 @@ function initScrollAreas() {
       if (e.target === thumb) return;
       const rect = thumb.getBoundingClientRect();
       const dir = e.clientY < rect.top ? -1 : 1;
-      viewport.scrollBy({ top: dir * viewport.clientHeight * 0.9, behavior: "smooth" });
+      viewport.scrollBy({ top: dir * viewport.clientHeight * 0.9, behavior: scrollBehavior() });
     });
 
     update();

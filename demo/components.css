@@ -1262,7 +1262,7 @@
      [<svg>…</svg>] Label [<svg>…</svg>]
    </button>
 
-   Density is a global knob, set `data-size="sm|md|lg"` on any ancestor
+   Density is a global knob, set `data-size="xs|sm|md|lg"` on any ancestor
    (root for site-wide, a wrapper for per-section) and the button
    (along with any density-driven component inside) rescales. */
 
@@ -1769,6 +1769,12 @@
       background var(--motion-default),
       border-color var(--motion-default),
       color var(--motion-default);
+  }
+
+  [data-size="xs"] .chip {
+    --chip-h: 24px;
+    --chip-px: 6px;
+    --chip-gap: 4px;
   }
 
   [data-size="sm"] .chip {
@@ -4264,7 +4270,7 @@
     gap: var(--space-16);
   }
 
-  @media (min-width: 36rem) {
+  @media (min-width: 640px) {
     .calendar--range .calendar__months {
       flex-direction: row;
     }
@@ -5085,6 +5091,162 @@
     background: var(--background-secondary-active);
   }
 
+  /* ── Toast ─────────────────────────────────────────────────────────────────
+   A brief message that appears over the page, then fades on its own. One reused
+   pill rather than a stack: a second message replaces the first, so the corner
+   never fills up. Typed toasts take a leading icon in the matching semantic
+   color (the same glyphs the Alert component uses); the loading type takes the
+   ring spinner instead and holds until its promise settles.
+
+   The pill is aria-hidden and the message is announced through a separate
+   visually-hidden live region (polite, or assertive for error/warning), so a
+   reader gets the text once rather than racing the animation.
+
+   Structure:
+     <div class="toast" data-type="success" aria-hidden="true">
+       <span class="toast__icon"><svg …/></span>
+       <span class="toast__text">Changes saved</span>
+     </div> */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translateX(-50%) translateY(1rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+
+    /* % (not 100vw) resolves against the viewport minus any scrollbar, so a wide
+     toast can't itself trigger a horizontal scrollbar. */
+    max-width: calc(100% - 2rem);
+    padding: 0.75rem 1.25rem;
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-lg), var(--surface-rim);
+    font-size: var(--font-caption-medium-size);
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+    z-index: var(--z-toast);
+  }
+
+  .toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Leading icon carries its own optical space, tighten the left, like badge. */
+  .toast:has(.toast__icon svg) {
+    padding-left: 16px;
+  }
+
+  .toast__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* An untyped toast still renders the span; collapse it so the gap doesn't
+   open in front of text that has no icon. */
+  .toast__icon:empty {
+    display: none;
+  }
+
+  .toast__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .toast[data-type="success"] .toast__icon {
+    color: var(--green);
+  }
+
+  .toast[data-type="info"] .toast__icon {
+    color: var(--blue);
+  }
+
+  .toast[data-type="warning"] .toast__icon {
+    color: var(--amber);
+  }
+
+  .toast[data-type="error"] .toast__icon {
+    color: var(--red);
+  }
+
+  /* No colour of its own: a removal is neither good news nor bad, so the glyph
+   sits at the text's own weight and the shape carries the whole meaning. */
+  .toast[data-type="removed"] .toast__icon,
+  .toast[data-type="loading"] .toast__icon {
+    color: var(--ink-secondary);
+  }
+
+  /* Ring spinner for the loading type, the same grow/shrink dash as the Spinner
+   component. Kept as its own selectors rather than reusing .spinner so a toast
+   stays one self-contained block to copy.
+   Rendered as <svg class="toast__spinner"><circle .-track/><circle .-arc/></svg>. */
+  .toast__spinner {
+    /* ~75% of the icon slot so it optically matches the other glyphs' inset
+     circles (their paths sit inside a 24 viewBox), not the full box. */
+    width: 0.85rem;
+    height: 0.85rem;
+    animation: toast-spin 2s linear infinite;
+  }
+
+  .toast__spinner-track {
+    stroke: color-mix(in oklab, currentcolor 18%, transparent);
+  }
+
+  .toast__spinner-arc {
+    stroke: currentcolor;
+    stroke-dasharray: 1px, 200px;
+    transform-origin: center;
+    animation: toast-spin-dash 2s ease-in-out infinite;
+  }
+
+  /* Both elements carry data-motion-essential, so the reduced-motion guard in
+   globals.css leaves them running: an in-flight promise still needs to read as
+   in flight. Slow them the way the Spinner component does. */
+  @media (prefers-reduced-motion: reduce) {
+    .toast__spinner,
+    .toast__spinner-arc {
+      animation-duration: 6s;
+    }
+  }
+
+  @keyframes toast-spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes toast-spin-dash {
+    0% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: 0;
+    }
+
+    50% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -15px;
+    }
+
+    100% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: -120px;
+    }
+  }
+
   /* ── Forced colors (Windows High Contrast) ─────────────────────────────────
    The forced palette strips backgrounds, shadows and masks, so any state or
    surface shown only by a fill/shadow disappears. Restore it with system colors
@@ -5393,6 +5555,31 @@
     .carousel__control:disabled {
       color: GrayText;
       border-color: GrayText;
+    }
+
+    /* Toast pops up on its own surface, which the forced palette strips; a
+     CanvasText border keeps it a visible, delineated notification. */
+    .toast {
+      border: var(--border-width) solid CanvasText;
+    }
+
+    /* Keep the typed toast icon's semantic color (like the Alert icons). The
+     color is set on this wrapper span, so the forced palette would remap it to a
+     system color and the SVG would inherit that; opt out to preserve it. */
+    .toast__icon {
+      forced-color-adjust: none;
+    }
+
+    /* Toast promise spinner: the faint track drops out in the forced palette, so
+     pin both strokes so the ring + arc still read (arc CanvasText, track dimmer). */
+    .toast__spinner-arc {
+      forced-color-adjust: none;
+      stroke: CanvasText;
+    }
+
+    .toast__spinner-track {
+      forced-color-adjust: none;
+      stroke: GrayText;
     }
   }
 }

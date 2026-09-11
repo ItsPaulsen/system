@@ -28,11 +28,19 @@
     </script>
   </head>
   <body>
-    <main class="wrap" data-size="sm">
+    <main class="wrap">
       <header class="site-head">
         <div class="site-head__body">
           <div class="site-head__title">
             <h1>Toast</h1>
+            <button
+              class="btn"
+              type="button"
+              data-copy-css="/demo/components.css"
+              data-copy-section="Toast"
+            >
+              Copy CSS
+            </button>
           </div>
           <p class="lede">A brief message that appears, then fades on its own.</p>
         </div>
@@ -59,7 +67,7 @@
         </button>
       </div>
 
-      <div class="preview-grid">
+      <div class="preview-grid" data-size="sm">
         <section class="preview-block">
           <h2 class="subhead">Types</h2>
           <p class="section-note">
@@ -166,14 +174,24 @@
         </section>
 
         <section class="preview-block" data-lang="html">
-          <h2 class="subhead">Usage</h2>
+          <h2 class="subhead">Component</h2>
           <p class="section-note">
-            The shell exposes it via a <code>data-toast</code> trigger; in your own code call the
-            <code>toast</code> helper with a message.
+            No markup to author: the helper mounts the pill itself. The shell exposes it via a
+            <code>data-toast</code> trigger; in your own code call <code>toast</code> with a
+            message.
           </p>
           <pre><code><span class="tok-key">&lt;button</span> <span class="tok-prop">data-toast</span>=<span class="tok-str">"Changes saved"</span><span class="tok-key">&gt;</span>Show toast<span class="tok-key">&lt;/button&gt;</span>
 
 <span class="tok-fn">toast</span>(<span class="tok-str">"Changes saved"</span>)<span class="tok-key">;</span></code></pre>
+        </section>
+
+        <section class="preview-block" data-lang="html">
+          <h2 class="subhead">JavaScript</h2>
+          <p class="section-note">
+            From <code>app.js</code>. Mounts one reused pill plus the two live regions, picks the
+            icon for the type, and clears the previous timer so a second message replaces the first.
+          </p>
+          <div data-source="/assets/app.js" data-fn="toast"></div>
         </section>
       </div>
     </main>

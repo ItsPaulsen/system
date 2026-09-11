@@ -416,10 +416,10 @@
     --icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6l6 -6'/%3E%3C/svg%3E");
     --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5l10 -10'/%3E%3C/svg%3E");
 
-    /* Density, [data-size="sm|md|lg"] on any ancestor nudges the label size of
-     density-aware components (see .chip) via this addition. Component pixel
+    /* Density, [data-size="xs|sm|md|lg"] on any ancestor nudges the label size
+     of density-aware components (see .chip) via this addition. Component pixel
      sizes are set explicitly per size in the component itself (see .button's
-     --button-size ladder). Default matches `data-size="md"`; the sm/lg
+     --button-size ladder). Default matches `data-size="md"`; the xs/sm/lg
      overrides live at the end of the file. */
     --ds-font-size-addition: 0rem;
 
@@ -735,9 +735,14 @@
   }
 
   /* ── Density knob ──────────────────────────────────────────────────────────
-   Set `data-size="sm|md|lg"` on any ancestor to shift the label size of
+   Set `data-size="xs|sm|md|lg"` on any ancestor to shift the label size of
    density-aware components below that node (component pixel sizes are set
-   explicitly per size in the component). Root default matches md. */
+   explicitly per size in the component). Root default matches md. Each step is
+   2px, so the label lands on a real type token at every tier (12/14/16/18). */
+
+  [data-size="xs"] {
+    --ds-font-size-addition: -0.25rem;
+  }
 
   [data-size="sm"] {
     --ds-font-size-addition: -0.125rem;

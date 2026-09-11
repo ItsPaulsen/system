@@ -322,7 +322,10 @@
     };
     steps.forEach((b) =>
       b.addEventListener("click", () => {
-        railView.scrollBy({ top: Number(b.dataset.pdpRailStep) * tile() * 3, behavior: "smooth" });
+        // The CSS reduced-motion guard sets scroll-behavior, but an explicit
+        // JS "smooth" overrides it, so the paging step has to ask as well.
+        const behavior = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+        railView.scrollBy({ top: Number(b.dataset.pdpRailStep) * tile() * 3, behavior });
       })
     );
     // Arrowing inside the rail steps it and takes focus along, the way it does in

@@ -1,5 +1,5 @@
 /* Shop listing, the product sibling of the blog listing: the same recessed 2xl
-   band, the same filter rail (rail above 1024, left sheet below), and the same
+   band, the same filter rail (rail from 1024, left sheet below), and the same
    example shell (topbar, hero, footer). What's new here is the product card (a
    white media tile on the band, badge, clamped title, price) and the toolbar
    holding search, the result count, and one Select on a bare skin.
@@ -80,7 +80,7 @@
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
-    /* 24 top down to the toolbar (→ 48 above 1024), 96 bottom gray gap before
+    /* 24 top down to the toolbar (→ 48 from 1024), 96 bottom gray gap before
        the footer (→ 128 at md). */
     padding-block: var(--space-24) 6rem;
   }
@@ -331,7 +331,7 @@
   }
 
   /* ── Product grid ────────────────────────────────────────────────────────
-     Two-up on mobile, three from 768, four from 1281 and no further: at the 2xl
+     Two-up on mobile, three from 768, four from 1280 and no further: at the 2xl
      cap that's a 287 column, wide enough that a fifth would only shrink the
      product shots. */
   .shop__grid {
@@ -726,11 +726,11 @@
     }
   }
 
-  /* >1024, the filter rail returns beside the products and the band's top gap
+  /* ≥1024, the filter rail returns beside the products and the band's top gap
      opens to 64. The grid stays three across: the rail has just taken 216 out of
      the row, so a fourth column here would be narrower than the three-up it
      replaced. */
-  @media (min-width: 1025px) {
+  @media (min-width: 1024px) {
     .shop {
       padding-top: var(--space-48);
     }
@@ -748,10 +748,10 @@
     }
   }
 
-  /* >1280, four across. Landing the fourth column here keeps every product about
+  /* ≥1280, four across. Landing the fourth column here keeps every product about
      290 wide from 768 all the way to the 2xl cap, so the shots hold their size
      across the whole ladder instead of shrinking at each step. */
-  @media (min-width: 1281px) {
+  @media (min-width: 1280px) {
     .shop__grid {
       grid-template-columns: repeat(4, 1fr);
     }

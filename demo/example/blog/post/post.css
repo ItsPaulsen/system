@@ -25,8 +25,8 @@
   }
 
   /* ── Intro (on the page surface) ─────────────────────────────────────────
-     Back-link, then the title + standfirst row (byline beside the text above
-     1024, stacked under it at 1024 and below), then the full-width cover. */
+     Back-link, then the title + standfirst row (byline beside the text from
+     1024, stacked under it below that), then the full-width cover. */
   .article-intro {
     padding-block: var(--space-24) 0;
   }
@@ -112,7 +112,7 @@
     font-weight: var(--font-body-large-weight);
   }
 
-  /* Byline: avatar + name/date. In the side-by-side layout (>1024) a 2px rule
+  /* Byline: avatar + name/date. In the side-by-side layout (≥1024) a 2px rule
      divides it from the lead; stacked (mobile) there's nothing to divide, so the
      rule is added only at that breakpoint (see min-width below). */
   .article-byline {
@@ -421,9 +421,9 @@
     }
   }
 
-  /* >1024: the byline sits beside the text, with a 2px rule dividing the two.
-     At 1024 and below it stacks under the text and the rule is dropped. */
-  @media (min-width: 1025px) {
+  /* ≥1024: the byline sits beside the text, with a 2px rule dividing the two.
+     Below 1024 it stacks under the text and the rule is dropped. */
+  @media (min-width: 1024px) {
     .article-intro__row {
       flex-direction: row;
       justify-content: space-between;

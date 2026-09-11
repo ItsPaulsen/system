@@ -722,13 +722,13 @@
     margin: 0;
   }
 
-  @media (min-width: 40rem) {
+  @media (min-width: 640px) {
     .lede {
       text-wrap: balance;
     }
   }
 
-  @media (min-width: 48rem) {
+  @media (min-width: 768px) {
     .lede {
       max-width: 80%;
     }
@@ -1921,7 +1921,13 @@
     transform: rotate(-90deg);
   }
 
-  /* Toast: light surface (like Alert/cards) so semantic type icons read. */
+  /* Toast (docs chrome only).
+   The component itself lives in components.css, which is NOT loaded site-wide;
+   pages like /demo/colors still need a pill for the "Copied CSS" confirmation,
+   so the plain, untyped part of it is repeated here. Only what chrome uses:
+   no semantic types and no promise spinner, both of which are demoed on pages
+   that do load components.css (where that copy wins, being later in the same
+   layer). Keep the shared declarations in step with the Toast section there. */
   .toast {
     position: fixed;
     left: 50%;
@@ -1946,7 +1952,7 @@
     transition:
       opacity 0.18s ease,
       transform 0.18s ease;
-    z-index: 10;
+    z-index: var(--z-toast);
   }
 
   .toast.is-visible {
@@ -1954,110 +1960,10 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* Leading icon carries its own optical space, tighten the left, like badge. */
-  .toast:has(.toast__icon svg) {
-    padding-left: 16px;
-  }
-
-  .toast__icon {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 1.125rem;
-    height: 1.125rem;
-  }
-
+  /* The icon span is always rendered; chrome never fills it, so collapse it or
+   it opens a gap in front of the text. */
   .toast__icon:empty {
     display: none;
-  }
-
-  .toast__icon svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .toast[data-type="success"] .toast__icon {
-    color: var(--green);
-  }
-
-  .toast[data-type="info"] .toast__icon {
-    color: var(--blue);
-  }
-
-  .toast[data-type="warning"] .toast__icon {
-    color: var(--amber);
-  }
-
-  .toast[data-type="error"] .toast__icon {
-    color: var(--red);
-  }
-
-  /* No colour of its own: a removal is neither good news nor bad, so the glyph
-   sits at the text's own weight and the shape carries the whole meaning. */
-  .toast[data-type="removed"] .toast__icon,
-  .toast[data-type="loading"] .toast__icon {
-    color: var(--ink-secondary);
-  }
-
-  /* Ring spinner matching the Spinner component (which lives in components.css,
-   not loaded site-wide, so the toast keeps a self-contained copy of the same
-   SVG grow/shrink spinner here, kept in sync with .spinner in components.css).
-   Rendered as <svg class="toast__spinner"><circle .-track/><circle .-arc/></svg>. */
-  .toast__spinner {
-    /* ~75% of the icon slot so it optically matches the other glyphs' inset
-     circles (their paths sit inside a 24 viewBox), not the full box. */
-    width: 0.85rem;
-    height: 0.85rem;
-    animation: toast-spin 2s linear infinite;
-  }
-
-  .toast__spinner-track {
-    stroke: color-mix(in oklab, currentcolor 18%, transparent);
-  }
-
-  .toast__spinner-arc {
-    stroke: currentcolor;
-    stroke-dasharray: 1px, 200px;
-    transform-origin: center;
-    animation: toast-spin-dash 2s ease-in-out infinite;
-  }
-
-  /* Both elements carry data-motion-essential, so the reduced-motion guard in
-   globals.css leaves them running: an in-flight promise still needs to read as
-   in flight. Slow them the way the Spinner component does. */
-  @media (prefers-reduced-motion: reduce) {
-    .toast__spinner,
-    .toast__spinner-arc {
-      animation-duration: 6s;
-    }
-  }
-
-  @keyframes toast-spin {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes toast-spin-dash {
-    0% {
-      stroke-dasharray: 1px, 200px;
-      stroke-dashoffset: 0;
-    }
-
-    50% {
-      stroke-dasharray: 100px, 200px;
-      stroke-dashoffset: -15px;
-    }
-
-    100% {
-      stroke-dasharray: 1px, 200px;
-      stroke-dashoffset: -120px;
-    }
   }
 
   /* ── Preference fallbacks ────────────────────────────────────────────────────
@@ -2109,28 +2015,10 @@
     }
 
     /* Toast pops up on its own surface, which the forced palette strips; a
-     CanvasText border keeps it a visible, delineated notification. */
+     CanvasText border keeps it a visible, delineated notification. The typed
+     icon and spinner overrides live with the component in components.css. */
     .toast {
       border: var(--border-width) solid CanvasText;
-    }
-
-    /* Keep the typed toast icon's semantic color (like the Alert icons). The
-     color is set on this wrapper span, so the forced palette would remap it to a
-     system color and the SVG would inherit that; opt out to preserve it. */
-    .toast__icon {
-      forced-color-adjust: none;
-    }
-
-    /* Toast promise spinner: the faint track drops out in the forced palette, so
-     pin both strokes so the ring + arc still read (arc CanvasText, track dimmer). */
-    .toast__spinner-arc {
-      forced-color-adjust: none;
-      stroke: CanvasText;
-    }
-
-    .toast__spinner-track {
-      forced-color-adjust: none;
-      stroke: GrayText;
     }
 
     .docs-switch__toggle {

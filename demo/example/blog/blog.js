@@ -9,8 +9,8 @@
 // the set (a partial demo set isn't paged).
 //
 // Categories are read from the visible tag text, so there's no second source of
-// truth to keep in sync with the markup; the date is the one thing that isn't on
-// screen in a sortable form, so it lives in data-date. The one .blog-filter node
+// truth to keep in sync with the markup; the date is read off the <time datetime>
+// the card already prints, so it has no second copy either. The one .blog-filter node
 // is relocated between rail and sheet by chrome.js rather than recreated, so a
 // change listener bound to it survives the move.
 (function () {
@@ -35,7 +35,9 @@
   const categoryOf = (card) =>
     card.querySelector(".blog-card__tag")?.textContent.trim().toLowerCase();
   // ISO dates, so a string compare is a date compare.
-  const dateOf = (card) => card.dataset.date || "";
+  // The visible date is a <time datetime>, so it is already machine-readable;
+  // no second copy on the card to keep in step with it.
+  const dateOf = (card) => card.querySelector("time[datetime]")?.dateTime || "";
   const minutesOf = (card) => Number(card.dataset.minutes) || 0;
   const readBand = () => filter.querySelector('input[name="blog-read"]:checked')?.value || "any";
 

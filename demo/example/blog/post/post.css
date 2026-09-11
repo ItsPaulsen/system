@@ -86,6 +86,11 @@
     line-height: var(--font-caption-medium-lh);
   }
 
+  /* Same separator the listing cards use between date and reading time. */
+  .article-kicker__dot {
+    color: var(--ink-tertiary);
+  }
+
   .article-kicker svg {
     flex: none;
     width: 20px;

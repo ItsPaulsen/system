@@ -6,10 +6,11 @@
 // second copy to keep in sync. The detail view is one node filled from the card
 // that opened it.
 //
-// Filtering never moves a node. apply() hides the cards that don't match and
-// flips the panel's data-mode; results mode is a CSS change (stores.css) that
-// flattens the region tree, which is also what lets "Nearest you" reorder the
-// whole set with a `order` per card.
+// Filtering has two modes. With nothing set, the cards sit in their region
+// accordions. With a search or a filter on, the matches move into one flat list
+// and the regions step aside, which is what lets "Nearest you" sort across them.
+// Every pass starts by sending all the cards home, so the list is a function of
+// the current query rather than an accumulation of the last few.
 (function () {
   const panel = document.querySelector("[data-stores-panel]");
   if (!panel) return;
@@ -377,12 +378,10 @@
   const snapTo = (i, velocity) => {
     snap = Math.min(snaps.length - 1, Math.max(0, i));
     springStart(snaps[snap], velocity || 0);
-    grab.setAttribute("aria-expanded", String(snap === 0));
   };
 
   let dragFrom = null;
   let dragStart = 0;
-  let dragged = false;
   let lastY = 0;
   let lastT = 0;
   let velocity = 0; // px/ms, signed the same way as the offset
@@ -408,7 +407,6 @@
 
   const onMove = (e) => {
     if (dragFrom === null) return;
-    dragged = true;
     const dt = e.timeStamp - lastT;
     if (dt > 0) velocity = (e.clientY - lastY) / dt;
     lastY = e.clientY;
@@ -488,25 +486,6 @@
   scroll?.addEventListener("pointerup", onUp, { passive: true });
   scroll?.addEventListener("pointercancel", onUp, { passive: true });
 
-  grab.addEventListener("click", () => {
-    // pointerup fires first, so a finished drag would otherwise toggle the snap
-    // it just landed on.
-    if (dragged) {
-      dragged = false;
-      return;
-    }
-    snapTo(snap === 0 ? 1 : 0);
-  });
-  grab.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      snapTo(snap - 1);
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      snapTo(snap + 1);
-    }
-  });
-
   const resize = () => {
     measure();
     if (!desktop.matches) {
@@ -538,6 +517,14 @@
   // ── Wiring ────────────────────────────────────────────────────────────────
   cards.forEach((card) => card.addEventListener("click", () => openDetail(card)));
   back.addEventListener("click", closeDetail);
+
+  // Focusing the search below 1024 opens the sheet: you are about to type and
+  // read results, and the peek snap leaves room for about one. This is the same
+  // move the handle used to make on a tap, which is exactly where it was wrong:
+  // here it follows an intent, there it followed a misfire.
+  search.addEventListener("focus", () => {
+    if (!desktop.matches) snapTo(0);
+  });
 
   search.addEventListener("input", apply);
   nearest.addEventListener("change", apply);

@@ -14,7 +14,7 @@
   .stores-page {
     /* Panel width at the desktop tier, and the inset it floats by. One place so
        the map's zoom control and the panel can't drift apart. */
-    --stores-panel-w: 400px;
+    --stores-panel-w: 448px; /* 400 of content inside the 24 side padding */
     --stores-inset: var(--space-16);
 
     /* Snap offset, in px, written by stores.js. The 22% start is what the sheet
@@ -164,18 +164,12 @@
     outline: none;
   }
 
-  /* Grab handle: a real button, so the sheet can be moved from the keyboard
-     (arrows step through the snaps, Enter toggles full/mid). Its hit area is the
-     full row; only the bar is drawn. */
+  /* Grab handle. Its hit area is the full row; only the bar is drawn. */
   .stores-panel__grab {
     display: grid;
     place-items: center;
     width: 100%;
     height: 28px;
-    padding: 0;
-    border: 0;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    background: transparent;
     cursor: grab;
     touch-action: none; /* the drag is ours, not the browser's scroll */
   }
@@ -191,29 +185,25 @@
     background: var(--fill-secondary);
   }
 
-  /* The sheet's own grab handle already says what this panel is, and the page
-     title sits right above it, so a second title here says nothing. It comes
-     back with the desktop card, which has neither. */
+  /* Title, search and filters as one box, on the same surface the region
+     accordions use. It scrolls with the list in both layouts: the sheet's snap
+     points already bring it back (drag down to peek, or focus the search, which
+     opens the sheet), so pinning it would spend a short sheet's height on
+     something the sheet itself already answers. */
+  .stores-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding: var(--space-16);
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+  }
+
   .stores-panel__title {
-    display: none;
     margin: 0;
     font-size: var(--font-body-large-emphasized-size);
     font-weight: var(--font-body-large-emphasized-weight);
     line-height: var(--font-body-large-emphasized-lh);
-  }
-
-  /* The search is the one thing that stays put while the list scrolls, so it is
-     a direct child of the scroller: nested inside a wrapper, sticky would stop
-     at that wrapper's bottom edge and come unstuck as soon as the chips left.
-     The negative margin bleeds its background to the panel edges, and its own
-     block padding is what keeps the focus ring clear of the scroller's top. */
-  .stores-search {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    margin-inline: calc(-1 * var(--space-16));
-    padding: var(--space-8) var(--space-16);
-    background: var(--background-primary);
   }
 
   /* data-size="sm" on the row is what puts the chips on the 32 step, with the
@@ -248,7 +238,16 @@
   .stores-panel__body {
     position: relative;
     flex: 1;
+
+    /* The scroller is inset from the panel's own top and bottom, so there is
+       always a strip of surface at both ends and content clips against that
+       instead of running out at the sheet's edge. */
+
+    /* The scroller is inset from the panel's own top and bottom, so there is
+       always a strip of surface at both ends and content clips against that
+       instead of running out at the sheet's edge. */
     min-height: 0; /* let the viewport scroll instead of stretching the sheet */
+    padding-block: var(--space-4);
   }
 
   /* One scroller for the whole panel, head included, so nothing is pinned above
@@ -272,6 +271,12 @@
     border: 0;
   }
 
+  /* The region ring has the same problem against the scroller's edges. */
+  .stores-region:has(.accordion__summary:focus-visible) {
+    outline-offset: -3px;
+    animation: none;
+  }
+
   .stores-list {
     display: flex;
     flex-direction: column;
@@ -285,6 +290,17 @@
     width: 100%;
     box-shadow: inset 0 0 0 var(--border-width) var(--fill-tertiary);
     text-align: left;
+  }
+
+  /* Rows in a tight list, so the ring goes inside the card rather than 2px
+     outside it: at 8px apart an offset ring crowds the neighbour above and
+     below, and it is the first thing the accordion's overflow clips. The
+     converge animation starts 6px out, which is outside that clip either way.
+     Same call base.css makes for the linked token rows. */
+  button.stores-card:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: -3px;
+    animation: none;
   }
 
   .stores-card__content {
@@ -376,6 +392,15 @@
     padding: var(--space-8) var(--space-16) var(--space-32);
     overflow-y: auto;
     overscroll-behavior: contain;
+  }
+
+  /* A scroll container is focusable in its own right, so tabbing through lands
+     on it and rings the whole list. Everything inside it is reachable on its
+     own, so the ring says nothing; same call the Sheet and Dialog components
+     make for their own scroll holders. */
+  .stores-panel__scroll:focus-visible,
+  .stores-detail__scroll:focus-visible {
+    outline: none;
   }
 
   .stores-detail__back {
@@ -541,42 +566,31 @@
       gap: var(--space-8);
     }
 
+    /* A rail, not a floating card: flush to the left edge and running the full
+       height of the map, so it reads as part of the page's frame. Square,
+       because there is no gap around it for a corner to sit in. */
     .stores-panel {
       position: absolute;
-      inset: var(--stores-inset) auto var(--stores-inset) var(--stores-inset);
+      inset: 0 auto 0 0;
       width: var(--stores-panel-w);
-      border-radius: var(--radius-lg);
+      border-radius: 0;
+      box-shadow: none;
       transform: none;
+    }
+
+    /* The rail meets the topbar and the viewport bottom, so there is no edge for
+       content to run out at and nothing to inset the scroller from. */
+    .stores-panel__body {
+      padding-block: 0;
     }
 
     .stores-panel__grab {
       display: none;
     }
 
-    .stores-panel__title {
-      display: block;
-    }
-
-    /* No sticky on the card: the panel is tall enough here that pinning the
-       field only costs list. */
-    .stores-search {
-      position: static;
-      margin-inline: 0;
-      padding: 0;
-      background: none;
-    }
-
     .stores-panel__scroll,
     .stores-detail__scroll {
-      padding-inline: var(--space-24);
-    }
-
-    .stores-panel__scroll {
-      padding-top: var(--space-24);
-    }
-
-    .stores-detail__scroll {
-      padding-top: var(--space-24);
+      padding: var(--space-16);
     }
   }
 

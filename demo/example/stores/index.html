@@ -65,63 +65,71 @@
         tabindex="-1"
         aria-label="Find a store"
       >
-        <!-- Drag handle. Only a control below 1024, where the panel is a sheet;
-             hidden from everyone (including AT) at the desktop tier. -->
-        <button class="stores-panel__grab" type="button" data-stores-grab aria-label="Expand list">
+        <!-- Drag handle: a pointer affordance, not a control. It is out of the
+             tab order and hidden from AT because it opens nothing the keyboard
+             can't already reach, the list scrolls at any snap and focusing the
+             search opens the sheet. A button here only put a focus ring around
+             the whole sheet. -->
+        <div class="stores-panel__grab" data-stores-grab aria-hidden="true">
           <span class="stores-panel__grab-bar"></span>
-        </button>
+        </div>
 
         <div class="stores-panel__body" data-scroll-area>
           <div class="scroll-area__viewport stores-panel__scroll">
-            <h2 class="stores-panel__title">Find a store</h2>
+            <!-- Title, search and filters. One box on the desktop rail; on the
+                 sheet the wrapper goes display:contents so the search is a direct
+                 child of the scroller again and can stick for its whole length. -->
+            <div class="stores-head">
+              <h2 class="stores-panel__title">Find a store</h2>
 
-            <div class="input stores-search">
-              <label class="input__label sr-only" for="stores-search"
-                >Search for a place or store name</label
-              >
-              <span class="input__container input__container--rounded">
-                <span class="input__leading">
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                    <path d="M21 21l-6 -6" />
-                  </svg>
+              <div class="input stores-search">
+                <label class="input__label sr-only" for="stores-search"
+                  >Search for a place or store name</label
+                >
+                <span class="input__container input__container--rounded">
+                  <span class="input__leading">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="20"
+                      height="20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                      <path d="M21 21l-6 -6" />
+                    </svg>
+                  </span>
+                  <input
+                    id="stores-search"
+                    name="stores-search"
+                    class="input__element"
+                    type="search"
+                    placeholder="Search for a place or store name"
+                    autocomplete="off"
+                    data-stores-search
+                  />
                 </span>
-                <input
-                  id="stores-search"
-                  name="stores-search"
-                  class="input__element"
-                  type="search"
-                  placeholder="Search for a place or store name"
-                  autocomplete="off"
-                  data-stores-search
-                />
-              </span>
-            </div>
+              </div>
 
-            <div class="stores-filters" data-size="sm">
-              <label class="chip chip--as-checkbox">
-                <input
-                  name="stores-nearest"
-                  type="checkbox"
-                  class="chip__input"
-                  data-stores-nearest
-                />
-                Nearest you
-              </label>
-              <label class="chip chip--as-checkbox">
-                <input name="stores-open" type="checkbox" class="chip__input" data-stores-open />
-                Open now
-              </label>
+              <div class="stores-filters" data-size="sm">
+                <label class="chip chip--as-checkbox">
+                  <input
+                    name="stores-nearest"
+                    type="checkbox"
+                    class="chip__input"
+                    data-stores-nearest
+                  />
+                  Nearest you
+                </label>
+                <label class="chip chip--as-checkbox">
+                  <input name="stores-open" type="checkbox" class="chip__input" data-stores-open />
+                  Open now
+                </label>
+              </div>
             </div>
 
             <!-- Live count, only printed once a search or filter has narrowed the

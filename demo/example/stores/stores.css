@@ -104,6 +104,16 @@
     transition: transform var(--motion-default);
   }
 
+  /* A cluster is the same disc carrying a count instead of a dot, so zooming out
+     reads as pins merging rather than a different object appearing. */
+  .stores-pin--cluster {
+    width: 44px;
+    height: 44px;
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    line-height: 1;
+  }
+
   .stores-pin__dot {
     width: 10px;
     height: 10px;
@@ -723,4 +733,12 @@
   color: var(--ink-tertiary);
   font-size: var(--font-caption-small-size);
   line-height: 1.8;
+}
+
+/* MarkerCluster.css is an unlayered <link> like Leaflet's, so its own icon
+   sizing has to be answered from out here too. Only the wrapper is touched: the
+   disc inside is .stores-pin, styled with everything else. */
+.leaflet-marker-icon .stores-pin--cluster {
+  display: grid;
+  place-items: center;
 }

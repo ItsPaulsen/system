@@ -33,10 +33,17 @@
   );
   const source = new Map(cards.map((card, i) => [card, i]));
 
+  // Captured now, not read with closest() later: results mode moves a card out
+  // of its region, so by then it has no region to look up.
+  const region = new Map(
+    cards.map((card) => [card, card.closest("[data-region]")?.dataset.region || ""])
+  );
+
   // ── Map ───────────────────────────────────────────────────────────────────
   // Leaflet comes off a CDN, so everything map-shaped is guarded: if the script
   // never arrives the panel is still a working store list.
   const markers = new Map();
+  let clusters = null; // the layer the pins actually live in, once clustering loaded
   let active = null; // store whose pin is open, and the only one shown while it is
   let lastFit = ""; // result set the map was last fitted to, so it isn't re-fitted for free
   let map = null;
@@ -73,6 +80,19 @@
 
   const mapEl = document.getElementById("stores-map");
 
+  // The open pin is a different icon, not a class added to the rendered one:
+  // clustering builds and rebuilds icon elements on its own schedule, so an
+  // element that exists when the class is set may not be the one on screen.
+  const icon = (on) =>
+    window.L.divIcon({
+      className: "",
+      html: `<span class="stores-pin${on ? " stores-pin--active" : ""}">
+               <span class="stores-pin__dot"></span>
+             </span>`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 18]
+    });
+
   const initMap = () => {
     if (!window.L || !mapEl) return;
 
@@ -90,22 +110,37 @@
       attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
     }).addTo(map);
 
+    // Clustering is a second CDN script, so it's optional the same way Leaflet
+    // is: without it the pins go straight on the map and everything else works.
+    clusters = window.L.markerClusterGroup
+      ? window.L.markerClusterGroup({
+          showCoverageOnHover: false,
+          maxClusterRadius: 56,
+
+          // No spread-out flourish on the way in: the pins land where they land.
+          animate: false,
+          spiderfyOnMaxZoom: false,
+          iconCreateFunction: (cluster) =>
+            window.L.divIcon({
+              className: "",
+              html: `<span class="stores-pin stores-pin--cluster">${cluster.getChildCount()}</span>`,
+              iconSize: [44, 44],
+              iconAnchor: [22, 22]
+            })
+        }).addTo(map)
+      : null;
+
     cards.forEach((card) => {
       const marker = window.L.marker(latLng(card), {
-        icon: window.L.divIcon({
-          className: "",
-          html: '<span class="stores-pin"><span class="stores-pin__dot"></span></span>',
-          iconSize: [36, 36],
-          iconAnchor: [18, 18]
-        }),
+        icon: icon(false),
         keyboard: true,
         title: card.querySelector(".stores-card__name").textContent.trim(),
         alt: card.querySelector(".stores-card__name").textContent.trim()
       });
       marker.on("click", () => openDetail(card));
       markers.set(card, marker);
-      marker.addTo(map);
     });
+    syncMarkers();
 
     fit();
 
@@ -135,18 +170,18 @@
     map.fitBounds(bounds, { ...padding(), maxZoom: 13, animate: false });
   };
 
-  // Both the detail open and the return to the list put one store in the middle
-  // of whatever map is actually visible, which is why this goes through
-  // padding() rather than a plain panTo: the panel covers the left on desktop
-  // and the sheet covers the bottom below it.
-  const centreOn = (card, zoom) => {
-    if (!map) return;
-    const at = window.L.latLngBounds([latLng(card), latLng(card)]);
+  // Frames a set of stores in whatever map is actually visible, which is why it
+  // goes through padding(): the panel covers the left on desktop and the sheet
+  // the bottom below it. maxZoom only caps zooming in, so passing the current
+  // zoom means "zoom out as far as this needs, no closer".
+  const frameStores = (set, zoom) => {
+    if (!map || !set.length) return;
+    const bounds = window.L.latLngBounds(set.map(latLng));
     // Leaflet derives the flight time from the distance travelled, which on a
     // jump across the map runs long enough to feel like waiting.
     const opts = { ...padding(), maxZoom: zoom, duration: 0.6 };
-    if (reduced.matches) map.fitBounds(at, { ...opts, animate: false });
-    else map.flyToBounds(at, opts);
+    if (reduced.matches) map.fitBounds(bounds, { ...opts, animate: false });
+    else map.flyToBounds(bounds, opts);
   };
 
   const pinOf = (card) => markers.get(card)?.getElement()?.firstElementChild;
@@ -161,32 +196,35 @@
       const marker = markers.get(card);
       if (!marker) return;
       const show = active ? card === active : !card.hidden;
-      const on = map.hasLayer(marker);
-      if (show && !on) marker.addTo(map);
-      else if (!show && on) marker.remove();
+      const layer = clusters || map;
+      const on = layer.hasLayer(marker);
+      if (show && !on) layer.addLayer(marker);
+      else if (!show && on) layer.removeLayer(marker);
     });
   };
 
   const setActive = (card) => {
+    const prev = active;
     active = card;
-    cards.forEach((c) => {
-      const on = c === card;
-      c.toggleAttribute("data-active", on);
-      pinOf(c)?.classList.toggle("stores-pin--active", on);
-    });
+    cards.forEach((c) => c.toggleAttribute("data-active", c === card));
     syncMarkers();
+
+    // Only the two that changed, so the rest keep the elements they have.
+    if (prev && prev !== card) markers.get(prev)?.setIcon(icon(false));
+    if (card) markers.get(card)?.setIcon(icon(true));
   };
 
   // ── Filtering ─────────────────────────────────────────────────────────────
   const matches = (card, query) => {
     if (openNow.checked && card.dataset.open !== "true") return false;
     if (!query) return true;
-    // Name, street and place, which is what the field offers. The whole card's
-    // text would drag the opening hours in with it, so "open" would match every
-    // store that prints a closing time.
+    // Name, street, place and the region it's filed under, so searching the group
+    // name finds everything in it. Not the whole card's text: that would drag the
+    // opening hours in, and "open" would match every store printing a closing
+    // time.
     return `${card.querySelector(".stores-card__name").textContent} ${
       card.querySelector(".stores-card__address").textContent
-    } ${card.dataset.city}`
+    } ${card.dataset.city} ${region.get(card)}`
       .toLowerCase()
       .includes(query);
   };
@@ -303,7 +341,7 @@
     setActive(card);
 
     opened = card;
-    centreOn(card, 15);
+    frameStores([card], 15);
     if (!desktop.matches) snapTo(1);
     detail.querySelector("[data-detail-name]").focus({ preventScroll: true });
   };
@@ -316,9 +354,16 @@
     // that only asked to go back to the list.
     panel.dataset.mode = backMode;
 
-    // Still re-centre the store just viewed, at the zoom already on screen:
-    // going back changes which part of the map the panel leaves visible.
-    if (opened) centreOn(opened, map ? map.getZoom() : 15);
+    // Back to the group the store came from, not to the store: its region while
+    // browsing, the result set while a search is on. Capped at the zoom already
+    // on screen, so a group of one just stays where it is.
+    if (opened && map) {
+      const peers =
+        backMode === "regions"
+          ? cards.filter((c) => !c.hidden && region.get(c) === region.get(opened))
+          : cards.filter((c) => !c.hidden);
+      frameStores(peers, map.getZoom());
+    }
   };
 
   // ── Sheet ─────────────────────────────────────────────────────────────────

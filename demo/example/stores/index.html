@@ -22,6 +22,15 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <!-- Cluster base only, not its Default skin: the positioning and the
+         zoom/spiderfy animations are needed, the orange discs are not. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/globals.css" />
     <link rel="stylesheet" href="/demo/components.css" />
@@ -170,7 +179,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Old Town</span>
+                          <span class="stores-card__name">Old Town</span>
                           <span class="stores-card__address">Market Square 1</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -213,7 +222,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Midtown</span>
+                          <span class="stores-card__name">Midtown</span>
                           <span class="stores-card__address">Bridge Street 18</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -256,7 +265,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Harbour</span>
+                          <span class="stores-card__name">Harbour</span>
                           <span class="stores-card__address">Pier Road 4</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
@@ -314,7 +323,7 @@
                         data-hours-sun="12:00 - 16:00"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Eastgate</span>
+                          <span class="stores-card__name">Eastgate</span>
                           <span class="stores-card__address">Eastgate Park 7</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -357,7 +366,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Parkside</span>
+                          <span class="stores-card__name">Parkside</span>
                           <span class="stores-card__address">Linden Avenue 22</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -400,7 +409,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Elmwood</span>
+                          <span class="stores-card__name">Elmwood</span>
                           <span class="stores-card__address">Elmwood Lane 3</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
@@ -458,7 +467,7 @@
                         data-hours-sun="12:00 - 16:00"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Northgate</span>
+                          <span class="stores-card__name">Northgate</span>
                           <span class="stores-card__address">Northgate Road 55</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -501,7 +510,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Hillcrest</span>
+                          <span class="stores-card__name">Hillcrest</span>
                           <span class="stores-card__address">Hillcrest Terrace 9</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
@@ -544,7 +553,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Lakeview</span>
+                          <span class="stores-card__name">Lakeview</span>
                           <span class="stores-card__address">Lakeview Walk 12</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -602,7 +611,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Southbank</span>
+                          <span class="stores-card__name">Southbank</span>
                           <span class="stores-card__address">Southbank Quay 2</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -645,7 +654,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Stonebridge</span>
+                          <span class="stores-card__name">Stonebridge</span>
                           <span class="stores-card__address">Stonebridge Row 41</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
@@ -703,7 +712,7 @@
                         data-hours-sun="12:00 - 16:00"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Westfield</span>
+                          <span class="stores-card__name">Westfield</span>
                           <span class="stores-card__address">Westfield Green 30</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -746,7 +755,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Riverside</span>
+                          <span class="stores-card__name">Riverside</span>
                           <span class="stores-card__address">Riverside Path 6</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state stores-card__state--open">Open</span>
@@ -789,7 +798,7 @@
                         data-hours-sun="Closed"
                       >
                         <span class="stores-card__content">
-                          <span class="stores-card__name">Demo Greenfield</span>
+                          <span class="stores-card__name">Greenfield</span>
                           <span class="stores-card__address">Greenfield Court 14</span>
                           <span class="stores-card__status">
                             <span class="stores-card__state">Closed</span>
@@ -960,6 +969,13 @@
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
       integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
       defer

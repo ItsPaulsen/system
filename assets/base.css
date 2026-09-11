@@ -1592,6 +1592,13 @@
       position: static;
       transform: none;
     }
+
+    /* What pushes the chevron to the end of the row is the value's auto margin,
+       so a row without a value has nothing pushing it and the chevron lands
+       against the label. Those rows take the auto margin themselves. */
+    a.token-list__row:not(:has(.token-list__value))::after {
+      margin-inline-start: auto;
+    }
   }
 
   /* Flush variant, drops the box so each linked row is its own action-row-style

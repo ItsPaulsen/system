@@ -135,12 +135,16 @@
           solid: dark ? "#242427" : "#ece2d4"
         };
 
-        // Greens and water fresher than the published pastels. `land` is the
-        // whole landmass: Liberty leaves it the cream background and paints green
-        // only where a forest or park polygon exists, so a regional view is white
-        // with green blobs on it. Tinting the background makes land read as land,
-        // and the stronger greens sit on top of it as woodland.
-        const land = dark ? "#101311" : "#e4f0db";
+        // Greens and water fresher than the published pastels.
+        //
+        // The land tint is a zoom ramp, not one colour. Up close the published
+        // cream is right: parks and woods read as green against a neutral city.
+        // Pulled out, most of the country has no forest polygon at all, so the
+        // same cream leaves a white continent with green blobs on it, and the
+        // land needs to carry the green itself.
+        const land = dark
+          ? ["interpolate", ["linear"], ["zoom"], 7, "#141a14", 10, "#0c0c0c"]
+          : ["interpolate", ["linear"], ["zoom"], 7, "#dfeed4", 10, "#f8f4f0"];
         const green = dark ? "#22301f" : "#b7e29c";
         const water = dark ? "#16202c" : "#8ec8f2";
 

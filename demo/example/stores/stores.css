@@ -14,7 +14,7 @@
   .stores-page {
     /* Panel width at the desktop tier, and the inset the map's own controls sit
        by. One place so they can't drift apart. */
-    --stores-panel-w: 448px; /* 416 of content inside the 16 side padding */
+    --stores-panel-w: 480px; /* 448 of content inside the 16 side padding */
     --stores-inset: var(--space-16);
 
     /* Snap offset, in px, written by stores.js. The 22% start is what the sheet
@@ -41,7 +41,7 @@
        Set on the body so the very first paint is already map-coloured instead of
        the .ex surface's white. Raw values on purpose, they track OpenFreeMap's
        styles, not our palette. */
-    --stores-ground: #e4f0db;
+    --stores-ground: #f8f4f0;
 
     overflow: hidden;
     background: var(--stores-ground);
@@ -63,7 +63,7 @@
   }
 
   :root[data-theme="dark"] .stores-body {
-    --stores-ground: #101311;
+    --stores-ground: #0c0c0c;
   }
 
   /* Pin. A divIcon, so it is our markup and our tokens rather than Leaflet's
@@ -636,9 +636,9 @@
 
   .stores-detail__name {
     margin: 0;
-    font-size: var(--font-title-small-size);
-    font-weight: var(--font-title-small-weight);
-    line-height: var(--font-title-small-lh);
+    font-size: var(--font-body-large-emphasized-size);
+    font-weight: var(--font-body-large-emphasized-weight);
+    line-height: var(--font-body-large-emphasized-lh);
   }
 
   .stores-detail__name:focus-visible {
@@ -648,7 +648,7 @@
   .stores-detail__address {
     margin: 0;
     color: var(--ink-primary);
-    font-size: var(--font-body-small-size);
+    font-size: var(--font-caption-medium-size);
   }
 
   .stores-detail__hours {
@@ -661,10 +661,10 @@
     align-items: center;
     gap: var(--space-8);
 
-    /* 12 below, matching the list's row gap, so the first day is spaced off the
+    /* 8 below, matching the list's row gap, so the first day is spaced off the
        summary the same as every day is off the one before it. Closed there is no
        list, so it takes the 16 every other field row has. */
-    padding-block: var(--space-16) var(--space-12);
+    padding-block: var(--space-16) var(--space-8);
     cursor: pointer;
     list-style: none;
   }
@@ -695,8 +695,8 @@
   }
 
   .stores-detail__hours-label {
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
   /* The chevron sits on the status line, right after the words, rather than
@@ -709,7 +709,7 @@
 
   .stores-detail__hours-now {
     color: var(--ink-primary);
-    font-size: var(--font-body-small-size);
+    font-size: var(--font-caption-medium-size);
   }
 
   /* Open, the list below answers "until when", so the summary keeps only the
@@ -736,13 +736,13 @@
   .stores-detail__hours-list {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-12) var(--space-16);
+    gap: var(--space-8) var(--space-16);
 
     /* No bottom margin: the next field's own padding is the space below, and a
        margin here would sit inside the focus ring as dead room. */
     margin: 0;
     color: var(--ink-primary);
-    font-size: var(--font-body-small-size);
+    font-size: var(--font-caption-medium-size);
   }
 
   .stores-detail__hours-list dd {
@@ -750,7 +750,7 @@
   }
 
   .stores-detail__today {
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
   /* Field values rest at the brand colour and shift within it, the same three
@@ -798,13 +798,13 @@
   }
 
   .stores-detail__row dt {
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
   .stores-detail__row dd {
     margin: 0;
-    font-size: var(--font-body-small-size);
+    font-size: var(--font-caption-medium-size);
   }
 
   .stores-detail__cta {

@@ -36,12 +36,12 @@
      footer at all (the placeholder is left out of index.html) rather than one
      hidden below 1024: there is no scroll to reach it with either way. */
   .stores-body {
-    /* The basemap's own ground colour, sampled off the tiles rather than taken
-       from a surface token: it is what shows while the first tiles are still in
-       flight. Set on the body so the very first paint is already map-coloured
-       instead of the .ex surface's white. Raw values on purpose, they track
-       Esri's canvas styles, not our palette. */
-    --stores-ground: #efefef;
+    /* The basemap style's own background colour, read out of the style rather
+       than guessed: it is what shows while the first tiles are still in flight.
+       Set on the body so the very first paint is already map-coloured instead of
+       the .ex surface's white. Raw values on purpose, they track OpenFreeMap's
+       styles, not our palette. */
+    --stores-ground: #e4f0db;
 
     overflow: hidden;
     background: var(--stores-ground);
@@ -63,7 +63,7 @@
   }
 
   :root[data-theme="dark"] .stores-body {
-    --stores-ground: #474749;
+    --stores-ground: #101311;
   }
 
   /* Pin. A divIcon, so it is our markup and our tokens rather than Leaflet's

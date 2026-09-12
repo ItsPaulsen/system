@@ -8,9 +8,14 @@
 //
 // Filtering has two modes. With nothing set, the cards sit in their region
 // accordions. With a search or a filter on, the matches move into one flat list
-// and the regions step aside, which is what lets "Nearest you" sort across them.
+// and the regions step aside, which is what lets "Near me" sort across them.
 // Every pass starts by sending all the cards home, so the list is a function of
 // the current query rather than an accumulation of the last few.
+//
+// The basemap is MapLibre rendering an OpenFreeMap style, bridged in as a
+// Leaflet layer so markers, clustering and every gesture stay Leaflet's. The
+// published style is retuned at load in applyStyle() rather than forked: it
+// stays whatever OpenFreeMap publishes, and we only say what differs.
 (function () {
   const panel = document.querySelector("[data-stores-panel]");
   if (!panel) return;
@@ -51,17 +56,13 @@
   let tiles = null;
   let tileUrl = "";
 
-  // Label-free grey basemaps, so our pins are the only labels on the map and the
-  // demo's made-up place names aren't sitting next to real ones. Esri's canvas
-  // tiles need no key; CARTO's look the same but stamp "API KEY REQUIRED" across
-  // every unauthenticated tile.
-  const TILES = {
-    light:
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/" +
-      "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    dark:
-      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/" +
-      "World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+  // OpenFreeMap's vector styles: keyless, no quota, and a matching pair so the
+  // basemap follows the theme. MapLibre renders them; the Leaflet bridge makes
+  // the result an ordinary Leaflet layer, so markers, clustering and every
+  // gesture stay exactly as they were.
+  const STYLES = {
+    light: "https://tiles.openfreemap.org/styles/liberty",
+    dark: "https://tiles.openfreemap.org/styles/dark"
   };
 
   const latLng = (card) => [Number(card.dataset.lat), Number(card.dataset.lng)];
@@ -96,6 +97,124 @@
       iconAnchor: [18, 18]
     });
 
+  // renderWorldCopies off for the same reason as minZoom: one world, not a row
+  // of them.
+  const GL_OPTIONS = { renderWorldCopies: false };
+
+  const ATTRIBUTION =
+    '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+  // The published style, retuned. Patched at load rather than forked, so it stays
+  // whatever OpenFreeMap publishes and we only say what differs. Raw colours
+  // throughout: these track the basemap, not our palette.
+  const applyStyle = (url) =>
+    fetch(url)
+      .then((r) => r.json())
+      .then((style) => {
+        const dark = url === STYLES.dark;
+
+        // Out: the road casings, the dark outline under every road that makes a
+        // street grid look drawn in ink, and the POI markers, whose bus stops and
+        // shop pins compete with the only markers that matter here, ours.
+        style.layers = style.layers.filter(
+          (layer) => !layer.id.endsWith("_casing") && !layer.id.startsWith("poi_")
+        );
+
+        // Roads in one grey family instead of the yellow/orange road-atlas
+        // convention, motorways and primaries a step up so the hierarchy reads.
+        const road = dark
+          ? { major: "#3c3c3e", minor: "#2a2a2c" }
+          : { major: "#b3bacb", minor: "#ccd2de" };
+
+        // Buildings keep their extrusion, which is what gives a dense block its
+        // shape at close zoom, but softened: a warmer fill at lower opacity reads
+        // as relief rather than as hard shadow.
+        const building = {
+          flat: dark ? "#1c1c1e" : "#ede4d8",
+          solid: dark ? "#242427" : "#ece2d4"
+        };
+
+        // Greens and water fresher than the published pastels. `land` is the
+        // whole landmass: Liberty leaves it the cream background and paints green
+        // only where a forest or park polygon exists, so a regional view is white
+        // with green blobs on it. Tinting the background makes land read as land,
+        // and the stronger greens sit on top of it as woodland.
+        const land = dark ? "#101311" : "#e4f0db";
+        const green = dark ? "#22301f" : "#b7e29c";
+        const water = dark ? "#16202c" : "#8ec8f2";
+
+        style.layers.forEach((layer) => {
+          const paint = (values) => {
+            layer.paint = { ...layer.paint, ...values };
+          };
+
+          if (layer.type === "background") {
+            paint({ "background-color": land });
+          } else if (layer.type === "line" && /^(road|tunnel|bridge)_/.test(layer.id)) {
+            if (/rail|path|pedestrian|pattern/.test(layer.id)) return;
+            const major = /motorway|trunk|primary/.test(layer.id);
+            paint({ "line-color": major ? road.major : road.minor });
+          } else if (layer.id === "building") {
+            // Buildings arrive two zoom levels later than published (13/14), so
+            // the street grid fills in first and the blocks follow once you are
+            // close enough for them to mean something. Flat for one level, then
+            // the extrusion takes over.
+            layer.minzoom = 15;
+            layer.maxzoom = 16;
+            delete layer.paint?.["fill-outline-color"];
+            paint({ "fill-color": building.flat });
+          } else if (layer.id === "building-3d") {
+            layer.minzoom = 16;
+            paint({ "fill-extrusion-color": building.solid, "fill-extrusion-opacity": 0.55 });
+          } else if (layer.id.startsWith("label_") || layer.id.startsWith("water_name_")) {
+            // Names thin out on the way out. Published, suburbs come in at z8,
+            // villages at z9 and water names at no threshold at all, so a
+            // regional view arrives carrying every fjord, sund and hamlet in it.
+            // Cities and countries keep their own thresholds.
+            const at = {
+              label_other: 12,
+              label_village: 11,
+              label_town: 9,
+              water_name_point_label: 11,
+              water_name_line_label: 11
+            }[layer.id];
+            if (at) layer.minzoom = at;
+          } else if (layer.id.startsWith("highway-name-")) {
+            // Street names arrive with the blocks rather than ahead of them.
+            // Published: major 12.2, minor 15, path 15.5, which puts road names
+            // on screen two zoom levels before there is any building to place
+            // them against.
+            layer.minzoom = { "highway-name-major": 14, "highway-name-minor": 16 }[layer.id] ?? 17;
+          } else if (layer.id === "water") {
+            paint({ "fill-color": water });
+          } else if (layer.id === "park") {
+            delete layer.paint?.["fill-outline-color"];
+            paint({ "fill-color": green, "fill-opacity": 1 });
+          } else if (layer.id === "landcover_grass") {
+            paint({ "fill-color": green, "fill-opacity": 0.75 });
+          } else if (layer.id === "landcover_wood") {
+            paint({ "fill-color": green, "fill-opacity": 0.6 });
+          }
+        });
+
+        if (tiles) tiles.getMaplibreMap()?.setStyle(style);
+        else
+          tiles = window.L.maplibreGL({ style, attribution: ATTRIBUTION, ...GL_OPTIONS }).addTo(
+            map
+          );
+      })
+      .catch(() => {
+        // Couldn't read the style: fall back to it as published rather than to
+        // no basemap at all.
+        if (!tiles)
+          tiles = window.L.maplibreGL({
+            style: url,
+            attribution: ATTRIBUTION,
+            ...GL_OPTIONS
+          }).addTo(map);
+      });
+
   const initMap = () => {
     if (!window.L || !mapEl) return;
 
@@ -105,13 +224,21 @@
     map = window.L.map("stores-map", {
       zoomControl: false,
       attributionControl: true,
-      fadeAnimation: false
+      fadeAnimation: false,
+      maxZoom: 20, // vector tiles keep rendering well past the raster ceiling
+
+      // A floor too: without a globe to fall back on, zooming further out just
+      // repeats a flat world sideways and leaves empty bands above and below it.
+      minZoom: 4,
+
+      // Leaflet's own resize tracking calls invalidateSize every 20ms while a
+      // window is being dragged. Against a GL canvas each call reallocates the
+      // drawing buffer, so the map blanks for a frame, over and over. The
+      // observer below answers a settled size instead.
+      trackResize: false
     });
-    tileUrl = TILES[document.documentElement.dataset.theme] || TILES.light;
-    tiles = window.L.tileLayer(tileUrl, {
-      maxZoom: 16, // the canvas basemaps stop here; past it Leaflet would ask for tiles that 404
-      attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ"
-    }).addTo(map);
+    tileUrl = STYLES[document.documentElement.dataset.theme] || STYLES.light;
+    applyStyle(tileUrl);
 
     // Clustering is a second CDN script, so it's optional the same way Leaflet
     // is: without it the pins go straight on the map and everything else works.
@@ -145,6 +272,21 @@
     });
     syncMarkers();
 
+    // The zoom pair goes disabled at the limits rather than staying live and
+    // doing nothing. Fractional zooms, hence the epsilon.
+    const zoomButtons = [...document.querySelectorAll("[data-stores-zoom]")];
+    const syncZoom = () => {
+      const z = map.getZoom();
+      zoomButtons.forEach((button) => {
+        button.disabled =
+          button.dataset.storesZoom === "in"
+            ? z >= map.getMaxZoom() - 0.01
+            : z <= map.getMinZoom() + 0.01;
+      });
+    };
+    map.on("zoomend", syncZoom);
+    syncZoom();
+
     fit();
 
     // Leaflet caches the container's size at init, and at that point the page is
@@ -153,15 +295,22 @@
     // now drawn, so the attribution ends up clipped off the bottom edge. Watching
     // the element covers every cause of a resize, including the ones no window
     // event fires for.
-    new ResizeObserver(() => map.invalidateSize({ animate: false })).observe(mapEl);
+    let sizing;
+    new ResizeObserver(() => {
+      // Trailing, not throttled: the GL canvas stretches to fill on its own
+      // while the drag is in flight, and one invalidateSize at the end is what
+      // actually needs to happen.
+      clearTimeout(sizing);
+      sizing = setTimeout(() => map.invalidateSize({ animate: false }), 200);
+    }).observe(mapEl);
 
     // Dark theme is a token swap everywhere else on the site; the basemap is the
     // one thing that needs telling, so it follows data-theme the same way.
     new MutationObserver(() => {
-      const url = TILES[document.documentElement.dataset.theme] || TILES.light;
+      const url = STYLES[document.documentElement.dataset.theme] || STYLES.light;
       if (tiles && url !== tileUrl) {
         tileUrl = url;
-        tiles.setUrl(url);
+        applyStyle(url);
       }
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   };
@@ -445,7 +594,6 @@
       springV = 0;
       frame = null;
       setOffset(springAt);
-      if (map) map.invalidateSize({ animate: false });
       return;
     }
     setOffset(springAt);
@@ -460,7 +608,6 @@
     if (reduced.matches) {
       springAt = target;
       setOffset(target);
-      if (map) map.invalidateSize({ animate: false });
       return;
     }
     if (frame === null) {
@@ -593,7 +740,8 @@
     } else {
       panel.style.removeProperty("--sheet-y");
     }
-    if (map) map.invalidateSize({ animate: false });
+    // No invalidateSize here: the ResizeObserver above already answers a changed
+    // map box, and calling it from both is what made a window drag flicker.
   };
 
   // See .stores-panel[data-settling] in stores.css: hover is suppressed for as
@@ -607,9 +755,21 @@
     settling = setTimeout(() => delete panel.dataset.settling, 200);
   };
 
-  regions.forEach((region) => {
-    region.querySelector(".accordion__summary")?.addEventListener("click", settle);
-    region.addEventListener("toggle", settle); // keyboard, and any programmatic open
+  regions.forEach((group) => {
+    group.querySelector(".accordion__summary")?.addEventListener("click", settle);
+
+    group.addEventListener("toggle", () => {
+      settle(); // keyboard, and any programmatic open
+
+      // Opening a region frames its stores, the same view Back gives you after
+      // closing one of them. Only on the way open, and only while browsing: in
+      // results mode the regions aren't what the list is showing.
+      if (!group.open || panel.dataset.mode !== "regions") return;
+      frameStores(
+        [...group.querySelectorAll(".stores-card")].filter((card) => !card.hidden),
+        14
+      );
+    });
   });
 
   // ── Wiring ────────────────────────────────────────────────────────────────

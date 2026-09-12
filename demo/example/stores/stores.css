@@ -63,7 +63,7 @@
   }
 
   :root[data-theme="dark"] .stores-body {
-    --stores-ground: #0c0c0c;
+    --stores-ground: #2a3040;
   }
 
   /* Pin. A divIcon, so it is our markup and our tokens rather than Leaflet's
@@ -601,7 +601,10 @@
     /* Pulled back by its own inline padding, less the card's 16, so the label
        starts on the same edge as the store name inside the card below. */
     margin-inline-start: calc(var(--space-16) - var(--button-px));
-    color: var(--primary-foreground);
+
+    /* Ink, and it stays ink: the CTA is the one brand element in this view, so
+       Back shifts within its own colour rather than arriving at the brand. */
+    color: var(--ink-primary);
   }
 
   /* The ring goes inside and doesn't converge: the button fills its header row,
@@ -616,12 +619,12 @@
      control stays as quiet as the text it sits above. */
   .stores-detail__back:not(:disabled):hover {
     background: none;
-    color: var(--primary-foreground-hover);
+    color: var(--ink-primary-hover);
   }
 
   .stores-detail__back:not(:disabled):active {
     background: none;
-    color: var(--primary-foreground-active);
+    color: var(--ink-primary-active);
   }
 
   /* The store's record on the same surface everything else in this panel uses,
@@ -629,7 +632,7 @@
      different screen. Back sits above it and the action below, both on the page
      rather than inside the record. */
   .stores-detail__card {
-    padding: var(--space-16);
+    padding: var(--space-16) var(--space-16) var(--space-8);
     border-radius: var(--radius-md);
     background: var(--background-secondary);
   }
@@ -791,10 +794,10 @@
     border-top: var(--border-width) solid var(--fill-tertiary);
   }
 
-  /* The box's own edge closes the list. */
+  /* The box's own edge closes the list, but the row keeps its padding: the text
+     shouldn't sit tighter to the bottom than every other row does to its rule. */
   .stores-detail__row:last-child {
     border-bottom: 0;
-    padding-bottom: 0;
   }
 
   .stores-detail__row dt {

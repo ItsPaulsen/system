@@ -56,14 +56,7 @@
   let tiles = null;
   let tileUrl = "";
 
-  // OpenFreeMap's vector styles: keyless, no quota, and a matching pair so the
-  // basemap follows the theme. MapLibre renders them; the Leaflet bridge makes
-  // the result an ordinary Leaflet layer, so markers, clustering and every
-  // gesture stay exactly as they were.
-  const STYLES = {
-    light: "https://tiles.openfreemap.org/styles/liberty",
-    dark: "https://tiles.openfreemap.org/styles/dark"
-  };
+  const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
 
   const latLng = (card) => [Number(card.dataset.lat), Number(card.dataset.lng)];
 
@@ -105,102 +98,213 @@
     '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
-  // The published style, retuned. Patched at load rather than forked, so it stays
-  // whatever OpenFreeMap publishes and we only say what differs. Raw colours
-  // throughout: these track the basemap, not our palette.
-  const applyStyle = (url) =>
-    fetch(url)
+  // One style, two passes. Liberty is the only OpenFreeMap style with the full
+  // layer set: POIs, parks, landuse, buildings. The published dark style has 47
+  // layers and no POIs at all, which is why a dark map built on it has no green
+  // and no coloured markers however it is recoloured.
+  //
+  // Patched at load rather than forked, so the style stays whatever OpenFreeMap
+  // publishes and we only say what differs. Raw colours throughout: these track
+  // the basemap, not our palette.
+
+  // Transit POIs go in both themes: bus stops and stations compete with the only
+  // markers that matter here, ours. The rest stay, because they are most of the
+  // map's colour.
+  const dropped = (layer) => layer.id.endsWith("_casing") || layer.id === "poi_transit";
+
+  // The rank-based POI layers carry stops and stations too, so dropping
+  // poi_transit isn't enough: they have to be filtered by class as well.
+  const TRANSIT = ["bus", "railway", "tram", "subway", "ferry_terminal", "airport", "aerialway"];
+
+  const hideTransit = (style) => {
+    style.layers.forEach((layer) => {
+      if (!layer.id.startsWith("poi_")) return;
+      const notTransit = ["!", ["in", ["get", "class"], ["literal", TRANSIT]]];
+      layer.filter = layer.filter ? ["all", layer.filter, notTransit] : notTransit;
+    });
+  };
+
+  // Names arrive later than published across the board. Streets come in with the
+  // blocks rather than ahead of them (major 12.2, minor 15 published), and place
+  // and water names thin out on the way out, where z8 suburbs and unthresholded
+  // fjord names fill a regional view with hamlets.
+  const LABEL_ZOOM = {
+    "highway-name-major": 14,
+    "highway-name-minor": 16,
+    "highway-name-path": 17,
+    label_other: 12,
+    label_village: 11,
+    label_town: 9,
+    water_name_point_label: 11,
+    water_name_line_label: 11
+  };
+
+  const patchLight = (style) => {
+    style.layers = style.layers.filter((layer) => !dropped(layer));
+    hideTransit(style);
+
+    style.layers.forEach((layer) => {
+      const paint = (values) => {
+        layer.paint = { ...layer.paint, ...values };
+      };
+
+      if (layer.type === "background") {
+        // A zoom ramp, not one colour. Up close the published cream is right:
+        // parks read as green against a neutral city. Pulled out, most of the
+        // country has no forest polygon at all, so the land carries the green.
+        paint({
+          "background-color": ["interpolate", ["linear"], ["zoom"], 7, "#dfeed4", 10, "#f8f4f0"]
+        });
+      } else if (layer.type === "line" && /^(road|tunnel|bridge)_/.test(layer.id)) {
+        if (/rail|path|pedestrian|pattern/.test(layer.id)) return;
+        const major = /motorway|trunk|primary/.test(layer.id);
+        paint({ "line-color": major ? "#b3bacb" : "#ccd2de" });
+      } else if (layer.id === "water") {
+        paint({ "fill-color": "#8ec8f2" });
+      } else if (layer.id === "building") {
+        // Buildings arrive two zoom levels later than published (13/14), so the
+        // street grid fills in first and the blocks follow once you are close
+        // enough for them to mean something. Flat for one level, then extruded.
+        layer.minzoom = 15;
+        layer.maxzoom = 16;
+        delete layer.paint?.["fill-outline-color"];
+        paint({ "fill-color": "#ede4d8" });
+      } else if (layer.id === "building-3d") {
+        layer.minzoom = 16;
+        paint({ "fill-extrusion-color": "#ece2d4", "fill-extrusion-opacity": 0.55 });
+      } else if (layer.id === "park") {
+        delete layer.paint?.["fill-outline-color"];
+        paint({ "fill-color": "#b7e29c", "fill-opacity": 1 });
+      } else if (layer.id === "landcover_grass") {
+        paint({ "fill-color": "#b7e29c", "fill-opacity": 0.75 });
+      } else if (layer.id === "landcover_wood") {
+        paint({ "fill-color": "#b7e29c", "fill-opacity": 0.6 });
+      }
+
+      if (LABEL_ZOOM[layer.id]) layer.minzoom = LABEL_ZOOM[layer.id];
+    });
+  };
+
+  // Dark is the light map inverted, not a second set of colours picked by hand.
+  // Hand-picking is what kept going wrong: every value chosen on its own, so the
+  // relationships between land, water, parks and roads never survived the trip.
+  // Here the light style is built first and then every colour in it is flipped
+  // in lightness with its hue kept, which carries those relationships across by
+  // construction. POI icons are sprites and keep their own colours.
+  const probe = document.createElement("span");
+
+  const rgba = (value) => {
+    probe.style.color = "";
+    probe.style.color = value; // invalid values leave it empty, which is the test
+    const parts = probe.style.color.match(/rgba?\(([^)]+)\)/);
+    if (!parts) return null;
+    const [r, g, b, a = 1] = parts[1].split(",").map(Number);
+    return { r, g, b, a };
+  };
+
+  const flip = (value, range, chroma, cool) => {
+    const c = rgba(value);
+    if (!c) return value;
+    const [r, g, b] = [c.r / 255, c.g / 255, c.b / 255];
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    const d = max - min;
+
+    let h = 0;
+    if (d) {
+      if (max === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+    }
+
+    // Floors and ceilings. The floor is well off black: a cream ground inverts
+    // to almost nothing, and a map whose land is pure black leaves everything
+    // drawn on it shouting. Saturation
+    // comes down hard: the same chroma reads far louder against a dark ground
+    // than against cream, so a park that was a quiet pastel comes back vivid.
+    //
+    // `range` compresses the flip. Lines and labels take the full swing, which
+    // is what keeps roads and names bright. Area fills take less than half of
+    // it: a forest slightly darker than cream is quiet, but the same gap the
+    // other way turns every wooded hill into the loudest thing on the map.
+    const lightness = Math.min(0.88, Math.max(0.17, 0.17 + (1 - l) * range));
+
+    // Saturation comes from chroma, not from HSL's S. A near-white cream reports
+    // ~37% S purely because it is light; carry that number down to a dark
+    // lightness and the neutral ground comes back brown. Chroma is what the
+    // colour actually holds, so a near-neutral stays near-neutral and a real
+    // green keeps being green. Damped, since the same chroma reads louder on a
+    // dark ground than on cream.
+    const span = 1 - Math.abs(2 * lightness - 1);
+    let sat = span > 0 ? Math.min(1, (d / span) * chroma) : 0;
+    let hue = h;
+
+    // Warm area fills go cool. A cream ground, a beige residential block, a
+    // yellow school yard: warm because they sit on paper, and on the dark side
+    // they come back as brown. Only green and blue carry meaning here, so those
+    // hues are kept and everything else lands in the same blue-grey as the roads
+    // and the water.
+    const meaningful = h >= 70 && h <= 260; // greens through blues
+    if (cool && !meaningful) {
+      hue = 220;
+      sat = Math.max(sat, 0.16);
+    }
+
+    return `hsla(${Math.round(hue)},${Math.round(sat * 100)}%,${Math.round(lightness * 100)}%,${c.a})`;
+  };
+
+  const flipDeep = (value, range, chroma, cool) => {
+    if (Array.isArray(value)) return value.map((item) => flipDeep(item, range, chroma, cool));
+    return typeof value === "string" ? flip(value, range, chroma, cool) : value;
+  };
+
+  const patchDark = (style) => {
+    patchLight(style);
+
+    style.layers.forEach((layer) => {
+      if (!layer.paint) return;
+      // Shields keep their published colours: the plate behind them is a pale
+      // sprite we can't recolour, so inverting the text puts light on light.
+      if (/shield/.test(layer.id)) return;
+
+      // Area fills sit close to the land and hold little colour: a forest is a
+      // huge polygon, and at a light map's contrast it becomes the whole picture
+      // once the ground is dark. Lines and labels take the full swing, which is
+      // what keeps roads and names bright.
+      const area = /^(background|fill|fill-extrusion)$/.test(layer.type);
+      const range = area ? 0.28 : 1;
+      const chroma = area ? 0.3 : 0.55;
+
+      Object.keys(layer.paint).forEach((key) => {
+        if (key.endsWith("color"))
+          layer.paint[key] = flipDeep(layer.paint[key], range, chroma, area);
+      });
+
+      // Hatching and the pier/rail patterns are sprites, so the flip above can't
+      // reach them: they stay the pale fill drawn for a cream page, which on a
+      // dark ground is the loudest thing on the map. Their light versions are
+      // barely there, so this is what "the same, in dark" means for them.
+      const patterned = Object.keys(layer.paint).some((key) => key.endsWith("-pattern"));
+      if (patterned || /hatching/.test(layer.id)) {
+        layer.paint[layer.type === "line" ? "line-opacity" : "fill-opacity"] = 0.12;
+      }
+
+      // The one value not derived: flipping the light blue lands on a slate the
+      // fjord reads too pale in. Water goes darker than the land at night, which
+      // is the opposite of the flip's direction for it.
+      if (layer.id === "water") layer.paint["fill-color"] = "#0f1626";
+      if (layer.id === "waterway") layer.paint["line-color"] = "#0f1626";
+    });
+  };
+
+  const applyStyle = (theme) =>
+    fetch(STYLE_URL)
       .then((r) => r.json())
       .then((style) => {
-        const dark = url === STYLES.dark;
-
-        // Out: the road casings, the dark outline under every road that makes a
-        // street grid look drawn in ink, and the POI markers, whose bus stops and
-        // shop pins compete with the only markers that matter here, ours.
-        style.layers = style.layers.filter(
-          (layer) => !layer.id.endsWith("_casing") && !layer.id.startsWith("poi_")
-        );
-
-        // Roads in one grey family instead of the yellow/orange road-atlas
-        // convention, motorways and primaries a step up so the hierarchy reads.
-        const road = dark
-          ? { major: "#3c3c3e", minor: "#2a2a2c" }
-          : { major: "#b3bacb", minor: "#ccd2de" };
-
-        // Buildings keep their extrusion, which is what gives a dense block its
-        // shape at close zoom, but softened: a warmer fill at lower opacity reads
-        // as relief rather than as hard shadow.
-        const building = {
-          flat: dark ? "#1c1c1e" : "#ede4d8",
-          solid: dark ? "#242427" : "#ece2d4"
-        };
-
-        // Greens and water fresher than the published pastels.
-        //
-        // The land tint is a zoom ramp, not one colour. Up close the published
-        // cream is right: parks and woods read as green against a neutral city.
-        // Pulled out, most of the country has no forest polygon at all, so the
-        // same cream leaves a white continent with green blobs on it, and the
-        // land needs to carry the green itself.
-        const land = dark
-          ? ["interpolate", ["linear"], ["zoom"], 7, "#141a14", 10, "#0c0c0c"]
-          : ["interpolate", ["linear"], ["zoom"], 7, "#dfeed4", 10, "#f8f4f0"];
-        const green = dark ? "#22301f" : "#b7e29c";
-        const water = dark ? "#16202c" : "#8ec8f2";
-
-        style.layers.forEach((layer) => {
-          const paint = (values) => {
-            layer.paint = { ...layer.paint, ...values };
-          };
-
-          if (layer.type === "background") {
-            paint({ "background-color": land });
-          } else if (layer.type === "line" && /^(road|tunnel|bridge)_/.test(layer.id)) {
-            if (/rail|path|pedestrian|pattern/.test(layer.id)) return;
-            const major = /motorway|trunk|primary/.test(layer.id);
-            paint({ "line-color": major ? road.major : road.minor });
-          } else if (layer.id === "building") {
-            // Buildings arrive two zoom levels later than published (13/14), so
-            // the street grid fills in first and the blocks follow once you are
-            // close enough for them to mean something. Flat for one level, then
-            // the extrusion takes over.
-            layer.minzoom = 15;
-            layer.maxzoom = 16;
-            delete layer.paint?.["fill-outline-color"];
-            paint({ "fill-color": building.flat });
-          } else if (layer.id === "building-3d") {
-            layer.minzoom = 16;
-            paint({ "fill-extrusion-color": building.solid, "fill-extrusion-opacity": 0.55 });
-          } else if (layer.id.startsWith("label_") || layer.id.startsWith("water_name_")) {
-            // Names thin out on the way out. Published, suburbs come in at z8,
-            // villages at z9 and water names at no threshold at all, so a
-            // regional view arrives carrying every fjord, sund and hamlet in it.
-            // Cities and countries keep their own thresholds.
-            const at = {
-              label_other: 12,
-              label_village: 11,
-              label_town: 9,
-              water_name_point_label: 11,
-              water_name_line_label: 11
-            }[layer.id];
-            if (at) layer.minzoom = at;
-          } else if (layer.id.startsWith("highway-name-")) {
-            // Street names arrive with the blocks rather than ahead of them.
-            // Published: major 12.2, minor 15, path 15.5, which puts road names
-            // on screen two zoom levels before there is any building to place
-            // them against.
-            layer.minzoom = { "highway-name-major": 14, "highway-name-minor": 16 }[layer.id] ?? 17;
-          } else if (layer.id === "water") {
-            paint({ "fill-color": water });
-          } else if (layer.id === "park") {
-            delete layer.paint?.["fill-outline-color"];
-            paint({ "fill-color": green, "fill-opacity": 1 });
-          } else if (layer.id === "landcover_grass") {
-            paint({ "fill-color": green, "fill-opacity": 0.75 });
-          } else if (layer.id === "landcover_wood") {
-            paint({ "fill-color": green, "fill-opacity": 0.6 });
-          }
-        });
+        if (theme === "dark") patchDark(style);
+        else patchLight(style);
 
         if (tiles) tiles.getMaplibreMap()?.setStyle(style);
         else
@@ -213,7 +317,7 @@
         // no basemap at all.
         if (!tiles)
           tiles = window.L.maplibreGL({
-            style: url,
+            style: STYLE_URL,
             attribution: ATTRIBUTION,
             ...GL_OPTIONS
           }).addTo(map);
@@ -241,7 +345,7 @@
       // observer below answers a settled size instead.
       trackResize: false
     });
-    tileUrl = STYLES[document.documentElement.dataset.theme] || STYLES.light;
+    tileUrl = document.documentElement.dataset.theme;
     applyStyle(tileUrl);
 
     // Clustering is a second CDN script, so it's optional the same way Leaflet
@@ -311,10 +415,10 @@
     // Dark theme is a token swap everywhere else on the site; the basemap is the
     // one thing that needs telling, so it follows data-theme the same way.
     new MutationObserver(() => {
-      const url = STYLES[document.documentElement.dataset.theme] || STYLES.light;
-      if (tiles && url !== tileUrl) {
-        tileUrl = url;
-        applyStyle(url);
+      const theme = document.documentElement.dataset.theme;
+      if (tiles && theme !== tileUrl) {
+        tileUrl = theme;
+        applyStyle(theme);
       }
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   };

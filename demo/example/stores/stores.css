@@ -567,9 +567,14 @@
 
   /* Below the full snap the list doesn't scroll, so the sheet can be dragged by
      any part of it. touch-action keeps the browser from claiming the gesture
-     first, which is what made the list and the sheet move as two things. */
+     first, which is what made the list and the sheet move as two things. A
+     scroller whose content fits (data-fits, set in stores.js) has nothing to
+     scroll at any snap, so it gives the gesture up too: that is the detail view
+     at full, where the browser was eating the drag for a scroll it never ran. */
   .stores-panel[data-snap="partial"] .stores-panel__scroll,
-  .stores-panel[data-snap="partial"] .stores-detail__scroll {
+  .stores-panel[data-snap="partial"] .stores-detail__scroll,
+  .stores-panel__scroll[data-fits],
+  .stores-detail__scroll[data-fits] {
     overflow-y: hidden;
     touch-action: none;
   }

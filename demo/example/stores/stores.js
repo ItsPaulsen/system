@@ -551,6 +551,8 @@
         fit();
       }
     }
+
+    lockScrollers(); // a shorter list can stop scrolling, and then it stops owning the touch
   };
 
   // ── Detail ────────────────────────────────────────────────────────────────
@@ -644,6 +646,8 @@
           : cards.filter((c) => !c.hidden);
       frameStores(peers, map.getZoom());
     }
+
+    lockScrollers();
   };
 
   // ── Sheet ─────────────────────────────────────────────────────────────────
@@ -677,6 +681,17 @@
 
     snaps = [TOP, Math.round(h * 0.22), Math.max(TOP, h - bottom)];
     if (snaps[1] > snaps[2]) snaps[1] = Math.round(snaps[2] / 2);
+  };
+
+  // A scroller only owns the touch when it has somewhere to scroll. The detail
+  // usually fits the full snap, and a scroller with nothing to scroll was still
+  // claiming the gesture and cancelling the drag, so the sheet could only be
+  // pulled by its handle there. Flagged in the DOM because the lock that frees
+  // the gesture is touch-action, which has to be set before the touch lands.
+  const lockScrollers = () => {
+    [scroll, detailScroll].filter(Boolean).forEach((el) => {
+      el.toggleAttribute("data-fits", el.scrollHeight - el.clientHeight < 2);
+    });
   };
 
   const setOffset = (px) => panel.style.setProperty("--sheet-y", `${px}px`);
@@ -729,6 +744,7 @@
     // Drives the scroll lock in stores.css: the list only scrolls at the full
     // snap, so below it the sheet can take a drag started anywhere on it.
     panel.dataset.snap = snap === 0 ? "full" : "partial";
+    lockScrollers();
     springStart(snaps[snap], velocity || 0);
   };
 
@@ -818,7 +834,7 @@
       "pointerdown",
       (e) => {
         if (desktop.matches || e.pointerType === "mouse") return;
-        if (snap === 0 && el.scrollTop > 0) return;
+        if (snap === 0 && !el.hasAttribute("data-fits") && el.scrollTop > 0) return;
         startDrag(e);
       },
       { passive: true }
@@ -829,7 +845,7 @@
       (e) => {
         if (dragFrom === null) return;
         // At full, only a downward pull counts; scrolling back up is the list's.
-        if (snap === 0 && e.clientY - dragFrom <= 4) return;
+        if (snap === 0 && !el.hasAttribute("data-fits") && e.clientY - dragFrom <= 4) return;
         onMove(e);
       },
       { passive: true }
@@ -841,6 +857,7 @@
 
   const resize = () => {
     measure();
+    lockScrollers();
     if (!desktop.matches) {
       springAt = snaps[snap];
       springTo = springAt;
@@ -914,6 +931,7 @@
 
   initMap();
   measure();
+  lockScrollers();
   springAt = snaps[1];
   snapTo(1);
   apply();

@@ -942,6 +942,15 @@
   });
   back.addEventListener("click", closeDetail);
 
+  // The hours accordion is the detail's version of a region opening: it is the
+  // one thing that can turn a detail that fits into one that scrolls. Counted
+  // twice because it opens on an animation, so the height at the toggle is not
+  // the height it settles at.
+  detail.querySelector(".stores-detail__hours")?.addEventListener("toggle", () => {
+    lockScrollers();
+    setTimeout(lockScrollers, 200);
+  });
+
   // Focusing the search below 1024 opens the sheet: you are about to type and
   // read results, and the peek snap leaves room for about one. This is the same
   // move the handle used to make on a tap, which is exactly where it was wrong:

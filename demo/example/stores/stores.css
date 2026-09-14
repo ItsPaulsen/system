@@ -333,10 +333,11 @@
     padding: 0 var(--space-16) calc(var(--space-80) + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
 
-    /* none, not contain: contain stops the fling reaching the page behind but
-       leaves the scroller its own elastic bounce, which runs at the same time as
-       the sheet's rubber and reads as two things moving separately. */
-    overscroll-behavior: none;
+    /* contain stops the fling reaching the page behind and keeps the scroller its
+       own elastic bounce, which is the give the sheet has and the content should
+       have too. The one place the two collide is a pull-to-close, and that is
+       taken out below rather than by giving the bounce up everywhere. */
+    overscroll-behavior: contain;
   }
 
   /* ── Regions and results ──────────────────────────────────────────────────
@@ -558,7 +559,7 @@
        counts as fitting, and the sheet keeps its whole-surface drag. */
     padding: 0 var(--space-16) calc(var(--space-80) + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
-    overscroll-behavior: none;
+    overscroll-behavior: contain;
   }
 
   /* A scroll container is focusable in its own right, so tabbing through lands
@@ -582,6 +583,15 @@
   .stores-detail__scroll[data-fits] {
     overflow-y: hidden;
     touch-action: none;
+  }
+
+  /* While the sheet is under the finger its rubber is the only give in play. The
+     flag goes up on pointerdown, before anything has moved, so the bounce is
+     already off for the pull that would otherwise run both at once: the content
+     sliding inside a sheet that is sliding too, at twice the speed. */
+  .stores-panel[data-dragging] .stores-panel__scroll,
+  .stores-panel[data-dragging] .stores-detail__scroll {
+    overscroll-behavior: none;
   }
 
   /* The Button's flat skin rather than a link: this is the control you leave by,

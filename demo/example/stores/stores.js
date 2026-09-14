@@ -773,13 +773,32 @@
     return raw;
   };
 
-  const onMove = (e) => {
+  // A drag that starts on a scroller passes that scroller in, and once the sheet
+  // has run out of travel the rest of the pull becomes its scroll: one gesture
+  // takes the sheet to full and keeps reading, instead of stopping at the top
+  // and asking for a second swipe. Only upward, and only away from the handle:
+  // past the bottom the rubberband is still the right answer.
+  const onMove = (e, carrier) => {
     if (dragFrom === null) return;
     const dt = e.timeStamp - lastT;
     if (dt > 0) velocity = (e.clientY - lastY) / dt;
     lastY = e.clientY;
     lastT = e.timeStamp;
-    springAt = offsetFor(dragStart + (e.clientY - dragFrom));
+    const raw = dragStart + (e.clientY - dragFrom);
+    if (carrier) {
+      // Written on every move, not only past the top, so dragging back down
+      // unwinds the scroll before the sheet follows: the gesture is reversible.
+      const over = snaps[0] - raw;
+      carrier.scrollTop = Math.max(0, over);
+      if (over > 0) {
+        // The sheet is parked, so it carries no throw into the release.
+        velocity = 0;
+        springAt = snaps[0];
+        setOffset(springAt);
+        return;
+      }
+    }
+    springAt = offsetFor(raw);
     setOffset(springAt);
   };
 
@@ -846,7 +865,7 @@
         if (dragFrom === null) return;
         // At full, only a downward pull counts; scrolling back up is the list's.
         if (snap === 0 && !el.hasAttribute("data-fits") && e.clientY - dragFrom <= 4) return;
-        onMove(e);
+        onMove(e, el.hasAttribute("data-fits") ? null : el);
       },
       { passive: true }
     );

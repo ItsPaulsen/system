@@ -690,7 +690,11 @@
   // the gesture is touch-action, which has to be set before the touch lands.
   const lockScrollers = () => {
     [scroll, detailScroll].filter(Boolean).forEach((el) => {
-      el.toggleAttribute("data-fits", el.scrollHeight - el.clientHeight < 2);
+      // Measured against the bottom padding, not against zero: that padding is
+      // clearance for the browser's bottom bar, so a scroller with nothing under
+      // the fold but its own empty room has nowhere to scroll and should say so.
+      const clearance = parseFloat(getComputedStyle(el).paddingBottom) || 0;
+      el.toggleAttribute("data-fits", el.scrollHeight - el.clientHeight <= clearance + 1);
     });
   };
 
@@ -853,6 +857,10 @@
       "pointerdown",
       (e) => {
         if (desktop.matches || e.pointerType === "mouse") return;
+        // Recounted here as well as on every change that can move it: the flag
+        // decides who owns this gesture, and it has to be true of the list as it
+        // stands right now, not as it stood when it was last measured.
+        lockScrollers();
         if (snap === 0 && !el.hasAttribute("data-fits") && el.scrollTop > 0) return;
         startDrag(e);
       },
@@ -896,7 +904,13 @@
   const settle = () => {
     panel.dataset.settling = "";
     clearTimeout(settling);
-    settling = setTimeout(() => delete panel.dataset.settling, 200);
+    settling = setTimeout(() => {
+      delete panel.dataset.settling;
+      // An opened region is the one thing that turns a list that fits into one
+      // that scrolls, and it does it on an animation, so the recount waits for
+      // the reflow the flag above is already covering.
+      lockScrollers();
+    }, 200);
   };
 
   regions.forEach((group) => {

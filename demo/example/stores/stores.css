@@ -551,6 +551,11 @@
   .stores-detail__scroll {
     flex: 1;
     min-height: 0;
+
+    /* The same bar-and-indicator clearance the list carries. It is empty room
+       rather than content, so stores.js discounts it when it asks whether this
+       scroller has anywhere to scroll: a detail that ends above the fold still
+       counts as fitting, and the sheet keeps its whole-surface drag. */
     padding: 0 var(--space-16) calc(var(--space-80) + env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     overscroll-behavior: none;

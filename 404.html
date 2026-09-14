@@ -19,9 +19,9 @@
     <script>
       (function () {
         var t = localStorage.getItem("theme");
-        if (t !== "light" && t !== "dark") {
-          t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-        }
+        // Light for a first visit, whatever the OS is set to: this is the theme
+        // the system is designed in, so it is the one it introduces itself in.
+        if (t !== "light" && t !== "dark") t = "light";
         document.documentElement.dataset.theme = t;
       })();
     </script>

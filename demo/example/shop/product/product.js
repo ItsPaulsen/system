@@ -967,15 +967,16 @@
   const renderList = () => {
     if (!list) return;
 
-    // The chosen store is always on the list, whatever the filters say: it is
-    // the answer the buy column is already showing, and hiding it would leave
-    // no way back to it.
-    const kept = cards.filter(
+    // The chosen store is exempt from the filters in its own group only: it is
+    // the answer the buy column is already showing, so it has to stay reachable,
+    // but listing it again under its region while a filter says it has none is
+    // the filter being wrong about it. Everywhere below that heading, it passes
+    // like anything else.
+    const shown = cards.filter(
       (c) =>
-        c === active ||
-        (matches(c) &&
-          (!on("stock") || stockOf(c) !== "none") &&
-          (!on("open") || c.dataset.open === "true"))
+        matches(c) &&
+        (!on("stock") || stockOf(c) !== "none") &&
+        (!on("open") || c.dataset.open === "true")
     );
 
     // Emptying the list detaches whatever row has focus, which drops it to the
@@ -1016,7 +1017,7 @@
       set?.append(li);
     };
 
-    const rest = kept.filter((c) => c !== active).sort((a, b) => distanceOf(a) - distanceOf(b));
+    const rest = shown.filter((c) => c !== active).sort((a, b) => distanceOf(a) - distanceOf(b));
 
     if (active) {
       group("Selected store", CHECK);
@@ -1031,10 +1032,10 @@
     // A to Z, groups and the stores inside them: this is the part of the list you
     // read by looking for a name rather than by distance, and the two above
     // already answer "which is close". localeCompare, so the sort holds for names
-    // the ASCII order would put after z. Every kept store is here, the ones the
-    // groups above shortcut to included.
+    // the ASCII order would put after z. Every store that passed is here, the
+    // ones the groups above shortcut to included.
     const regions = new Map();
-    kept.forEach((card) => {
+    shown.forEach((card) => {
       const region = card.dataset.region || "Other";
       if (!regions.has(region)) regions.set(region, []);
       regions.get(region).push(card);
@@ -1050,7 +1051,7 @@
           .forEach(place);
       });
 
-    if (emptyEl) emptyEl.hidden = kept.length > 0;
+    if (emptyEl) emptyEl.hidden = shown.length > 0 || Boolean(active);
 
     if (was) {
       list.querySelector(`.pdp-store-row[data-store="${was}"]`)?.focus({ preventScroll: true });

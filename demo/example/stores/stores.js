@@ -20,7 +20,7 @@
   if (!panel) return;
 
   const regions = [...panel.querySelectorAll(".stores-region")];
-  const cards = [...panel.querySelectorAll(".stores-card")];
+  const cards = [...panel.querySelectorAll(".ex-store-row")];
   const search = panel.querySelector("[data-stores-search]");
   const nearest = panel.querySelector("[data-stores-nearest]");
   const openNow = panel.querySelector("[data-stores-open]");
@@ -136,8 +136,8 @@
       const marker = window.L.marker(latLng(card), {
         icon: icon(false),
         keyboard: true,
-        title: card.querySelector(".stores-card__name").textContent.trim(),
-        alt: card.querySelector(".stores-card__name").textContent.trim()
+        title: card.querySelector(".ex-store-row__name").textContent.trim(),
+        alt: card.querySelector(".ex-store-row__name").textContent.trim()
       });
       marker.on("click", () => openDetail(card));
       markers.set(card, marker);
@@ -221,8 +221,8 @@
     // name finds everything in it. Not the whole card's text: that would drag the
     // opening hours in, and "open" would match every store printing a closing
     // time.
-    return `${card.querySelector(".stores-card__name").textContent} ${
-      card.querySelector(".stores-card__address").textContent
+    return `${card.querySelector(".ex-store-row__name").textContent} ${
+      card.querySelector(".ex-store-row__address").textContent
     } ${card.dataset.city} ${region.get(card)}`
       .toLowerCase()
       .includes(query);
@@ -305,16 +305,16 @@
 
   const openDetail = (card) => {
     const d = card.dataset;
-    fill("[data-detail-name]", card.querySelector(".stores-card__name").textContent.trim());
+    fill("[data-detail-name]", card.querySelector(".ex-store-row__name").textContent.trim());
     fill(
       "[data-detail-address]",
-      `${card.querySelector(".stores-card__address").textContent.trim()}, ${d.city}`
+      `${card.querySelector(".ex-store-row__address").textContent.trim()}, ${d.city}`
     );
     // Cloned rather than copied as text, so the open/closed word keeps the colour
     // it carries in the list. What follows the state word is bundled into one
     // span so the CSS can drop it while the list is open.
-    const status = card.querySelector(".stores-card__status").cloneNode(true);
-    const state = status.querySelector(".stores-card__state");
+    const status = card.querySelector(".ex-store-row__status").cloneNode(true);
+    const state = status.querySelector(".ex-store-row__state");
     const rest = document.createElement("span");
     rest.className = "stores-detail__hours-rest";
     for (let node = state.nextSibling; node;) {
@@ -663,7 +663,7 @@
       // results mode the regions aren't what the list is showing.
       if (!group.open || panel.dataset.mode !== "regions") return;
       frameStores(
-        [...group.querySelectorAll(".stores-card")].filter((card) => !card.hidden),
+        [...group.querySelectorAll(".ex-store-row")].filter((card) => !card.hidden),
         14
       );
     });

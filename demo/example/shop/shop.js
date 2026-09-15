@@ -514,6 +514,7 @@
 
     if (option) group.dataset.store = option.dataset.store;
     else delete group.dataset.store;
+    window.exampleStore?.write(option?.dataset.store || "");
 
     options.forEach((o) => o.setAttribute("aria-pressed", String(o === option)));
     if (picked) picked.hidden = !option;
@@ -545,6 +546,19 @@
   });
 
   clear?.addEventListener("click", () => select(null));
+
+  // A store chosen on a product page lands here already filtering, and its group
+  // opens so the rail says where the narrowing came from. Through select(), so
+  // the picked line, the chip and the grid all follow the one path; the map
+  // isn't built yet and picks the choice up when it is.
+  const remembered = window.exampleStore?.read();
+  if (remembered) {
+    const option = options.find((o) => o.dataset.store === remembered);
+    if (option) {
+      select(option);
+      group.closest("details")?.setAttribute("open", "");
+    }
+  }
 
   const initMap = () => {
     if (map || !window.L || !canvas) return;

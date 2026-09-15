@@ -431,6 +431,13 @@
     if (desktop.matches) {
       // Rail: filter returns to the grid, ahead of the results column.
       if (filter.parentElement !== rail) rail.insertBefore(filter, main);
+
+      // The sheet has just had its contents taken out from under it, so an open
+      // one is an empty one. Closed without its own animation, since what it
+      // held is already on screen in the rail: sliding an empty panel away is
+      // showing the reader the seam.
+      const sheet = sheetBody.closest("dialog");
+      if (sheet?.open) sheet.close();
     } else if (filter.parentElement !== sheetBody) {
       // Drawer: filter lives inside the sheet body.
       sheetBody.append(filter);

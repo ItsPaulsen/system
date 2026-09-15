@@ -305,108 +305,9 @@
      second button: one focus stop, one target, and the card's own text is the
      accessible name. */
 
-  /* Typed selector on purpose: button.card resets padding to 0, so a plain
-     .stores-card loses on specificity and the inset silently disappears. */
-  button.stores-card {
-    display: flex;
-    align-items: center;
-    gap: var(--space-8);
-    width: 100%;
-
-    /* The card owns its inset and the gap to the chevron; the children carry no
-       padding of their own. .card__content is off the content span on purpose:
-       it exists to supply 20px of padding, which is the one thing this row
-       doesn't want. */
-
-    /* Inline padding sits on the box, not the row, so the rules span the box's
-       full inner width and every row's text starts on the box's own inset. */
-    padding: var(--space-12) 0;
-    border-bottom: var(--border-width) solid var(--fill-tertiary);
-    border-radius: 0;
-  }
-
-  /* Rows in a tight list, so the ring goes inside the card rather than 2px
-     outside it: at 8px apart an offset ring crowds the neighbour above and
-     below, and it is the first thing the accordion's overflow clips. The
-     converge animation starts 6px out, which is past that clip either way.
-     Same call base.css makes for the linked token rows. */
-  button.stores-card:focus-visible {
-    outline: var(--focus-ring-width) solid var(--focus);
-    outline-offset: -3px;
-    animation: none;
-  }
-
-  /* Pressed keeps its resting surface too: .card's tint fills a flush row edge to
-     edge, which on touch means tapping anywhere in the list flashes a grey block
-     across the box. */
-  button.stores-card:not(:disabled):active {
-    background: var(--background-secondary);
-  }
-
-  .stores-list > li:last-child > button.stores-card {
-    border-bottom: 0;
-  }
-
-  .stores-card__content {
-    display: flex;
-    flex: 1;
-    min-width: 0;
-    flex-direction: column;
-  }
-
-  /* Just the glyph, in the tone the other chevrons on the site use. */
-  .stores-card__action {
-    display: flex;
-    flex: none;
-    color: var(--ink-secondary);
-  }
-
-  .stores-card__action svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* Hovering the row darkens the chevron and nothing else: .card tints its whole
-     surface on hover, which on a list of these reads as a second selected state
-     next to the open card's rim. The chevron carries it instead. Guarded by the
-     hover query so a touch screen can't leave either stuck on. Pressed keeps the
-     component's own surface, since that one is feedback for an actual click. */
-
-  /* Hover is the chevron only, same reason. */
-  @media (hover: hover) and (pointer: fine) {
-    button.stores-card:not(:disabled):hover {
-      background: var(--background-secondary);
-    }
-
-    .stores-card:hover .stores-card__action {
-      color: var(--ink-primary);
-    }
-  }
-
-  .stores-card__name {
-    font-size: var(--font-body-small-emphasized-size);
-    font-weight: var(--font-body-small-emphasized-weight);
-    line-height: var(--font-body-small-emphasized-lh);
-  }
-
-  .stores-card__address,
-  .stores-card__status {
-    color: var(--ink-secondary);
-    font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
-  }
-
-  .stores-card__state {
-    color: var(--red);
-  }
-
-  .stores-card__state--open {
-    color: var(--green);
-  }
-
   /* The row matching the open pin. A tint now the rim is gone: a 2px rim on a
      flush row would draw the box back around it. */
-  .stores-card[data-active] {
+  .ex-store-row[data-active] {
     background: var(--accent-soft);
   }
 
@@ -415,7 +316,7 @@
      past and fades it back out, which reads as a highlight sweeping down the
      list. Taking the cards out of hit-testing while the layout settles removes
      the hover without touching the state itself. */
-  .stores-panel[data-settling] .stores-card {
+  .stores-panel[data-settling] .ex-store-row {
     pointer-events: none;
   }
 

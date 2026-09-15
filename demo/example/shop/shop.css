@@ -200,12 +200,12 @@
 
   .shop-store__map {
     /* The colour under the tiles, and so the surface the frame shows while they
-       load. The rail's raised surface rather than the basemap's own cream: at
-       this size the frame reads as one of the rail's cards, and a card is what
-       the other groups put their controls on. Set as the ground token, not a
-       background, so Leaflet's own container takes it too (it reads the same
-       token, from an unlayered rule this couldn't reach otherwise). */
-    --ex-map-ground: var(--background-secondary);
+       load. A step under the hairline around it, so an unloaded frame is one
+       quiet block waiting to be filled rather than a white card pretending to
+       hold something. Set as the ground token, not a background, so Leaflet's
+       own container takes it too (it reads the same token, from an unlayered
+       rule this couldn't reach otherwise). */
+    --ex-map-ground: var(--fill-quaternary);
 
     position: relative;
     height: 380px;

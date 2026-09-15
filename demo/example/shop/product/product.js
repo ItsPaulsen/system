@@ -10,7 +10,7 @@
     color: document.querySelector("[data-pdp-color]"),
     variant: document.querySelector("[data-pdp-variant]"),
     price: document.querySelector("[data-pdp-price]"),
-    badge: document.querySelector("[data-pdp-stock-badge]"),
+    stockRow: document.querySelector("[data-pdp-stock-row]"),
     stock: document.querySelector("[data-pdp-stock-label]"),
     status: document.querySelector("[data-pdp-status]"),
     care: document.querySelector("[data-pdp-care]"),
@@ -36,10 +36,12 @@
   const TIERS = [400, 640, 720, 1440];
   const srcsetFor = (stem) => TIERS.map((w) => `${stem}-${w}.webp ${w}w`).join(", ");
 
-  // Two stock states, each a badge skin plus the lead time it implies.
+  // Two stock states, each a label plus the lead time it implies. The glyph that
+  // goes with them is in the markup; the row's data-state picks which one shows.
   const STOCK = {
-    in: { skin: "badge--green", label: "In stock", lead: "Ships in 2-4 days" },
-    order: { skin: "badge--amber", label: "Made to order", lead: "Ships in 6-8 weeks" }
+    in: { label: "In stock online", lead: "Ships in 2-4 days" },
+    few: { label: "Few left online", lead: "Ships in 2-4 days" },
+    order: { label: "Made to order", lead: "Ships in 6-8 weeks" }
   };
 
   const set = (el, text) => {
@@ -88,10 +90,7 @@
     const stock = STOCK[d.stock] || STOCK.in;
     set(out.stock, stock.label);
     set(out.lead, stock.lead);
-    if (out.badge) {
-      out.badge.classList.remove("badge--green", "badge--amber");
-      out.badge.classList.add(stock.skin);
-    }
+    if (out.stockRow) out.stockRow.dataset.state = STOCK[d.stock] ? d.stock : "in";
     // Three things moved at once and the radio only announces itself, so say the
     // rest. Not on the first render: the page hasn't changed yet, it has arrived,
     // and a region populated at load can read itself out over the page.
@@ -769,4 +768,453 @@
   row.addEventListener("scroll", sync, { passive: true });
   window.addEventListener("resize", sync);
   sync();
+})();
+
+// Which store has this one, and which store the reader has chosen.
+//
+// The rows in the sheet are the data: each carries its coordinates and what the
+// shelf holds, so the pins are built from the list the reader can already see
+// and the buy column's line is read off the chosen row. The list is the control
+// at every width; the map is a second view of it, built on first open and left
+// out entirely if its scripts never arrive.
+//
+// The choice is the shop listing's choice too (store.js), so picking here lands
+// the listing already filtered, and picking there answers this page back.
+(function () {
+  const block = document.querySelector("[data-pdp-store-row]");
+  const sheet = document.getElementById("pdp-store-sheet");
+  if (!block || !sheet) return;
+
+  const text = block.querySelector("[data-pdp-store-text]");
+  const action = block.querySelector("[data-pdp-store-action]");
+  const title = sheet.querySelector("[data-pdp-store-title]");
+  const status = document.querySelector("[data-pdp-status]");
+
+  const picker = sheet.querySelector("[data-pdp-picker]");
+  const toggle = sheet.querySelector("[data-pdp-picker-toggle]");
+  const toggleLabel = sheet.querySelector("[data-pdp-picker-toggle-label]");
+  const mapEl = sheet.querySelector("[data-pdp-store-map]");
+  const canvas = sheet.querySelector(".pdp-store-map__canvas");
+  const list = sheet.querySelector("[data-pdp-store-list]");
+  const emptyEl = sheet.querySelector("[data-pdp-store-empty]");
+  const filters = [...sheet.querySelectorAll("[data-pdp-store-filter]")];
+  const search = sheet.querySelector("[data-pdp-store-search]");
+  const cards = [...sheet.querySelectorAll(".pdp-store-row")];
+  if (!cards.length) return;
+
+  // Where each row started, so every pass rebuilds the list from the same set
+  // rather than from whatever the last pass left behind.
+  const items = new Map(cards.map((card) => [card, card.parentElement]));
+
+  // What a shelf state is called and what it wears. One table for the buy
+  // column's line and the sheet's rows, so the two can't disagree about what
+  // "few" means or looks like.
+  const STOCK = {
+    in: { label: "In stock", skin: "badge--green" },
+    few: { label: "Few left", skin: "badge--amber" },
+    none: { label: "Not in stock", skin: "badge--neutral" }
+  };
+
+  const colours = document.querySelector(".pdp-color__list");
+  const colour = () => document.querySelector(".pdp-swatch__input:checked")?.value || "";
+
+  // A row's data-stock is what the shop holds of this piece; data-stock-out
+  // names the colourways it doesn't, so a shelf can be full of the oak and have
+  // never carried the dark brown. Listed on the row rather than a state per
+  // colour, since the exceptions are the short half of that table.
+  const stockOf = (card) => {
+    const out = (card.dataset.stockOut || "").split(/\s+/).filter(Boolean);
+    if (out.includes(colour())) return "none";
+    return card.dataset.stock in STOCK ? card.dataset.stock : "none";
+  };
+
+  const latLng = (card) => [Number(card.dataset.lat), Number(card.dataset.lng)];
+  const nameOf = (card) => card.querySelector(".ex-store-row__name").textContent.trim();
+  const distanceOf = (card) => Number(card.dataset.distance) || 0;
+
+  // How many of the nearest get a group of their own before the regions start.
+  const NEAR = 4;
+
+  const PICKED_ZOOM = 13;
+  const markers = new Map();
+  let clusters = null;
+  let map = null;
+  let active = null;
+
+  const icon = (on) =>
+    window.L.divIcon({
+      className: "",
+      html: `<span class="ex-pin${on ? " ex-pin--active" : ""}">
+               <span class="ex-pin__dot"></span>
+             </span>`,
+      iconSize: [36, 36],
+      iconAnchor: [18, 18]
+    });
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+
+  const fit = () => {
+    if (!map) return;
+    map.fitBounds(window.L.latLngBounds(cards.map(latLng)), { padding: [26, 26], animate: false });
+  };
+
+  // Every pin stays on the map here, unlike the listing's picker: this sheet is
+  // where a store is compared against the others, so hiding the rest would take
+  // away the comparison the reader opened it for.
+  const render = () => {
+    cards.forEach((card) => {
+      card.setAttribute("aria-pressed", String(card === active));
+      markers.get(card)?.setIcon(icon(card === active));
+
+      // Written here rather than left in the markup: a row's state follows the
+      // chosen colourway, so the badge is only true until the next swatch.
+      const state = stockOf(card);
+      card.dataset.state = state;
+      const line = card.querySelector("[data-pdp-card-stock]");
+      if (line) line.textContent = STOCK[state].label;
+    });
+
+    // Unchosen, the line answers the question a reader has before they have a
+    // store in mind: how many shops have it at all. Counted off the rows rather
+    // than written down, so it can't disagree with the list it came from.
+    if (!active) {
+      const stocked = cards.filter((c) => stockOf(c) !== "none").length;
+      block.dataset.state = stocked ? "in" : "none";
+      if (text) text.textContent = `In stock in ${stocked} stores`;
+      if (action) action.textContent = "Choose a store";
+      // The sheet is named by the button that opens it, so the reader arrives at
+      // the thing they pressed rather than at a different word for it.
+      if (title) title.textContent = "Choose a store";
+      return;
+    }
+
+    const state = stockOf(active);
+    block.dataset.state = state;
+    if (text) text.textContent = `${STOCK[state].label} at ${nameOf(active)}`;
+    if (action) action.textContent = "Change store";
+    if (title) title.textContent = "Change store";
+  };
+
+  // One entry point: the buy column's line and the list are two views of the
+  // same choice, so nothing calls only half of it.
+  const renderAll = () => {
+    render();
+    renderList();
+  };
+
+  // A colourway the chosen shop never carried changes this line without the
+  // store changing, so the swatches redraw it.
+  colours?.addEventListener("change", renderAll);
+
+  // ── The list ──────────────────────────────────────────────────────────────
+  // Rebuilt from the rows on every pass: the chosen store first under its own
+  // heading, then the nearest few, then what is left by region. A row appears
+  // once, in the first group that claims it, so "near me" and a region never
+  // show the same shop twice.
+  const on = (name) => filters.find((f) => f.dataset.pdpStoreFilter === name)?.checked;
+
+  // Name, street and the region it is filed under, the same four fields the store
+  // finder searches: typing a group name finds everything in it. Not the whole
+  // row's text, which would drag the opening line in and let "open" match every
+  // shop printing a closing time, and not the stock line either, which would make
+  // "in stock" a search term.
+  const matches = (card) => {
+    const q = (search?.value || "").trim().toLowerCase();
+    if (!q) return true;
+    const name = card.querySelector(".ex-store-row__name")?.textContent || "";
+    const address = card.querySelector(".ex-store-row__address")?.textContent || "";
+    return `${name} ${address} ${card.dataset.region || ""}`.toLowerCase().includes(q);
+  };
+
+  const heading = (label, icon) => {
+    const li = document.createElement("li");
+    li.className = "pdp-store-group";
+    li.innerHTML =
+      `<span class="pdp-store-group__icon" aria-hidden="true">${icon}</span>` +
+      `<span class="pdp-store-group__label"></span>`;
+    li.querySelector(".pdp-store-group__label").textContent = label;
+    return li;
+  };
+
+  const CHECK =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>';
+
+  const PIN =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />' +
+    '<path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0" /></svg>';
+
+  const renderList = () => {
+    if (!list) return;
+
+    // The chosen store is always on the list, whatever the filters say: it is
+    // the answer the buy column is already showing, and hiding it would leave
+    // no way back to it.
+    const kept = cards.filter(
+      (c) =>
+        c === active ||
+        (matches(c) &&
+          (!on("stock") || stockOf(c) !== "none") &&
+          (!on("open") || c.dataset.open === "true"))
+    );
+
+    // Emptying the list detaches whatever row has focus, which drops it to the
+    // body and takes the ring with it: the rows survive the rebuild (they are
+    // moved, not recreated), so the one that had focus gets it back after.
+    // The row that had focus may be a copy this pass throws away, so what is
+    // remembered is which store it was, not which element.
+    const was = list.contains(document.activeElement)
+      ? document.activeElement.closest(".pdp-store-row")?.dataset.store
+      : null;
+
+    list.textContent = "";
+
+    // A group is a heading and then one surface holding its rows, so the label
+    // sits over the box the way it does on the rest of the site rather than
+    // inside it. The rows keep their hairlines; the box supplies the corners and
+    // the inset.
+    let set = null;
+    const group = (label, icon) => {
+      list.append(heading(label, icon));
+      const li = document.createElement("li");
+      li.className = "pdp-store-set";
+      const ul = document.createElement("ul");
+      ul.className = "ex-store-list pdp-store-set__list";
+      li.append(ul);
+      list.append(li);
+      set = ul;
+    };
+
+    const place = (card) => set?.append(items.get(card));
+
+    // The shortcut groups show a copy, so the row keeps its place under its own
+    // region as well: those groups are a way to the store, not where it lives.
+    // Cloned after render() has written the row's state, so the copy carries it.
+    const copy = (card) => {
+      const li = document.createElement("li");
+      li.append(card.cloneNode(true));
+      set?.append(li);
+    };
+
+    const rest = kept.filter((c) => c !== active).sort((a, b) => distanceOf(a) - distanceOf(b));
+
+    if (active) {
+      group("Selected store", CHECK);
+      copy(active);
+    }
+
+    if (rest.length) {
+      group("Nearby stores", PIN);
+      rest.slice(0, NEAR).forEach(copy);
+    }
+
+    // Regions in the order the markup lists them, so the groups don't reshuffle
+    // as filters come and go. Every kept store is here, the ones the groups above
+    // shortcut to included.
+    const seen = new Set();
+    kept.forEach((card) => {
+      const region = card.dataset.region || "Other";
+      if (!seen.has(region)) {
+        seen.add(region);
+        group(region, "");
+      }
+      place(card);
+    });
+
+    if (emptyEl) emptyEl.hidden = kept.length > 0;
+
+    if (was) {
+      list.querySelector(`.pdp-store-row[data-store="${was}"]`)?.focus({ preventScroll: true });
+    }
+  };
+
+  filters.forEach((f) => f.addEventListener("change", renderList));
+  search?.addEventListener("input", renderList);
+
+  const select = (card, { announce = false } = {}) => {
+    active = card;
+    window.exampleStore?.write(card?.dataset.store || "");
+    renderAll();
+    if (map && card) {
+      map.flyTo(latLng(card), PICKED_ZOOM, { animate: !reduced.matches, duration: 0.6 });
+    }
+    // The line that changed is in the buy column, and the sheet closing takes
+    // focus away from it, so the polite region says what it now reads.
+    if (announce && status && card) {
+      status.textContent = `${STOCK[stockOf(card)].label} at ${nameOf(card)}`;
+    }
+  };
+
+  // Delegated, not bound per row: the shortcut groups at the top of the list are
+  // copies of rows that also sit under their region, so the thing pressed is not
+  // always the element the marker and the state are keyed to. The store's own
+  // name on the row is what resolves it back.
+  cards.forEach((card) => card.setAttribute("aria-pressed", "false"));
+
+  list?.addEventListener("click", (e) => {
+    const row = e.target.closest(".pdp-store-row");
+    if (!row) return;
+    const card = cards.find((c) => c.dataset.store === row.dataset.store);
+    if (!card) return;
+    select(card, { announce: true });
+    // Chosen is the answer to the question the sheet asked, so it closes on it.
+    sheet.close();
+  });
+
+  const initMap = () => {
+    if (map || !window.L || !canvas) return;
+
+    map = window.L.map(canvas, {
+      zoomControl: false,
+      attributionControl: false,
+      fadeAnimation: false,
+      maxZoom: 20,
+      minZoom: 4,
+      // The sheet scrolls, so a wheel over the map belongs to the sheet.
+      scrollWheelZoom: false,
+      trackResize: false
+    });
+
+    mapEl.hidden = false;
+    const ready = window.exampleBasemap(map, canvas);
+
+    clusters = window.L.markerClusterGroup
+      ? window.L.markerClusterGroup({
+          showCoverageOnHover: false,
+          maxClusterRadius: 56,
+          animate: false,
+          spiderfyOnMaxZoom: false,
+          iconCreateFunction: (cluster) =>
+            window.L.divIcon({
+              className: "",
+              html: `<span class="ex-pin ex-pin--cluster">${cluster.getChildCount()}</span>`,
+              iconSize: [44, 44],
+              iconAnchor: [22, 22]
+            })
+        }).addTo(map)
+      : null;
+
+    cards.forEach((card) => {
+      const label = nameOf(card);
+      const marker = window.L.marker(latLng(card), {
+        icon: icon(card === active),
+        keyboard: true,
+        title: label,
+        alt: label
+      });
+      // The row is the control, so a pin presses it: one path, and the sheet
+      // closes on a pin the same way it closes on a row.
+      marker.on("click", () => card.click());
+      markers.set(card, marker);
+      clusters ? clusters.addLayer(marker) : marker.addTo(map);
+    });
+
+    const zoom = [...sheet.querySelectorAll("[data-pdp-store-zoom]")];
+    const syncZoom = () => {
+      const z = map.getZoom();
+      zoom.forEach((button) => {
+        button.disabled =
+          button.dataset.pdpStoreZoom === "in"
+            ? z >= map.getMaxZoom() - 0.01
+            : z <= map.getMinZoom() + 0.01;
+      });
+    };
+    zoom.forEach((button) => {
+      button.addEventListener("click", () => {
+        map.setZoom(map.getZoom() + (button.dataset.pdpStoreZoom === "in" ? 1 : -1));
+      });
+    });
+    map.on("zoomend", syncZoom);
+    syncZoom();
+
+    if (active) map.setView(latLng(active), PICKED_ZOOM, { animate: false });
+    else fit();
+
+    ready.then(() => {
+      mapEl.dataset.ready = "";
+    });
+
+    // The sheet is display:none until it opens, so the box Leaflet measured is
+    // not the one it ends up with. Refit once the size settles, unless a store
+    // is chosen, in which case the view is that store and not the set.
+    map.on("resize", () => {
+      if (!active) fit();
+    });
+  };
+
+  // Below 1024 the map is a panel over the rows and the bar raises it. From 1024
+  // both panes are on screen and the bar is out of the way.
+  //
+  // No Leaflet, no map panel and nothing to switch to: the rows take the whole
+  // picker rather than sharing it with an empty column. Read now rather than on
+  // first open, since every map script is deferred ahead of this one and has
+  // either arrived by now or isn't coming.
+  if (!window.L && picker) picker.dataset.map = "off";
+
+  // The panel rests with exactly its bar showing, so that height has to be the
+  // real one: a hardcoded guess is a jump at both ends of every slide. Measured
+  // whenever the box can change, since the bar's height follows the font.
+  const measureSwitch = () => {
+    if (!mapEl || !toggle) return;
+    const bar = toggle.closest(".pdp-picker__switch") || toggle;
+    mapEl.style.setProperty("--pdp-switch-h", `${bar.getBoundingClientRect().height}px`);
+  };
+
+  if (toggle) new ResizeObserver(measureSwitch).observe(toggle);
+
+  const setView = (view) => {
+    if (!picker) return;
+    picker.dataset.view = view;
+    if (toggle) toggle.setAttribute("aria-expanded", String(view === "map"));
+    if (toggleLabel) toggleLabel.textContent = view === "map" ? "Show the list" : "Show on map";
+  };
+
+  // Crossing the breakpoint changes the panel from a column of the grid to a
+  // sheet slid down out of the way, and the transition animates that: the map
+  // slides off rather than simply not being there any more. CSS can't tell a
+  // resize from a press, so the crossing says so itself and the move is cut for
+  // the frames it takes to settle. The view goes back to the rows at the same
+  // time, so coming back down never lands on a raised panel.
+  const wide = matchMedia("(min-width: 1024px)");
+
+  wide.addEventListener("change", () => {
+    if (!picker) return;
+    picker.dataset.resizing = "";
+    picker.dataset.view = "list";
+    requestAnimationFrame(() => {
+      // The pane has just changed shape, and Leaflet is still holding the size it
+      // measured in the other layout: it would paint one frame at the old
+      // dimensions and correct itself when the basemap's trailing resize watch
+      // catches up, which is the jump. Told now, while the frame is still blank.
+      map?.invalidateSize({ animate: false });
+      requestAnimationFrame(() => delete picker.dataset.resizing);
+    });
+  });
+
+  toggle?.addEventListener("click", () => {
+    setView(picker?.dataset.view === "map" ? "list" : "map");
+  });
+
+  // The scrim is the picker's own ::after, so a press that lands on it arrives
+  // here with the picker as its target: anything inside the panel or the rows
+  // reports itself instead.
+  picker?.addEventListener("click", (e) => {
+    if (e.target === picker && picker.dataset.view === "map") setView("list");
+  });
+
+  // Built on first open, whichever view is showing: the panel is laid out at its
+  // full size even while it is slid down, so the map has a box to render into
+  // before the reader asks for it and is drawn by the time it comes up.
+  sheet.addEventListener("toggle", () => {
+    if (sheet.open) initMap();
+  });
+
+  // A store chosen on the listing (or here, last visit) is already the answer.
+  const remembered = window.exampleStore?.read();
+  const start = remembered && cards.find((c) => c.dataset.store === remembered);
+  if (start) select(start);
+  else renderAll();
 })();

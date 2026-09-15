@@ -14,6 +14,30 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
     />
+    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+      integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css"
+      integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Cluster base only, not its Default skin: the positioning and the
+         zoom/spiderfy animations are needed, the orange discs are not. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/globals.css" />
     <link rel="stylesheet" href="/demo/components.css" />
@@ -594,7 +618,7 @@
                         data-lowest="6 199 kr"
                         data-color="Refine leather black/black"
                         data-price="5 879 kr"
-                        data-stock="order"
+                        data-stock="few"
                         data-img="/assets/images/products/cover-side-chair-black-leather"
                         data-alt="Cover Side Chair in black refine leather"
                       />
@@ -715,15 +739,107 @@
                 </button>
               </div>
 
-              <p class="pdp-buy__stock">
-                <!-- No glyph: the skin already carries the state and the label
-                     already names it, so an icon here is a third telling of the
-                     same thing. -->
-                <span class="badge badge--green" data-pdp-stock-badge>
-                  <span data-pdp-stock-label>In stock</span>
-                </span>
-                <span class="pdp-buy__lead" data-pdp-lead>Ships in 2-4 days</span>
-              </p>
+              <!-- Availability, two lines: what the warehouse will send and what a
+                   shop floor is holding. Both states live in the markup and the
+                   row's data-state reveals one, so a colour change or a new store
+                   never rebuilds the glyph. A circle rather than a badge: at two
+                   lines the filled skins were most of the column. -->
+              <ul class="pdp-avail">
+                <li class="pdp-avail__row" data-pdp-store-row data-state="in">
+                  <span class="pdp-avail__glyph">
+                    <svg
+                      class="pdp-avail__icon"
+                      data-icon="check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                      <path d="M9 12l2 2l4 -4" />
+                    </svg>
+                    <svg
+                      class="pdp-avail__icon"
+                      data-icon="alert"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                      <path d="M12 8v4" />
+                      <path d="M12 16h.01" />
+                    </svg>
+                    <svg
+                      class="pdp-avail__icon"
+                      data-icon="cross"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <!-- circle-x's own cross, grown to the 9-15 span the tick beside it takes -->
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                      <path d="M9 9l6 6m0 -6l-6 6" />
+                    </svg>
+                  </span>
+                  <span class="pdp-avail__text" data-pdp-store-text></span>
+                  <button
+                    class="link pdp-avail__action"
+                    type="button"
+                    data-dialog-open="pdp-store-sheet"
+                    data-pdp-store-action
+                  >
+                    Choose a store
+                  </button>
+                </li>
+                <li class="pdp-avail__row" data-pdp-stock-row data-state="in">
+                  <span class="pdp-avail__glyph">
+                    <svg
+                      class="pdp-avail__icon"
+                      data-icon="check"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                      <path d="M9 12l2 2l4 -4" />
+                    </svg>
+                    <svg
+                      class="pdp-avail__icon"
+                      data-icon="alert"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                      <path d="M12 8v4" />
+                      <path d="M12 16h.01" />
+                    </svg>
+                  </span>
+                  <span class="pdp-avail__text">
+                    <span data-pdp-stock-label>In stock online</span>.
+                    <span class="pdp-avail__lead" data-pdp-lead>Ships in 2-4 days</span>
+                  </span>
+                </li>
+              </ul>
 
               <!-- What the buy column just did, for anyone who can't see it do it.
                    Choosing a colour rewrites the name, the price and the stock at
@@ -878,6 +994,1396 @@
            close (product.js), the way the listing's filter rail moves between the
            rail and its sheet: one carousel, one position, nothing to keep in sync,
            and no second copy of the slides to repoint on a colour change. -->
+
+      <!-- Store picker. The map is a second view of the list, not a replacement
+           for it: the rows are the control at every width and carry the
+           coordinates the pins are built from, so the picker works before the
+           map's scripts land and if they never do. -->
+      <dialog class="sheet pdp-store-sheet" id="pdp-store-sheet">
+        <!-- Map, header and list are siblings, not a header over both: from 1024
+             the map holds the whole left column and the header sits over the rows
+             it names. -->
+        <div class="sheet__inner pdp-picker" data-pdp-picker data-view="list">
+          <header class="sheet__header pdp-picker__head">
+            <h2 class="sheet__title pdp-picker__title" data-pdp-store-title>Choose a store</h2>
+            <button
+              class="sheet__close pdp-picker__close"
+              type="button"
+              data-dialog-close
+              aria-label="Close"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </button>
+          </header>
+          <div class="pdp-picker__list scroll-area" data-scroll-area>
+            <div class="scroll-area__viewport pdp-picker__scroll">
+              <!-- The rows are the data: coordinates for the pins, region and
+                   distance for the grouping, and what the shelf holds. product.js
+                   sorts them into their groups and writes each stock line, since
+                   both follow the chosen colourway. -->
+              <!-- Search and filters, a band across the panel rather than a card in the
+               list: it stays put while the rows scroll under it. -->
+              <div class="pdp-store-head">
+                <div class="input pdp-store-search">
+                  <label class="input__label sr-only" for="pdp-store-search"
+                    >Search for a place or store name</label
+                  >
+                  <span class="input__container input__container--rounded">
+                    <span class="input__leading">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                        <path d="M21 21l-6 -6" />
+                      </svg>
+                    </span>
+                    <input
+                      id="pdp-store-search"
+                      name="pdp-store-search"
+                      class="input__element"
+                      type="search"
+                      placeholder="Search for a place or store name"
+                      autocomplete="off"
+                      data-pdp-store-search
+                    />
+                  </span>
+                </div>
+
+                <!-- Stock is on, open is not: a shop with none of this is no answer
+                     at all, while a shut one still is, since the reader may be
+                     planning tomorrow. The chosen store is exempt from both (see
+                     product.js): it is the answer the buy column is already showing,
+                     and filtering it out would leave no way back to it. -->
+                <div class="pdp-store-filters" data-size="sm">
+                  <label class="chip chip--as-checkbox">
+                    <input
+                      name="pdp-store-stock"
+                      type="checkbox"
+                      class="chip__input"
+                      checked
+                      data-pdp-store-filter="stock"
+                    />
+                    In stock
+                  </label>
+                  <label class="chip chip--as-checkbox">
+                    <input
+                      name="pdp-store-open"
+                      type="checkbox"
+                      class="chip__input"
+                      data-pdp-store-filter="open"
+                    />
+                    Open now
+                  </label>
+                </div>
+              </div>
+              <ul class="ex-store-list pdp-store-list" data-pdp-store-list>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="old-town"
+                    data-lat="59.9123"
+                    data-lng="10.7459"
+                    data-region="Central"
+                    data-distance="1.2"
+                    data-open="true"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Old Town</span>
+                      <span class="ex-store-row__address">
+                        Market Square 1
+                        <span aria-hidden="true">·</span>
+                        1.2 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 20:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="midtown"
+                    data-lat="59.9165"
+                    data-lng="10.7325"
+                    data-region="Central"
+                    data-distance="2.4"
+                    data-open="true"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Midtown</span>
+                      <span class="ex-store-row__address">
+                        Bridge Street 18
+                        <span aria-hidden="true">·</span>
+                        2.4 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 19:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="harbour"
+                    data-lat="59.908"
+                    data-lng="10.7233"
+                    data-region="Central"
+                    data-distance="3.1"
+                    data-open="false"
+                    data-stock="few"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Harbour</span>
+                      <span class="ex-store-row__address">
+                        Pier Road 4
+                        <span aria-hidden="true">·</span>
+                        3.1 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state">Closed</span>
+                        <span aria-hidden="true">·</span>
+                        Opens Tue 11:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="eastgate"
+                    data-lat="59.9155"
+                    data-lng="10.802"
+                    data-region="East"
+                    data-distance="4.6"
+                    data-open="true"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Eastgate</span>
+                      <span class="ex-store-row__address">
+                        Eastgate Park 7
+                        <span aria-hidden="true">·</span>
+                        4.6 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 20:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="parkside"
+                    data-lat="59.9268"
+                    data-lng="10.788"
+                    data-region="East"
+                    data-distance="5.0"
+                    data-open="true"
+                    data-stock="none"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Parkside</span>
+                      <span class="ex-store-row__address">
+                        Linden Avenue 22
+                        <span aria-hidden="true">·</span>
+                        5.0 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 19:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="elmwood"
+                    data-lat="59.905"
+                    data-lng="10.826"
+                    data-region="East"
+                    data-distance="6.8"
+                    data-open="false"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Elmwood</span>
+                      <span class="ex-store-row__address">
+                        Elmwood Lane 3
+                        <span aria-hidden="true">·</span>
+                        6.8 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state">Closed</span>
+                        <span aria-hidden="true">·</span>
+                        Opens Tue 08:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="northgate"
+                    data-lat="59.9605"
+                    data-lng="10.758"
+                    data-region="North"
+                    data-distance="7.4"
+                    data-open="true"
+                    data-stock="few"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Northgate</span>
+                      <span class="ex-store-row__address">
+                        Northgate Road 55
+                        <span aria-hidden="true">·</span>
+                        7.4 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 20:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="hillcrest"
+                    data-lat="59.9482"
+                    data-lng="10.786"
+                    data-region="North"
+                    data-distance="6.2"
+                    data-open="false"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Hillcrest</span>
+                      <span class="ex-store-row__address">
+                        Hillcrest Terrace 9
+                        <span aria-hidden="true">·</span>
+                        6.2 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state">Closed</span>
+                        <span aria-hidden="true">·</span>
+                        Opens Tue 10:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="lakeview"
+                    data-lat="59.9702"
+                    data-lng="10.721"
+                    data-region="North"
+                    data-distance="9.1"
+                    data-open="true"
+                    data-stock="none"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Lakeview</span>
+                      <span class="ex-store-row__address">
+                        Lakeview Walk 12
+                        <span aria-hidden="true">·</span>
+                        9.1 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 16:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="southbank"
+                    data-lat="59.888"
+                    data-lng="10.762"
+                    data-region="South"
+                    data-distance="3.9"
+                    data-open="true"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Southbank</span>
+                      <span class="ex-store-row__address">
+                        Southbank Quay 2
+                        <span aria-hidden="true">·</span>
+                        3.9 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 19:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="stonebridge"
+                    data-lat="59.8752"
+                    data-lng="10.788"
+                    data-region="South"
+                    data-distance="8.3"
+                    data-open="false"
+                    data-stock="few"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Stonebridge</span>
+                      <span class="ex-store-row__address">
+                        Stonebridge Row 41
+                        <span aria-hidden="true">·</span>
+                        8.3 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state">Closed</span>
+                        <span aria-hidden="true">·</span>
+                        Opens Tue 08:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="westfield"
+                    data-lat="59.923"
+                    data-lng="10.68"
+                    data-region="West"
+                    data-distance="5.5"
+                    data-open="true"
+                    data-stock="in"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Westfield</span>
+                      <span class="ex-store-row__address">
+                        Westfield Green 30
+                        <span aria-hidden="true">·</span>
+                        5.5 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 20:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="riverside"
+                    data-lat="59.935"
+                    data-lng="10.657"
+                    data-region="West"
+                    data-distance="7.9"
+                    data-open="true"
+                    data-stock="none"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Riverside</span>
+                      <span class="ex-store-row__address">
+                        Riverside Path 6
+                        <span aria-hidden="true">·</span>
+                        7.9 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state ex-store-row__state--open">Open</span>
+                        <span aria-hidden="true">·</span>
+                        Closes 19:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="card ex-store-row pdp-store-row"
+                    type="button"
+                    data-store="greenfield"
+                    data-lat="59.9034"
+                    data-lng="10.6368"
+                    data-region="West"
+                    data-distance="9.6"
+                    data-open="false"
+                    data-stock="in"
+                    data-stock-out="dark-beige dark-brown"
+                  >
+                    <span class="ex-store-row__content">
+                      <span class="ex-store-row__name">Greenfield</span>
+                      <span class="ex-store-row__address">
+                        Greenfield Court 14
+                        <span aria-hidden="true">·</span>
+                        9.6 km
+                      </span>
+                      <span class="ex-store-row__status pdp-store-row__stock">
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="check"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 12l2 2l4 -4" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="alert"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                          <path d="M12 8v4" />
+                          <path d="M12 16h.01" />
+                        </svg>
+                        <svg
+                          class="pdp-store-row__icon"
+                          data-icon="cross"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                          <path d="M9 9l6 6m0 -6l-6 6" />
+                        </svg>
+                        <span data-pdp-card-stock></span>
+                      </span>
+                      <span class="ex-store-row__status">
+                        <span class="ex-store-row__state">Closed</span>
+                        <span aria-hidden="true">·</span>
+                        Opens Tue 08:00
+                      </span>
+                    </span>
+                    <span class="ex-store-row__action" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M9 6l6 6l-6 6" />
+                      </svg>
+                    </span>
+                  </button>
+                </li>
+              </ul>
+
+              <p class="pdp-store-empty" hidden data-pdp-store-empty>
+                No stores match those filters.
+              </p>
+            </div>
+            <div class="scroll-area__bar" aria-hidden="true">
+              <div class="scroll-area__thumb"></div>
+            </div>
+          </div>
+
+          <div class="pdp-picker__map">
+            <!-- The panel's own top edge, and the only part of it showing while it
+                 is down. Out of the way from 1024, where both panes are on screen
+                 and there is nothing to switch between. -->
+            <p class="pdp-picker__switch">
+              <button
+                class="button button--flat button--with-end-icon pdp-picker__toggle"
+                type="button"
+                data-pdp-picker-toggle
+                aria-expanded="false"
+              >
+                <span class="button__label" data-pdp-picker-toggle-label>Show on map</span>
+                <svg
+                  class="pdp-picker__chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M6 15l6 -6l6 6" />
+                </svg>
+              </button>
+            </p>
+            <div class="pdp-store-map" data-pdp-store-map hidden>
+              <div class="pdp-store-map__canvas" id="pdp-store-map"></div>
+              <div class="pdp-store-map__zoom">
+                <button
+                  class="button button--flat button--icon pdp-store-map__zoom-button"
+                  type="button"
+                  data-pdp-store-zoom="in"
+                  aria-label="Zoom in"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 5l0 14" />
+                    <path d="M5 12l14 0" />
+                  </svg>
+                </button>
+                <button
+                  class="button button--flat button--icon pdp-store-map__zoom-button"
+                  type="button"
+                  data-pdp-store-zoom="out"
+                  aria-label="Zoom out"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12l14 0" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </dialog>
+
       <dialog class="dialog pdp-zoom" id="pdp-zoom" aria-label="Cover Side Chair, larger view">
         <div class="dialog__inner pdp-zoom__inner">
           <button
@@ -1167,8 +2673,40 @@
 
     <div data-chrome="grid-overlay"></div>
 
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+      integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <!-- Vector basemap: MapLibre renders OpenFreeMap's styles, bridged into
+         Leaflet as a layer so every marker, cluster and gesture stays Leaflet's. -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"
+      integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"
+      integrity="sha384-4CB9Vtol9LN6lGgBCvmPLbUEZwilrqIvPieSRurgAXAB7FVJaLS9n8WyAIA5wjQ+"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/map.js" defer></script>
+    <script src="/demo/example/store.js" defer></script>
     <script src="/demo/example/shop/product/product.js" defer></script>
   </body>
 </html>

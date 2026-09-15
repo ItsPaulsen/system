@@ -1847,6 +1847,113 @@
     inset: -4px; /* 40 → 48 hit target */
   }
 
+  /* ── Store row ────────────────────────────────────────────────────────────
+     A store in a list, shared by the finder and the product page's picker: a
+     flush row with a hairline under it rather than a raised card, since a column
+     of these is one list and not a stack of objects.
+
+     Each page adds what is its own, a chevron into a detail view on one, a stock
+     line on the other, and the row itself is the same either way. */
+
+  /* Typed selector on purpose: button.card resets padding to 0, so a plain
+     .ex-store-row loses on specificity and the inset silently disappears. */
+  button.ex-store-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    width: 100%;
+
+    /* The card owns its inset and the gap to the chevron; the children carry no
+       padding of their own. .card__content is off the content span on purpose:
+       it exists to supply 20px of padding, which is the one thing this row
+       doesn't want. */
+
+    /* Inline padding sits on the box, not the row, so the rules span the box's
+       full inner width and every row's text starts on the box's own inset. */
+    padding: var(--space-12) 0;
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+    border-radius: 0;
+  }
+
+  /* Rows in a tight list, so the ring goes inside the card rather than 2px
+     outside it: at 8px apart an offset ring crowds the neighbour above and
+     below, and it is the first thing the accordion's overflow clips. The
+     converge animation starts 6px out, which is past that clip either way.
+     Same call base.css makes for the linked token rows. */
+  button.ex-store-row:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: -3px;
+    animation: none;
+  }
+
+  /* Pressed keeps its resting surface too: .card's tint fills a flush row edge to
+     edge, which on touch means tapping anywhere in the list flashes a grey block
+     across the box. */
+  button.ex-store-row:not(:disabled):active {
+    background: var(--background-secondary);
+  }
+
+  .ex-store-list > li:last-child > button.ex-store-row {
+    border-bottom: 0;
+  }
+
+  .ex-store-row__content {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  /* Just the glyph, in the tone the other chevrons on the site use. */
+  .ex-store-row__action {
+    display: flex;
+    flex: none;
+    color: var(--ink-secondary);
+  }
+
+  .ex-store-row__action svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Hovering the row darkens the chevron and nothing else: .card tints its whole
+     surface on hover, which on a list of these reads as a second selected state
+     next to the open card's rim. The chevron carries it instead. Guarded by the
+     hover query so a touch screen can't leave either stuck on. Pressed keeps the
+     component's own surface, since that one is feedback for an actual click. */
+
+  /* Hover is the chevron only, same reason. */
+  @media (hover: hover) and (pointer: fine) {
+    button.ex-store-row:not(:disabled):hover {
+      background: var(--background-secondary);
+    }
+
+    .ex-store-row:hover .ex-store-row__action {
+      color: var(--ink-primary);
+    }
+  }
+
+  .ex-store-row__name {
+    font-size: var(--font-body-small-emphasized-size);
+    font-weight: var(--font-body-small-emphasized-weight);
+    line-height: var(--font-body-small-emphasized-lh);
+  }
+
+  .ex-store-row__address,
+  .ex-store-row__status {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+  }
+
+  .ex-store-row__state {
+    color: var(--red);
+  }
+
+  .ex-store-row__state--open {
+    color: var(--green);
+  }
+
   /* ── Map ──────────────────────────────────────────────────────────────────
      Shared by the store finder and the shop's store filter: both draw the same
      basemap (map.js) and the same pins, under different furniture.

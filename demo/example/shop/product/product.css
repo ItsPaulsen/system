@@ -854,20 +854,577 @@
     font-weight: var(--font-title-large-weight);
   }
 
-  /* Stock badge plus the lead time it implies. The badge carries the state (green
-     in stock, amber made to order); the text beside it says what that means. */
-  .pdp-buy__stock {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-8) var(--space-12);
+  /* ── Availability ─────────────────────────────────────────────────────────
+     Two lines, one for a shop floor and one for the warehouse. An outlined
+     circle rather than a filled badge: at two rows the skins were most of the
+     column, and the state is carried by the glyph's colour and the sentence
+     beside it either way.
+
+     Every state's glyph sits in the markup and the row's data-state reveals one,
+     so nothing is rebuilt when a colour or a store changes. */
+  .pdp-avail {
+    display: grid;
+    gap: var(--space-4);
     margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .pdp-buy__lead {
-    color: var(--ink-secondary);
+  .pdp-avail__row {
+    display: flex;
+    align-items: start;
+    gap: var(--space-8);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
+    color: var(--ink-primary);
+  }
+
+  /* Sized and centred on the first line of text, so a row that wraps keeps its
+     glyph beside the sentence's start rather than floating to the middle. */
+  .pdp-avail__glyph {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 20px;
+    height: calc(var(--font-caption-medium-size) * var(--font-caption-medium-lh));
+  }
+
+  .pdp-avail__icon {
+    display: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* State to mark. The glyph answers one question, can this be had, so in stock
+     and made to order share the tick and the difference between them is carried
+     by the colour and the sentence. */
+  .pdp-avail__row[data-state="in"] .pdp-avail__icon[data-icon="check"],
+  .pdp-avail__row[data-state="order"] .pdp-avail__icon[data-icon="check"],
+  .pdp-avail__row[data-state="few"] .pdp-avail__icon[data-icon="alert"],
+  .pdp-avail__row[data-state="none"] .pdp-avail__icon[data-icon="cross"] {
+    display: block;
+  }
+
+  /* The state's own colour, the same three the badges use. Not a fill behind the
+     text, so the sentence stays ink and only the mark carries the state.
+
+     Three marks across four states: a tick for anything you can have (stocked,
+     or made for you), a warning for a shelf running down, a cross for not
+     carried. The two that differ in kind, yes and no, differ in shape; the two
+     that differ only in how long it takes differ in colour and in words. */
+  .pdp-avail__row[data-state="in"] .pdp-avail__glyph {
+    color: var(--green);
+  }
+
+  .pdp-avail__row[data-state="order"] .pdp-avail__glyph,
+  .pdp-avail__row[data-state="few"] .pdp-avail__glyph {
+    color: var(--amber);
+  }
+
+  .pdp-avail__row[data-state="none"] .pdp-avail__glyph {
+    color: var(--ink-secondary);
+  }
+
+  .pdp-avail__text {
+    min-width: 0;
+  }
+
+  /* Pushed to the trailing edge, on the row it acts on. .link is written for an
+     <a>, so the <button> wearing it sheds the UA's border, fill and centred
+     font; ink, and it stays ink, since it opens a picker rather than choosing. */
+  .pdp-avail__action {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  .pdp-avail__action:hover {
+    color: var(--ink-primary-hover);
+  }
+
+  /* Instant: .link eases colour over 150ms, which is most of a click. */
+  .pdp-avail__action:active {
+    color: var(--ink-primary-active);
+    transition: none;
+  }
+
+  /* ── Store picker sheet ───────────────────────────────────────────────────
+     The rows are the picker and the map is the optional half: it ships hidden
+     and product.js reveals it once there is one to show.
+
+     The recessed surface, not the Sheet's own raised one, so the rows read as
+     cards on it the way the store finder's panel holds its list. Full width on a
+     phone: the picker is the task while it is open, and a strip of dimmed page
+     beside it buys nothing at that size. */
+  .pdp-store-sheet {
+    width: 100%;
+    background: var(--background-primary);
+  }
+
+  /* From 768 it is a panel again. Wider than the store finder's own column,
+     because this one carries the map under the rows rather than beside them. */
+  @media (min-width: 768px) {
+    .pdp-store-sheet {
+      width: min(92vw, 640px);
+    }
+  }
+
+  /* ── Picker layout ────────────────────────────────────────────────────────
+     One pane at a time here, both of them from 1024 (below). The bar is the
+     switch: at the foot with the rows showing, above the map once it is, so it
+     always sits between the reader and the thing it will swap to.
+
+     Order, not two bars: one control that moves keeps the button the focus is on
+     when it is pressed. */
+  .pdp-picker {
+    position: relative; /* the map panel is anchored to it */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    /* The resting map panel is translated down past this edge, so without a clip
+       here it overflows the sheet and puts a scrollbar on it. That bar then goes
+       as the panel slides up, and the sheet, which is anchored to the right,
+       jumps that far across at the end of the slide. */
+    overflow: hidden;
+  }
+
+  /* 64 at every width, rather than tracking the topbar's 64-then-72: this head
+     sits inside a panel, not across the page, so it stays the same object
+     whatever the viewport is doing. Inline padding down to the 16 the rows below
+     it take, so the close lines up with their own edge. */
+  .pdp-picker__head {
+    order: 0;
+    flex-shrink: 0;
+    height: 64px;
+    padding: 0 var(--space-16);
+
+    /* Title centred on the header, not on what the close button leaves over, so
+       it stays put as the word changes between choose and change. The close goes
+       out of the flow for it. */
+    position: relative;
+    justify-content: center;
+
+    /* The raised surface, the same one the search band under it takes: the two
+       are one top over the recessed list, and the sheet's own recessed ground
+       would otherwise split them. */
+    background: var(--background-secondary);
+  }
+
+  /* A step down from the Sheet's 20: this head is 64 tall and the title shares
+     it with nothing but the close. */
+  .pdp-picker__title {
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    line-height: var(--font-body-medium-emphasized-lh);
+  }
+
+  .pdp-picker__close {
+    position: absolute;
+    inset-inline-end: var(--space-16);
+  }
+
+  /* The map is a panel over the rows, not a pane taking turns with them: anchored
+     to the foot of the picker and slid down far enough that only its own top
+     edge, the switch, is left showing. Pressing that brings it up over the list.
+
+     Over, rather than in the flow, is what lets the move animate at all: two
+     panes swapping places can only appear and disappear, and the arriving one
+     then slides into a gap the leaving one has already left. */
+  .pdp-picker__map {
+    /* The strip of the panel left showing while it is down: its own top edge.
+       Measured by product.js, since guessing it wrong is a jump at the start and
+       end of every slide; this is only the value before the first measure. */
+    --pdp-switch-h: 49px;
+
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+
+    /* Over the list's scroll thumb, which is a positioned z-index 1 of its own
+       and sits later in the markup, so at the same level it would draw on top of
+       the map. */
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+
+    /* Stops 48 short of the top, so the rows it came from are still visible above
+       it and it reads as sitting over the list rather than replacing it. */
+    height: calc(100% - 48px);
+    overflow: hidden;
+
+    /* The store finder's own sheet: same radius and same lift, since this is the
+       same object, a panel that comes up from the foot of the screen. */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    background: var(--background-secondary);
+    box-shadow: var(--shadow-md);
+    translate: 0 calc(100% - var(--pdp-switch-h));
+    transition: translate 0.3s var(--motion-ease-out);
+  }
+
+  .pdp-picker__list {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    order: 2;
+  }
+
+  .pdp-picker[data-view="map"] .pdp-picker__map {
+    translate: none;
+  }
+
+  /* Mid-breakpoint-crossing: the panel is changing what kind of thing it is, and
+     that is not a move to watch. Covers the scrim too, which would otherwise
+     fade out on its own schedule as the layout changes underneath it. */
+  .pdp-picker[data-resizing] .pdp-picker__map,
+  .pdp-picker[data-resizing]::after {
+    transition: none;
+  }
+
+  /* The scrim under the panel, on the Sheet's own overlay token. Inert while the
+     panel is down so the rows take their own clicks; catching them while it is up
+     is what makes a press on the dimmed list put the panel away again. */
+  .pdp-picker::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--overlay);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--motion-ease-out);
+  }
+
+  .pdp-picker[data-view="map"]::after {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* The panel's top edge, so it rides up with the map rather than changing place.
+     Hairline below it, since what it divides is always what sits underneath. */
+  .pdp-picker__switch {
+    flex-shrink: 0;
+    margin: 0;
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+  }
+
+  /* Without Leaflet the panel is an empty surface sitting over the foot of the
+     list, so it goes with the bar that would have raised it. */
+  .pdp-picker[data-map="off"] .pdp-picker__map,
+  .pdp-picker[data-map="off"] .pdp-picker__switch {
+    display: none;
+  }
+
+  /* Ink, and it stays ink, the same shift the store finder's Back takes: this
+     swaps which pane is on screen rather than acting on the page, so it moves
+     within its own colour and its surface never fills in under the pointer. */
+  .pdp-picker__toggle {
+    --button-font: var(--font-caption-medium-size);
+
+    width: 100%;
+    justify-content: center;
+    color: var(--ink-primary);
+  }
+
+  .pdp-picker__toggle:not(:disabled):hover {
+    background: none;
+    color: var(--ink-primary-hover);
+  }
+
+  .pdp-picker__toggle:not(:disabled):active {
+    background: none;
+    color: var(--ink-primary-active);
+  }
+
+  .pdp-picker__chevron {
+    transition: rotate var(--motion-default);
+  }
+
+  .pdp-picker[data-view="map"] .pdp-picker__chevron {
+    rotate: 180deg;
+  }
+
+  .pdp-picker__scroll {
+    flex: 1;
+    min-height: 0;
+    padding: var(--space-16);
+  }
+
+  /* From 1024 both panes are on screen, so the switch has nothing to switch and
+     the sheet widens to hold them. Two columns and two rows: the map takes the
+     left one whole, top to bottom, and the header sits in the right one over the
+     rows it names rather than across both.
+
+     The rows keep the store finder's own column width, so a list of stores is
+     the same reading measure wherever the site shows one. */
+  @media (min-width: 1024px) {
+    .pdp-store-sheet {
+      --pdp-picker-list-w: 480px; /* 448 of content inside the 16 side padding */
+
+      width: min(94vw, 1100px);
+    }
+
+    .pdp-picker {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) var(--pdp-picker-list-w);
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    /* Back in the flow as the left column: nothing to slide, and nothing to slide
+       over. Placed rather than flowed, since the map is last in the markup so
+       focus runs through the header and the rows first. */
+    .pdp-picker__map {
+      position: static;
+      grid-column: 1;
+      grid-row: 1 / -1;
+      height: auto;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+      translate: none;
+    }
+
+    /* Nothing is over anything from here, so there is nothing to dim. */
+    .pdp-picker::after {
+      content: none;
+    }
+
+    .pdp-picker__head,
+    .pdp-picker__list {
+      grid-column: 2;
+      border-left: var(--border-width) solid var(--fill-tertiary);
+    }
+
+    .pdp-picker__switch {
+      display: none;
+    }
+
+    /* Without a map the rows take the width the two panes were sharing. */
+    .pdp-picker[data-map="off"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pdp-picker[data-map="off"] .pdp-picker__map {
+      display: none;
+    }
+
+    .pdp-picker[data-map="off"] .pdp-picker__head,
+    .pdp-picker[data-map="off"] .pdp-picker__list {
+      grid-column: 1;
+      border-left: 0;
+    }
+  }
+
+  .pdp-store-map {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+
+    /* The colour under the tiles, and so what the frame shows while they load:
+       a step under the hairline around it, so an unloaded frame is one quiet
+       block rather than a white card pretending to hold something. Set as the
+       ground token, not a background, so Leaflet's own container takes it
+       too: that rule is unlayered and a layered one can't reach it. */
+    --ex-map-ground: var(--fill-quaternary);
+
+    background: var(--ex-map-ground);
+  }
+
+  /* Held back until the tiles are drawn: the cream underneath is painted by
+     MapLibre itself, from the style's background layer, so the only way not to
+     show it is not to show the canvas. Kept in the layout and merely
+     transparent, since a canvas with no box renders no tiles to wait for. */
+  .pdp-store-map__canvas {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 250ms var(--motion-ease-out);
+  }
+
+  .pdp-store-map[data-ready] .pdp-store-map__canvas {
+    opacity: 1;
+  }
+
+  .pdp-store-map__zoom {
+    position: absolute;
+    right: var(--space-8);
+    bottom: var(--space-8);
+    z-index: 400; /* over Leaflet's own panes */
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: var(--background-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .pdp-store-map__zoom-button {
+    --button-size: 32px;
+
+    position: relative;
+    color: var(--ink-secondary);
+  }
+
+  .pdp-store-map__zoom-button + .pdp-store-map__zoom-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 20px;
+    height: 1px;
+    background: var(--fill-tertiary);
+    translate: -50% 0;
+  }
+
+  .pdp-store-map__zoom-button:not(:disabled):hover {
+    background: none;
+    color: var(--ink-primary);
+  }
+
+  .pdp-store-map__zoom-button:not(:disabled):active {
+    background: none;
+    color: var(--ink-primary-active);
+  }
+
+  /* Search and filters as a band, not a card inside the list: it spans the full
+     width the way the header's rule does, and scrolls away with the rows, since
+     the header is the only part worth keeping on screen.
+
+     Out through the scroller's own 16 to reach both edges, and its padding put
+     back on itself, so the controls still line up with the rows below. */
+  .pdp-store-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    margin: calc(var(--space-16) * -1) calc(var(--space-16) * -1) var(--space-16);
+    padding: var(--space-16);
+    border-bottom: var(--border-width) solid var(--fill-tertiary);
+    background: var(--background-secondary);
+  }
+
+  /* data-size="sm" on the row is what puts the chips on the 32 step, with the
+     8px inline padding that comes with that rung. The pill is the one thing the
+     Chip doesn't carry (it rests at --radius-sm), and a pill needs more room at
+     the ends than a rounded rect does, so the padding steps up to the next rung
+     on the same ladder (md's 12) rather than to a number off it. Same call the
+     store finder makes for the same set of filters. */
+  .pdp-store-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+  }
+
+  .pdp-store-filters .chip {
+    --chip-px: 12px; /* md's rung, on sm's height */
+
+    border-radius: var(--radius-full);
+  }
+
+  .pdp-store-empty {
+    margin: var(--space-16) 0 0;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-secondary);
+  }
+
+  .pdp-store-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Group heading. A row in the same list rather than a nested one, so the rows
+     stay siblings and the hairline between them is the row's own. */
+  .pdp-store-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+
+    /* 8 in from the scroller's own 16, so a heading sits 24 off the panel edge
+       and steps in toward the box it names rather than starting flush with it. */
+    padding: var(--space-16) var(--space-8) var(--space-8);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    color: var(--ink-secondary);
+  }
+
+  /* The count line above already spaces the first one. */
+  .pdp-store-group:first-child {
+    padding-top: 0;
+  }
+
+  .pdp-store-group__icon {
+    display: grid;
+    place-items: center;
+  }
+
+  .pdp-store-group__icon:empty {
+    display: none;
+  }
+
+  .pdp-store-group__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* The surface a group's rows sit on. The rows bring their own hairlines and no
+     inline padding (the store finder's box supplies that there), so the inset is
+     the box's here too, and its corners are what the flush rows can't round. */
+  .pdp-store-set {
+    padding: 0 var(--space-16);
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+  }
+
+  .pdp-store-set__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Stock, as the same mark the buy column uses: a column of them down the list
+     compares at a glance, and the row's data-state picks which one shows. */
+  .pdp-store-row__stock {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .pdp-store-row__icon {
+    display: none;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .pdp-store-row[data-state="in"] .pdp-store-row__icon[data-icon="check"],
+  .pdp-store-row[data-state="few"] .pdp-store-row__icon[data-icon="alert"],
+  .pdp-store-row[data-state="none"] .pdp-store-row__icon[data-icon="cross"] {
+    display: block;
+  }
+
+  .pdp-store-row[data-state="in"] .pdp-store-row__icon {
+    color: var(--green);
+  }
+
+  .pdp-store-row[data-state="few"] .pdp-store-row__icon {
+    color: var(--amber);
+  }
+
+  .pdp-store-row[data-state="none"] .pdp-store-row__icon {
+    color: var(--ink-secondary);
   }
 
   /* ── Colour swatches ──────────────────────────────────────────────────────

@@ -194,6 +194,11 @@
      Portrait, because the stores run north to south and a landscape strip of a
      244 rail would frame mostly water. */
   .shop-store {
+    /* 48, not the 64 a full-page map gives its open pin: in a 244 rail that is a
+       quarter of the frame's width, and the chosen store is already named under
+       the map. */
+    --ex-pin-open: 48;
+
     display: grid;
     gap: var(--space-12);
   }

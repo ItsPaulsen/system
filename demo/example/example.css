@@ -2039,10 +2039,16 @@
   }
 
   /* Leaflet positions the icon by its top-left, so growth has to come out of the
-     centre or the pin walks off its coordinate. */
+     centre or the pin walks off its coordinate.
+
+     The open size is a fallback rather than a declaration on the pin: declared
+     here it would beat the value a page sets on the map around it, since a
+     property set on an element wins over one inherited into it. 64 reads as
+     "this one" against a map that fills the viewport; a small framed map sets
+     --ex-pin-open lower on its own container. */
   .ex-pin--active {
     z-index: 1;
-    transform: scale(calc(64 / 40));
+    transform: scale(calc(var(--ex-pin-open, 64) / 40));
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -2052,7 +2058,7 @@
 
     /* The open pin is already at its own size; hovering it doesn't shrink it. */
     .ex-pin--active:hover {
-      transform: scale(calc(64 / 40));
+      transform: scale(calc(var(--ex-pin-open, 64) / 40));
     }
   }
 

@@ -2599,6 +2599,14 @@
     margin-top: 0;
   }
 
+  /* The mirror, plus the case a positional :last-child can't see: an element that
+     ships hidden is still the last child, so the one before it is left holding a
+     bottom margin on top of the body's own padding. */
+  .accordion__body > :last-child,
+  .accordion__body > :has(+ [hidden]:last-child) {
+    margin-bottom: 0;
+  }
+
   .accordion__body > :last-child {
     margin-bottom: 0;
   }

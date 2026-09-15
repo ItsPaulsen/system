@@ -890,7 +890,14 @@
 
     const state = stockOf(active);
     block.dataset.state = state;
-    if (text) text.textContent = `${STOCK[state].label} at ${nameOf(active)}`;
+    if (text) {
+      // The shop's name is the part that changes and the part being looked for,
+      // so it is a node of its own rather than the tail of a sentence.
+      const store = document.createElement("span");
+      store.className = "pdp-avail__store";
+      store.textContent = nameOf(active);
+      text.replaceChildren(`${STOCK[state].label} at `, store);
+    }
     if (action) action.textContent = "Change store";
     if (title) title.textContent = "Change store";
   };
@@ -1012,18 +1019,27 @@
       rest.slice(0, NEAR).forEach(copy);
     }
 
-    // Regions in the order the markup lists them, so the groups don't reshuffle
-    // as filters come and go. Every kept store is here, the ones the groups above
-    // shortcut to included.
-    const seen = new Set();
+    // A to Z, groups and the stores inside them: this is the part of the list you
+    // read by looking for a name rather than by distance, and the two above
+    // already answer "which is close". localeCompare, so the sort holds for names
+    // the ASCII order would put after z. Every kept store is here, the ones the
+    // groups above shortcut to included.
+    const regions = new Map();
     kept.forEach((card) => {
       const region = card.dataset.region || "Other";
-      if (!seen.has(region)) {
-        seen.add(region);
-        group(region, "");
-      }
-      place(card);
+      if (!regions.has(region)) regions.set(region, []);
+      regions.get(region).push(card);
     });
+
+    [...regions.keys()]
+      .sort((a, b) => a.localeCompare(b))
+      .forEach((region) => {
+        group(region, "");
+        regions
+          .get(region)
+          .sort((a, b) => nameOf(a).localeCompare(nameOf(b)))
+          .forEach(place);
+      });
 
     if (emptyEl) emptyEl.hidden = kept.length > 0;
 
@@ -1049,20 +1065,23 @@
     }
   };
 
+  cards.forEach((card) => card.setAttribute("aria-pressed", "false"));
+
+  // Chosen is the answer to the question the sheet asked, so it closes on it.
+  const choose = (card) => {
+    select(card, { announce: true });
+    sheet.close();
+  };
+
   // Delegated, not bound per row: the shortcut groups at the top of the list are
   // copies of rows that also sit under their region, so the thing pressed is not
   // always the element the marker and the state are keyed to. The store's own
   // name on the row is what resolves it back.
-  cards.forEach((card) => card.setAttribute("aria-pressed", "false"));
-
   list?.addEventListener("click", (e) => {
     const row = e.target.closest(".pdp-store-row");
     if (!row) return;
     const card = cards.find((c) => c.dataset.store === row.dataset.store);
-    if (!card) return;
-    select(card, { announce: true });
-    // Chosen is the answer to the question the sheet asked, so it closes on it.
-    sheet.close();
+    if (card) choose(card);
   });
 
   const initMap = () => {
@@ -1106,9 +1125,11 @@
         title: label,
         alt: label
       });
-      // The row is the control, so a pin presses it: one path, and the sheet
-      // closes on a pin the same way it closes on a row.
-      marker.on("click", () => card.click());
+      // Straight to choose(), not through the row: every store keeps its pin,
+      // including the ones the filters have taken out of the list, and a row
+      // that isn't in the list is detached, so a click on it would bubble
+      // nowhere.
+      marker.on("click", () => choose(card));
       markers.set(card, marker);
       clusters ? clusters.addLayer(marker) : marker.addTo(map);
     });

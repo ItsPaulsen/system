@@ -863,19 +863,25 @@
      Every state's glyph sits in the markup and the row's data-state reveals one,
      so nothing is rebuilt when a colour or a store changes. */
 
-  /* The caution mark's yellow. Not --amber: that one is darkened for badge text
-     to clear AA on a soft fill, and at 16px as a solid disc it comes out muddy.
-     A mark that repeats what the sentence beside it already says has no contrast
-     floor to meet, so it can be the colour caution actually is.
+  /* The marks' own green and yellow. Not --green and --amber: those are darkened
+     6% so badge text clears AA on a soft fill, and at 16px as a solid disc that
+     only reads muddy. A mark that repeats what the sentence beside it already
+     says has no contrast floor of its own to meet, so it can be the colour the
+     state actually is.
 
-     Raw, and only here: one mark is not a hue. If a second place wants it, that
-     is when it earns a token and the ladder that comes with one. */
+     Light only, because the darkening is: in dark both tokens sit on their
+     anchor untouched, and there is nothing to undo.
+
+     Raw, and only here: two marks are not a palette. If a second place wants
+     them, that is when they earn tokens and the ladders that come with one. */
   :root {
+    --pdp-ok: #0f9d34;
     --pdp-caution: #e0a000;
   }
 
   :root[data-theme="dark"] {
-    --pdp-caution: #f5c04a;
+    --pdp-ok: var(--green);
+    --pdp-caution: var(--amber);
   }
 
   .pdp-avail {
@@ -932,7 +938,7 @@
      Tabler's filled set, so the mark reads as a state at 16 rather than as a
      line drawing of one. */
   .pdp-avail__row[data-state="in"] .pdp-avail__glyph {
-    color: var(--green);
+    color: var(--pdp-ok);
   }
 
   .pdp-avail__row[data-state="order"] .pdp-avail__glyph,
@@ -946,6 +952,10 @@
 
   .pdp-avail__text {
     min-width: 0;
+  }
+
+  .pdp-avail__store {
+    font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
   /* Pushed to the trailing edge, on the row it acts on. .link is written for an
@@ -1376,7 +1386,12 @@
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
     font-weight: var(--font-caption-medium-emphasized-weight);
-    color: var(--ink-secondary);
+
+    /* Ink, like the names under it: at 14 against their 16 the size and the
+       weight already say which is the heading, and a label fainter than its own
+       content reads as a caption for the box rather than a heading of it. The
+       icon takes it too, since it is part of the label. */
+    color: var(--ink-primary);
   }
 
   /* The count line above already spaces the first one. */
@@ -1445,7 +1460,7 @@
   }
 
   .pdp-store-row[data-state="in"] .pdp-store-row__icon {
-    color: var(--green);
+    color: var(--pdp-ok);
   }
 
   .pdp-store-row[data-state="few"] .pdp-store-row__icon {

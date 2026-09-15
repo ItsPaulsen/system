@@ -3,7 +3,7 @@
 // Checking one or more Category boxes narrows the grid to posts whose tag
 // matches; with none checked, everything shows. The Reading time band narrows on
 // data-minutes alongside it, both having to pass. When nothing matches, the grid
-// gives way to the empty state, whose "Clear all filters" button unchecks every
+// gives way to the empty state, whose "Clear filters" button unchecks every
 // box and restores the full grid. Pagination is a full-listing affordance, so it
 // shows only when every post is visible and hides the moment a filter narrows
 // the set (a partial demo set isn't paged).
@@ -19,8 +19,9 @@
   const empty = document.querySelector(".blog-empty");
   const pagination = document.querySelector(".blog__pagination");
   const sort = document.querySelector(".ex-sort");
-  const countEl = document.querySelector("[data-blog-count]");
+  const counts = document.querySelectorAll("[data-blog-count]");
   const nouns = document.querySelectorAll("[data-blog-noun]");
+  const sheetClear = document.querySelector("[data-ex-filter-clear]");
   if (!filter || !grid || !empty) return;
 
   // The Reading time split: under 5 goes to "Under 5 min", 5 and up to
@@ -63,7 +64,13 @@
     // while filters come and go.
     [...cards].sort(SORTS[order]).forEach((card) => grid.append(card));
 
-    if (countEl) countEl.textContent = String(shown);
+    // Anything to clear is anything ticked, plus a reading state off its default.
+    if (sheetClear) {
+      const read = filter.querySelector('input[name="blog-read"]:checked');
+      sheetClear.disabled = !boxes.some((b) => b.checked) && (!read || read.value === "any");
+    }
+
+    counts.forEach((c) => (c.textContent = String(shown)));
     nouns.forEach((n) => {
       n.textContent = shown === 1 ? "post" : "posts";
     });
@@ -82,14 +89,18 @@
     apply();
   });
 
-  empty.querySelector("[data-blog-clear]")?.addEventListener("click", () => {
+  // One clearing, reached from the empty state and from the sheet's own header.
+  const clearAll = () => {
     boxes.forEach((b) => {
       b.checked = false;
     });
     const any = filter.querySelector('input[name="blog-read"][value="any"]');
     if (any) any.checked = true;
     apply();
-  });
+  };
+
+  empty.querySelector("[data-blog-clear]")?.addEventListener("click", clearAll);
+  sheetClear?.addEventListener("click", clearAll);
 
   apply();
 })();

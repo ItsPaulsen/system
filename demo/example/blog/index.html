@@ -687,7 +687,7 @@
                 Try another category, or clear your filters to see everything.
               </p>
               <button type="button" class="button button--secondary" data-blog-clear>
-                Clear all filters
+                Clear filters
               </button>
             </div>
 
@@ -708,19 +708,17 @@
           <div class="sheet__inner">
             <header class="sheet__header">
               <h2 class="sheet__title">Filter</h2>
-              <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M18 6l-12 12" />
-                  <path d="M6 6l12 12" />
-                </svg>
+              <!-- The way out is the count at the foot, so the header carries the other
+                   thing a filter panel is asked for. Disabled while nothing is on,
+                   rather than hidden, so the row keeps its shape as filters come
+                   and go. -->
+              <button
+                class="link ex-filter-sheet__clear"
+                type="button"
+                disabled
+                data-ex-filter-clear
+              >
+                Clear filters
               </button>
             </header>
             <div class="sheet__body" data-scroll-area>
@@ -729,6 +727,21 @@
                 <div class="scroll-area__thumb"></div>
               </div>
             </div>
+
+            <!-- The way out, and what it will show. Filtering behind a sheet asks
+                 you to take it on trust that anything changed, so the count comes
+                 to the button you leave by. Closing is all it does: the results
+                 are already filtered underneath. -->
+            <footer class="ex-filter-sheet__foot">
+              <button
+                class="button button--primary ex-filter-sheet__apply"
+                type="button"
+                data-dialog-close
+              >
+                Show <span data-blog-count>9</span>
+                <span data-blog-noun>posts</span>
+              </button>
+            </footer>
           </div>
         </dialog>
       </section>

@@ -1834,19 +1834,6 @@
     }
   }
 
-  /* Filter sheet close button, shared by both listings so the two can't drift: a
-     48 hit target (::before) around the component's own 40 box, which is the
-     visible surface. */
-  .ex-filter-sheet .sheet__close {
-    position: relative;
-  }
-
-  .ex-filter-sheet .sheet__close::before {
-    content: "";
-    position: absolute;
-    inset: -4px; /* 40 → 48 hit target */
-  }
-
   /* ── Store row ────────────────────────────────────────────────────────────
      A store in a list, shared by the finder and the product page's picker: a
      flush row with a hairline under it rather than a raised card, since a column
@@ -2068,6 +2055,69 @@
     .ex-pin {
       transition: none;
     }
+  }
+
+  /* The header's clear, shared by both listings so the two can't drift. .link is
+     written for an <a>, so a <button> wearing it sheds the UA's border, fill and
+     centred font. Disabled rather than hidden while nothing is on: the row keeps
+     its shape as filters come and go, and a control that moves is harder to aim
+     at than one that greys. Disabled controls are exempt from the contrast floor,
+     so that state can be quiet. */
+  .ex-filter-sheet__clear {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  /* --fill-secondary, the colour the Button component gives its own disabled
+     label, rather than a dimmed ink: a control that can't be pressed reads as
+     off, and ink at any step still reads as text you could use. Disabled
+     controls are exempt from the contrast floor. */
+  .ex-filter-sheet__clear:disabled {
+    color: var(--fill-secondary);
+    text-decoration: none;
+    cursor: not-allowed;
+  }
+
+  .ex-filter-sheet__clear:hover:not(:disabled) {
+    color: var(--ink-primary-hover);
+  }
+
+  /* Instant: .link eases colour over 150ms, which is most of a click. */
+  .ex-filter-sheet__clear:active:not(:disabled) {
+    color: var(--ink-primary-active);
+    transition: none;
+  }
+
+  /* The filter sheet's foot. A sibling of the scrolling body inside a column that
+     is the sheet's full height, so it sits on the bottom edge without being told
+     to: no sticky, and nothing overlapping the last option in the list.
+
+     No rule above it: the button is a filled block sitting on the sheet's own
+     surface, which separates the foot from the list without a line of its own. */
+  .ex-filter-sheet__foot {
+    flex-shrink: 0;
+    padding: var(--space-16);
+  }
+
+  /* Full width: it is the only thing on the row and the one way out.
+
+     The gap here is word spacing, not the icon spacing the token is for: the
+     count and the noun are three words of one sentence, and 8 either side of the
+     number reads as three things rather than one line. */
+  .ex-filter-sheet__apply {
+    --button-gap: 6px;
+
+    width: 100%;
   }
 
   /* Forced colors (Windows High Contrast): the composed cards and the tinted

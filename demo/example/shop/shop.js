@@ -27,10 +27,11 @@
   const sort = document.querySelector(".ex-sort");
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
+  const sheetClear = document.querySelector("[data-ex-filter-clear]");
   const priceSlider = document.querySelector(".shop-price__slider");
   const priceFields = [...document.querySelectorAll("[data-shop-price-field]")];
   const storeGroup = document.querySelector('[data-filter="store"]');
-  const countEl = document.querySelector("[data-shop-count]");
+  const counts = document.querySelectorAll("[data-shop-count]");
   const nouns = document.querySelectorAll("[data-shop-noun]");
   const shownEl = document.querySelector("[data-shop-shown]");
   const totalEl = document.querySelector("[data-shop-total]");
@@ -220,7 +221,7 @@
       card.hidden = !live.has(card);
     });
 
-    if (countEl) countEl.textContent = String(matches.length);
+    counts.forEach((c) => (c.textContent = String(matches.length)));
     // Both counts agree with the size of the result, so a filter narrowed to a
     // single hit reads "1 product" / "Showing 1 of 1 product".
     nouns.forEach((n) => {
@@ -292,8 +293,11 @@
   };
 
   const renderChips = () => {
-    if (!chips) return;
     const active = activeFilters();
+    // The sheet's own clear says whether there is anything to clear, so it is
+    // written from the same pass the chip row is.
+    if (sheetClear) sheetClear.disabled = active.length === 0;
+    if (!chips) return;
     chips.hidden = active.length === 0;
     chips.textContent = "";
     active.forEach(({ label, off }) => {
@@ -313,7 +317,7 @@
       const clear = document.createElement("button");
       clear.type = "button";
       clear.className = "link shop__chips-clear";
-      clear.textContent = "Clear all filters";
+      clear.textContent = "Clear filters";
       clear.addEventListener("click", clearAll);
       chips.append(clear);
     }
@@ -346,6 +350,7 @@
   });
 
   empty.querySelector("[data-shop-clear]")?.addEventListener("click", clearAll);
+  sheetClear?.addEventListener("click", clearAll);
 
   // Deep link from a product's brand line: ?brand=<label> lands on the listing
   // with that brand already checked. Matched on the label the option shows, which

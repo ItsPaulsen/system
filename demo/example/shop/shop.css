@@ -303,7 +303,7 @@
   }
 
   /* The chosen store, under the map: the name it was picked by, and the way
-     back out. Both the chip row above the grid and Clear all press that same
+     back out. Both the chip row above the grid and Clear filters press that same
      button, so there is one path out of this facet. */
 
   /* No gap: the button's own box is 24 around a 21 line, and that 3 either side

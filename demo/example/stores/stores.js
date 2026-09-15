@@ -310,18 +310,18 @@
       "[data-detail-address]",
       `${card.querySelector(".ex-store-row__address").textContent.trim()}, ${d.city}`
     );
-    // Cloned rather than copied as text, so the open/closed word keeps the colour
-    // it carries in the list. What follows the state word is bundled into one
-    // span so the CSS can drop it while the list is open.
-    const status = card.querySelector(".ex-store-row__status").cloneNode(true);
-    const state = status.querySelector(".ex-store-row__state");
+    // The row says it in one line ("Open until 20:00"), and this summary wants to
+    // drop everything after the state word once the hours list below is open, so
+    // it is split here: the word off data-open, the remainder off the line. Split
+    // rather than kept as two spans in the row, since out there it is one fact and
+    // reads as one.
+    const line = card.querySelector(".ex-store-row__status").textContent.trim();
+    const word = d.open === "true" ? "Open" : "Closed";
+    const state = document.createElement("span");
+    state.textContent = word;
     const rest = document.createElement("span");
     rest.className = "stores-detail__hours-rest";
-    for (let node = state.nextSibling; node;) {
-      const next = node.nextSibling;
-      rest.append(node);
-      node = next;
-    }
+    rest.textContent = line.startsWith(word) ? line.slice(word.length) : ` ${line}`;
     detail.querySelector("[data-detail-status]").replaceChildren(state, rest);
 
     // Seven rows starting at today and wrapping round, today set in the emphasized

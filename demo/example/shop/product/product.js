@@ -936,16 +936,17 @@
     return li;
   };
 
+  // Filled, like the marks on the rows they head.
   const CHECK =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
-    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>';
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3.34a10 10 0 ' +
+    "1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 " +
+    "-1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 " +
+    '.094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" /></svg>';
 
   const PIN =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
-    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />' +
-    '<path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0" /></svg>';
+    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.364 4.636a9 9 ' +
+    "0 0 1 .203 12.519l-.203 .21l-4.243 4.242a3 3 0 0 1 -4.097 .135l-.144 -.135l-4.244 -4.243a9 " +
+    '9 0 0 1 12.728 -12.728zm-6.364 3.364a3 3 0 1 0 0 6a3 3 0 0 0 0 -6" /></svg>';
 
   const renderList = () => {
     if (!list) return;
@@ -1208,8 +1209,15 @@
   // Built on first open, whichever view is showing: the panel is laid out at its
   // full size even while it is slid down, so the map has a box to render into
   // before the reader asks for it and is drawn by the time it comes up.
+  const scroller = sheet.querySelector(".pdp-picker__scroll");
+
   sheet.addEventListener("toggle", () => {
-    if (sheet.open) initMap();
+    if (!sheet.open) return;
+    initMap();
+    // The sheet is the same element every time, so it keeps whatever the last
+    // visit left it scrolled to. Opening it is a fresh question, and the answer
+    // starts with the chosen store at the top.
+    if (scroller) scroller.scrollTop = 0;
   });
 
   // A store chosen on the listing (or here, last visit) is already the answer.

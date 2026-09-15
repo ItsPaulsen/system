@@ -547,17 +547,16 @@
 
   clear?.addEventListener("click", () => select(null));
 
-  // A store chosen on a product page lands here already filtering, and its group
-  // opens so the rail says where the narrowing came from. Through select(), so
-  // the picked line, the chip and the grid all follow the one path; the map
-  // isn't built yet and picks the choice up when it is.
+  // A store chosen on a product page lands here already filtering. The group
+  // stays shut: the chip above the grid is what says where the narrowing came
+  // from, and opening a 380 map to repeat it pushes the rest of the rail off the
+  // screen. Through select(), so the picked line, the chip and the grid all
+  // follow the one path; the map isn't built yet and picks the choice up when it
+  // is.
   const remembered = window.exampleStore?.read();
   if (remembered) {
     const option = options.find((o) => o.dataset.store === remembered);
-    if (option) {
-      select(option);
-      group.closest("details")?.setAttribute("open", "");
-    }
+    if (option) select(option);
   }
 
   const initMap = () => {

@@ -15,6 +15,27 @@
 window.exampleBasemap = (function () {
   const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
 
+  // Fetched once per page and kept. The style is a round-trip in front of every
+  // tile request, so a map that is built later (the product page's picker only
+  // exists once its dialog opens, and a closed dialog has no box to render into)
+  // would otherwise wait for it before asking for a single tile. Warmed while
+  // the page is idle instead, so opening the picker starts at the tiles.
+  //
+  // Patching mutates what it is handed, so each map gets its own copy.
+  let styleDoc = null;
+  const loadStyle = () => {
+    styleDoc = styleDoc || fetch(STYLE_URL).then((r) => r.json());
+    return styleDoc.then((doc) => structuredClone(doc));
+  };
+
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(() => {
+      // A failure here is not one worth reporting: applyStyle falls back to the
+      // style as published, and this only ever meant to be early.
+      loadStyle().catch(() => {});
+    });
+  }
+
   const GL_OPTIONS = { renderWorldCopies: false };
 
   const ATTRIBUTION =
@@ -229,8 +250,7 @@ window.exampleBasemap = (function () {
     let theme = "";
 
     const applyStyle = (next) =>
-      fetch(STYLE_URL)
-        .then((r) => r.json())
+      loadStyle()
         .then((style) => {
           if (next === "dark") patchDark(style);
           else patchLight(style);

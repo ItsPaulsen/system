@@ -1941,16 +1941,27 @@
 
   .ex-store-row__address,
   .ex-store-row__status {
-    color: var(--ink-secondary);
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
   }
 
-  .ex-store-row__state {
-    color: var(--red);
+  /* Ink: the street is how the row is told apart from the one under it, as much
+     as the name is. The status line below stays quiet, since it is a condition
+     rather than the shop's identity. */
+  .ex-store-row__address {
+    color: var(--ink-primary);
   }
 
-  .ex-store-row__state--open {
+  /* The whole line, not the word that starts it: open or shut is one fact, and
+     splitting its colour off from the time it applies to made the row read as two
+     things. Shut is quiet rather than red, since a shop being closed at this hour
+     is ordinary, not a warning. */
+  .ex-store-row__status {
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    color: var(--ink-secondary);
+  }
+
+  .ex-store-row__status--open {
     color: var(--green);
   }
 

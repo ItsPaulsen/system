@@ -862,6 +862,22 @@
 
      Every state's glyph sits in the markup and the row's data-state reveals one,
      so nothing is rebuilt when a colour or a store changes. */
+
+  /* The caution mark's yellow. Not --amber: that one is darkened for badge text
+     to clear AA on a soft fill, and at 16px as a solid disc it comes out muddy.
+     A mark that repeats what the sentence beside it already says has no contrast
+     floor to meet, so it can be the colour caution actually is.
+
+     Raw, and only here: one mark is not a hue. If a second place wants it, that
+     is when it earns a token and the ladder that comes with one. */
+  :root {
+    --pdp-caution: #e0a000;
+  }
+
+  :root[data-theme="dark"] {
+    --pdp-caution: #f5c04a;
+  }
+
   .pdp-avail {
     display: grid;
     gap: var(--space-4);
@@ -911,14 +927,17 @@
      Three marks across four states: a tick for anything you can have (stocked,
      or made for you), a warning for a shelf running down, a cross for not
      carried. The two that differ in kind, yes and no, differ in shape; the two
-     that differ only in how long it takes differ in colour and in words. */
+     that differ only in how long it takes differ in colour and in words.
+
+     Tabler's filled set, so the mark reads as a state at 16 rather than as a
+     line drawing of one. */
   .pdp-avail__row[data-state="in"] .pdp-avail__glyph {
     color: var(--green);
   }
 
   .pdp-avail__row[data-state="order"] .pdp-avail__glyph,
   .pdp-avail__row[data-state="few"] .pdp-avail__glyph {
-    color: var(--amber);
+    color: var(--pdp-caution);
   }
 
   .pdp-avail__row[data-state="none"] .pdp-avail__glyph {
@@ -1400,6 +1419,16 @@
     display: flex;
     align-items: center;
     gap: var(--space-4);
+
+    /* Ink, not the shared status line's secondary: what the shelf holds is the
+       reason to pick this shop, so it reads at the strength of the name above it
+       rather than at the opening hours' below. The mark keeps its state colour.
+
+       The shared line's extra weight goes, though: the hours carry it because
+       that line is nothing but a state, while this one is a sentence with a mark
+       already saying which state it is. */
+    font-weight: var(--font-caption-medium-weight);
+    color: var(--ink-primary);
   }
 
   .pdp-store-row__icon {
@@ -1420,7 +1449,7 @@
   }
 
   .pdp-store-row[data-state="few"] .pdp-store-row__icon {
-    color: var(--amber);
+    color: var(--pdp-caution);
   }
 
   .pdp-store-row[data-state="none"] .pdp-store-row__icon {

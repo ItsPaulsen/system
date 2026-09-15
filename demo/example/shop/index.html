@@ -14,6 +14,30 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
     />
+    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+      integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css"
+      integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Cluster base only, not its Default skin: the positioning and the
+         zoom/spiderfy animations are needed, the orange discs are not. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="/assets/base.css" />
     <link rel="stylesheet" href="/demo/globals.css" />
     <link rel="stylesheet" href="/demo/components.css" />
@@ -530,6 +554,243 @@
                   </label>
                 </div>
               </details>
+
+              <!-- Store. The one facet that isn't a checkbox list: pick a store on
+                   the map and the grid drops to what that store stocks. Single
+                   select, since "in stock at" is a question about one shop you
+                   can walk into, not a set of them.
+
+                   The stores are the markup here too, same as the store finder:
+                   each option carries its own coordinates, so the pins are built
+                   from the list below and there is no second copy to keep in
+                   sync. The list is also the fallback, the map comes off a CDN,
+                   and it stays on screen as a plain set of buttons if that
+                   script never arrives. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Store</summary>
+                <div class="ex-filter__body" data-filter="store">
+                  <div class="shop-store">
+                    <div class="shop-store__map" data-shop-store-map hidden>
+                      <div class="shop-store__canvas" id="shop-store-map"></div>
+                      <div class="shop-store__zoom">
+                        <button
+                          class="button button--flat button--icon shop-store__zoom-button"
+                          type="button"
+                          data-shop-store-zoom="in"
+                          aria-label="Zoom in"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                          </svg>
+                        </button>
+                        <button
+                          class="button button--flat button--icon shop-store__zoom-button"
+                          type="button"
+                          data-shop-store-zoom="out"
+                          aria-label="Zoom out"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M5 12l14 0" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <p class="shop-store__picked" hidden>
+                      <span class="shop-store__name" data-shop-store-name></span>
+                      <button type="button" class="link shop-store__clear" data-shop-store-clear>
+                        Remove selected store
+                      </button>
+                    </p>
+                    <ul class="shop-store__list" data-shop-store-list>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="old-town"
+                          data-lat="59.9123"
+                          data-lng="10.7459"
+                        >
+                          <span class="shop-store__option-name">Old Town</span>
+                          <span class="shop-store__option-address">Market Square 1</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="midtown"
+                          data-lat="59.9165"
+                          data-lng="10.7325"
+                        >
+                          <span class="shop-store__option-name">Midtown</span>
+                          <span class="shop-store__option-address">Bridge Street 18</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="harbour"
+                          data-lat="59.908"
+                          data-lng="10.7233"
+                        >
+                          <span class="shop-store__option-name">Harbour</span>
+                          <span class="shop-store__option-address">Pier Road 4</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="eastgate"
+                          data-lat="59.9155"
+                          data-lng="10.802"
+                        >
+                          <span class="shop-store__option-name">Eastgate</span>
+                          <span class="shop-store__option-address">Eastgate Park 7</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="parkside"
+                          data-lat="59.9268"
+                          data-lng="10.788"
+                        >
+                          <span class="shop-store__option-name">Parkside</span>
+                          <span class="shop-store__option-address">Linden Avenue 22</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="elmwood"
+                          data-lat="59.905"
+                          data-lng="10.826"
+                        >
+                          <span class="shop-store__option-name">Elmwood</span>
+                          <span class="shop-store__option-address">Elmwood Lane 3</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="northgate"
+                          data-lat="59.9605"
+                          data-lng="10.758"
+                        >
+                          <span class="shop-store__option-name">Northgate</span>
+                          <span class="shop-store__option-address">Northgate Road 55</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="hillcrest"
+                          data-lat="59.9482"
+                          data-lng="10.786"
+                        >
+                          <span class="shop-store__option-name">Hillcrest</span>
+                          <span class="shop-store__option-address">Hillcrest Terrace 9</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="lakeview"
+                          data-lat="59.9702"
+                          data-lng="10.721"
+                        >
+                          <span class="shop-store__option-name">Lakeview</span>
+                          <span class="shop-store__option-address">Lakeview Walk 12</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="southbank"
+                          data-lat="59.888"
+                          data-lng="10.762"
+                        >
+                          <span class="shop-store__option-name">Southbank</span>
+                          <span class="shop-store__option-address">Southbank Quay 2</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="stonebridge"
+                          data-lat="59.8752"
+                          data-lng="10.788"
+                        >
+                          <span class="shop-store__option-name">Stonebridge</span>
+                          <span class="shop-store__option-address">Stonebridge Row 41</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="westfield"
+                          data-lat="59.923"
+                          data-lng="10.68"
+                        >
+                          <span class="shop-store__option-name">Westfield</span>
+                          <span class="shop-store__option-address">Westfield Green 30</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="riverside"
+                          data-lat="59.935"
+                          data-lng="10.657"
+                        >
+                          <span class="shop-store__option-name">Riverside</span>
+                          <span class="shop-store__option-address">Riverside Path 6</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="greenfield"
+                          data-lat="59.9034"
+                          data-lng="10.6368"
+                        >
+                          <span class="shop-store__option-name">Greenfield</span>
+                          <span class="shop-store__option-address">Greenfield Court 14</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </details>
             </div>
             <div class="scroll-area__bar" aria-hidden="true">
               <div class="scroll-area__thumb"></div>
@@ -647,6 +908,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="walnut natural"
+                data-stores="old-town midtown"
                 data-price="50974"
                 data-added="54"
               >
@@ -684,6 +946,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak"
+                data-stores="eastgate parkside elmwood northgate"
                 data-price="5249"
                 data-added="33"
               >
@@ -721,6 +984,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak natural"
+                data-stores="northgate hillcrest lakeview"
                 data-price="12259"
                 data-added="49"
               >
@@ -758,6 +1022,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="yellow natural"
+                data-stores="southbank stonebridge westfield"
                 data-price="8116"
                 data-added="62"
               >
@@ -795,6 +1060,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak natural"
+                data-stores="riverside greenfield"
                 data-price="44601"
                 data-added="44"
               >
@@ -832,6 +1098,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak"
+                data-stores="midtown harbour eastgate"
                 data-price="13375"
                 data-added="60"
               >
@@ -869,6 +1136,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak beige"
+                data-stores="parkside elmwood northgate"
                 data-price="13056"
                 data-added="52"
               >
@@ -906,6 +1174,7 @@
                 href="/demo/example/shop/product/?color=black-leather"
                 data-category="chairs"
                 data-color="black"
+                data-stores="hillcrest lakeview"
                 data-price="5879"
                 data-added="39"
               >
@@ -955,6 +1224,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="seaweed natural"
+                data-stores="stonebridge westfield"
                 data-price="7639"
                 data-added="66"
               >
@@ -993,6 +1263,7 @@
                 href="/demo/example/shop/product/?color=black"
                 data-category="chairs"
                 data-color="black"
+                data-stores="old-town midtown harbour greenfield"
                 data-price="4236"
                 data-added="37"
               >
@@ -1036,6 +1307,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="brown oak"
+                data-stores="harbour"
                 data-price="55913"
                 data-added="58"
               >
@@ -1073,6 +1345,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak beige"
+                data-stores="elmwood northgate"
                 data-price="34883"
                 data-added="48"
               >
@@ -1110,6 +1383,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="terracotta natural"
+                data-stores="lakeview southbank stonebridge westfield"
                 data-price="7639"
                 data-added="63"
               >
@@ -1147,6 +1421,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak eggshell"
+                data-stores="westfield"
                 data-price="47310"
                 data-added="45"
               >
@@ -1186,6 +1461,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="beech natural"
+                data-stores="old-town midtown harbour eastgate parkside"
                 data-price="7321"
                 data-added="50"
               >
@@ -1223,6 +1499,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak cognac"
+                data-stores="eastgate parkside elmwood northgate hillcrest"
                 data-price="7449"
                 data-added="35"
               >
@@ -1260,6 +1537,7 @@
                 href="/demo/example/shop/product/?color=oak"
                 data-category="chairs"
                 data-color="oak"
+                data-stores="northgate hillcrest lakeview southbank stonebridge"
                 data-price="5295"
                 data-added="41"
               >
@@ -1297,6 +1575,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak beige"
+                data-stores="southbank"
                 data-price="31378"
                 data-added="53"
               >
@@ -1334,6 +1613,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="white natural"
+                data-stores="old-town riverside greenfield"
                 data-price="7639"
                 data-added="56"
               >
@@ -1371,6 +1651,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="slate natural"
+                data-stores="midtown harbour eastgate parkside"
                 data-price="8595"
                 data-added="59"
               >
@@ -1408,6 +1689,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="falu natural"
+                data-stores="parkside elmwood"
                 data-price="7639"
                 data-added="64"
               >
@@ -1445,6 +1727,7 @@
                 href="/demo/example/shop/product/?color=cognac"
                 data-category="chairs"
                 data-color="oak cognac"
+                data-stores="hillcrest lakeview southbank"
                 data-price="7349"
                 data-added="38"
               >
@@ -1484,6 +1767,7 @@
                 href="/demo/example/shop/product/?color=dark-beige"
                 data-category="chairs"
                 data-color="beige"
+                data-stores="stonebridge westfield riverside greenfield"
                 data-price="5295"
                 data-added="43"
               >
@@ -1521,6 +1805,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="black"
+                data-stores="old-town midtown harbour eastgate parkside greenfield"
                 data-price="5249"
                 data-added="36"
               >
@@ -1558,6 +1843,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="walnut brown"
+                data-stores="harbour"
                 data-price="19907"
                 data-added="61"
               >
@@ -1595,6 +1881,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="barley natural"
+                data-stores="elmwood northgate hillcrest lakeview"
                 data-price="7639"
                 data-added="55"
               >
@@ -1632,6 +1919,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak natural"
+                data-stores="lakeview southbank"
                 data-price="10507"
                 data-added="51"
               >
@@ -1669,6 +1957,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="northsea natural"
+                data-stores="westfield riverside greenfield"
                 data-price="8116"
                 data-added="65"
               >
@@ -1707,6 +1996,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="black"
+                data-stores="old-town midtown harbour"
                 data-price="7449"
                 data-added="34"
               >
@@ -1744,6 +2034,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="black natural"
+                data-stores="eastgate parkside"
                 data-price="12419"
                 data-added="57"
               >
@@ -1783,6 +2074,7 @@
                 href="/demo/example/shop/product/?color=dark-brown"
                 data-category="chairs"
                 data-color="brown"
+                data-stores="northgate hillcrest lakeview"
                 data-price="5295"
                 data-added="40"
               >
@@ -1820,6 +2112,7 @@
                 href="/demo/example/shop/product/"
                 data-category="chairs"
                 data-color="oak natural"
+                data-stores="southbank stonebridge westfield"
                 data-price="42848"
                 data-added="47"
               >
@@ -1857,6 +2150,7 @@
                 href="/demo/example/shop/product/?color=green"
                 data-category="chairs"
                 data-color="green"
+                data-stores="riverside greenfield"
                 data-price="5295"
                 data-added="42"
               >
@@ -1972,8 +2266,39 @@
 
     <div data-chrome="grid-overlay"></div>
 
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+      integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <!-- Vector basemap: MapLibre renders OpenFreeMap's styles, bridged into
+         Leaflet as a layer so every marker, cluster and gesture stays Leaflet's. -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"
+      integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"
+      integrity="sha384-4CB9Vtol9LN6lGgBCvmPLbUEZwilrqIvPieSRurgAXAB7FVJaLS9n8WyAIA5wjQ+"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/map.js" defer></script>
     <script src="/demo/example/shop/shop.js" defer></script>
   </body>
 </html>

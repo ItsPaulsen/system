@@ -185,6 +185,220 @@
     opacity: 0.5;
   }
 
+  /* ── Store picker ─────────────────────────────────────────────────────────
+     The Store facet: a map at the foot of the rail, and the store list that
+     feeds it. Only one of the two is on screen. The list ships visible and the
+     map hidden, so the facet works before the map's CDN scripts land and keeps
+     working if they never do; shop.js swaps them once there is a map.
+
+     Portrait, because the stores run north to south and a landscape strip of a
+     244 rail would frame mostly water. */
+  .shop-store {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .shop-store__map {
+    /* The colour under the tiles, and so the surface the frame shows while they
+       load. The rail's raised surface rather than the basemap's own cream: at
+       this size the frame reads as one of the rail's cards, and a card is what
+       the other groups put their controls on. Set as the ground token, not a
+       background, so Leaflet's own container takes it too (it reads the same
+       token, from an unlayered rule this couldn't reach otherwise). */
+    --ex-map-ground: var(--background-secondary);
+
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+
+    /* The system's hairline, the same one the rail's dividers and the zoom
+       pair's split take, so the frame has an edge against the surface it sits
+       on instead of floating on it. */
+    border: var(--border-width) solid var(--fill-tertiary);
+    border-radius: var(--radius-md);
+    background: var(--ex-map-ground);
+  }
+
+  /* Held back until the tiles are drawn, so the frame shows its own surface
+     rather than the basemap's cream. That cream is painted by MapLibre itself,
+     from the style's background layer, the moment the style lands and well
+     before any tile does: it is inside the GL canvas, so the only way to not
+     show it is to not show the canvas. Kept in the layout and merely
+     transparent, since a canvas with no box renders no tiles to wait for. */
+  .shop-store__canvas {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+
+    /* A little longer than --motion-default's 150, which is a control's timing
+       and lands the map with a snap, but short enough to stay out of the way of
+       the wait it follows. The global reduced-motion clamp takes it out for
+       anyone who asked. */
+    transition: opacity 250ms var(--motion-ease-out);
+  }
+
+  .shop-store__map[data-ready] .shop-store__canvas {
+    opacity: 1;
+  }
+
+  /* Over Leaflet's own panes, which sit at z-index 400 and below. */
+  .shop-store__zoom {
+    position: absolute;
+    right: var(--space-8);
+    bottom: var(--space-8);
+    z-index: 400;
+    display: flex;
+    flex-direction: column;
+
+    /* Between --radius-sm and --radius-md: 8 reads sharp against the 32 buttons
+       and 16 rounds the pair into a pill. Raw, like the page's other one-offs. */
+    border-radius: 12px;
+    background: var(--background-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Flat buttons sharing one surface, so the pair reads as a single control with
+     a hairline between them rather than two cards. 32 square, set through the
+     component's own size token so the height and the icon follow the width
+     rather than being pinned separately. */
+  .shop-store__zoom-button {
+    --button-size: 32px;
+
+    position: relative;
+    color: var(--ink-secondary);
+  }
+
+  .shop-store__zoom-button + .shop-store__zoom-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 20px;
+    height: 1px;
+    background: var(--fill-tertiary);
+    translate: -50% 0;
+  }
+
+  .shop-store__zoom-button:not(:disabled):hover {
+    background: none;
+    color: var(--ink-primary);
+  }
+
+  .shop-store__zoom-button:not(:disabled):active {
+    background: none;
+    color: var(--ink-primary-active);
+  }
+
+  /* display:grid on both of these beats the UA's [hidden] rule, so each says so
+     itself: the list steps aside once the map is the control, and the chosen
+     line is out until there is a chosen store. */
+  .shop-store__picked[hidden],
+  .shop-store__list[hidden] {
+    display: none;
+  }
+
+  /* The chosen store, under the map: the name it was picked by, and the way
+     back out. Both the chip row above the grid and Clear all press that same
+     button, so there is one path out of this facet. */
+
+  /* No gap: the button's own box is 24 around a 21 line, and that 3 either side
+     is the space between the two rows. */
+  .shop-store__picked {
+    display: grid;
+    justify-items: start;
+    margin: 0;
+  }
+
+  /* A step up in weight: this is the heading of the picked state, and the line
+     under it is the action. */
+  .shop-store__name {
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    color: var(--ink-primary);
+  }
+
+  /* .link is written for an <a>, so a <button> wearing it keeps the UA's border,
+     grey fill and centred font: strip those the same way the chip row's clear
+     does, leaving the underline and the colour the component is actually for. */
+  .shop-store__clear {
+    /* 24 tall around a 21 line: a hit target rather than the height of the word,
+       with the underline still sitting on the text. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+
+    /* Ink, and it stays ink, the same shift the store finder's Back takes: this
+       undoes a choice rather than making one, so it moves within its own colour
+       instead of arriving at the brand. */
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  .shop-store__clear:hover {
+    color: var(--ink-primary-hover);
+  }
+
+  /* Instant, unlike the hover it shares a transition with: .link eases colour
+     over 150ms, which is most of a click, so the pressed colour was still on its
+     way in when the button released and took the whole line with it. A press has
+     to answer on the frame it happens. */
+  .shop-store__clear:active {
+    color: var(--ink-primary-active);
+    transition: none;
+  }
+
+  /* The list. Rows that touch, the same shape the checkbox options above take,
+     so the facet reads as part of the rail whichever half of it is showing. */
+  .shop-store__list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .shop-store__option {
+    display: grid;
+    width: 100%;
+    padding: var(--space-8) 0;
+    gap: 2px;
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .shop-store__option-name {
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    color: var(--ink-primary);
+  }
+
+  .shop-store__option-address {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-secondary);
+  }
+
+  /* The chosen row while the list is the control (no map): the name carries it,
+     since a row has no box to tick. */
+  .shop-store__option[aria-pressed="true"] .shop-store__option-name {
+    font-weight: var(--font-body-medium-emphasized-weight);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop-store__option:hover .shop-store__option-name {
+      color: var(--ink-primary-hover);
+    }
+  }
+
   /* ── Colour swatches ──────────────────────────────────────────────────────
      A dot beside each colour option, so the list can be scanned by colour and
      not only read. Decoration: it's aria-hidden and the label carries the name,

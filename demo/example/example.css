@@ -17,6 +17,12 @@
     --ex-topbar-h: 64px;
     --ex-control-h: 40px;
     --ex-control-px: 16px;
+
+    /* The basemap style's own background colour, read out of the style rather
+       than guessed: it is what shows while the first tiles are still in flight.
+       Raw values on purpose, they track OpenFreeMap's styles, not our palette.
+       See the Map section below. */
+    --ex-map-ground: #f8f4f0;
   }
 
   @media (min-width: 768px) {
@@ -1841,6 +1847,105 @@
     inset: -4px; /* 40 → 48 hit target */
   }
 
+  /* ── Map ──────────────────────────────────────────────────────────────────
+     Shared by the store finder and the shop's store filter: both draw the same
+     basemap (map.js) and the same pins, under different furniture.
+
+     --ex-map-ground (with the sizing tokens at the top of this file) is the
+     colour under the tiles, so a map paints its own ground before the first
+     tile lands rather than flashing the surface's white. */
+  :root[data-theme="dark"] {
+    --ex-map-ground: #2a3040;
+  }
+
+  /* Pin. A divIcon, so it is our markup and our tokens rather than Leaflet's
+     image marker: a filled circle with a rim that separates it from both the
+     water and the land underneath. */
+  .ex-pin {
+    /* 40 at rest, 44 hovered, 64 for the open one, measured across the rim.
+       Grown with a transform rather than a width, so the pin keeps the centre
+       Leaflet anchored it by. The divisor is 40, not the 36 circle: the 2px rim
+       scales with everything else, so the outer size is what the ratios have to
+       be written against. */
+    --ex-pin: 36px;
+
+    display: grid;
+    place-items: center;
+    width: var(--ex-pin);
+    height: var(--ex-pin);
+    border-radius: var(--radius-full);
+
+    /* Fill is the foreground role, so the pin lifts to a light tint on the dark
+       stage instead of staying a dark violet on a dark map.
+
+       The dot is derived from that fill rather than taken from --accent-on:
+       --accent-on answers "what reads on --accent", and the fill here is
+       --accent-foreground, which in dark is a different colour entirely. Same
+       formula, pointed at the fill actually used, so the dot lands white on the
+       light theme's dark violet and black on the dark theme's light tint.
+
+       The rim stays the theme surface in both: it is what separates the pin
+       from the map, and it reads as a rim either way. */
+    --ex-pin-fill: var(--accent-foreground);
+
+    background: var(--ex-pin-fill);
+    box-shadow:
+      0 0 0 2px var(--background-secondary),
+      0 2px 8px 0 color-mix(in oklab, var(--neutral-black) 30%, transparent);
+    color: oklch(from var(--ex-pin-fill) clamp(0, round(1.15 - l), 1) 0 h);
+    transition: transform var(--motion-default);
+  }
+
+  /* A cluster is the same disc carrying a count instead of a dot, so zooming out
+     reads as pins merging rather than a different object appearing. */
+  .ex-pin--cluster {
+    width: 44px;
+    height: 44px;
+    font-size: var(--font-caption-medium-emphasized-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    line-height: 1;
+  }
+
+  .ex-pin__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: currentcolor;
+  }
+
+  /* Set from the list: hovering a card grows its pin to the same size hovering
+     the pin does, so the two halves of the page point at each other. Declared
+     before --active so the open pin keeps its own size while hovered. */
+  .ex-pin--hover {
+    transform: scale(calc(44 / 40));
+  }
+
+  /* Leaflet positions the icon by its top-left, so growth has to come out of the
+     centre or the pin walks off its coordinate. */
+  .ex-pin--active {
+    z-index: 1;
+    transform: scale(calc(64 / 40));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ex-pin:hover {
+      transform: scale(calc(44 / 40));
+    }
+
+    /* The open pin is already at its own size; hovering it doesn't shrink it. */
+    .ex-pin--active:hover {
+      transform: scale(calc(64 / 40));
+    }
+  }
+
+  /* A pin that snaps to its open size still says which one is open; what it must
+     not do is grow under someone who asked it not to. */
+  @media (prefers-reduced-motion: reduce) {
+    .ex-pin {
+      transition: none;
+    }
+  }
+
   /* Forced colors (Windows High Contrast): the composed cards and the tinted
      log-out button lose their surface/fill, so outline them to keep their bounds
      visible (in the hero marquee and on the settings screen). */
@@ -1853,4 +1958,45 @@
       border: var(--border-width) solid ButtonBorder;
     }
   }
+}
+
+/* Leaflet's stylesheet is an unlayered <link>, and unlayered CSS outranks every
+   layer, so these overrides have to sit outside @layer components too. In the
+   layer they lose silently: .leaflet-container kept Leaflet's own #ddd, which is
+   the grey the map faded up from on load.
+
+   Kept to the minimum: the container's type and ground, and the attribution,
+   which the tile terms require so it is styled rather than hidden. */
+.leaflet-container {
+  font: inherit;
+  background: var(--ex-map-ground);
+}
+
+.leaflet-container a {
+  color: var(--ink-secondary);
+}
+
+.leaflet-control-attribution {
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--background-secondary) 82%, transparent);
+  color: var(--ink-tertiary);
+  font-size: var(--font-caption-small-size);
+  line-height: 1.8;
+}
+
+/* MarkerCluster.css is an unlayered <link> like Leaflet's, so its own icon
+   sizing has to be answered from out here too. Only the wrapper is touched: the
+   disc inside is .ex-pin, styled with everything else. */
+.leaflet-marker-icon .ex-pin--cluster {
+  display: grid;
+  place-items: center;
+}
+
+/* A pin is a disc, but the element that takes focus is the square box Leaflet
+   builds around it, so the ring came out a rectangle around a circle. The
+   outline follows the radius of the element it is drawn on, and this box is
+   square at both pin sizes, so a full radius rings the disc itself. */
+.leaflet-marker-icon {
+  border-radius: var(--radius-full);
 }

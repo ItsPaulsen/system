@@ -40,8 +40,7 @@
   // goes with them is in the markup; the row's data-state picks which one shows.
   const STOCK = {
     in: { label: "In stock online", lead: "Ships in 2-4 days" },
-    few: { label: "Few left online", lead: "Ships in 2-4 days" },
-    order: { label: "Made to order", lead: "Ships in 6-8 weeks" }
+    order: { label: "Made to order online", lead: "Ships in 6-8 weeks" }
   };
 
   const set = (el, text) => {
@@ -806,26 +805,32 @@
   // rather than from whatever the last pass left behind.
   const items = new Map(cards.map((card) => [card, card.parentElement]));
 
-  // What a shelf state is called and what it wears. One table for the buy
-  // column's line and the sheet's rows, so the two can't disagree about what
-  // "few" means or looks like.
-  const STOCK = {
-    in: { label: "In stock", skin: "badge--green" },
-    few: { label: "Few left", skin: "badge--amber" },
-    none: { label: "Not in stock", skin: "badge--neutral" }
-  };
+  // Stock is what the warehouse holds and ships; available is what is on a shelf
+  // you can walk to. The buy column's two lines use one word each, and the
+  // store's line says the same number the sheet's rows do, so the page never
+  // gives one shop two different answers.
+  const available = (n) => (n ? `${n} available` : "None available");
 
   const colours = document.querySelector(".pdp-color__list");
   const colour = () => document.querySelector(".pdp-swatch__input:checked")?.value || "";
 
-  // A row's data-stock is what the shop holds of this piece; data-stock-out
-  // names the colourways it doesn't, so a shelf can be full of the oak and have
-  // never carried the dark brown. Listed on the row rather than a state per
-  // colour, since the exceptions are the short half of that table.
-  const stockOf = (card) => {
+  // How many the shop is holding of this piece; data-stock-out names the
+  // colourways it never carried, so a shelf can be full of the oak and have none
+  // of the dark brown. Listed on the row rather than a count per colour, since
+  // the exceptions are the short half of that table.
+  const countOf = (card) => {
     const out = (card.dataset.stockOut || "").split(/\s+/).filter(Boolean);
-    if (out.includes(colour())) return "none";
-    return card.dataset.stock in STOCK ? card.dataset.stock : "none";
+    if (out.includes(colour())) return 0;
+    return Number(card.dataset.count) || 0;
+  };
+
+  // The state is read off the number rather than stored beside it, so the mark
+  // and the count can't disagree about what "few" is.
+  const FEW = 3;
+  const stockOf = (card) => {
+    const n = countOf(card);
+    if (!n) return "none";
+    return n <= FEW ? "few" : "in";
   };
 
   const latLng = (card) => [Number(card.dataset.lat), Number(card.dataset.lng)];
@@ -870,17 +875,21 @@
       // chosen colourway, so the badge is only true until the next swatch.
       const state = stockOf(card);
       card.dataset.state = state;
+      // The number, not the state's word: the list is where shops are compared,
+      // and "14 available" against "2 available" is the comparison. The buy
+      // column keeps the words, where there is room for a sentence.
+      const n = countOf(card);
       const line = card.querySelector("[data-pdp-card-stock]");
-      if (line) line.textContent = STOCK[state].label;
+      if (line) line.textContent = available(n);
     });
 
     // Unchosen, the line answers the question a reader has before they have a
     // store in mind: how many shops have it at all. Counted off the rows rather
     // than written down, so it can't disagree with the list it came from.
     if (!active) {
-      const stocked = cards.filter((c) => stockOf(c) !== "none").length;
+      const stocked = cards.filter((c) => countOf(c) > 0).length;
       block.dataset.state = stocked ? "in" : "none";
-      if (text) text.textContent = `In stock in ${stocked} stores`;
+      if (text) text.textContent = `Available in ${stocked} stores`;
       if (action) action.textContent = "Choose a store";
       // The sheet is named by the button that opens it, so the reader arrives at
       // the thing they pressed rather than at a different word for it.
@@ -896,7 +905,7 @@
       const store = document.createElement("span");
       store.className = "pdp-avail__store";
       store.textContent = nameOf(active);
-      text.replaceChildren(`${STOCK[state].label} at `, store);
+      text.replaceChildren(`${available(countOf(active))} at `, store);
     }
     if (action) action.textContent = "Change store";
     if (title) title.textContent = "Change store";
@@ -1061,7 +1070,7 @@
     // The line that changed is in the buy column, and the sheet closing takes
     // focus away from it, so the polite region says what it now reads.
     if (announce && status && card) {
-      status.textContent = `${STOCK[stockOf(card)].label} at ${nameOf(card)}`;
+      status.textContent = `${available(countOf(card))} at ${nameOf(card)}`;
     }
   };
 

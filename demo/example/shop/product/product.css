@@ -922,7 +922,7 @@
      by the colour and the sentence. */
   .pdp-avail__row[data-state="in"] .pdp-avail__icon[data-icon="check"],
   .pdp-avail__row[data-state="order"] .pdp-avail__icon[data-icon="check"],
-  .pdp-avail__row[data-state="few"] .pdp-avail__icon[data-icon="alert"],
+  .pdp-avail__row[data-state="few"] .pdp-avail__icon[data-icon="check"],
   .pdp-avail__row[data-state="none"] .pdp-avail__icon[data-icon="cross"] {
     display: block;
   }
@@ -941,11 +941,17 @@
     color: var(--pdp-ok);
   }
 
-  .pdp-avail__row[data-state="order"] .pdp-avail__glyph,
-  .pdp-avail__row[data-state="few"] .pdp-avail__glyph {
+  .pdp-avail__row[data-state="order"] .pdp-avail__glyph {
     color: var(--pdp-caution);
   }
 
+  .pdp-avail__row[data-state="few"] .pdp-avail__glyph {
+    color: var(--pdp-ok);
+  }
+
+  /* Quiet here, red in the list. The buy column is two lines about one shop, and
+     a red mark on one of them reads as an alarm about the product; down a column
+     of shops it is the thing being compared, so there it carries. */
   .pdp-avail__row[data-state="none"] .pdp-avail__glyph {
     color: var(--ink-secondary);
   }
@@ -1453,22 +1459,25 @@
     height: 16px;
   }
 
+  /* Two marks, not three: the number beside it is what says how many, so the
+     mark only answers whether the shop has any. A warning colour on "2
+     available" would be saying the same thing twice and louder. */
   .pdp-store-row[data-state="in"] .pdp-store-row__icon[data-icon="check"],
-  .pdp-store-row[data-state="few"] .pdp-store-row__icon[data-icon="alert"],
+  .pdp-store-row[data-state="few"] .pdp-store-row__icon[data-icon="check"],
   .pdp-store-row[data-state="none"] .pdp-store-row__icon[data-icon="cross"] {
     display: block;
   }
 
-  .pdp-store-row[data-state="in"] .pdp-store-row__icon {
+  .pdp-store-row[data-state="in"] .pdp-store-row__icon,
+  .pdp-store-row[data-state="few"] .pdp-store-row__icon {
     color: var(--pdp-ok);
   }
 
-  .pdp-store-row[data-state="few"] .pdp-store-row__icon {
-    color: var(--pdp-caution);
-  }
-
+  /* --red straight, no local value beside the other two: red is the one of the
+     three that isn't darkened in light (it sits on its anchor in both themes),
+     so there is nothing to undo. */
   .pdp-store-row[data-state="none"] .pdp-store-row__icon {
-    color: var(--ink-secondary);
+    color: var(--red);
   }
 
   /* ── Colour swatches ──────────────────────────────────────────────────────

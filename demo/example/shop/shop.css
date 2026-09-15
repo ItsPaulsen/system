@@ -309,12 +309,39 @@
     margin: 0;
   }
 
+  /* Chosen, with a map above it: the two become one card. The frame's bottom
+     corners square off and its bottom border turns into the divider, the block
+     below picks the box back up at its sides and closes it, and the gap between
+     them goes so the seam is that one hairline.
+
+     Written off the adjacency rather than a state class, because it is exactly
+     the case the markup already describes: a frame that is showing, with a
+     chosen store directly under it. With the list as the control instead (no
+     map) the block keeps its own shape, since there is no box to continue. */
+  .shop-store:has(.shop-store__map:not([hidden]) + .shop-store__picked:not([hidden])) {
+    gap: 0;
+  }
+
+  .shop-store__map:not([hidden]):has(+ .shop-store__picked:not([hidden])) {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  .shop-store__map:not([hidden]) + .shop-store__picked:not([hidden]) {
+    padding: var(--space-8) var(--space-12) var(--space-12);
+    border: var(--border-width) solid var(--fill-tertiary);
+    border-top: 0; /* the map's own bottom edge is the divider */
+    border-end-start-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
+    background: var(--background-secondary);
+  }
+
   /* A step up in weight: this is the heading of the picked state, and the line
      under it is the action. */
   .shop-store__name {
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
-    font-weight: var(--font-body-medium-emphasized-weight);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
     color: var(--ink-primary);
   }
 

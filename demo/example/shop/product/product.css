@@ -1926,15 +1926,19 @@
      padding, so the first card still starts on the page's left edge and the last
      one can scroll clear of the right. */
   @media (max-width: 767.98px) {
+    /* Short of the full page margin by the ring's room: the row's own negative
+       margin (see the base rule) then puts its clip box exactly on the window's
+       edges. Pulled the whole margin, the row reached past them and the page
+       scrolled sideways by the ring's width. */
     .pdp-related__shelf {
-      margin-inline: calc(-1 * var(--grid-margin, 1rem));
+      margin-inline: calc(-1 * (var(--grid-margin, 1rem) - var(--pdp-focus-room)));
     }
 
-    /* The ring's room is already on both sides (see the base rule); this is the
-       page margin on top of it, so the first card still starts on the page's left
-       edge. */
+    /* The page margin alone: the clip box already starts at the window's edge, so
+       this is what puts the first card on the page's left edge, and it is wider
+       than the ring needs. */
     .pdp-related__grid {
-      padding-inline: calc(var(--grid-margin, 1rem) + var(--pdp-focus-room));
+      padding-inline: var(--grid-margin, 1rem);
     }
   }
 

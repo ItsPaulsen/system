@@ -872,11 +872,17 @@
                 <span data-detail-mine-label>Make this my store</span>
               </button>
 
-              <!-- A link and nothing else. Making a shop yours is the button
-                   above, so leaving for the listing does not quietly do it: the
-                   listing narrows to whichever store was actually chosen. -->
-              <a class="button button--primary stores-detail__cta" href="/demo/example/shop/">
-                See what's in stock
+              <!-- A link, and it stays one: making a shop yours is the button
+                   above, so leaving for the listing does not quietly do it.
+                   stores.js points it at ?store=<slug>, which narrows the listing
+                   to this shop for the visit without touching that choice. The
+                   plain listing is what it falls back to. -->
+              <a
+                class="button button--primary stores-detail__cta"
+                href="/demo/example/shop/"
+                data-detail-shop
+              >
+                Browse this store
               </a>
             </div>
           </div>

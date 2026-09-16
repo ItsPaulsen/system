@@ -473,6 +473,9 @@
   let clusters = null;
   let map = null;
   let active = null;
+  // Whether the store showing is one the link named rather than one the reader
+  // chose, which is what decides whether clearing it clears their choice too.
+  let linked = false;
 
   // Same pin as the store finder, built as a divIcon so it is our markup and our
   // tokens. Rebuilt rather than reclassed: clustering makes and remakes icon
@@ -513,13 +516,17 @@
     });
   };
 
-  const select = (option) => {
+  // `remember` is what separates the facet from the preference. Choosing a shop
+  // here answers the question the product page asks too, so it is written down;
+  // a choice arriving already made (remembered, or named by the link that got
+  // here) is only being replayed, so it writes nothing back.
+  const select = (option, { remember = true } = {}) => {
     const prev = active;
     active = option;
 
     if (option) group.dataset.store = option.dataset.store;
     else delete group.dataset.store;
-    window.exampleStore?.write(option?.dataset.store || "");
+    if (remember) window.exampleStore?.write(option?.dataset.store || "");
 
     options.forEach((o) => o.setAttribute("aria-pressed", String(o === option)));
     if (picked) picked.hidden = !option;
@@ -545,23 +552,37 @@
     group.dispatchEvent(new CustomEvent("shop-store:change", { bubbles: true }));
   };
 
+  // Every press on the facet goes through here. A store the link asked for is
+  // this visit's filter rather than the reader's own shop, so clearing it clears
+  // the filter and leaves what they chose elsewhere alone; picking a different
+  // one is a choice like any other and is written down.
+  const pick = (next) => {
+    const remember = !linked || next !== null;
+    linked = false;
+    select(next, { remember });
+  };
+
   options.forEach((option) => {
     option.setAttribute("aria-pressed", "false");
-    option.addEventListener("click", () => select(option === active ? null : option));
+    option.addEventListener("click", () => pick(option === active ? null : option));
   });
 
-  clear?.addEventListener("click", () => select(null));
+  clear?.addEventListener("click", () => pick(null));
 
-  // A store chosen on a product page lands here already filtering. The group
-  // stays shut: the chip above the grid is what says where the narrowing came
-  // from, and opening a 380 map to repeat it pushes the rest of the rail off the
-  // screen. Through select(), so the picked line, the chip and the grid all
-  // follow the one path; the map isn't built yet and picks the choice up when it
-  // is.
-  const remembered = window.exampleStore?.read();
-  if (remembered) {
-    const option = options.find((o) => o.dataset.store === remembered);
-    if (option) select(option);
+  // A store chosen on a product page lands here already filtering, and so does a
+  // store finder's link, which names one in ?store= for the visit without making
+  // it the reader's. The link wins where both are there: it is the shop they just
+  // came from. The group stays shut either way: the chip above the grid is what
+  // says where the narrowing came from, and opening a 380 map to repeat it pushes
+  // the rest of the rail off the screen. Through select(), so the picked line,
+  // the chip and the grid all follow the one path; the map isn't built yet and
+  // picks the choice up when it is.
+  const byStore = (slug) => slug && options.find((o) => o.dataset.store === slug);
+  const asked = byStore(new URLSearchParams(location.search).get("store"));
+  const start = asked || byStore(window.exampleStore?.read());
+  if (start) {
+    linked = Boolean(asked);
+    select(start, { remember: false });
   }
 
   const initMap = () => {

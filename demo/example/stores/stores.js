@@ -355,6 +355,13 @@
     email.textContent = d.email;
     email.href = `mailto:${d.email}`;
 
+    // Browsing this store means the listing narrowed to it: it takes the store
+    // in the query
+    // and narrows itself to it for the visit. Written per store rather than
+    // left in the markup, since the link is only ever pressed from a store that
+    // is open. Without JS it stays the plain listing it is in the markup.
+    if (toShop) toShop.href = `/demo/example/shop/?store=${encodeURIComponent(d.store)}`;
+
     backMode = panel.dataset.mode;
     panel.dataset.mode = "detail";
     detail.hidden = false;
@@ -397,6 +404,7 @@
   // back and narrow themselves to it.
   const mine = detail.querySelector("[data-detail-mine]");
   const mineLabel = detail.querySelector("[data-detail-mine-label]");
+  const toShop = detail.querySelector("[data-detail-shop]");
 
   // The same filled check the product page's picker heads its chosen group with.
   const CHECK =

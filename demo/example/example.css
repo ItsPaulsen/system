@@ -159,10 +159,59 @@
     padding-inline: 6px;
   }
 
+  /* The rail's own skip link. Out of the flow and clipped until it takes focus,
+     then it lays out in place and pushes the groups down, so the first tab stop
+     in the rail shows itself where it belongs rather than floating over the page
+     the way the document's own skip link does.
+
+     Only in the rail: in the sheet the way past the filters is the count button
+     at the foot, and a link that jumped to results behind an open sheet would be
+     answering a question nobody asked. */
+  .ex-filter__skip {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .ex-filter__skip:focus-visible {
+    position: static;
+    width: auto;
+    height: 40px;
+    margin-bottom: var(--space-16);
+    overflow: visible;
+    clip-path: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--background-secondary);
+    color: var(--ink-primary);
+    font-size: var(--font-caption-medium-size);
+    font-weight: var(--font-caption-medium-emphasized-weight);
+    text-decoration: none;
+  }
+
+  .sheet .ex-filter__skip {
+    display: none;
+  }
+
+  /* The results column is a skip target, not a control: focused programmatically
+     by the link, so it takes no ring, and its scroll-margin clears the topbar the
+     way #ex-main's does. */
+  [data-ex-filter-main] {
+    scroll-margin-top: calc(var(--ex-topbar-h) + var(--space-16));
+  }
+
+  [data-ex-filter-main]:focus-visible {
+    outline: none;
+  }
+
   .ex-filter__title {
-    /* 24 down to the first divider, which lines that hairline up with the top of
-       the items beside it. */
-    margin: 0 0 var(--space-24);
+    /* 16 down to the first group, which now opens straight into its heading row
+       rather than a divider, so it sits closer than the 24 the line needed. */
+    margin: 0 0 var(--space-16);
     font-size: var(--font-title-small-size);
     line-height: var(--font-title-small-lh);
     font-weight: var(--font-title-small-weight);
@@ -178,6 +227,20 @@
        between its two dividers. On the GROUP, not the body, so the bottom 4 is
        there whether the group is open or closed. */
     padding-block: var(--space-4);
+
+    /* Scrolled to the top of the sheet (chrome.js), a group lands flush with the
+       scroller's edge rather than under the 8 of inset above it, so its own top
+       divider tucks under the head's and the heading is the first thing below
+       the title. The extra hairline is the group's own border-top, which would
+       otherwise sit on the scroller's first row. */
+    scroll-margin-top: calc(var(--border-width) * -1);
+  }
+
+  /* A line between groups and nowhere else: above the first is the rail's own
+     title, which is heading enough, and below the last is the end of the rail. A
+     divider separates two groups, so it is drawn only where there are two. */
+  .ex-filter__group:first-of-type {
+    border-top: 0;
   }
 
   /* No hover surface: the whole row is the toggle, so a surface on the chevron
@@ -2057,67 +2120,216 @@
     }
   }
 
-  /* The header's clear, shared by both listings so the two can't drift. .link is
-     written for an <a>, so a <button> wearing it sheds the UA's border, fill and
-     centred font. Disabled rather than hidden while nothing is on: the row keeps
-     its shape as filters come and go, and a control that moves is harder to aim
-     at than one that greys. Disabled controls are exempt from the contrast floor,
-     so that state can be quiet. */
-  .ex-filter-sheet__clear {
-    display: inline-flex;
-    align-items: center;
-    min-height: 24px;
-    padding: 0;
-    border: 0;
-    background: none;
-    font: inherit;
-    font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
-    font-weight: var(--font-caption-medium-emphasized-weight);
-    color: var(--ink-primary);
-    cursor: pointer;
+  /* A bottom sheet on a phone, the component's side panel from 640. Below that a
+     drawer down one edge wastes the edge the thumb is nearest, and the filters
+     are the whole task while they are open, so they come up from the foot and
+     take the width.
+
+     Written as the base and undone at 640 rather than the other way round: the
+     phone case is the one this sheet is mostly opened in.
+
+     Every 640 override for this sheet lives in the one block at the end of the
+     section, after the rules it undoes. A media query adds no specificity, so a
+     base rule written below one wins at every width, which is not something the
+     query looks like it is losing. */
+  .ex-filter-sheet {
+    inset: auto 0 0;
+    width: 100%;
+
+    /* As tall as its filters, growing as a group opens, and never closer to the
+       top than 48. A cap rather than a height, so the sheet is the size of what
+       is in it until there is too much.
+
+       The dialog is the flex column itself here, and it clips: the head and foot
+       are the parts that never shrink, the body is the only one that gives, and
+       without the clip a list too long for the cap pushes the foot out through
+       the bottom edge instead of scrolling. */
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    max-height: calc(100dvh - 48px);
+    overflow: hidden;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    transform: translateY(100%);
   }
 
-  /* --fill-secondary, the colour the Button component gives its own disabled
-     label, rather than a dimmed ink: a control that can't be pressed reads as
-     off, and ink at any step still reads as text you could use. Disabled
-     controls are exempt from the contrast floor. */
-  .ex-filter-sheet__clear:disabled {
-    color: var(--fill-secondary);
-    text-decoration: none;
-    cursor: not-allowed;
+  /* A closed dialog is display:none from the UA, and the display above outranks
+     it, which leaves the whole panel sitting in the page. Same trap as a rule
+     that sets display on something carrying [hidden]. */
+  .ex-filter-sheet:not([open]) {
+    display: none;
   }
 
-  .ex-filter-sheet__clear:hover:not(:disabled) {
-    color: var(--ink-primary-hover);
+  /* The component's plain ease-out spends most of the 200ms arriving; the token
+     curve gets there and settles, which is what a sheet coming off the bottom
+     edge should do. Same duration. */
+  .ex-filter-sheet[open] {
+    transform: translateY(0);
+    transition: transform 0.2s var(--motion-ease-out);
   }
 
-  /* Instant: .link eases colour over 150ms, which is most of a click. */
-  .ex-filter-sheet__clear:active:not(:disabled) {
-    color: var(--ink-primary-active);
-    transition: none;
+  @starting-style {
+    .ex-filter-sheet[open] {
+      transform: translateY(100%);
+    }
+  }
+
+  /* The inner column gives way with the dialog rather than holding a height of
+     its own, so the cap reaches the body. */
+  .ex-filter-sheet .sheet__inner {
+    flex: 0 1 auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  /* The only part that shrinks. At the cap it is the one left holding a bound,
+     which is what makes its scroller scroll while the head and foot stay. */
+  .ex-filter-sheet .sheet__body {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  /* The head, matched to the store picker's so the mini-site's two sheets open the
+     same way: 64 tall at every width, the title centred on the header rather than
+     on what the close leaves over, and the close out of the flow for it. */
+  .ex-filter-sheet .sheet__header {
+    position: relative;
+    justify-content: center;
+
+    /* Never gives: in a column that has run out of room every item shrinks by
+       default, and a head with a height but no floor loses it to the list. */
+    flex-shrink: 0;
+    height: 64px;
+    padding: 0 var(--space-16);
+  }
+
+  .ex-filter-sheet .sheet__title {
+    font-size: var(--font-body-medium-emphasized-size);
+    font-weight: var(--font-body-medium-emphasized-weight);
+    line-height: var(--font-body-medium-emphasized-lh);
+  }
+
+  /* A 48 hit target (::before) around the component's own 40 box, which is the
+     visible surface. */
+  .ex-filter-sheet .sheet__close {
+    position: absolute;
+    inset-inline-end: var(--space-16);
+  }
+
+  .ex-filter-sheet .sheet__close::before {
+    content: "";
+    position: absolute;
+    inset: -4px; /* 40 → 48 hit target */
+  }
+
+  /* Down one edge from 640: the insets give the sheet the viewport's height, so
+     there is no cap to pass along and the column fills rather than sizing to
+     content. The component's own transform is on X, so both axes are restated
+     here, @starting-style included, or the panel would slide in on the axis it
+     is no longer anchored to. */
+  @media (min-width: 640px) {
+    .ex-filter-sheet {
+      inset: 0 auto 0 0;
+
+      /* The store picker's column, so the mini-site's two sheets are the same
+         panel at the same width. */
+      width: min(92vw, 480px);
+      max-height: none;
+      border-radius: 0;
+      transform: translateX(-256px);
+    }
+
+    .ex-filter-sheet[open] {
+      transform: translateX(0);
+    }
+
+    @starting-style {
+      .ex-filter-sheet[open] {
+        transform: translateX(-256px);
+      }
+    }
+
+    .ex-filter-sheet .sheet__inner,
+    .ex-filter-sheet .sheet__body {
+      flex: 1;
+    }
   }
 
   /* The filter sheet's foot. A sibling of the scrolling body inside a column that
      is the sheet's full height, so it sits on the bottom edge without being told
      to: no sticky, and nothing overlapping the last option in the list.
 
-     No rule above it: the button is a filled block sitting on the sheet's own
-     surface, which separates the foot from the list without a line of its own. */
+     No rule above it: the buttons are blocks sitting on the sheet's own surface,
+     which separates the foot from the list without a line of its own. */
   .ex-filter-sheet__foot {
     flex-shrink: 0;
-    padding: var(--space-16);
+    display: flex;
+
+    /* Stacked while the sheet is the width of the screen: two buttons sharing a
+       phone's row leave each too narrow to read as the thing it is. Side by side
+       from 640, where the panel is a column down one edge. */
+    flex-direction: column;
+    gap: var(--space-8);
+
+    /* 24 at the sides and under, the inset the Sheet gives its scroller, so the
+       buttons line up with the filters above them and sit off the bottom edge by
+       as much as they do off the sides. 16 over, where the list is already
+       running out above them. */
+    padding: var(--space-16) var(--space-24) var(--space-24);
   }
 
-  /* Full width: it is the only thing on the row and the one way out.
-
-     The gap here is word spacing, not the icon spacing the token is for: the
-     count and the noun are three words of one sentence, and 8 either side of the
-     number reads as three things rather than one line. */
+  /* Stacked: each takes the width and only its own height. flex: 1 here would
+     share the foot's height between them and stretch both, since the stack runs
+     down the main axis. Reset goes under the count, which is the button this
+     sheet is left by; in the markup it comes first so the row from 640 reads
+     left to right. */
+  .ex-filter-sheet__clear,
   .ex-filter-sheet__apply {
+    /* The sm step's numbers rather than data-size="sm" on the foot: the attribute
+       has no breakpoint, and the smaller button is only wanted while the sheet
+       comes up from below. On the buttons, not the row around them, because
+       .button declares --button-size on itself and a property set on an element
+       beats one inherited into it. The gap is word spacing here, not the icon
+       spacing the token is for: "Show" and the count are one phrase. */
+    --button-size: 40px;
     --button-gap: 6px;
+    --button-px: 16px;
 
+    flex: none;
     width: 100%;
+    min-width: 0;
+  }
+
+  /* Under the count when stacked, after it when in a row: either way Reset is the
+     second of the two, and it comes first in the markup so a row reads the way
+     the source does. */
+  .ex-filter-sheet__clear {
+    order: 1;
+  }
+
+  /* A row from 640, and an even split across it: basis 0 so the two share it
+     whatever their words are. Placed after the rules it undoes, since a media
+     query adds no specificity and the later rule wins at every width. */
+  @media (min-width: 640px) {
+    .ex-filter-sheet__foot {
+      flex-direction: row;
+    }
+
+    .ex-filter-sheet__clear,
+    .ex-filter-sheet__apply {
+      --button-size: 48px;
+      --button-px: 20px;
+
+      flex: 1;
+      width: auto;
+    }
+
+    /* Reset on the left, the count on the right: in a row the affirmative sits
+       where a dialog's does, at the trailing edge. Stacked it is the other way
+       round, the count on top, which is why the order is set at each width. */
+    .ex-filter-sheet__clear {
+      order: 0;
+    }
   }
 
   /* Forced colors (Windows High Contrast): the composed cards and the tinted

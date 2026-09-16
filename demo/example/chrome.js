@@ -446,6 +446,46 @@
 
   place();
   desktop.addEventListener("change", place);
+
+  // Opening a group in the sheet brings it to the top of the scroller, and the
+  // travel is not the animation: the group takes the press and opens, the list
+  // is simply already where the opening needs it. A smooth scroll here runs
+  // alongside the group's own height transition and reads as the sheet taking
+  // longer to answer than it did.
+  //
+  // The groups are one accordion, so opening one closes whatever was open before
+  // it, and a group collapsing higher up the list pulls the target with it as it
+  // goes. That shift is measured once the collapse has finished and corrected
+  // only if it happened, smoothly, since by then it is a settle rather than a
+  // move.
+  //
+  // Capture, because toggle doesn't bubble. Not in the rail: there the filters sit
+  // beside the results and the page is already where it was.
+  const SETTLE = 240; // the group's height transition, with a frame either side
+
+  filter.addEventListener(
+    "toggle",
+    (e) => {
+      const group = e.target;
+      if (desktop.matches || !group.open || !group.matches(".ex-filter__group")) return;
+
+      // Held at the top for the length of the collapse, not scrolled to once and
+      // corrected afterwards. The group that was open is closing as this one
+      // opens, and if it sat higher up the list it drags the target with it the
+      // whole way down: a single scroll lands on a position the list is still
+      // leaving, and the correction that follows is the movement the press
+      // seemed to be waiting for. Re-pinning every frame instead, so the group is
+      // simply at the top from the first one and everything else settles around
+      // it.
+      const start = performance.now();
+      const hold = () => {
+        group.scrollIntoView({ block: "start", behavior: "instant" });
+        if (performance.now() - start < SETTLE) requestAnimationFrame(hold);
+      };
+      hold();
+    },
+    true
+  );
 })();
 
 // Filter sheet: when a filter changed while the sheet was open, closing it lands

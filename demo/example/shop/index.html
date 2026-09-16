@@ -91,6 +91,12 @@
             <div class="scroll-area__viewport">
               <h2 class="ex-filter__title">Filter</h2>
 
+              <!-- Past the whole rail in one stop. A filter list is a long run of
+                   controls between the tab key and the thing it filters, so the
+                   first stop inside it offers the way out. Hidden until focused,
+                   so it costs the page nothing until a keyboard needs it. -->
+              <a class="ex-filter__skip" href="#shop-results">Skip to results</a>
+
               <!-- Store. The one facet that isn't a checkbox list: pick a store on
                    the map and the grid drops to what that store stocks. Single
                    select, since "in stock at" is a question about one shop you
@@ -797,7 +803,7 @@
             </div>
           </aside>
 
-          <div class="shop__main" data-ex-filter-main>
+          <div class="shop__main" data-ex-filter-main id="shop-results" tabindex="-1">
             <!-- Result count + sort. The count is a live region, so filtering or
                  searching is announced without moving focus. The sort control is
                  the Select component on a bare skin (no border, no fill), the
@@ -2234,17 +2240,19 @@
           <div class="sheet__inner">
             <header class="sheet__header">
               <h2 class="sheet__title">Filter</h2>
-              <!-- The way out is the count at the foot, so the header carries the other
-                   thing a filter panel is asked for. Disabled while nothing is on,
-                   rather than hidden, so the row keeps its shape as filters come
-                   and go. -->
-              <button
-                class="link ex-filter-sheet__clear"
-                type="button"
-                disabled
-                data-ex-filter-clear
-              >
-                Clear filters
+              <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6l-12 12" />
+                  <path d="M6 6l12 12" />
+                </svg>
               </button>
             </header>
             <div class="sheet__body" data-scroll-area>
@@ -2253,19 +2261,26 @@
                 <div class="scroll-area__thumb"></div>
               </div>
             </div>
-
-            <!-- The way out, and what it will show. Filtering behind a sheet asks
-                 you to take it on trust that anything changed, so the count comes
-                 to the button you leave by. Closing is all it does: the results
-                 are already filtered underneath. -->
+            <!-- The two things asked of a filter panel, on the edge it is left by:
+                 start over, or take what it has. The count rides the one you
+                 leave by, since filtering behind a sheet asks you to take it on
+                 trust that anything changed. Closing is all Show does: the
+                 results are already filtered underneath. -->
             <footer class="ex-filter-sheet__foot">
+              <button
+                class="button button--secondary ex-filter-sheet__clear"
+                type="button"
+                disabled
+                data-ex-filter-clear
+              >
+                Reset
+              </button>
               <button
                 class="button button--primary ex-filter-sheet__apply"
                 type="button"
                 data-dialog-close
               >
                 Show <span data-shop-count>33</span>
-                <span data-shop-noun>products</span>
               </button>
             </footer>
           </div>

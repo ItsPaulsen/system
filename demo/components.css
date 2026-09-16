@@ -1475,10 +1475,17 @@
   /* Disabled, fill-quaternary bg for filled skins, transparent for flat.
    Text/icon drop to fill-secondary. Higher specificity via double class. */
 
+  /* Ink, not a fill: the fill ladder's top two rungs are 0.2 and 0.26 alpha, so
+     stepping within it cannot look like anything. --ink-tertiary is the quietest
+     ink the system has and the first value that actually reads as a word rather
+     than a shape where one should be. */
   .button:disabled {
-    color: var(--fill-secondary);
+    color: var(--ink-tertiary);
     cursor: not-allowed;
-    background: var(--fill-quaternary);
+
+    /* One rung up from the ladder's faintest too, so the face still reads as a
+       button under a label that is now ink. */
+    background: var(--fill-tertiary);
   }
 
   .button.button--flat:disabled {

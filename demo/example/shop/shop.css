@@ -658,10 +658,12 @@
     display: none;
   }
 
+  /* The plate's own radius: the ring traces the card, and the roundest thing in
+     it is the tile at the top, so a tighter corner reads as cutting across it. */
   .shop-card:focus-visible {
     outline: var(--focus-ring-width) solid var(--focus);
     outline-offset: var(--focus-ring-offset);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
   }
 
   /* Square white tile, the raised surface on the band. No padding: every product
@@ -1003,23 +1005,12 @@
     }
   }
 
-  /* Filter sheet header: same height as the topbar and the main menu's header
-     (--ex-topbar-h, 64 on mobile / 72 from md), so every header row on the
-     example site matches. No divider, the first filter group's hairline reads as
-     the top edge. */
-  .shop__sheet .sheet__header {
-    height: var(--ex-topbar-h);
-    padding-block: 0;
-    border-bottom: 0;
-  }
-
-  .shop__sheet .sheet__title {
-    font-size: var(--font-title-small-size);
-    line-height: var(--font-title-small-lh);
-    font-weight: var(--font-title-small-weight);
-  }
-
+  /* The head is the shared one (.ex-filter-sheet in example.css), so this sheet
+     and the product page's store picker open the same way. Only the scroller's
+     top inset is this page's: 8 under the head's own rule, against the 24 the
+     Sheet gives the other three sides, since the first group's heading row
+     carries its own space. */
   .shop__sheet .sheet__scroll {
-    padding-top: 0;
+    padding-top: var(--space-8);
   }
 }

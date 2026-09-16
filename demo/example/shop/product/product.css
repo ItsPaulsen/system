@@ -1026,9 +1026,10 @@
     background: var(--background-primary);
   }
 
-  /* From 768 it is a panel again. Wider than the store finder's own column,
-     because this one carries the map under the rows rather than beside them. */
-  @media (min-width: 768px) {
+  /* From 640 it is a panel again, the same width the listing's filter sheet
+     becomes there. Wider than the store finder's own column, because this one
+     carries the map under the rows rather than beside them. */
+  @media (min-width: 640px) {
     .pdp-store-sheet {
       width: min(92vw, 640px);
     }
@@ -1225,13 +1226,19 @@
   @media (min-width: 1024px) {
     .pdp-store-sheet {
       --pdp-picker-list-w: 480px; /* 448 of content inside the 16 side padding */
+      --pdp-picker-map-w: 480px;
 
-      width: min(94vw, 1100px);
+      width: min(94vw, calc(var(--pdp-picker-map-w) + var(--pdp-picker-list-w)));
     }
 
     .pdp-picker {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) var(--pdp-picker-list-w);
+
+      /* The map is a fixed frame, not a column that takes what is left: a map
+         that changes size as the window does reframes itself every time, and the
+         pins move under the reader for no reason they asked for. The rows give
+         instead, on the rare window too narrow to hold both. */
+      grid-template-columns: var(--pdp-picker-map-w) minmax(0, var(--pdp-picker-list-w));
       grid-template-rows: auto minmax(0, 1fr);
     }
 

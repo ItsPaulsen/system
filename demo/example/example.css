@@ -2015,26 +2015,6 @@
     color: var(--green);
   }
 
-  /* "Your store", written onto the row of whichever shop the site is currently
-     answering for (stores.js). Above the name, not under the status line: it says
-     which row this is rather than something about the shop, so it reads before
-     the name the way a group heading would. */
-  .ex-store-row__mine {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    margin-bottom: 2px;
-    font-size: var(--font-caption-small-size);
-    line-height: var(--font-caption-small-lh);
-    font-weight: var(--font-caption-small-emphasized-weight);
-    color: var(--ink-primary);
-  }
-
-  .ex-store-row__mine svg {
-    width: 14px;
-    height: 14px;
-  }
-
   /* ── Map ──────────────────────────────────────────────────────────────────
      Shared by the store finder and the shop's store filter: both draw the same
      basemap (map.js) and the same pins, under different furniture.

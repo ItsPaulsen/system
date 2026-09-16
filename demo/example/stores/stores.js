@@ -298,6 +298,10 @@
   let backMode = "regions"; // mode to restore when the detail view is closed
   let opened = null; // store whose detail was last open, re-centred on the way back
 
+  // The detail's one action: the listing, narrowed to the shop whose page it was
+  // pressed on.
+  const toShop = detail.querySelector("[data-detail-shop]");
+
   const fill = (selector, text) => {
     const el = detail.querySelector(selector);
     if (el) el.textContent = text;
@@ -368,7 +372,6 @@
     setActive(card);
 
     opened = card;
-    renderChosen();
     // Snap first: padding() frames against where the sheet is going.
     if (!desktop.matches) snapTo(1);
     frameStores([card], 15);
@@ -396,64 +399,6 @@
 
     lockScrollers();
   };
-
-  // ── Chosen store ──────────────────────────────────────────────────────────
-  // Which shop the whole example answers for, shared with the listing and the
-  // product page through store.js. This is the page the stores are described on,
-  // so it is where the choice is made and unmade; the other two only read it
-  // back and narrow themselves to it.
-  const mine = detail.querySelector("[data-detail-mine]");
-  const mineLabel = detail.querySelector("[data-detail-mine-label]");
-  const toShop = detail.querySelector("[data-detail-shop]");
-
-  // The same filled check the product page's picker heads its chosen group with.
-  const CHECK =
-    '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 3.34a10 10 0 ' +
-    "1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 " +
-    "-1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 " +
-    '.094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" /></svg>';
-
-  const chosen = () => window.exampleStore?.read() || "";
-
-  // Written onto the row rather than left in the markup: it is a fact about the
-  // reader, not about the shop, so no row carries it until the choice says so.
-  // Touched only where it changes, since the rows move between lists on every
-  // filter pass and a rebuilt mark would churn with them.
-  const markRows = () => {
-    const slug = chosen();
-    cards.forEach((card) => {
-      const had = card.querySelector(".ex-store-row__mine");
-      const on = card.dataset.store === slug;
-      if (on === Boolean(had)) return;
-      if (!on) {
-        had.remove();
-        return;
-      }
-      const mark = document.createElement("span");
-      mark.className = "ex-store-row__mine";
-      mark.innerHTML = CHECK;
-      mark.append("Your store");
-      card.querySelector(".ex-store-row__content").prepend(mark);
-    });
-  };
-
-  // One pass over both views of the choice: the mark on the rows, and the button
-  // in the detail, which is the same control either way round.
-  const renderChosen = () => {
-    markRows();
-    if (!mine) return;
-    const on = Boolean(opened) && opened.dataset.store === chosen();
-    mine.setAttribute("aria-pressed", String(on));
-    mine.classList.toggle("button--with-start-icon", on);
-    if (mineLabel) mineLabel.textContent = on ? "Your store" : "Make this my store";
-  };
-
-  mine?.addEventListener("click", () => {
-    if (!opened) return;
-    const on = mine.getAttribute("aria-pressed") === "true";
-    window.exampleStore?.write(on ? "" : opened.dataset.store);
-    renderChosen();
-  });
 
   // ── Sheet ─────────────────────────────────────────────────────────────────
   // Three snaps, measured rather than guessed: full (0), the mock's resting
@@ -777,7 +722,6 @@
   desktop.addEventListener("change", resize);
 
   initMap();
-  renderChosen();
   measure();
   lockScrollers();
   springAt = snaps[1];

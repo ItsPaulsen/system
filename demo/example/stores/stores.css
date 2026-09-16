@@ -642,30 +642,12 @@
     font-size: var(--font-caption-medium-size);
   }
 
-  /* The two actions the detail ends on. The 32 clear of the panel edges (the
-     scroller's own 16 plus 16 here) belongs to the pair now rather than to the
-     one that used to be alone. */
-  .stores-detail__actions {
-    display: grid;
-    gap: var(--space-8);
+  .stores-detail__cta {
+    /* Full width, 32 clear of the panel edges: the scroller's own 16 plus 16
+       here. display:flex because .button is inline-flex, which hugs its label
+       however the width is written. */
+    display: flex;
     margin: var(--space-24) var(--space-16) 0;
-  }
-
-  /* display:flex because .button is inline-flex, which hugs its label however
-     the width is written. */
-  .stores-detail__cta,
-  .stores-detail__mine {
-    display: flex;
-  }
-
-  /* Only once it is yours. Unpressed the button is the invitation, and a check
-     beside that would report the thing as already done. */
-  .stores-detail__mine-check {
-    display: none;
-  }
-
-  .stores-detail__mine[aria-pressed="true"] .stores-detail__mine-check {
-    display: flex;
   }
 
   /* Mode switch. Both halves are display rules, so both sides need stating: the

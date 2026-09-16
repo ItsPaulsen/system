@@ -872,13 +872,10 @@
                 <span data-detail-mine-label>Make this my store</span>
               </button>
 
-              <!-- The listing reads the chosen store on arrival, so this lands
-                   already narrowed to the shop whose page it was pressed on. -->
-              <a
-                class="button button--primary stores-detail__cta"
-                href="/demo/example/shop/"
-                data-detail-shop
-              >
+              <!-- A link and nothing else. Making a shop yours is the button
+                   above, so leaving for the listing does not quietly do it: the
+                   listing narrows to whichever store was actually chosen. -->
+              <a class="button button--primary stores-detail__cta" href="/demo/example/shop/">
                 See what's in stock
               </a>
             </div>

@@ -397,7 +397,6 @@
   // back and narrow themselves to it.
   const mine = detail.querySelector("[data-detail-mine]");
   const mineLabel = detail.querySelector("[data-detail-mine-label]");
-  const toShop = detail.querySelector("[data-detail-shop]");
 
   // The same filled check the product page's picker heads its chosen group with.
   const CHECK =
@@ -446,15 +445,6 @@
     const on = mine.getAttribute("aria-pressed") === "true";
     window.exampleStore?.write(on ? "" : opened.dataset.store);
     renderChosen();
-  });
-
-  // "What's in stock" is a question about the shop whose page it is pressed on,
-  // and the listing answers it by reading the chosen store on arrival. So the
-  // press says which shop it means before it leaves.
-  toShop?.addEventListener("click", () => {
-    if (opened) {
-      window.exampleStore?.write(opened.dataset.store);
-    }
   });
 
   // ── Sheet ─────────────────────────────────────────────────────────────────

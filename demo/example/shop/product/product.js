@@ -996,7 +996,8 @@
     // the inset.
     let set = null;
     const group = (label, icon) => {
-      list.append(heading(label, icon));
+      const head = heading(label, icon);
+      list.append(head);
       const li = document.createElement("li");
       li.className = "pdp-store-set";
       const ul = document.createElement("ul");
@@ -1004,6 +1005,7 @@
       li.append(ul);
       list.append(li);
       set = ul;
+      return head;
     };
 
     const place = (card) => set?.append(items.get(card));
@@ -1020,7 +1022,25 @@
     const rest = shown.filter((c) => c !== active).sort((a, b) => distanceOf(a) - distanceOf(b));
 
     if (active) {
-      group("Selected store", CHECK);
+      // The way back out. Choosing is a row, so unchoosing cannot be one too:
+      // the heading names the choice, so the button that undoes it sits at the
+      // end of that line rather than hiding as a second meaning of a press.
+      // The sheet stays open, since a reader who has just cleared is choosing.
+      const head = group("Selected store", CHECK);
+      const off = document.createElement("button");
+      off.type = "button";
+      off.className = "link pdp-store-group__clear";
+      off.textContent = "Remove";
+      off.setAttribute("aria-label", "Remove selected store");
+      off.addEventListener("click", () => {
+        // The rebuild throws this button away, so focus is put where the store
+        // now is: its own row under its region, which is where it goes back to.
+        const was = active.dataset.store;
+        select(null);
+        const row = list.querySelector(`.pdp-store-row[data-store="${was}"]`);
+        (row || search)?.focus({ preventScroll: true });
+      });
+      head.append(off);
       copy(active);
     }
 
@@ -1051,7 +1071,10 @@
           .forEach(place);
       });
 
-    if (emptyEl) emptyEl.hidden = shown.length > 0 || Boolean(active);
+    // The chosen store keeps its group whatever the search says, but it is not an
+    // answer to what was typed: with nothing else matching, the line that says so
+    // belongs under it.
+    if (emptyEl) emptyEl.hidden = shown.length > 0;
 
     if (was) {
       list.querySelector(`.pdp-store-row[data-store="${was}"]`)?.focus({ preventScroll: true });

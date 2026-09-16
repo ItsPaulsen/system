@@ -851,9 +851,37 @@
               </dl>
             </div>
 
-            <a class="button button--primary stores-detail__cta" href="/demo/example/shop/">
-              See what's in stock
-            </a>
+            <!-- The two ways out of a store's page, and the order they are read
+                 in: making it yours is the quieter of the two, and the one that
+                 changes what the rest of the site shows. The check only appears
+                 once it is (stores.js swaps the label with aria-pressed). -->
+            <div class="stores-detail__actions">
+              <button
+                class="button button--secondary stores-detail__mine"
+                type="button"
+                aria-pressed="false"
+                data-detail-mine
+              >
+                <span class="stores-detail__mine-check" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M17 3.34a10 10 0 1 1 -14.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 14.995 -8.336zm-1.293 5.953a1 1 0 0 0 -1.32 -.083l-.094 .083l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.403 1.403l.083 .094l2 2l.094 .083a1 1 0 0 0 1.226 0l.094 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z"
+                    />
+                  </svg>
+                </span>
+                <span data-detail-mine-label>Make this my store</span>
+              </button>
+
+              <!-- The listing reads the chosen store on arrival, so this lands
+                   already narrowed to the shop whose page it was pressed on. -->
+              <a
+                class="button button--primary stores-detail__cta"
+                href="/demo/example/shop/"
+                data-detail-shop
+              >
+                See what's in stock
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -951,6 +979,7 @@
     <script src="/demo/example/chrome.js" defer></script>
     <script src="/assets/app.js" defer></script>
     <script src="/demo/example/map.js" defer></script>
+    <script src="/demo/example/store.js" defer></script>
     <script src="/demo/example/stores/stores.js" defer></script>
   </body>
 </html>

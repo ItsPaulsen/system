@@ -1436,6 +1436,35 @@
     place-items: center;
   }
 
+  /* At the end of the line it belongs to: the heading names the chosen store, so
+     the way to unchoose sits on that line rather than beside the row. Ink, and it
+     stays ink, the same move the listing's clear takes: this undoes a choice
+     rather than making one. */
+  .pdp-store-group__clear {
+    margin-inline-start: auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: var(--font-caption-medium-weight);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  .pdp-store-group__clear:hover {
+    color: var(--ink-primary-hover);
+  }
+
+  /* Instant, unlike the hover it shares a transition with: 150ms of easing is most
+     of a click, so the pressed colour was still arriving as the button released. */
+  .pdp-store-group__clear:active {
+    color: var(--ink-primary-active);
+    transition: none;
+  }
+
   .pdp-store-group__icon:empty {
     display: none;
   }

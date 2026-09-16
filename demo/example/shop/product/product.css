@@ -1644,6 +1644,13 @@
      like a menu item; the +/- reports the state and the cursor carries the rest. */
   .pdp-details {
     gap: 0;
+
+    /* 12 under the availability lines rather than the column's own 20. The first
+       section's label already carries 16 of padding above it, so the column gap
+       lands the heading further off the two lines above than any other pair in
+       the column is from its neighbour. Pulled back out of the gap rather than
+       taken off the summary, whose 56 floor would swallow it. */
+    margin-block-start: calc(var(--space-8) * -1);
   }
 
   .pdp-detail {

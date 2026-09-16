@@ -764,11 +764,14 @@
     color: var(--ink-primary);
 
     /* The brand is the headline here and the product's name reads under it, so it
-       takes title-large and its weight. The <h1> is still the name: what changes
-       is which line is loudest, not which one names the page. */
-    font-size: var(--font-title-large-size);
-    font-weight: var(--font-title-large-weight);
-    line-height: var(--font-title-large-lh);
+       takes the title role and its weight. The <h1> is still the name: what
+       changes is which line is loudest, not which one names the page.
+
+       Title-small at every width: the price under it is the loud line, and the
+       brand only has to name whose chair this is. */
+    font-size: var(--font-title-small-size);
+    font-weight: var(--font-title-small-weight);
+    line-height: var(--font-title-small-lh);
     text-decoration: none;
   }
 
@@ -844,11 +847,14 @@
     display: none;
   }
 
+  /* The fine print under the price: what it was, what it is off, how long the
+     offer runs. Caption small at every width, since at 14 it sits within a size
+     of the price it qualifies and stops reading as the smaller print. */
   .pdp-buy__term {
     margin: 0;
     color: var(--ink-secondary);
-    font-size: var(--font-caption-medium-size);
-    line-height: var(--font-caption-medium-lh);
+    font-size: var(--font-caption-small-size);
+    line-height: var(--font-caption-small-lh);
   }
 
   .pdp-buy__amount {
@@ -940,7 +946,13 @@
      that differ only in how long it takes differ in colour and in words.
 
      Tabler's filled set, so the mark reads as a state at 16 rather than as a
-     line drawing of one. */
+     line drawing of one. The cross is the package's own with longer arms: filled
+     icons cut the mark out of the disc by winding, so it cannot be resized as an
+     element, and at the published size it sits noticeably smaller inside its
+     circle than the tick does in its. Only the eight diagonal segments are
+     lengthened, not the round caps that set the thickness, so it still weighs
+     the same as the tick; the disc is untouched, so the two line up down a
+     column. */
   .pdp-avail__row[data-state="in"] .pdp-avail__glyph {
     color: var(--pdp-ok);
   }

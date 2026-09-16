@@ -516,6 +516,20 @@
     });
   };
 
+  // A store the link named is this visit's and nothing has written it down, so
+  // the product page cannot read it back: the cards carry it on instead, and the
+  // answer holds from the finder through the listing to the product. A store the
+  // reader chose needs no help, since the product page reads that itself.
+  const productLinks = [...document.querySelectorAll("a.shop-card")];
+  const carry = () => {
+    productLinks.forEach((card) => {
+      const url = new URL(card.getAttribute("href"), location.origin);
+      if (linked && active) url.searchParams.set("store", active.dataset.store);
+      else url.searchParams.delete("store");
+      card.setAttribute("href", `${url.pathname}${url.search}`);
+    });
+  };
+
   // `remember` is what separates the facet from the preference. Choosing a shop
   // here answers the question the product page asks too, so it is written down;
   // a choice arriving already made (remembered, or named by the link that got
@@ -545,6 +559,8 @@
         fit();
       }
     }
+
+    carry();
 
     // The grid, the count and the chip row all hang off apply(), so the facet
     // reports its change the way the price slider does and lets the one pass

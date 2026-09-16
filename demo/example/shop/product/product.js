@@ -845,6 +845,9 @@
   let clusters = null;
   let map = null;
   let active = null;
+  // Whether the store showing is one the link named rather than one the reader
+  // chose, which is what decides whether removing it removes their choice too.
+  let linked = false;
 
   const icon = (on) =>
     window.L.divIcon({
@@ -1036,7 +1039,11 @@
         // The rebuild throws this button away, so focus is put where the store
         // now is: its own row under its region, which is where it goes back to.
         const was = active.dataset.store;
-        select(null);
+        // Removing a store the link asked for removes the link, not the shop the
+        // reader chose in a picker, so that one is left where it is.
+        const remember = !linked;
+        linked = false;
+        select(null, { remember });
         const row = list.querySelector(`.pdp-store-row[data-store="${was}"]`);
         (row || search)?.focus({ preventScroll: true });
       });
@@ -1084,9 +1091,13 @@
   filters.forEach((f) => f.addEventListener("change", renderList));
   search?.addEventListener("input", renderList);
 
-  const select = (card, { announce = false } = {}) => {
+  // `remember` is what separates the page's answer from the reader's choice.
+  // Choosing a shop in the sheet is a choice and is written down; one arriving
+  // already made, remembered or named by the link that got here, is only being
+  // replayed.
+  const select = (card, { announce = false, remember = true } = {}) => {
     active = card;
-    window.exampleStore?.write(card?.dataset.store || "");
+    if (remember) window.exampleStore?.write(card?.dataset.store || "");
     renderAll();
     if (map && card) {
       map.flyTo(latLng(card), PICKED_ZOOM, { animate: !reduced.matches, duration: 0.6 });
@@ -1102,6 +1113,7 @@
 
   // Chosen is the answer to the question the sheet asked, so it closes on it.
   const choose = (card) => {
+    linked = false;
     select(card, { announce: true });
     sheet.close();
   };
@@ -1274,9 +1286,16 @@
     if (scroller) scroller.scrollTop = 0;
   });
 
-  // A store chosen on the listing (or here, last visit) is already the answer.
-  const remembered = window.exampleStore?.read();
-  const start = remembered && cards.find((c) => c.dataset.store === remembered);
-  if (start) select(start);
-  else renderAll();
+  // A store chosen on the listing (or here, last visit) is already the answer,
+  // and so is one the link carries: a store finder's link names a shop for the
+  // visit without making it the reader's, and the listing passes that along on
+  // its cards, so the answer holds from the finder through to here. The link
+  // wins where both are there: it is the shop they came in on.
+  const byStore = (slug) => slug && cards.find((c) => c.dataset.store === slug);
+  const asked = byStore(new URLSearchParams(location.search).get("store"));
+  const start = asked || byStore(window.exampleStore?.read());
+  if (start) {
+    linked = Boolean(asked);
+    select(start, { remember: false });
+  } else renderAll();
 })();

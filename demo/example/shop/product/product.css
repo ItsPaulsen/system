@@ -960,8 +960,11 @@
     min-width: 0;
   }
 
+  /* Semibold, a step past the emphasized weight the rest of the line could take:
+     this is plain text with no mark or fill to carry it, so weight is the only
+     thing that can say which word is the answer. */
   .pdp-avail__store {
-    font-weight: var(--font-caption-medium-emphasized-weight);
+    font-weight: var(--font-weight-semibold);
   }
 
   /* Pushed to the trailing edge, on the row it acts on. .link is written for an

@@ -636,17 +636,21 @@
     display: none;
   }
 
-  /* Wherever the two sit side by side the buy column is the taller of them, so the
-     media column sticks and the product stays in view while the copy scrolls, the
-     way IKEA's does. align-self: start is what gives it room to travel: a
-     stretched grid item is already as tall as its row and can't move.
+  /* Whichever of the two is shorter follows the other down. Both are sticky and it
+     settles itself: align-self: start gives each only the height of its own
+     content, so the shorter one has slack in the row and pins, while the taller
+     one fills the row, has nowhere to travel, and never engages. Usually that is
+     the media column staying in view while the copy scrolls, but with every
+     section closed the buy column is the short one and it is the product that
+     keeps going.
 
      The offset is the listing rail's, topbar plus 32 (see .ex-filter), so every
-     sticky thing on the mini-site parks at the same line. A media column taller
-     than the viewport parks with its bottom out of reach, which is the trade IKEA
-     takes too; it only happens on a wide, short window. */
+     sticky thing on the mini-site parks at the same line. A column taller than
+     the viewport parks with its bottom out of reach, which only happens on a
+     wide, short window. */
   @media (min-width: 768px) {
-    .pdp-gallery {
+    .pdp-gallery,
+    .pdp-buy {
       position: sticky;
       top: calc(var(--ex-topbar-h) + var(--space-32));
       align-self: start;
@@ -1608,21 +1612,18 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Drawn rather than bordered, because a border would take the radius with it
-     and hook down at both ends of what should be a straight line. */
-  .pdp-detail::before,
-  .pdp-detail:last-child::after {
+  /* Lines between the rows and nowhere else: above the first is the buy column,
+     which has just ended, and below the last is the page. A divider separates two
+     rows, so it is drawn only where there are two. Drawn rather than bordered,
+     because a border would take the radius with it and hook down at both ends of
+     what should be a straight line. */
+  .pdp-detail:not(:last-child)::after {
     content: "";
     position: absolute;
     inset-inline: 0;
-    top: 0;
+    bottom: 0;
     height: var(--border-width);
     background: var(--fill-tertiary);
-  }
-
-  .pdp-detail:last-child::after {
-    top: auto;
-    bottom: 0;
   }
 
   @media (hover: hover) and (pointer: fine) {

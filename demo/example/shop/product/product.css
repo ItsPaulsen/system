@@ -27,7 +27,7 @@
     --pdp-ring-room: 4px;
 
     /* The rail tile at its biggest, ring included. It scales with the image below
-       that (see the lg block), the way IKEA's does. */
+       that (see the lg block), so the two hold their proportion. */
     --pdp-thumb-max: 96px;
 
     gap: 4rem;
@@ -187,7 +187,7 @@
 
     /* .carousel is a flex row that centres its items, and only `display` was
        overridden here, so the rail sat halfway down beside the image. Both items
-       start at the top of the row, like IKEA's. */
+       start at the top of the row. */
     align-items: start;
   }
 
@@ -486,8 +486,9 @@
   @media (min-width: 1024px) {
     /* The rail is a share of the gallery rather than a fixed column, capped at the
        tile's largest size: 96 from the widest tier down to about 1400, and scaling
-       with the image below that, so the two never drift out of proportion. IKEA
-       does the same with a flat 13% (and no cap). */
+       with the image below that, so the two never drift out of proportion. A flat
+       percentage with no cap is the other way to do it, and it lets the tiles grow
+       past the size a thumbnail is worth. */
     .pdp-gallery {
       grid-template-columns: min(12%, var(--pdp-thumb-max)) minmax(0, 1fr);
       column-gap: var(--space-16);
@@ -605,8 +606,8 @@
     }
   }
 
-  /* Chevrons that page the rail, overlaid on its first and last tile the way
-     IKEA's are. They're the Button component at 40, and product.js hides the one
+  /* Chevrons that page the rail, overlaid on its first and last tile rather than
+     set outside it, which would cost the tiles width. They're the Button at 40, and product.js hides the one
      at whichever end the rail is already against, so neither ever sits there
      dead. Below lg the rail is a wrapping row with nothing to page, and they stay
      hidden. */

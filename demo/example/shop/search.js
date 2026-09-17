@@ -216,8 +216,9 @@
     return li;
   };
 
-  const termRow = (term, q) => {
+  const termRow = (term, q, resting) => {
     const li = row("term", () => submit(term));
+    if (resting) li.classList.add("shop-search__row--resting");
     const icon = document.createElement("span");
     icon.className = "shop-search__icon";
     icon.innerHTML = SEARCH_ICON;
@@ -270,12 +271,17 @@
     // What the panel offers when it has nothing better: the reader's own
     // searches, then the popular ones they have not already made, since the same
     // word twice in one list is the list repeating itself.
-    const suggest = () => {
-      recent.forEach((term) => termRow(term, ""));
+    // `resting` is the panel opened on nothing, which is the only state these
+    // rows are the whole offer in: there they carry weight, and where they are a
+    // fallback under a search that found nothing they read as the quieter thing
+    // they are.
+    const suggest = (resting) => {
+      const add = (term) => termRow(term, "", resting);
+      recent.forEach(add);
       // The popular four stay four whatever the reader has looked for: they are
       // what the shop is asked for, not a list of things they have not tried, so
       // searching Oak puts it in the history and leaves it popular.
-      popular.slice(0, KEEP).forEach((term) => termRow(term, ""));
+      popular.slice(0, KEEP).forEach(add);
     };
 
     if (q) {
@@ -294,7 +300,7 @@
     // see. A dead end is where the way out matters most, so what the panel shows
     // is somewhere to go rather than a sentence about not finding anything.
     const suggesting = !rows.length;
-    if (suggesting) suggest();
+    if (suggesting) suggest(!q);
 
     // The label and its Clear belong to the history, so they are there only when
     // there is one, and only over the rows they name.

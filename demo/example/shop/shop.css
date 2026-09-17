@@ -1215,6 +1215,8 @@
      arrives in a min-height box can change it. The field is one line either way,
      so it is 48 either way. */
   .shop-search .input__container {
+    /* Also the frame the leading glyph is positioned against (see Motion below). */
+    position: relative;
     width: 100%;
     height: 48px;
   }
@@ -1335,12 +1337,15 @@
     min-height: 40px;
     padding: var(--space-4) var(--space-12);
     border-radius: var(--radius-sm);
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
+
+    /* 14, the size a product's brand takes two rows down: a word suggestion and a
+       product are the same kind of answer, so they read at the same size. */
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
 
     /* Stated, not inherited: the run still to be typed is emphasized against
        this, so the weight it is measured from belongs to the row. */
-    font-weight: var(--font-body-small-weight);
+    font-weight: var(--font-caption-medium-weight);
     color: var(--ink-primary);
     cursor: pointer;
   }
@@ -1432,6 +1437,14 @@
     white-space: nowrap;
   }
 
+  /* The panel opened on nothing: the history and the popular four are the whole
+     offer there, so they carry the weight the untyped run carries elsewhere. Under
+     a search that found nothing they are a fallback rather than the offer, and
+     they stay at the row's own weight. */
+  .shop-search__row--resting .shop-search__text {
+    font-weight: 600;
+  }
+
   /* Undoing something rather than choosing it, so it stays in the quieter ink
      the store finder's own Remove does. */
   .shop-search__row--clear .shop-search__text {
@@ -1469,29 +1482,92 @@
      field, the same job the magnifier at the other end does, and it takes the
      same tone. Its hover surface goes neutral with it, since a brand wash under
      a grey glyph would be the loudest thing in the field. */
-  .shop-search__wipe {
+  .shop-search__wipe,
+  .shop-search__submit {
+    /* 20, not the 17.5 the xs button derives from its 14 label: these are the same
+       glyph the field wears at the start, and a magnifier that shrinks on the way
+       across is the one thing this move must not do. */
+    --button-icon: 20px;
+
     color: var(--ink-secondary);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .shop-search__wipe:not(:disabled):hover {
+    .shop-search__wipe:not(:disabled):hover,
+    .shop-search__submit:not(:disabled):hover {
       background: var(--fill-tertiary);
       color: var(--ink-primary);
     }
   }
 
-  .shop-search__wipe:not(:disabled):active {
+  .shop-search__wipe:not(:disabled):active,
+  .shop-search__submit:not(:disabled):active {
     background: var(--fill-secondary);
     color: var(--ink-primary);
   }
 
-  /* Out of the way until there is something to send. In CSS off the field's own
-     emptiness rather than in the script: a deferred script runs after the first
-     paint, so the button it hides has already been on screen for a frame. This
-     also means it is right without any script at all, where a submit is the only
-     way the form can be sent. */
-  .input__element:placeholder-shown + .shop-search__go {
-    display: none;
+  /* The glyph changes ends as soon as there is something to search for. Empty, it
+     sits at the start as the field's label; typing makes it the submit, and it
+     arrives at the other end with the clear beside it.
+
+     The one on the left is taken out of the flow and fades where it stands, so
+     the text slides left across it rather than shoving it out of the way: the
+     field's own start padding is what moves, and the glyph is simply no longer
+     there by the time the text arrives. Collapsing the slot instead made the
+     text push the icon along in front of it, which is a different gesture and a
+     worse one.
+
+     Two elements rather than one travelling across, because the one on the left
+     is a decoration inside a slot and the one on the right is a button. Held in
+     CSS off the field's own emptiness rather than in the script, so there is no
+     frame where the page has it wrong, and so it is still right with no script at
+     all, where the submit is the only way the form can be sent. */
+  .shop-search .input__leading {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    transition: opacity var(--motion-default);
+  }
+
+  /* Out of the flow, so the room for it is the field's own padding: 44 is the 20
+     of icon plus the 16 and 8 either side of it. */
+  .shop-search .input__element {
+    padding-inline-start: 44px;
+    transition: padding var(--motion-default);
+  }
+
+  .shop-search .input__element:not(:placeholder-shown) {
+    padding-inline-start: var(--space-16);
+  }
+
+  /* Matched from the container, not from the input: the leading slot comes before
+     the input in the markup, and a sibling combinator only ever looks forward. */
+  .shop-search .input__container:has(.input__element:not(:placeholder-shown)) .input__leading {
+    opacity: 0;
+  }
+
+  /* And the pair at the other end arrives from the edge it belongs to, so it
+     reads as coming in rather than appearing. */
+  .shop-search .shop-search__go {
+    transition:
+      width var(--motion-default),
+      padding var(--motion-default),
+      opacity var(--motion-default),
+      translate var(--motion-default);
+  }
+
+  .shop-search .input__element:placeholder-shown + .shop-search__go {
+    width: 0;
+    padding-inline: 0;
+    opacity: 0;
+    overflow: hidden;
+    translate: var(--space-8) 0;
+  }
+
+  /* Nothing to press while it is on its way out, and nothing for the keyboard to
+     stop at either. */
+  .shop-search .input__element:placeholder-shown + .shop-search__go .button {
+    visibility: hidden;
   }
 
   /* ── Categories ───────────────────────────────────────────────────────────

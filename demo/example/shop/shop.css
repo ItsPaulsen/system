@@ -1181,6 +1181,11 @@
     position: relative;
     z-index: 1;
     display: block;
+
+    /* It is the row: the Close beside it only appears where the panel takes the
+       screen, and the field takes everything the Close is not using. */
+    flex: 1;
+    min-width: 0;
     text-align: start;
   }
 
@@ -1194,6 +1199,100 @@
     position: relative;
     width: 100%;
     height: 48px;
+  }
+
+  /* The field and the way out sit on one line. Above 768 there is nothing beside
+     the field, so the row is the field. */
+  .shop-search__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+  }
+
+  /* Only where the panel takes the screen. Ink, and it stays ink: it undoes
+     something rather than choosing it, the same move the store detail's Back
+     makes. */
+  .shop-search__close {
+    display: none;
+    flex: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop-search__close:hover {
+      color: var(--ink-primary-hover);
+    }
+  }
+
+  .shop-search__close:active {
+    color: var(--ink-primary-active);
+  }
+
+  /* ── The panel on a phone ─────────────────────────────────────────────────
+     Below 768 an open search is the screen rather than a card on it: there is no
+     room for a page behind a list of this length, and a field halfway down the
+     page with a panel under it leaves the keyboard covering most of it. So the
+     box leaves the hero, goes to the top, and the panel fills what is left. */
+  @media (max-width: 767.98px) {
+    .shop-search.is-open .shop-search__box {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: var(--space-16);
+      border-radius: 0;
+      box-shadow: none;
+
+      /* The Sheet's curve and duration, and its asymmetry: in on 0.2s ease-out,
+         gone on the frame it is dismissed. Not the Sheet's 256 of travel, though.
+         This opens on focus rather than on a press, so it runs every time the
+         field is tabbed into, and on a phone it would be sliding one edge of the
+         screen while the keyboard comes up the other. A short drop from the top
+         says the same thing without racing it, and the field inside does not
+         travel at all: it arrives where it is going. */
+      transition:
+        translate 0.2s ease-out,
+        opacity 0.2s ease-out;
+    }
+
+    @starting-style {
+      .shop-search.is-open .shop-search__box {
+        translate: 0 calc(-1 * var(--space-12));
+        opacity: 0;
+      }
+    }
+
+    .shop-search.is-open .shop-search__close {
+      display: block;
+    }
+
+    /* In the flow under the field rather than hung off it, and taking the rest of
+       the screen. Its own surface and shadow go: the box is the surface now. */
+    .shop-search.is-open .shop-search__panel {
+      position: static;
+      flex: 1;
+      max-height: none;
+      margin-top: var(--space-8);
+      padding-inline: 0;
+      border-radius: 0;
+      box-shadow: none;
+      clip-path: none;
+    }
+
+    /* Nothing to dim: the panel covers the page. */
+    .shop-search.is-open .shop-search__scrim {
+      display: none;
+    }
   }
 
   /* ── Suggestions ──────────────────────────────────────────────────────────
@@ -1626,10 +1725,13 @@
        had nothing to overflow, which is why it would not scroll, and the head's
        See all went off the right edge with the track. */
     grid-template-columns: minmax(0, 1fr);
+
+    /* The room above the first shelf is the room between the shelves: the band
+       opens on one the same way it carries on to the next. */
     gap: var(--space-48);
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-block: var(--space-24) 6rem;
+    padding-block: var(--space-48) 6rem;
   }
 
   /* display beats the hidden attribute, so the other half has to be said: the
@@ -1641,15 +1743,9 @@
 
   @media (min-width: 768px) {
     .shop-shelves {
-      gap: 5rem;
-      padding-bottom: 8rem;
+      gap: 4rem;
+      padding-block: 4rem 8rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .shop-shelves {
-      padding-top: var(--space-48);
     }
   }
 
@@ -1680,12 +1776,28 @@
     margin-bottom: var(--space-16);
   }
 
+  /* The same size the product page's own shelf heading takes: the two are the
+     same element doing the same job, a few products under a name, so they read
+     the same wherever they turn up. Covers Best sellers on the results page,
+     which is this shelf too.
+
+     24 up to 1024 and 28 above it: the heading sits over a row that shows one and
+     a half cards on a phone and six across at the widest, and a name over six
+     carries further than a name over one. */
   .shop-shelf__title {
     margin: 0;
-    font-size: var(--font-title-medium-size);
-    line-height: var(--font-title-medium-lh);
-    font-weight: var(--font-title-medium-weight);
+    font-size: var(--font-title-small-size);
+    line-height: var(--font-title-small-lh);
+    font-weight: var(--font-title-small-weight);
     color: var(--ink-primary);
+  }
+
+  @media (min-width: 1024px) {
+    .shop-shelf__title {
+      font-size: var(--font-title-medium-size);
+      line-height: var(--font-title-medium-lh);
+      font-weight: var(--font-title-medium-weight);
+    }
   }
 
   .shop-shelf__all {

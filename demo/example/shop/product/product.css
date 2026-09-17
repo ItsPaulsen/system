@@ -55,16 +55,20 @@
        item's max-content, so the band would have stopped at the content column's
        cap instead of running the full width of the page. */
     grid-template-columns: minmax(0, 1fr);
-    gap: 4rem;
-    padding-block: 4rem 6rem;
+
+    /* The shop's own band rhythm: the room above the first section is the room
+       between sections, 48 up to 768 and 64 above it, so a shelf on this page and
+       a shelf on the shop open the same way. */
+    gap: var(--space-48);
+    padding-block: var(--space-48) 6rem;
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
   @media (min-width: 768px) {
     .pdp-band {
-      gap: 6rem;
-      padding-block: 6rem 8rem;
+      gap: 4rem;
+      padding-block: 4rem 8rem;
     }
   }
 
@@ -1720,12 +1724,23 @@
 
   /* ── Specs and related ────────────────────────────────────────────────────
      Section headings for the two blocks under the split. */
+
+  /* 24 up to 1024 and 28 above it, the same step the shop's shelf headings take:
+     the two are the same element, a few products under a name. */
   .pdp-heading {
     margin: 0;
     color: var(--ink-primary);
     font-size: var(--font-title-small-size);
     line-height: var(--font-title-small-lh);
     font-weight: var(--font-title-small-weight);
+  }
+
+  @media (min-width: 1024px) {
+    .pdp-heading {
+      font-size: var(--font-title-medium-size);
+      line-height: var(--font-title-medium-lh);
+      font-weight: var(--font-title-medium-weight);
+    }
   }
 
   /* The care suggestion, ringed rather than filled: the sections have no surface

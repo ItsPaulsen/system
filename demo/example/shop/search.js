@@ -25,6 +25,11 @@
   // Above the list rather than in it: it acts on the history rather than being
   // one of the things in it, so it is not somewhere the arrows should stop.
   const scrim = form.querySelector("[data-shop-search-scrim]");
+  const closer = form.querySelector("[data-shop-search-close]");
+  // Below this the open panel is the screen rather than a card on it, which is
+  // the one state the page behind has to stop scrolling in. Mirrors the
+  // breakpoint the layout uses (see shop.css).
+  const phone = matchMedia("(max-width: 767.98px)");
   const wipe = form.querySelector("[data-shop-search-wipe]");
   const bar = form.querySelector("[data-shop-search-bar]");
   const clear = form.querySelector("[data-shop-search-clear]");
@@ -331,6 +336,10 @@
     // The class carries the card's surface and the scrim, which fades in off it
     // (see shop.css); the panel is the one thing that still needs telling.
     form.classList.toggle("is-open", on);
+
+    // The same lock the dialogs use, so a panel covering the screen does not
+    // leave the page scrolling underneath it. Only where it covers the screen.
+    document.documentElement.classList.toggle("is-scroll-locked", on && phone.matches);
     input.setAttribute("aria-expanded", String(on));
     if (!on) {
       active = -1;
@@ -352,6 +361,11 @@
     input.value = "";
     input.focus();
     render();
+  });
+
+  closer?.addEventListener("click", () => {
+    open(false);
+    input.blur();
   });
 
   clear?.addEventListener("click", () => {

@@ -67,78 +67,15 @@
             <div class="shop-search__scrim" data-shop-search-scrim></div>
 
             <div class="shop-search__box">
-              <div class="input shop-search__field">
-                <label class="input__label sr-only" for="shop-search">Search products</label>
-                <span class="input__container input__container--rounded">
-                  <span class="input__leading">
-                    <svg
-                      viewBox="0 0 24 24"
-                      width="20"
-                      height="20"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                      <path d="M21 21l-6 -6" />
-                    </svg>
-                  </span>
-                  <input
-                    id="shop-search"
-                    name="q"
-                    class="input__element"
-                    type="search"
-                    placeholder="Search"
-                    autocomplete="off"
-                    role="combobox"
-                    aria-expanded="false"
-                    aria-autocomplete="list"
-                    aria-controls="shop-search-list"
-                  />
-
-                  <!-- The form still needs a way to be sent that is not a keypress
-                       (WCAG H32), so the submit is here rather than nowhere. It
-                       only appears once there is something to send: an empty
-                       field with a live Search beside it is offering to look for
-                       nothing. Shown and hidden in CSS, off the field's own
-                       emptiness (see shop.css), so there is no frame where it is
-                       on screen before a script takes it away. -->
-                  <span class="input__trailing shop-search__go" data-size="xs">
-                    <!-- Ours rather than the browser's: the native one in a search
-                         field comes and goes with focus, so typing something and
-                         clicking away left the Search button sitting beside a
-                         field that could no longer be emptied. This follows the
-                         same rule Search does, there whenever there is text. -->
-                    <button
-                      class="button button--flat button--icon shop-search__wipe"
-                      type="button"
-                      aria-label="Clear search"
-                      data-shop-search-wipe
-                    >
+              <div class="shop-search__head">
+                <div class="input shop-search__field">
+                  <label class="input__label sr-only" for="shop-search">Search products</label>
+                  <span class="input__container input__container--rounded">
+                    <span class="input__leading">
                       <svg
                         viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                      >
-                        <path d="M18 6l-12 12" />
-                        <path d="M6 6l12 12" />
-                      </svg>
-                    </button>
-
-                    <button
-                      class="button button--flat button--icon shop-search__submit"
-                      type="submit"
-                      aria-label="Search"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
+                        width="20"
+                        height="20"
                         fill="none"
                         stroke="currentColor"
                         stroke-width="2"
@@ -149,9 +86,80 @@
                         <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                         <path d="M21 21l-6 -6" />
                       </svg>
-                    </button>
+                    </span>
+                    <input
+                      id="shop-search"
+                      name="q"
+                      class="input__element"
+                      type="search"
+                      placeholder="Search"
+                      autocomplete="off"
+                      role="combobox"
+                      aria-expanded="false"
+                      aria-autocomplete="list"
+                      aria-controls="shop-search-list"
+                    />
+
+                    <!-- The form still needs a way to be sent that is not a keypress
+                       (WCAG H32), so the submit is here rather than nowhere. It
+                       only appears once there is something to send: an empty
+                       field with a live Search beside it is offering to look for
+                       nothing. Shown and hidden in CSS, off the field's own
+                       emptiness (see shop.css), so there is no frame where it is
+                       on screen before a script takes it away. -->
+                    <span class="input__trailing shop-search__go" data-size="xs">
+                      <!-- Ours rather than the browser's: the native one in a search
+                         field comes and goes with focus, so typing something and
+                         clicking away left the Search button sitting beside a
+                         field that could no longer be emptied. This follows the
+                         same rule Search does, there whenever there is text. -->
+                      <button
+                        class="button button--flat button--icon shop-search__wipe"
+                        type="button"
+                        aria-label="Clear search"
+                        data-shop-search-wipe
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M18 6l-12 12" />
+                          <path d="M6 6l12 12" />
+                        </svg>
+                      </button>
+
+                      <button
+                        class="button button--flat button--icon shop-search__submit"
+                        type="submit"
+                        aria-label="Search"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                          <path d="M21 21l-6 -6" />
+                        </svg>
+                      </button>
+                    </span>
                   </span>
-                </span>
+                </div>
+                <!-- Below 768 the panel takes the screen, so it needs a way out that
+                   is not a press on a page nobody can see. Hidden above that,
+                   where the scrim behind it is the way out. -->
+                <button class="shop-search__close" type="button" data-shop-search-close>
+                  Close
+                </button>
               </div>
 
               <!-- Filled by search.js: what was looked for last and what everyone

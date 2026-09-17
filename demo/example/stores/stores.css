@@ -547,6 +547,13 @@
     font-size: var(--font-caption-medium-size);
   }
 
+  /* Open is the same green the list's own rows give it, and it holds on the word
+     alone once the hours below are expanded and the time drops away. Shut stays
+     in ink: a shop being closed at this hour is ordinary, not a warning. */
+  .stores-detail__hours-now--open {
+    color: var(--green);
+  }
+
   /* Open, the list below answers "until when", so the summary keeps only the
      state word. */
   .stores-detail__hours[open] .stores-detail__hours-rest {

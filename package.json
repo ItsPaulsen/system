@@ -11,7 +11,8 @@
     "lint:js": "eslint .",
     "lint:html": "html-validate \"**/*.html\"",
     "lint:chrome": "node scripts/lint-chrome-templates.mjs",
-    "lint": "npm run format:check && npm run lint:css && npm run lint:js && npm run lint:html && npm run lint:chrome"
+    "lint:cards": "node scripts/lint-shop-cards.mjs",
+    "lint": "npm run format:check && npm run lint:css && npm run lint:js && npm run lint:html && npm run lint:chrome && npm run lint:cards"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

@@ -326,7 +326,11 @@
     const rest = document.createElement("span");
     rest.className = "stores-detail__hours-rest";
     rest.textContent = line.startsWith(word) ? line.slice(word.length) : ` ${line}`;
-    detail.querySelector("[data-detail-status]").replaceChildren(state, rest);
+    const status = detail.querySelector("[data-detail-status]");
+    status.replaceChildren(state, rest);
+    // Green while the shop is open, the same green the rows in the list use, and
+    // it stays on the word once the hours are expanded and the time drops away.
+    status.classList.toggle("stores-detail__hours-now--open", d.open === "true");
 
     // Seven rows starting at today and wrapping round, today set in the emphasized
     // weight: the row you want is the one you're standing on, and a fixed Mon-Sun

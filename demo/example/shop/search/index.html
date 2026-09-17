@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en" data-width="2xl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Search - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+      integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css"
+      integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Cluster base only, not its Default skin: the positioning and the
+         zoom/spiderfy animations are needed, the orange discs are not. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <link rel="stylesheet" href="/demo/example/shop/shop.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        // Light for a first visit, whatever the OS is set to: this is the theme
+        // the system is designed in, so it is the one it introduces itself in.
+        if (t !== "light" && t !== "dark") t = "light";
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <div data-chrome="topbar"></div>
+
+    <!-- Search results, on a route of their own. A query is not a page under a
+         category: it is asked of the whole shop, so it has no breadcrumb and no
+         category in its path.
+
+         The products are not written here. results.js fetches the category
+         listings and lifts their cards, so the catalogue stays written in exactly
+         one place and a page of search results cannot drift from the page it is
+         searching. -->
+    <main class="ex shop-page" id="ex-main" tabindex="-1">
+      <header class="shop-hero">
+        <h1 class="shop-hero__title shop-hero__title--results" data-results-title>Search</h1>
+        <p class="shop-hero__sub" data-results-sub hidden>
+          Check the spelling, or try a shorter word.
+        </p>
+
+        <!-- The same field the landing has, panel and all (shop/search.js): the
+             way on from a result, or from no result, is another search, and it
+             should suggest the way it does everywhere else. Its pool is the cards
+             results.js has fetched by then. -->
+        <form class="shop-search shop-retry" method="get" role="search" data-shop-search>
+          <div class="shop-search__scrim" data-shop-search-scrim></div>
+
+          <div class="shop-search__box">
+            <div class="input shop-search__field">
+              <label class="input__label sr-only" for="shop-search-again">Search products</label>
+              <span class="input__container input__container--rounded">
+                <span class="input__leading">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                    <path d="M21 21l-6 -6" />
+                  </svg>
+                </span>
+                <input
+                  id="shop-search-again"
+                  name="q"
+                  class="input__element"
+                  type="search"
+                  placeholder="Search"
+                  autocomplete="off"
+                  data-results-field
+                  role="combobox"
+                  aria-expanded="false"
+                  aria-autocomplete="list"
+                  aria-controls="shop-search-list"
+                />
+                <span class="input__trailing shop-search__go" data-size="xs">
+                  <button
+                    class="button button--flat button--icon shop-search__wipe"
+                    type="button"
+                    aria-label="Clear search"
+                    data-shop-search-wipe
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 6l-12 12" />
+                      <path d="M6 6l12 12" />
+                    </svg>
+                  </button>
+
+                  <button class="button button--primary shop-search__submit" type="submit">
+                    Search
+                  </button>
+                </span>
+              </span>
+            </div>
+
+            <div class="shop-search__panel" data-shop-search-panel hidden>
+              <div class="shop-search__bar" data-shop-search-bar hidden>
+                <span>Your search history</span>
+                <button class="link shop-search__clear" type="button" data-shop-search-clear>
+                  Clear
+                </button>
+              </div>
+              <!-- [html-validate-disable-next prefer-native-element -- suggestions, not a set of values to pick between; a native select cannot hold a product's shot ] -->
+              <ul
+                class="shop-search__list"
+                id="shop-search-list"
+                role="listbox"
+                aria-label="Suggestions"
+                data-shop-search-list
+              ></ul>
+            </div>
+          </div>
+
+          <!-- Copy, so it lives on the page rather than in the script. -->
+          <ul data-shop-search-popular hidden>
+            <li>Wishbone</li>
+            <li>Lounge chair</li>
+            <li>Oak</li>
+            <li>Muuto</li>
+          </ul>
+        </form>
+      </header>
+
+      <script>
+        // Inline and synchronous, so the field carries the query on the first
+        // paint. Deferred, it filled a moment later and the Search button beside
+        // it (shown in CSS while the field is not empty) flashed in with it.
+        (function () {
+          var q = new URLSearchParams(location.search).get("q");
+          var field = document.querySelector("[data-results-field]");
+          if (field && q) field.value = q;
+        })();
+      </script>
+
+      <!-- Replaced by the listing's own band once results.js has fetched it: the
+           rail, the toolbar, the sort, the grid and the filter sheet, with the
+           cards that did not match already dropped out. A results page's facets
+           have to be the listing's facets, and taking the markup is the only way
+           to have them without keeping a second copy.
+
+           Until then this is the empty band, so the page has its shape before the
+           fetch lands rather than jumping into place. -->
+      <section class="shop" aria-label="Results" data-results-band></section>
+
+      <!-- What the page offers when nothing matched: the six the shop sells most
+           of, in the shelf the landing uses. Outside the band, because there is
+           no band in that case. -->
+      <div class="shop shop-suggested-band" data-results-suggested hidden>
+        <div class="shop__inner">
+          <div class="shop-suggested">
+            <h2 class="shop-shelf__title">Best sellers</h2>
+
+            <div class="ex-shelf">
+              <button
+                class="carousel__control carousel__control--prev ex-shelf__control"
+                type="button"
+                tabindex="-1"
+                aria-label="Previous products"
+                hidden
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M15 6l-6 6l6 6" />
+                </svg>
+              </button>
+
+              <div class="ex-shelf__row" data-results-shelf></div>
+
+              <button
+                class="carousel__control carousel__control--next ex-shelf__control"
+                type="button"
+                tabindex="-1"
+                aria-label="Next products"
+                hidden
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 6l6 6l-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div data-chrome="footer"></div>
+
+    <div data-chrome="menu"></div>
+
+    <div data-chrome="grid-overlay"></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+      integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <!-- Vector basemap: MapLibre renders OpenFreeMap's styles, bridged into
+         Leaflet as a layer so every marker, cluster and gesture stays Leaflet's. -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"
+      integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"
+      integrity="sha384-4CB9Vtol9LN6lGgBCvmPLbUEZwilrqIvPieSRurgAXAB7FVJaLS9n8WyAIA5wjQ+"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script src="/demo/example/chrome.js" defer></script>
+    <script src="/assets/app.js" defer></script>
+    <!-- The Store facet in the band this page lifts is a map, so it needs what
+         the listing gives it: the basemap and the chosen store, loaded here
+         rather than discovered missing when the facet is opened. -->
+    <script src="/demo/example/map.js" defer></script>
+    <script src="/demo/example/store.js" defer></script>
+    <script src="/demo/example/shop/catalogue.js" defer></script>
+    <script src="/demo/example/shop/search/results.js" defer></script>
+    <script src="/demo/example/shop/search.js" defer></script>
+    <!-- After results.js, which fills the shelf: a row measured empty has nothing
+         to scroll, and results.js tells it to measure again once it is not. -->
+    <script src="/demo/example/shelf.js" defer></script>
+  </body>
+</html>

@@ -364,7 +364,7 @@
     // and narrows itself to it for the visit. Written per store rather than
     // left in the markup, since the link is only ever pressed from a store that
     // is open. Without JS it stays the plain listing it is in the markup.
-    if (toShop) toShop.href = `/demo/example/shop/?store=${encodeURIComponent(d.store)}`;
+    if (toShop) toShop.href = `/demo/example/shop/chairs/?store=${encodeURIComponent(d.store)}`;
 
     backMode = panel.dataset.mode;
     panel.dataset.mode = "detail";

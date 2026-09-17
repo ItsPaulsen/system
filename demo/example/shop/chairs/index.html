@@ -1,0 +1,2340 @@
+<!doctype html>
+<html lang="en" data-width="2xl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Chairs - Demo</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+      integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css"
+      integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Cluster base only, not its Default skin: the positioning and the
+         zoom/spiderfy animations are needed, the orange discs are not. -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
+      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/demo/globals.css" />
+    <link rel="stylesheet" href="/demo/components.css" />
+    <link rel="stylesheet" href="/demo/example/example.css" />
+    <link rel="stylesheet" href="/demo/example/shop/shop.css" />
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        // Light for a first visit, whatever the OS is set to: this is the theme
+        // the system is designed in, so it is the one it introduces itself in.
+        if (t !== "light" && t !== "dark") t = "light";
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#ex-main">Skip to content</a>
+    <div data-chrome="topbar"></div>
+
+    <main class="ex shop-page" id="ex-main" tabindex="-1">
+      <!-- Left-aligned hero: breadcrumb up to Home, then the page title and
+           intro. Shares the listing band's content column so breadcrumb, title
+           and products line up on one left edge. -->
+      <header class="shop-hero">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol class="breadcrumb__list">
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/">Home</a>
+            </li>
+            <li class="breadcrumb__item">
+              <a class="breadcrumb__link" href="/demo/example/shop/">Shop</a>
+            </li>
+            <li class="breadcrumb__item">
+              <span class="breadcrumb__current" aria-current="page">Chairs</span>
+            </li>
+          </ol>
+        </nav>
+
+        <h1 class="shop-hero__title">Chairs</h1>
+        <p class="shop-hero__intro">
+          Every product here is the same handful of components: a card surface, a badge, a filter
+          rail, and one sort control. Filter, search and sort all run on the markup below.
+        </p>
+      </header>
+
+      <!-- Listing band: filter rail + product grid + show-more, on the recessed
+           2xl surface. -->
+      <section class="shop" aria-label="Products">
+        <div class="shop__inner" data-ex-filter-rail>
+          <!-- Filter rail: price range plus collapsible option groups. Same rail as the
+               blog listing: from 1024 it sits here, below that it moves into the
+               left sheet (shop.js), so its state survives the move. -->
+          <aside class="scroll-area ex-filter shop-filter" aria-label="Filter" data-scroll-area>
+            <div class="scroll-area__viewport">
+              <h2 class="ex-filter__title">Filter</h2>
+
+              <!-- Past the whole rail in one stop. A filter list is a long run of
+                   controls between the tab key and the thing it filters, so the
+                   first stop inside it offers the way out. Hidden until focused,
+                   so it costs the page nothing until a keyboard needs it. -->
+              <a class="ex-filter__skip" href="#shop-results">Skip to results</a>
+
+              <!-- Store. The one facet that isn't a checkbox list: pick a store on
+                   the map and the grid drops to what that store stocks. Single
+                   select, since "in stock at" is a question about one shop you
+                   can walk into, not a set of them.
+
+                   The stores are the markup here too, same as the store finder:
+                   each option carries its own coordinates, so the pins are built
+                   from the list below and there is no second copy to keep in
+                   sync. The list is also the fallback, the map comes off a CDN,
+                   and it stays on screen as a plain set of buttons if that
+                   script never arrives. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Store</summary>
+                <div class="ex-filter__body" data-filter="store">
+                  <div class="shop-store">
+                    <div class="shop-store__map" data-shop-store-map hidden>
+                      <div class="shop-store__canvas" id="shop-store-map"></div>
+                      <div class="shop-store__zoom">
+                        <button
+                          class="button button--flat button--icon shop-store__zoom-button"
+                          type="button"
+                          data-shop-store-zoom="in"
+                          aria-label="Zoom in"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                          </svg>
+                        </button>
+                        <button
+                          class="button button--flat button--icon shop-store__zoom-button"
+                          type="button"
+                          data-shop-store-zoom="out"
+                          aria-label="Zoom out"
+                        >
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d="M5 12l14 0" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <p class="shop-store__picked" hidden>
+                      <span class="shop-store__name" data-shop-store-name></span>
+                      <button type="button" class="link shop-store__clear" data-shop-store-clear>
+                        Remove selected store
+                      </button>
+                    </p>
+                    <ul class="shop-store__list" data-shop-store-list>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="old-town"
+                          data-lat="59.9123"
+                          data-lng="10.7459"
+                        >
+                          <span class="shop-store__option-name">Old Town</span>
+                          <span class="shop-store__option-address">Market Square 1</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="midtown"
+                          data-lat="59.9165"
+                          data-lng="10.7325"
+                        >
+                          <span class="shop-store__option-name">Midtown</span>
+                          <span class="shop-store__option-address">Bridge Street 18</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="harbour"
+                          data-lat="59.908"
+                          data-lng="10.7233"
+                        >
+                          <span class="shop-store__option-name">Harbour</span>
+                          <span class="shop-store__option-address">Pier Road 4</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="eastgate"
+                          data-lat="59.9155"
+                          data-lng="10.802"
+                        >
+                          <span class="shop-store__option-name">Eastgate</span>
+                          <span class="shop-store__option-address">Eastgate Park 7</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="parkside"
+                          data-lat="59.9268"
+                          data-lng="10.788"
+                        >
+                          <span class="shop-store__option-name">Parkside</span>
+                          <span class="shop-store__option-address">Linden Avenue 22</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="elmwood"
+                          data-lat="59.905"
+                          data-lng="10.826"
+                        >
+                          <span class="shop-store__option-name">Elmwood</span>
+                          <span class="shop-store__option-address">Elmwood Lane 3</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="northgate"
+                          data-lat="59.9605"
+                          data-lng="10.758"
+                        >
+                          <span class="shop-store__option-name">Northgate</span>
+                          <span class="shop-store__option-address">Northgate Road 55</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="hillcrest"
+                          data-lat="59.9482"
+                          data-lng="10.786"
+                        >
+                          <span class="shop-store__option-name">Hillcrest</span>
+                          <span class="shop-store__option-address">Hillcrest Terrace 9</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="lakeview"
+                          data-lat="59.9702"
+                          data-lng="10.721"
+                        >
+                          <span class="shop-store__option-name">Lakeview</span>
+                          <span class="shop-store__option-address">Lakeview Walk 12</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="southbank"
+                          data-lat="59.888"
+                          data-lng="10.762"
+                        >
+                          <span class="shop-store__option-name">Southbank</span>
+                          <span class="shop-store__option-address">Southbank Quay 2</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="stonebridge"
+                          data-lat="59.8752"
+                          data-lng="10.788"
+                        >
+                          <span class="shop-store__option-name">Stonebridge</span>
+                          <span class="shop-store__option-address">Stonebridge Row 41</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="westfield"
+                          data-lat="59.923"
+                          data-lng="10.68"
+                        >
+                          <span class="shop-store__option-name">Westfield</span>
+                          <span class="shop-store__option-address">Westfield Green 30</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="riverside"
+                          data-lat="59.935"
+                          data-lng="10.657"
+                        >
+                          <span class="shop-store__option-name">Riverside</span>
+                          <span class="shop-store__option-address">Riverside Path 6</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          class="shop-store__option"
+                          type="button"
+                          data-store="greenfield"
+                          data-lat="59.9034"
+                          data-lng="10.6368"
+                        >
+                          <span class="shop-store__option-name">Greenfield</span>
+                          <span class="shop-store__option-address">Greenfield Court 14</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Price is a two-handle range slider over a pair of fields.
+                   min/max are the bounds of the real catalogue rounded out to the
+                   step, so both handles at the ends means "no price filter" and
+                   the chip stays away. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Price</summary>
+                <div class="ex-filter__body">
+                  <div class="shop-price">
+                    <div class="slider-range shop-price__slider" data-slider-range>
+                      <input
+                        class="slider-range__input"
+                        type="range"
+                        min="4000"
+                        max="56000"
+                        step="1000"
+                        value="4000"
+                        aria-label="Minimum price"
+                      />
+                      <input
+                        class="slider-range__input"
+                        type="range"
+                        min="4000"
+                        max="56000"
+                        step="1000"
+                        value="56000"
+                        aria-label="Maximum price"
+                      />
+                    </div>
+
+                    <!-- The fields are the readout as well as an input: shop.js
+                         writes the handle values into them and reads a typed
+                         value back, clamped to the bounds and to each other. -->
+                    <div class="shop-price__fields">
+                      <label class="input shop-price__field">
+                        <span class="input__label sr-only">Minimum price in kr</span>
+                        <span class="input__container shop-price__control">
+                          <input
+                            class="input__element"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            value="4000"
+                            data-shop-price-field="min"
+                          />
+                        </span>
+                      </label>
+                      <span class="shop-price__dash" aria-hidden="true">-</span>
+                      <label class="input shop-price__field">
+                        <span class="input__label sr-only">Maximum price in kr</span>
+                        <span class="input__container shop-price__control">
+                          <input
+                            class="input__element"
+                            type="text"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            value="56000"
+                            data-shop-price-field="max"
+                          />
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </details>
+
+              <!-- Brand. The card's title *is* the brand, so the filter matches on
+                   that text rather than a data attribute: one source of truth, and
+                   a product can't be tagged with a brand it doesn't display. Only
+                   the real products carry one so far. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Brand</summary>
+                <div class="ex-filter__body" data-filter="brand" data-filter-long>
+                  <label class="input ex-filter__search">
+                    <span class="input__label sr-only">Find brand</span>
+                    <span
+                      class="input__container input__container--rounded ex-filter__search-field"
+                    >
+                      <span class="input__leading">
+                        <svg
+                          viewBox="0 0 24 24"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                          <path d="M21 21l-6 -6" />
+                        </svg>
+                      </span>
+                      <input
+                        name="shop-brand-find"
+                        class="input__element"
+                        type="search"
+                        placeholder="Find brand"
+                        autocomplete="off"
+                      />
+                    </span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-brand-muuto" type="checkbox" class="checkbox__input" />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Muuto</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-brand-carl-hansen"
+                        type="checkbox"
+                        class="checkbox__input"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Carl Hansen &amp; Søn</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <button type="button" class="link ex-filter__more" hidden></button>
+                </div>
+              </details>
+
+              <!-- Color, whose options are families rather than single values.
+                   Each checkbox declares the colors it covers in data-colors, so
+                   the filter's own markup is the one place that says which values
+                   belong to it: adding a wood is one word here, next to the
+                   label it belongs to.
+
+                   data-color on a card is the facet token (oak, black), never the
+                   copy shown to the reader: the variant line carries that, and it
+                   can be as specific as the product needs ("refine leather
+                   black/black") without the filter having to know about it. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Color</summary>
+                <div class="ex-filter__body" data-filter="color">
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-tree"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="oak ash beech birch pine walnut"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="tree" aria-hidden="true"></span>
+                    <span class="checkbox__label">Tree</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-brown"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="brown cognac"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="brown" aria-hidden="true"></span>
+                    <span class="checkbox__label">Brown</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-beige"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="beige"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="beige" aria-hidden="true"></span>
+                    <span class="checkbox__label">Beige</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-black"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="black"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="black" aria-hidden="true"></span>
+                    <span class="checkbox__label">Black</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-grey"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="slate"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="grey" aria-hidden="true"></span>
+                    <span class="checkbox__label">Grey</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-white"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="white eggshell"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="white" aria-hidden="true"></span>
+                    <span class="checkbox__label">White</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-red"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="falu"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="red" aria-hidden="true"></span>
+                    <span class="checkbox__label">Red</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-orange"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="terracotta"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="orange" aria-hidden="true"></span>
+                    <span class="checkbox__label">Orange</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-yellow"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="yellow"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="yellow" aria-hidden="true"></span>
+                    <span class="checkbox__label">Yellow</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-green"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="green seaweed"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="green" aria-hidden="true"></span>
+                    <span class="checkbox__label">Green</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input
+                        name="shop-color-blue"
+                        type="checkbox"
+                        class="checkbox__input"
+                        data-colors="northsea"
+                      />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="shop-swatch" data-swatch="blue" aria-hidden="true"></span>
+                    <span class="checkbox__label">Blue</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                </div>
+              </details>
+            </div>
+            <div class="scroll-area__bar" aria-hidden="true">
+              <div class="scroll-area__thumb"></div>
+            </div>
+          </aside>
+
+          <div class="shop__main" data-ex-filter-main id="shop-results" tabindex="-1">
+            <!-- Result count + sort. The count is a live region, so filtering or
+                 searching is announced without moving focus. The sort control is
+                 the Select component on a bare skin (no border, no fill), the
+                 only page-local restyle on this screen. -->
+            <div class="ex-listing__toolbar">
+              <p class="ex-listing__count" role="status">
+                <strong data-shop-count>33</strong> <span data-shop-noun>products</span>
+              </p>
+
+              <div class="ex-listing__actions" data-size="sm">
+                <button
+                  type="button"
+                  class="button button--with-start-icon ex-filter-toggle"
+                  data-dialog-open="shop-filter-sheet"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 6l8 0" />
+                    <path d="M16 6l4 0" />
+                    <path d="M6 12a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 12l2 0" />
+                    <path d="M10 12l10 0" />
+                    <path d="M15 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M4 18l11 0" />
+                    <path d="M19 18l1 0" />
+                  </svg>
+                  Filter
+                </button>
+
+                <div class="select ex-sort" data-select>
+                  <button
+                    class="select__trigger"
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                  >
+                    <span class="sr-only">Sort by,</span>
+                    <span class="select__value">Most popular</span>
+                    <svg
+                      class="select__chevron"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 9l6 6l6 -6" />
+                    </svg>
+                  </button>
+                  <!-- [html-validate-disable-next prefer-native-element -- custom listbox; Native Select is the native option] -->
+                  <ul
+                    class="select__list ex-sort-list"
+                    role="listbox"
+                    tabindex="-1"
+                    aria-label="Sort by"
+                    hidden
+                  >
+                    <li
+                      class="select__option"
+                      role="option"
+                      aria-selected="true"
+                      data-sort="popular"
+                    >
+                      Most popular
+                    </li>
+                    <li class="select__option" role="option" data-sort="newest">Newest first</li>
+                    <li class="select__option" role="option" data-sort="oldest">Oldest first</li>
+                    <li class="select__option" role="option" data-sort="price-asc">
+                      Price low-high
+                    </li>
+                    <li class="select__option" role="option" data-sort="price-desc">
+                      Price high-low
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Source order IS the "Most popular" ranking (shop.js reads it
+                 before any sort rewrites the DOM), so it's deliberately mixed
+                 rather than the order the products were added: a ranking that
+                 happens to group every brand together reads like a filing
+                 cabinet. Recency lives in data-added, so Newest/Oldest are
+                 unaffected by how this is arranged.
+
+                 Store counts cap at nine: ten or more prints as "9+ stores", so
+                 no card ever shows an exact double-digit figure. One card sits at
+                 "1 store" to keep the singular honest. -->
+            <!-- Active filters, one removable chip each plus a clear-all.
+                 shop.js builds the row from whatever is checked, so it can't
+                 disagree with the rail, and the row stays out when nothing is
+                 filtered. -->
+            <div class="shop__chips" data-size="sm" hidden></div>
+
+            <div class="shop__grid">
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="walnut natural"
+                data-stores="old-town midtown"
+                data-price="50974"
+                data-added="54"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch25-lounge-chair-walnut-400.webp 400w,
+                        /assets/images/products/ch25-lounge-chair-walnut-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch25-lounge-chair-walnut-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH25 Lounge Chair, oiled walnut/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">50 974 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak"
+                data-stores="eastgate parkside elmwood northgate"
+                data-price="5249"
+                data-added="33"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-oak-400.webp 400w,
+                        /assets/images/products/cover-armchair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Armchair, oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 249 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak natural"
+                data-stores="northgate hillcrest lakeview"
+                data-price="10420"
+                data-added="49"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch23-dining-chair-white-oiled-oak-400.webp 400w,
+                        /assets/images/products/ch23-dining-chair-white-oiled-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch23-dining-chair-white-oiled-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH23 Dining Chair, white oiled oak/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">10 420 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Normal price: <s>12 259 kr</s> <span class="shop-card__off">-15%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="yellow natural"
+                data-stores="southbank stonebridge westfield"
+                data-price="8116"
+                data-added="62"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-hollyhock-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-hollyhock-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-hollyhock-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft hollyhock</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">8 116 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak natural"
+                data-stores="riverside greenfield"
+                data-price="44601"
+                data-added="44"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch25-lounge-chair-oiled-oak-400.webp 400w,
+                        /assets/images/products/ch25-lounge-chair-oiled-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch25-lounge-chair-oiled-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH25 Lounge Chair, oiled oak/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">44 601 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak"
+                data-stores="midtown harbour eastgate"
+                data-price="13375"
+                data-added="60"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soaped-oak-black-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soaped-oak-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soaped-oak-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soaped oak/black</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">13 375 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak beige"
+                data-stores="parkside elmwood northgate"
+                data-price="9792"
+                data-added="52"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/mg501-cuba-chair-soaped-oak-400.webp 400w,
+                        /assets/images/products/mg501-cuba-chair-soaped-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/mg501-cuba-chair-soaped-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">MG501 Cuba Chair, soaped oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">9 792 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Normal price: <s>13 056 kr</s> <span class="shop-card__off">-25%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=black-leather"
+                data-category="chairs"
+                data-color="black"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield greenfield"
+                data-price="5879"
+                data-added="39"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-black-leather-400.webp 400w,
+                        /assets/images/products/cover-side-chair-black-leather-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-black-leather-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant"
+                    >Cover Side Chair, refine leather black/black</span
+                  >
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 879 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Original: <s>7 349 kr</s> <span class="shop-card__off">-20%</span></span
+                    >
+                    <span class="shop-card__term"
+                      >Lowest recent price: <s>6 199 kr</s>
+                      <span class="shop-card__off">-5%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">11 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="seaweed natural"
+                data-stores="stonebridge westfield"
+                data-price="7639"
+                data-added="66"
+              >
+                <span class="badge shop-card__badge">New</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-seaweed-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-seaweed-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-seaweed-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft seaweed</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 639 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=black"
+                data-category="chairs"
+                data-color="black"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield greenfield"
+                data-price="4236"
+                data-added="37"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-black-400.webp 400w,
+                        /assets/images/products/cover-side-chair-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Side Chair, black</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">4 236 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Normal price: <s>5 295 kr</s> <span class="shop-card__off">-20%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">11 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="brown oak"
+                data-stores="harbour"
+                data-price="55913"
+                data-added="58"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch78-mama-bear-brown-oak-400.webp 400w,
+                        /assets/images/products/ch78-mama-bear-brown-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch78-mama-bear-brown-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH78 Mama Bear, brown/soaped oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">55 913 kr</span>
+                  <span class="shop-card__stores">1 store</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak beige"
+                data-stores="elmwood northgate"
+                data-price="27906"
+                data-added="48"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/fk10-plico-lounge-chair-oak-400.webp 400w,
+                        /assets/images/products/fk10-plico-lounge-chair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/fk10-plico-lounge-chair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">FK10 Plico Lounge Chair, oiled oak/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">27 906 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Original: <s>34 883 kr</s> <span class="shop-card__off">-20%</span></span
+                    >
+                    <span class="shop-card__term"
+                      >Lowest recent price: <s>31 395 kr</s>
+                      <span class="shop-card__off">-11%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="terracotta natural"
+                data-stores="lakeview southbank stonebridge westfield"
+                data-price="7639"
+                data-added="63"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-terracotta-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-terracotta-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-terracotta-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft terracotta</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 639 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak eggshell"
+                data-stores="westfield"
+                data-price="47310"
+                data-added="45"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch290-lounge-chair-eggshell-oak-400.webp 400w,
+                        /assets/images/products/ch290-lounge-chair-eggshell-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch290-lounge-chair-eggshell-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant"
+                    >CH290 Lounge Chair, 1501 eggshell/oiled oak</span
+                  >
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">47 310 kr</span>
+                  <span class="shop-card__stores">1 store</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="beech natural"
+                data-stores="old-town midtown harbour eastgate parkside"
+                data-price="7321"
+                data-added="50"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soaped-beech-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soaped-beech-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soaped-beech-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soaped beech/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 321 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak cognac"
+                data-stores="eastgate parkside elmwood northgate hillcrest"
+                data-price="7449"
+                data-added="35"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-cognac-oak-400.webp 400w,
+                        /assets/images/products/cover-armchair-cognac-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-cognac-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Armchair, refine leather cognac/oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 449 kr</span>
+                  <span class="shop-card__stores">5 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=oak"
+                data-category="chairs"
+                data-color="oak"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield greenfield"
+                data-price="5295"
+                data-added="41"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-oak-400.webp 400w,
+                        /assets/images/products/cover-side-chair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Side Chair, oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">11 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak beige"
+                data-stores="southbank"
+                data-price="31378"
+                data-added="53"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/fk11-plico-lounge-chair-oak-400.webp 400w,
+                        /assets/images/products/fk11-plico-lounge-chair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/fk11-plico-lounge-chair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">FK11 Plico Lounge Chair, oiled oak/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">31 378 kr</span>
+                  <span class="shop-card__stores">1 store</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="white natural"
+                data-stores="old-town riverside greenfield"
+                data-price="7639"
+                data-added="56"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-white-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-white-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-white-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft white</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 639 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="slate natural"
+                data-stores="midtown harbour eastgate parkside"
+                data-price="8595"
+                data-added="59"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-slate-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-slate-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-slate-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft slate</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">8 595 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="falu natural"
+                data-stores="parkside elmwood"
+                data-price="7639"
+                data-added="64"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-falu-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-falu-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-falu-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft falu</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 639 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=cognac"
+                data-category="chairs"
+                data-color="oak cognac"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield greenfield"
+                data-price="7349"
+                data-added="38"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-cognac-oak-400.webp 400w,
+                        /assets/images/products/cover-side-chair-cognac-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-cognac-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant"
+                    >Cover Side Chair, refine leather cognac/oak</span
+                  >
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 349 kr</span>
+                  <span class="shop-card__stores">11 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=dark-beige"
+                data-category="chairs"
+                data-color="beige"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield"
+                data-price="5295"
+                data-added="43"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-dark-beige-400.webp 400w,
+                        /assets/images/products/cover-side-chair-dark-beige-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-dark-beige-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Side Chair, dark beige</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">10 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="black"
+                data-stores="old-town midtown harbour eastgate parkside greenfield"
+                data-price="5249"
+                data-added="36"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-black-400.webp 400w,
+                        /assets/images/products/cover-armchair-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Armchair, black</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 249 kr</span>
+                  <span class="shop-card__stores">6 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="walnut brown"
+                data-stores="harbour"
+                data-price="19907"
+                data-added="61"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-walnut-black-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-walnut-black-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-walnut-black-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, oiled walnut/black</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">19 907 kr</span>
+                  <span class="shop-card__stores">1 store</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="barley natural"
+                data-stores="elmwood northgate hillcrest lakeview"
+                data-price="7639"
+                data-added="55"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-barley-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-barley-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-barley-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft barley</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 639 kr</span>
+                  <span class="shop-card__stores">4 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak natural"
+                data-stores="lakeview southbank"
+                data-price="8405"
+                data-added="51"
+              >
+                <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch36-dining-chair-soaped-oak-400.webp 400w,
+                        /assets/images/products/ch36-dining-chair-soaped-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch36-dining-chair-soaped-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH36 Dining Chair, soaped oak</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">8 405 kr</span>
+                  <span class="shop-card__terms">
+                    <span class="shop-card__term"
+                      >Normal price: <s>10 507 kr</s> <span class="shop-card__off">-20%</span></span
+                    >
+                  </span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="northsea natural"
+                data-stores="westfield riverside greenfield"
+                data-price="8116"
+                data-added="65"
+              >
+                <span class="badge shop-card__badge">New</span>
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-soft-north-sea-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-soft-north-sea-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-soft-north-sea-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH24 Wishbone Chair, soft north sea</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">8 116 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="black"
+                data-stores="old-town midtown harbour"
+                data-price="7449"
+                data-added="34"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-armchair-black-leather-400.webp 400w,
+                        /assets/images/products/cover-armchair-black-leather-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-armchair-black-leather-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Armchair, refine leather black/black</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">7 449 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="black oak natural"
+                data-stores="eastgate parkside"
+                data-price="12419"
+                data-added="57"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch24-wishbone-chair-black-oak-400.webp 400w,
+                        /assets/images/products/ch24-wishbone-chair-black-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch24-wishbone-chair-black-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant"
+                    >CH24 Wishbone Chair, black lacquered oak/natural</span
+                  >
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">12 419 kr</span>
+                  <span class="shop-card__stores">2 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=dark-brown"
+                data-category="chairs"
+                data-color="brown"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield"
+                data-price="5295"
+                data-added="40"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-dark-brown-400.webp 400w,
+                        /assets/images/products/cover-side-chair-dark-brown-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-dark-brown-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Side Chair, stained dark brown</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">10 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/"
+                data-category="chairs"
+                data-color="oak natural"
+                data-stores="southbank stonebridge westfield"
+                data-price="42848"
+                data-added="47"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/ch25-lounge-chair-oak-400.webp 400w,
+                        /assets/images/products/ch25-lounge-chair-oak-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/ch25-lounge-chair-oak-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Carl Hansen &amp; Søn</span>
+                  <span class="shop-card__variant">CH25 Lounge Chair, oak/natural</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">42 848 kr</span>
+                  <span class="shop-card__stores">3 stores</span>
+                </span>
+              </a>
+
+              <a
+                class="shop-card"
+                href="/demo/example/shop/product/?color=green"
+                data-category="chairs"
+                data-color="green"
+                data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest southbank stonebridge westfield greenfield"
+                data-price="5295"
+                data-added="42"
+              >
+                <span class="shop-card__media">
+                  <picture>
+                    <source
+                      type="image/webp"
+                      srcset="
+                        /assets/images/products/cover-side-chair-green-400.webp 400w,
+                        /assets/images/products/cover-side-chair-green-640.webp 640w
+                      "
+                      sizes="(min-width: 1280px) 240px, (min-width: 1024px) 250px, (min-width: 768px) 28vw, 42vw"
+                    />
+                    <img
+                      class="ex-ph shop-card__img"
+                      src="/assets/images/products/cover-side-chair-green-640.jpg"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </picture>
+                </span>
+                <h3 class="shop-card__head">
+                  <span class="shop-card__brand">Muuto</span>
+                  <span class="shop-card__variant">Cover Side Chair, green</span>
+                </h3>
+                <span class="shop-card__meta">
+                  <span class="shop-card__price">5 295 kr</span>
+                  <span class="shop-card__stores">11 stores</span>
+                </span>
+              </a>
+            </div>
+
+            <!-- Shown when the filters + search match nothing (shop.js toggles
+                 [hidden] and hides the grid and the footer). Same recipe and the
+                 same filter-off icon as the blog's empty state: the filters are
+                 what emptied the page, and a struck-through cart reads as a
+                 broken basket at this size. -->
+            <div class="shop-empty" hidden>
+              <svg
+                class="shop-empty__icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8 4h12v2.172a2 2 0 0 1 -.586 1.414l-3.914 3.914m-.5 3.5v4l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227"
+                />
+                <path d="M3 3l18 18" />
+              </svg>
+              <h2 class="shop-empty__title">Nothing matched those filters</h2>
+              <p class="shop-empty__text">
+                Try a different category or price, or clear everything to see all products.
+              </p>
+
+              <button type="button" class="button button--secondary" data-shop-clear>
+                Clear filters
+              </button>
+            </div>
+
+            <!-- Count + Show more. The button reveals the next batch of matches
+                 and hides itself once everything matching is on screen. -->
+            <div class="shop__foot">
+              <p class="shop__showing">
+                Showing <strong data-shop-shown>33</strong> of <strong data-shop-total>33</strong>
+                <span data-shop-noun>products</span>
+              </p>
+              <button type="button" class="button shop__more" data-shop-more>Show more</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Left sheet holding the filter below 1024. shop.js moves the .shop-filter
+             node into .sheet__body here, and back to the rail from 1024. The
+             generic data-dialog-open/close wiring (app.js) drives open/close and
+             focus. -->
+        <dialog class="sheet sheet--left ex-filter-sheet shop__sheet" id="shop-filter-sheet">
+          <div class="sheet__inner">
+            <header class="sheet__header">
+              <h2 class="sheet__title">Filter</h2>
+              <button class="sheet__close" type="button" data-dialog-close aria-label="Close">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M18 6l-12 12" />
+                  <path d="M6 6l12 12" />
+                </svg>
+              </button>
+            </header>
+            <div class="sheet__body" data-scroll-area>
+              <div class="scroll-area__viewport sheet__scroll" data-ex-filter-slot></div>
+              <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__thumb"></div>
+              </div>
+            </div>
+            <!-- The two things asked of a filter panel, on the edge it is left by:
+                 start over, or take what it has. The count rides the one you
+                 leave by, since filtering behind a sheet asks you to take it on
+                 trust that anything changed. Closing is all Show does: the
+                 results are already filtered underneath. -->
+            <footer class="ex-filter-sheet__foot">
+              <button
+                class="button button--secondary ex-filter-sheet__clear"
+                type="button"
+                disabled
+                data-ex-filter-clear
+              >
+                Reset
+              </button>
+              <button
+                class="button button--primary ex-filter-sheet__apply"
+                type="button"
+                data-dialog-close
+              >
+                Show <span data-shop-count>33</span>
+              </button>
+            </footer>
+          </div>
+        </dialog>
+      </section>
+    </main>
+
+    <div data-chrome="footer"></div>
+
+    <div data-chrome="menu"></div>
+
+    <div data-chrome="grid-overlay"></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
+      integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <!-- Vector basemap: MapLibre renders OpenFreeMap's styles, bridged into
+         Leaflet as a layer so every marker, cluster and gesture stays Leaflet's. -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"
+      integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"
+      integrity="sha384-4CB9Vtol9LN6lGgBCvmPLbUEZwilrqIvPieSRurgAXAB7FVJaLS9n8WyAIA5wjQ+"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"
+      integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
+    ></script>
+    <script src="/demo/example/chrome.js" defer></script>
+    <script src="/assets/app.js" defer></script>
+    <script src="/demo/example/map.js" defer></script>
+    <script src="/demo/example/store.js" defer></script>
+    <script src="/demo/example/shop/shop.js" defer></script>
+  </body>
+</html>

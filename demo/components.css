@@ -791,6 +791,21 @@
     padding: 4px;
   }
 
+  /* A pill's ends curve away from whatever sits in them, so the 12 that reads
+     right against a square field's edge reads tight against this one. Only on the
+     side that meets the curve: the gap from the glyph to the text is a gap
+     between two pieces of content, and 8 is enough to separate them.
+
+     Icon slots only. A slot holding a button hugs the edge on purpose (the rule
+     above), and that is still what it should do here. */
+  .input__container--rounded .input__leading:not(:has(.button)) {
+    padding-inline: 1rem 0.5rem;
+  }
+
+  .input__container--rounded .input__trailing:not(:has(.button)) {
+    padding-inline: 0.5rem 1rem;
+  }
+
   /* ── Textarea ──────────────────────────────────────────────────────────── */
 
   /* Reuses the input shell (label + container + focus/invalid/disabled); the

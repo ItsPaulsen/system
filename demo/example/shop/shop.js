@@ -86,13 +86,19 @@
   // the ends" is the off state and nothing here has to know the catalogue's
   // prices: widening the range is one attribute in the markup.
   const priceInputs = () => [...(priceSlider?.querySelectorAll(".slider-range__input") || [])];
+
+  // No slider at all is not a price of zero: the search results page drops the
+  // Price group when its results are all one price, and bounds of 0 to 0 would
+  // then reject every product on the page. An absent facet constrains nothing.
+  const OPEN = { min: -Infinity, max: Infinity };
   const priceBounds = () => {
     const [lower] = priceInputs();
-    return { min: Number(lower?.min || 0), max: Number(lower?.max || 0) };
+    if (!lower) return OPEN;
+    return { min: Number(lower.min || 0), max: Number(lower.max || 0) };
   };
   const priceRange = () => {
     const [lower, upper] = priceInputs();
-    if (!lower || !upper) return priceBounds();
+    if (!lower || !upper) return OPEN;
     return { min: Number(lower.value), max: Number(upper.value) };
   };
   const kr = (v) => `${String(v).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} kr`;
@@ -289,6 +295,10 @@
     // than reaching in to undo half of it.
     const store = storeClear();
     if (store) out.push(store);
+    // No chip for the query. A chip is a constraint on a page, and pulling one
+    // off leaves the reader where they were; the query is what the page is, and
+    // taking it away puts them on a different one. It is said in the heading
+    // instead, with its own way out under it.
     return out;
   };
 

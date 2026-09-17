@@ -17,6 +17,10 @@
    padding from the inline value on its own, so only these numbers are set. */
   :root {
     --ex-topbar-h: 64px;
+
+    /* How far a focus ring reaches past its control, so a scroll container can
+       leave room for one: the ring's width plus its offset. */
+    --ex-focus-room: calc(var(--focus-ring-width) + var(--focus-ring-offset));
     --ex-control-h: 40px;
     --ex-control-px: 16px;
 
@@ -765,6 +769,213 @@
     .ex-marquee__track {
       animation: none;
     }
+  }
+
+  /* ── Shelf ────────────────────────────────────────────────────────────────
+     One row of cards that scrolls sideways: the product page's "goes well with"
+     row, and one per category on the shop landing. The mechanics are here rather
+     than on either page, since both wanted the same row and the second one is
+     what proved it was a component. shelf.js drives every .ex-shelf__row on the
+     page.
+
+The shelf holds the row's two measurements, because the arrows sit outside
+     the row and take their vertical centre from a card's width. It's also their
+     containing block: the row they step is the thing that scrolls, so anything
+     inside it would travel with the cards.
+
+     The gap is tighter than the listing's 20. There it separates rows of products
+     that wrap; here it is the seam in one continuous shelf. The card width comes
+     off the same value, so six cards and five gaps still come to exactly the
+     content cap: the widest window shows those six and has nothing left to
+     scroll (a flat 240 overshot it by 4 and left the row twitching), and a phone
+     shows one and a half. Derived from the cap rather than typed out, so it stays
+     true on a page at the narrower xl tier. */
+  .ex-shelf {
+    --ex-shelf-gap: var(--space-16);
+    --ex-shelf-card: calc((var(--container-max) - 5 * var(--ex-shelf-gap)) / 6);
+
+    position: relative;
+  }
+
+  /* One scrolling row at every width instead of the listing's column ladder: the
+     cards hold that fixed width and the window decides how many you see, with the
+     next one peeking at the edge.
+
+     Column flow with auto columns rather than a fixed count, so the row follows
+     however many cards the markup carries. */
+  .ex-shelf__row {
+    /* Its own grid, not the listing's. It used to carry .shop__grid as well and
+       override the parts that differed, which held only while the page's own
+       stylesheet came first: from example.css the listing's column counts win on
+       source order alone, and the row collapsed into four columns of stacked
+       cards. Nothing here needs the listing's rules, so it states them. */
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--ex-shelf-card);
+    column-gap: var(--ex-shelf-gap);
+
+    /* The card's own internal rhythm, which on the listing comes from the grid
+       the cards sit in. */
+    --shop-card-gap: var(--space-8);
+
+    overflow-x: auto;
+
+    /* Room for a focus ring inside the clip. A scroll container clips on both
+       axes, so a card's ring was cut off the moment it was tabbed to: top and
+       bottom always, and against the ends on the inline axis. The padding gives
+       the ring somewhere to be drawn and the negative margin gives the space back,
+       so nothing moves and the cards still line up with the column.
+
+       --ex-focus-room is the ring's width plus its offset, the same measure the
+       thumbnail rail reserves for its own. */
+    padding: var(--ex-focus-room);
+    margin: calc(-1 * var(--ex-focus-room));
+
+    /* No bar: the peeking card is the affordance, and the row is dragged rather
+       than scrolled by hand. Tabbing a card still scrolls it into view, so nothing
+       depends on the bar being there. */
+    scrollbar-width: none;
+  }
+
+  /* The ring's converge animation starts 6 out and travels in, which is further
+     than a ring at rest reaches and further than the row reserves, so its first
+     frames were clipped by the scroller. The row keeps room for the ring, not for
+     a flourish arriving from outside it: here the ring simply appears where it
+     lands. Same place it ends up either way. */
+  .ex-shelf__row .shop-card:focus-visible {
+    animation: none;
+  }
+
+  .ex-shelf__row > * {
+    /* Pulled past an end, the cards move rather than the scroller: a scroll
+       container is clamped by the browser, so the resistance has to be drawn.
+       Shifting the children keeps the clip box (and the page edges it lines up
+       with) where it is. shelf.js sets the distance and eases it back to nothing
+       on release. */
+    translate: var(--ex-shelf-pull, 0);
+  }
+
+  /* Dragging shouldn't select the titles it passes over. */
+  .ex-shelf__row.is-dragging {
+    user-select: none;
+  }
+
+  /* Snap only where nothing else lands the row. The drag in shelf.js is
+     mouse-only and lands itself, and snap points would be a second thing pulling
+     at a scrollLeft it is already setting frame by frame. Under a finger there is
+     no drag, so the platform scrolls it and these land it on a card.
+
+     Proximity, not mandatory: a shelf of products is pushed along rather than
+     stepped through, so a swipe that means to travel shouldn't be caught by every
+     card it passes. */
+  @media (hover: none) and (pointer: coarse) {
+    .ex-shelf__row {
+      scroll-snap-type: x proximity;
+
+      /* Snapping aligns a card to the scrollport's edge, which is the row's
+         padding box, so without this it landed the first card flush against the
+         window and ate the page margin the row is padded by. */
+      scroll-padding-inline: calc(var(--grid-margin, 1rem) + var(--ex-focus-room));
+    }
+
+    .ex-shelf__row > * {
+      scroll-snap-align: start;
+    }
+  }
+
+  .ex-shelf__row::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Below md the row runs to both window edges: on a phone the scroll is the whole
+     point, and stopping it at the content column left a strip of dead surface the
+     cards never reach.
+
+     The pull past the column is the shelf's, not the row's, so the arrows measure
+     from the same edges the cards do; the row gives the margin back as its own
+     padding, so the first card still starts on the page's left edge and the last
+     one can scroll clear of the right. */
+  @media (max-width: 767.98px) {
+    /* Short of the full page margin by the ring's room: the row's own negative
+       margin (see the base rule) then puts its clip box exactly on the window's
+       edges. Pulled the whole margin, the row reached past them and the page
+       scrolled sideways by the ring's width. */
+    .ex-shelf {
+      margin-inline: calc(-1 * (var(--grid-margin, 1rem) - var(--ex-focus-room)));
+    }
+
+    /* The page margin alone: the clip box already starts at the window's edge, so
+       this is what puts the first card on the page's left edge, and it is wider
+       than the ring needs. */
+    .ex-shelf__row {
+      padding-inline: var(--grid-margin, 1rem);
+    }
+  }
+
+  /* ── Shelf arrows ───────────────────────────────────────────────────────
+     Centred on the shot, not on the card: the card carries a title and a price
+     under its tile, and an arrow halfway down all three sits below the
+     photograph it is stepping through. The tile is square, so half a card's
+     width is half its height.
+
+     40 rather than the component's 32, the same as the gallery's: they're
+     overlaid on photography rather than sitting in chrome. */
+  .ex-shelf__control {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top: calc(var(--ex-shelf-card) / 2);
+    width: 40px;
+    height: 40px;
+    translate: 0 -50%;
+  }
+
+  .ex-shelf__control svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .carousel__control--prev.ex-shelf__control {
+    inset-inline-start: var(--space-24);
+  }
+
+  .carousel__control--next.ex-shelf__control {
+    inset-inline-end: var(--space-24);
+  }
+
+  /* Pointer only, and only while the row is under it. Touch drags the row
+     already, and a shelf at rest shouldn't carry chrome over its first and last
+     product.
+
+     Nothing brings them back for the keyboard: they're tabindex="-1", because
+     tabbing a card scrolls it into view, which is the same journey. They stay
+     real buttons for the pointer and for assistive tech.
+
+     shelf.js hides whichever arrow has nothing left to reach, and both of them
+     when every card is already showing, so the hover reveals only what's live. */
+  @media (hover: hover) and (pointer: fine) {
+    .ex-shelf__control {
+      display: inline-flex;
+      opacity: 0;
+      transition: opacity var(--motion-default);
+
+      /* Invisible is not gone: at opacity 0 the arrow still answers the pointer,
+         and it sits dead centre of the first and last product shots, so a press
+         on either card was landing on a button nobody could see instead of
+         following the card's link. */
+      pointer-events: none;
+    }
+
+    .ex-shelf:hover .ex-shelf__control {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* Beats the display in the hover query: an attribute selector outranks the
+     class, and a media query adds no specificity of its own. */
+  .ex-shelf__control[hidden] {
+    display: none;
   }
 
   /* ── Composed card surface ────────────────────────────────────────────────

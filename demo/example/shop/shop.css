@@ -1005,6 +1005,78 @@
     }
   }
 
+  /* The results heading is a sentence about a set rather than the name of a
+     place, so it takes title-large rather than the category hero's headline
+     ladder: at 48 the query is the loudest thing on a page whose point is what
+     was found. One size at every width. */
+  .shop-hero__title--results {
+    font-size: var(--font-title-large-size);
+    line-height: var(--font-title-large-lh);
+    font-weight: var(--font-title-large-weight);
+  }
+
+  /* ── Nothing found ────────────────────────────────────────────────────────
+     A search with no results, on the results page: there is no band at all, since
+     a rail that can only narrow nothing is a row of controls with no work to do.
+     What is left is the news, the field to try again with, and a shelf. */
+
+  /* The subtitle under the heading, in the intro's own tone: the heading says
+     what happened and this says what to do about it. */
+  .shop-hero__sub {
+    margin: var(--space-8) 0 0;
+    max-width: 36rem;
+    color: var(--ink-secondary);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+  }
+
+  /* Left with the rest of the hero, and no wider than the prose above it. Two
+     classes, because it is the landing's search field as well and that one is
+     centred under a centred hero; this hero is left aligned. */
+  .shop-search.shop-retry {
+    margin: var(--space-24) 0 0;
+    max-width: 30rem;
+  }
+
+  /* The band the shelf sits on when there is no results band: the same recessed
+     surface, since it is the same kind of thing. */
+  .shop-suggested-band {
+    padding-block: var(--space-48) 6rem;
+  }
+
+  /* One column: this band holds a shelf and no rail, so the rail's track (see the
+     1024 block) would otherwise hold it in 244px. The results page adds the same
+     class to its own inner when a search leaves nothing to filter by and the rail
+     is taken out. */
+  .shop-suggested-band .shop__inner,
+  .shop__inner--alone {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* A rail with every group pruned away. Two classes, because .ex-filter turns
+     itself back on at 1024 and this has to outrank that. Kept in the page rather
+     than removed: shop.js reads it as the sign that this is a listing. */
+  .shop-filter.ex-filter--empty {
+    display: none;
+  }
+
+  .shop-suggested-band[hidden] {
+    display: none;
+  }
+
+  /* The shelf that fills it. Its own heading, since there is no toolbar here to
+     say what it is. */
+  .shop-suggested {
+    display: grid;
+    gap: var(--space-16);
+    min-width: 0;
+  }
+
+  /* display beats the hidden attribute, so the other half has to be said. */
+  .shop-suggested[hidden] {
+    display: none;
+  }
+
   /* The head is the shared one (.ex-filter-sheet in example.css), so this sheet
      and the product page's store picker open the same way. Only the scroller's
      top inset is this page's: 8 under the head's own rule, against the 24 the
@@ -1012,5 +1084,555 @@
      carries its own space. */
   .shop__sheet .sheet__scroll {
     padding-top: var(--space-8);
+  }
+
+  /* ── Landing ──────────────────────────────────────────────────────────────
+     The shop's front door: hero and search, the categories under it, then one
+     shelf per category. Same column as the listing's hero, so the title, the
+     search field, the category names and the first card in every shelf all start
+     on one left edge. */
+
+  /* Hero → band, the same drop the blog listing makes: 80 on mobile, 128 at md,
+     matching the room above the hero that .ex already sets. */
+  .shop-home {
+    gap: 5rem;
+
+    /* Flat hero surface, dropping .ex's dot grid and its top wash, same as the
+       blog and the listing. */
+    background-image: none;
+  }
+
+  @media (min-width: 768px) {
+    .shop-home {
+      gap: 8rem;
+    }
+  }
+
+  /* Inside that block the two belong together, so they sit a section apart
+     rather than a page apart. */
+  .shop-home__intro {
+    display: grid;
+    gap: var(--space-48);
+  }
+
+  @media (min-width: 768px) {
+    .shop-home__intro {
+      gap: 4rem;
+    }
+  }
+
+  /* Under the intro like the hero's own action row, and narrower than the prose
+     above it: a search field as wide as a paragraph reads as a form rather than
+     as one thing to type in. */
+  .shop-search {
+    margin: 1.75rem auto 0;
+    max-width: 30rem;
+  }
+
+  /* Over the page, which is dimmed behind it: the form lifts as a whole so the
+     field stays above its own scrim, and everything else on the page goes under
+     both. The topbar scrolls with the page rather than being pinned, so there is
+     nothing else up here holding a layer. */
+  .shop-search.is-open {
+    position: relative;
+    z-index: 50;
+  }
+
+  /* Fades in, and goes on the frame it is dismissed: the same asymmetry the
+     Dialog and Sheet backdrops have, and for the same reason. Arriving, the dim
+     is a change the reader should see happen; leaving, it is in the way of what
+     they have just asked to get back to.
+
+     Driven by the class rather than the hidden attribute, because an element
+     coming out of display:none has nothing to transition from: @starting-style
+     is what gives it the frame at 0 to start from, and the transition lives on
+     the open state, so leaving it is instant. */
+  .shop-search__scrim {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    opacity: 0;
+  }
+
+  .shop-search.is-open .shop-search__scrim {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.2s ease-out;
+  }
+
+  @starting-style {
+    .shop-search.is-open .shop-search__scrim {
+      opacity: 0;
+    }
+  }
+
+  /* The card around the field. Two surfaces rather than one, the field's and the
+     panel's, which is what lets the panel simply sit under the card: a single
+     card with the field drawn over it has to be told how tall the field is, and
+     that number then has to stay true through every density and breakpoint the
+     field has.
+
+     The inset is here at every width, with only the paint switched on: the field
+     keeps one width open or shut, so opening the panel does not resize the thing
+     being typed in. */
+  .shop-search__box {
+    --shop-search-pad: var(--space-16);
+
+    position: relative;
+    margin-inline: calc(-1 * var(--shop-search-pad));
+    padding: var(--shop-search-pad);
+    border-radius: var(--radius-md);
+  }
+
+  /* Open, the card is the top half of one surface: rounded at the top, square at
+     the bottom, where the panel carries straight on. Two boxes both rounded all
+     round read as two pills with a sliver of page between them, however flush
+     they are. */
+  .shop-search.is-open .shop-search__box {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    background: var(--background-secondary);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Over the panel, which is pulled up under it and would otherwise cover the
+     focus ring's bottom edge: the ring is drawn as an outset shadow on the
+     field's own border, so it reaches past the box it belongs to.
+
+     The hero centres its text; the field's own label and placeholder read from
+     the start edge like any other field. */
+  .shop-search__field {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: start;
+  }
+
+  /* The container is inline-flex, so it hugs its content unless told otherwise.
+     A stated height, not the component's min-height: the Search button appears
+     inside the field as soon as there is something to send, and anything that
+     arrives in a min-height box can change it. The field is one line either way,
+     so it is 48 either way. */
+  .shop-search .input__container {
+    width: 100%;
+    height: 48px;
+  }
+
+  /* ── Suggestions ──────────────────────────────────────────────────────────
+     The Select popup's surface, since this is the same kind of thing: a list
+     that hangs under a control and takes a press. Positioned by CSS rather than
+     by app.js's floating helper, because it is not portalled anywhere.
+
+     Its own surface under the card's, as wide as the card and starting directly
+     under the field: it is pulled up over the card's bottom inset, so the rows
+     follow the field with only their own padding between, and the card's bottom
+     edge and everything its shadow draws there is covered rather than showing as
+     a line across the white. Pulled rather than the card's padding dropped,
+     which would shorten the box and take the page below it up 16 on every
+     open. */
+  .shop-search__panel {
+    position: absolute;
+    inset-inline: 0;
+    top: calc(100% - var(--shop-search-pad));
+    max-height: min(32rem, 70vh);
+
+    /* The card's own inset, so the list is held off the surface's edges the way
+       the field above it is. With the rows' own 12 inside that, a row's magnifier
+       lands on the same line as the field's. */
+    padding: var(--space-16);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    background: var(--background-secondary);
+
+    /* The hero centres its text and the panel is inside it; rows read from the
+       start edge like any other list. */
+    text-align: start;
+
+    /* The bottom half of that surface: square where it meets the card, rounded
+       where it ends. Its own background covers the card's shadow along the seam,
+       so the pair is drawn with one shadow around the outside. */
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-md);
+
+    /* Cut at the top edge. The panel is painted over the card, and --shadow-md's
+       widest layer blurs 12 in every direction, so without this the list casts a
+       band across the white under the field: a seam inside what is meant to read
+       as one surface. 16 of room on the other three sides, which is more than
+       that layer reaches. */
+    clip-path: inset(0 -1rem -1rem -1rem);
+  }
+
+  .shop-search__panel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shop-search__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The one piece of chrome in the panel, and it is small: the rows are what the
+     reader came to look at, and this only undoes something. No heading over
+     either set, since a word beside a magnifier already says what it is. */
+
+  /* Any rule setting display beats the hidden attribute, and this one sets flex,
+     so the bar has to say the other half itself: without it the label and its
+     Clear showed over a history that was not there. */
+  .shop-search__bar[hidden] {
+    display: none;
+  }
+
+  .shop-search__bar {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+
+    /* No room above it: the panel's own 16 is already there, and the bar adding
+       its own on top of that pushed the history away from the field it belongs
+       under. */
+    padding: 0 var(--space-12) var(--space-4);
+    font-size: var(--font-caption-small-size);
+    line-height: var(--font-caption-small-lh);
+    color: var(--ink-primary);
+  }
+
+  /* The .link skin, at the bar's size: what it is comes from the sentence beside
+     it, and the underline is what says this one can be pressed.
+
+     Ink, and it stays ink, shifting within its own colour the way the store
+     detail's Back does: this undoes something rather than choosing it, so it
+     never arrives at the brand. */
+  .shop-search__clear {
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop-search__clear:hover {
+      color: var(--ink-primary-hover);
+    }
+  }
+
+  /* Instant, unlike the hover it shares a transition with: .link eases colour
+     over 150ms, which is most of a click, so the pressed colour was still on its
+     way in when the button released. */
+  .shop-search__clear:active {
+    color: var(--ink-primary-active);
+    transition: none;
+  }
+
+  .shop-search__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    min-height: 40px;
+    padding: var(--space-4) var(--space-12);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+
+    /* Stated, not inherited: the run still to be typed is emphasized against
+       this, so the weight it is measured from belongs to the row. */
+    font-weight: var(--font-body-small-weight);
+    color: var(--ink-primary);
+    cursor: pointer;
+  }
+
+  /* Arrowing marks a row with the focus ring rather than a fill. Focus is really
+     still in the field (the rows are options named by aria-activedescendant), so
+     what is drawn has to say "this is the one the keyboard is on", and that is
+     what a ring says everywhere else on the site. Inset by its own width, since
+     the rows stack with no gap and a ring drawn outwards would sit on its
+     neighbours.
+
+     No hover surface to go with it: the pointer already has a cursor and the
+     thing it is over, and a fill that follows the mouse through a list of
+     products is the loudest thing in the panel. */
+  .shop-search__row.is-active {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: calc(-1 * var(--focus-ring-width));
+  }
+
+  /* The width of a product's shot, so the glyph is centred on the same column the
+     thumbnails fill and every row's text starts on one line, whichever kind of
+     row it is. */
+  .shop-search__icon {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    width: 48px;
+    color: var(--ink-secondary);
+  }
+
+  .shop-search__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* A product is recognised by its shot before its name is read, so the row
+     leads with one. On the plate both themes share, like every other tile
+     holding a product photographed on white. */
+  .shop-search__thumb {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+    object-fit: contain;
+  }
+
+  .shop-search__row--product {
+    min-height: 56px;
+  }
+
+  /* Plain text by default: a word suggestion is one line made of two runs, the
+     part typed and the part still to type, and stacking a flex column here broke
+     "Muuto" into "Muu" over "to". Only a product's two lines are a column. */
+  .shop-search__text {
+    min-width: 0;
+  }
+
+  .shop-search__row--product .shop-search__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The part still to type, which is the part worth seeing: what the reader has
+     already written is the part they know.
+
+     600 against the row's 400, written out rather than taken from a token: the
+     scale tops out at 500 for emphasis, which at this size is too close to the
+     run beside it to be read as the difference between typed and suggested. A
+     page one-off, so it stays here rather than joining the scale. */
+  .shop-search__text strong {
+    font-weight: 600;
+  }
+
+  /* The brand leads the row and the piece names itself under it, so the 14 and
+     the ink are on the brand and the 12 is on the name: the same order the shop
+     card's own head reads in. */
+  .shop-search__brand {
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
+    color: var(--ink-primary);
+  }
+
+  .shop-search__name {
+    overflow: hidden;
+    font-size: var(--font-caption-small-size);
+    line-height: var(--font-caption-small-lh);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Undoing something rather than choosing it, so it stays in the quieter ink
+     the store finder's own Remove does. */
+  .shop-search__row--clear .shop-search__text {
+    color: var(--ink-secondary);
+  }
+
+  /* Inside the field rather than beside it, so it takes the compact control size
+     the rest of the site's dense chrome uses (data-size="xs" in the markup: 32
+     tall, the 14 label, 12 of inline padding).
+
+     12 rather than the 8 it has above and below, because the field is a pill:
+     measured to the border the two are the same, but the container's end curves
+     away from the button's own curve, so a geometric 8 there reads tighter than
+     the 8 over flat edges. */
+
+  /* Two classes, because the Input component drops this slot to 4px the moment it
+     holds a button (.input__trailing:has(.button), the Input Group convention
+     where a button hugs the field's edge). Here the field is a pill and the
+     button is a pill inside it, so it takes the same 8 it has above and below
+     rather than hugging the edge. */
+  .input__trailing.shop-search__go {
+    gap: var(--space-4);
+    padding-block: var(--space-4);
+    padding-inline: var(--space-8);
+  }
+
+  /* The browser's own clear, which only exists in some of them and only while
+     the field has focus. Ours is in the markup beside Search, so both follow the
+     one rule. */
+  .shop-search .input__element::-webkit-search-cancel-button {
+    display: none;
+  }
+
+  /* Neutral, not the flat skin's brand ink: this is the glyph at the end of a
+     field, the same job the magnifier at the other end does, and it takes the
+     same tone. Its hover surface goes neutral with it, since a brand wash under
+     a grey glyph would be the loudest thing in the field. */
+  .shop-search__wipe {
+    color: var(--ink-secondary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop-search__wipe:not(:disabled):hover {
+      background: var(--fill-tertiary);
+      color: var(--ink-primary);
+    }
+  }
+
+  .shop-search__wipe:not(:disabled):active {
+    background: var(--fill-secondary);
+    color: var(--ink-primary);
+  }
+
+  /* Out of the way until there is something to send. In CSS off the field's own
+     emptiness rather than in the script: a deferred script runs after the first
+     paint, so the button it hides has already been on screen for a frame. This
+     also means it is right without any script at all, where a submit is the only
+     way the form can be sent. */
+  .input__element:placeholder-shown + .shop-search__go {
+    display: none;
+  }
+
+  /* ── Categories ───────────────────────────────────────────────────────────
+     Two across on a phone, three from md, all six in a row from lg. A name and a
+     chevron on a surface: the shot on a category card is a promise about what is
+     behind it, and there is only one category with products to keep it. */
+  .shop-cats {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+  }
+
+  .shop-cats__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 768px) {
+    .shop-cats__list {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-12);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .shop-cats__list {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  /* The Card component carries the surface and every state; this is the row
+     inside it. A rim, because these sit on a page that has the dot grid switched
+     off (see .shop-home), and a white card on the near-white surface without
+     either one is a card nobody can see. */
+  .shop-cat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    min-height: 64px;
+    padding: var(--space-16);
+    border: var(--border-width) solid var(--fill-tertiary);
+    text-decoration: none;
+  }
+
+  .shop-cat__name {
+    font-size: var(--font-body-small-emphasized-size);
+    line-height: var(--font-body-small-emphasized-lh);
+    font-weight: var(--font-body-small-emphasized-weight);
+  }
+
+  /* Quiet: the whole card is the target, and the glyph only says which way it
+     goes. Same tone the store rows give theirs. */
+  .shop-cat__chevron {
+    display: flex;
+    flex: none;
+    color: var(--ink-secondary);
+  }
+
+  .shop-cat__chevron svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* The band the shelves sit on: the listing's own surface and its rounded top
+     corners, so the products are on the same ground here as they are one level
+     down. Every measurement is that band's, not this page's: 24 top down to the
+     first thing in it (→ 48 from 1024), 96 of grey before the footer (→ 128 at
+     md), and the corner stepping 24 → 32. */
+  .shop-shelves {
+    display: grid;
+
+    /* minmax(0, 1fr), not the implicit auto track: an auto track takes its
+       minimum from its content, so the shelf inside it grew to the width of a
+       row of cards and carried the band past the window with it. The row then
+       had nothing to overflow, which is why it would not scroll, and the head's
+       See all went off the right edge with the track. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-48);
+    background: var(--background-primary);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-block: var(--space-24) 6rem;
+  }
+
+  @media (min-width: 768px) {
+    .shop-shelves {
+      gap: 5rem;
+      padding-bottom: 8rem;
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .shop-shelves {
+      padding-top: var(--space-48);
+    }
+  }
+
+  /* ── Shelves ──────────────────────────────────────────────────────────────
+     The row itself is .ex-shelf in example.css, shared with the product page.
+     What belongs to the landing is the heading over it and the column it sits
+     in. */
+  .shop-shelf {
+    max-width: calc(var(--container-max) + 2 * var(--grid-margin));
+    width: 100%;
+
+    /* Belt and braces with the track above: a grid item's automatic minimum is
+       its content, and the row inside is only allowed to scroll if its column is
+       allowed to be narrower than what it holds. */
+    min-width: 0;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin, 1rem);
+  }
+
+  /* The name and the way past it on one line: a shelf shows a few of something,
+     so the link to the rest of it belongs at the top where the promise is made
+     rather than at the end of a row you have to travel to find it. */
+  .shop-shelf__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-16);
+    margin-bottom: var(--space-16);
+  }
+
+  .shop-shelf__title {
+    margin: 0;
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+    color: var(--ink-primary);
+  }
+
+  .shop-shelf__all {
+    flex: none;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
   }
 }

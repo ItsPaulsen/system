@@ -92,6 +92,9 @@
                 <a class="breadcrumb__link" href="/demo/example/shop/">Shop</a>
               </li>
               <li class="breadcrumb__item">
+                <a class="breadcrumb__link" href="/demo/example/shop/chairs/">Chairs</a>
+              </li>
+              <li class="breadcrumb__item">
                 <span class="breadcrumb__current" aria-current="page">Cover Side Chair</span>
               </li>
             </ol>
@@ -376,7 +379,9 @@
               <div class="pdp-buy__intro">
                 <div class="pdp-buy__head">
                   <div class="pdp-buy__naming">
-                    <a class="pdp-buy__brand" href="/demo/example/shop/?brand=Muuto">Muuto</a>
+                    <a class="pdp-buy__brand" href="/demo/example/shop/chairs/?brand=Muuto"
+                      >Muuto</a
+                    >
                     <h1 class="pdp-buy__title">
                       Cover Side Chair<span class="pdp-buy__variant" data-pdp-variant>, oak</span>
                     </h1>
@@ -2048,9 +2053,9 @@
             <!-- The arrows sit over the row rather than beside it: the content column
                has no room for a pair of gutters, and the row already bleeds to the
                page edges on a phone. -->
-            <div class="pdp-related__shelf">
+            <div class="ex-shelf">
               <button
-                class="carousel__control carousel__control--prev pdp-related__control"
+                class="carousel__control carousel__control--prev ex-shelf__control"
                 type="button"
                 aria-label="Previous products"
                 tabindex="-1"
@@ -2068,7 +2073,7 @@
                   <path d="M15 6l-6 6l6 6" />
                 </svg>
               </button>
-              <div class="shop__grid pdp-related__grid">
+              <div class="ex-shelf__row">
                 <a class="shop-card" href="/demo/example/shop/product/?color=black">
                   <span class="badge shop-card__badge shop-card__badge--sale">Offer</span>
                   <span class="shop-card__media">
@@ -2271,7 +2276,7 @@
                 </a>
               </div>
               <button
-                class="carousel__control carousel__control--next pdp-related__control"
+                class="carousel__control carousel__control--next ex-shelf__control"
                 type="button"
                 aria-label="Next products"
                 tabindex="-1"
@@ -2335,6 +2340,7 @@
     <script src="/assets/app.js" defer></script>
     <script src="/demo/example/map.js" defer></script>
     <script src="/demo/example/store.js" defer></script>
+    <script src="/demo/example/shelf.js" defer></script>
     <script src="/demo/example/shop/product/product.js" defer></script>
   </body>
 </html>

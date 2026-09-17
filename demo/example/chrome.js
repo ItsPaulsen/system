@@ -368,11 +368,29 @@
   // Mark the current page's nav link (topbar + menu) by matching href to path.
   // Both sides drop a trailing "index.html", which GitHub Pages serves as well
   // as the bare directory, so the link still matches on either URL.
+  //
+  // A page one level in (the shop's category listings, a product) has no link of
+  // its own, so the section it belongs to takes the mark instead: "true" rather
+  // than "page", since Shop is where this page lives and not the page itself.
+  // The deepest href that contains the path wins, so a section with a submenu
+  // marks the nearest of the two.
   const tidy = (p) => p.replace(/index\.html$/, "");
   const path = tidy(location.pathname);
-  document.querySelectorAll(".ex-topbar__nav a, .ex-menu__nav a").forEach((a) => {
-    if (tidy(a.getAttribute("href")) === path) a.setAttribute("aria-current", "page");
-  });
+  const links = [...document.querySelectorAll(".ex-topbar__nav a, .ex-menu__nav a")];
+  const exact = links.filter((a) => tidy(a.getAttribute("href")) === path);
+  if (exact.length) {
+    exact.forEach((a) => a.setAttribute("aria-current", "page"));
+  } else {
+    const within = links.filter((a) => path.startsWith(tidy(a.getAttribute("href"))));
+    const deepest = within.reduce((best, a) => {
+      const href = tidy(a.getAttribute("href"));
+      return !best || href.length > tidy(best.getAttribute("href")).length ? a : best;
+    }, null);
+    const deep = deepest && tidy(deepest.getAttribute("href"));
+    within.forEach((a) => {
+      if (tidy(a.getAttribute("href")) === deep) a.setAttribute("aria-current", "true");
+    });
+  }
 
   // Theme toggle lives in the injected menu; keep every theme control in sync.
   const radios = document.querySelectorAll(".toggle-group__radio[data-theme-opt]");
@@ -418,7 +436,11 @@
 // but for their selectors: the pages mark their own rail, main column and sheet
 // slot with data-ex-filter-*, and this reads those rather than knowing either
 // page. A listing that wants the behaviour adds the three hooks and nothing else.
-(function () {
+//
+// Exposed as well as run, because the search results page builds its listing from
+// a fetch rather than from its own markup: there is no rail to place when this
+// file runs there, and one call once the band is in place is all that differs.
+window.exampleFilterPlacement = function placeFilter() {
   const filter = document.querySelector(".ex-filter");
   const rail = document.querySelector("[data-ex-filter-rail]");
   const main = document.querySelector("[data-ex-filter-main]");
@@ -486,7 +508,9 @@
     },
     true
   );
-})();
+};
+
+window.exampleFilterPlacement();
 
 // Filter sheet: when a filter changed while the sheet was open, closing it lands
 // on the top of the results.

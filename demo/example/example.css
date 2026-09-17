@@ -8,8 +8,10 @@
    unlayered sheet outranking every layer. Same as post.css. */
 @layer components {
   /* Header sizing, kept in one place so the pieces can't drift apart.
-   --ex-topbar-h is the sticky topbar, the open menu's header row and the
-   skip-link scroll offset: 64 on mobile, 72 from md. --ex-control-* is the nav
+   --ex-topbar-h is the topbar and the open menu's header row: 64 on mobile, 72
+   from md. The bar scrolls away with the page, so nothing offsets itself by it
+   any more; what still measures it is the store finder, whose map fills the
+   viewport under it. --ex-control-* is the nav
    pills and the Menu/Close buttons: compact 40/16 below lg, the Button
    component's own 48/20 from lg. --with-end-icon derives the tighter icon-side
    padding from the inline value on its own, so only these numbers are set. */
@@ -41,10 +43,10 @@
   /* The example <main> is the "Skip to content" target (tabindex=-1, focused
      programmatically), not a tabbable control, kill the focus ring so the skip
      link doesn't outline the whole page surface. Mirrors .wrap in base.css.
-     scroll-margin-top clears the sticky topbar so skipping lands the content
-     just below the bar instead of scrolling it underneath. */
+     scroll-margin-top is a little air over the landing, so skipping doesn't put
+     the first line hard against the top of the screen. */
   #ex-main {
-    scroll-margin-top: var(--ex-topbar-h);
+    scroll-margin-top: var(--space-16);
   }
 
   #ex-main:focus-visible {
@@ -198,10 +200,10 @@
   }
 
   /* The results column is a skip target, not a control: focused programmatically
-     by the link, so it takes no ring, and its scroll-margin clears the topbar the
-     way #ex-main's does. */
+     by the link, so it takes no ring, and it lands with the same air over it
+     that #ex-main does. */
   [data-ex-filter-main] {
-    scroll-margin-top: calc(var(--ex-topbar-h) + var(--space-16));
+    scroll-margin-top: var(--space-16);
   }
 
   [data-ex-filter-main]:focus-visible {
@@ -411,9 +413,9 @@
   }
 
   .ex-listing__toolbar {
-    /* Clears the sticky topbar when the filter sheet scrolls the results back
-       into view on close (see chrome.js). */
-    scroll-margin-top: var(--ex-topbar-h);
+    /* A little air over it when the filter sheet scrolls the results back into
+       view on close (see chrome.js). */
+    scroll-margin-top: var(--space-16);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -535,7 +537,7 @@
      soon as the page catches up. */
   @media (min-width: 1024px) {
     .ex-filter {
-      --ex-rail-top: calc(var(--ex-topbar-h) + var(--space-32));
+      --ex-rail-top: var(--space-32);
 
       display: block;
       position: sticky;
@@ -1087,15 +1089,15 @@
   }
 
   /* ── Top bar ──────────────────────────────────────────────────────────────
-     80px header: brand left, nav centered, Menu button right. Sticky and opaque
-     so it stays above the dotted surface while scrolling. */
+     80px header: brand left, nav centered, Menu button right. It scrolls away
+     with the page: it was pinned for a while, and the argument for it (a control
+     in reach on every screen) never arrived, since nothing in the bar is wanted
+     mid-page and 64 of a phone's viewport held back on every article is a real
+     price for it. */
 
   /* Base = mobile: compact flex header, nav hidden (hamburger). Builds up to the
      full grid header at lg. */
   .ex-topbar {
-    position: sticky;
-    top: 0;
-    z-index: 20;
     display: flex;
     justify-content: space-between;
     align-items: center;

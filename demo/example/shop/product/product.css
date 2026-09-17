@@ -652,7 +652,7 @@
     .pdp-gallery,
     .pdp-buy {
       position: sticky;
-      top: calc(var(--ex-topbar-h) + var(--space-32));
+      top: var(--space-32);
       align-self: start;
     }
   }

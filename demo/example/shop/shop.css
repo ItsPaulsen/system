@@ -1038,17 +1038,9 @@
     max-width: 30rem;
   }
 
-  /* The band the shelf sits on when there is no results band: the same recessed
-     surface, since it is the same kind of thing. */
-  .shop-suggested-band {
-    padding-block: var(--space-48) 6rem;
-  }
-
-  /* One column: this band holds a shelf and no rail, so the rail's track (see the
-     1024 block) would otherwise hold it in 244px. The results page adds the same
-     class to its own inner when a search leaves nothing to filter by and the rail
-     is taken out. */
-  .shop-suggested-band .shop__inner,
+  /* One column: the results band holds a shelf and no rail when a search leaves
+     nothing to filter by, and the rail's track (see the 1024 block) would
+     otherwise hold the results in 244px. */
   .shop__inner--alone {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1057,23 +1049,6 @@
      itself back on at 1024 and this has to outrank that. Kept in the page rather
      than removed: shop.js reads it as the sign that this is a listing. */
   .shop-filter.ex-filter--empty {
-    display: none;
-  }
-
-  .shop-suggested-band[hidden] {
-    display: none;
-  }
-
-  /* The shelf that fills it. Its own heading, since there is no toolbar here to
-     say what it is. */
-  .shop-suggested {
-    display: grid;
-    gap: var(--space-16);
-    min-width: 0;
-  }
-
-  /* display beats the hidden attribute, so the other half has to be said. */
-  .shop-suggested[hidden] {
     display: none;
   }
 
@@ -1655,6 +1630,13 @@
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     padding-block: var(--space-24) 6rem;
+  }
+
+  /* display beats the hidden attribute, so the other half has to be said: the
+     search results page ships this band hidden and shows it when nothing
+     matched. */
+  .shop-shelves[hidden] {
+    display: none;
   }
 
   @media (min-width: 768px) {

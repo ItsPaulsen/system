@@ -205,58 +205,60 @@
       <section class="shop" aria-label="Results" data-results-band></section>
 
       <!-- What the page offers when nothing matched: the six the shop sells most
-           of, in the shelf the landing uses. Outside the band, because there is
-           no band in that case. -->
-      <div class="shop shop-suggested-band" data-results-suggested hidden>
-        <div class="shop__inner">
-          <div class="shop-suggested">
-            <h2 class="shop-shelf__title">Best sellers</h2>
-
-            <div class="ex-shelf">
-              <button
-                class="carousel__control carousel__control--prev ex-shelf__control"
-                type="button"
-                tabindex="-1"
-                aria-label="Previous products"
-                hidden
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M15 6l-6 6l6 6" />
-                </svg>
-              </button>
-
-              <div class="ex-shelf__row" data-results-shelf></div>
-
-              <button
-                class="carousel__control carousel__control--next ex-shelf__control"
-                type="button"
-                tabindex="-1"
-                aria-label="Next products"
-                hidden
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M9 6l6 6l-6 6" />
-                </svg>
-              </button>
-            </div>
+           of, in the landing's own shelf band. The same markup as the shelves
+           there, so it is inset the same way and bleeds to the window edges on a
+           phone the same way, rather than being a second arrangement that has to
+           be kept in step. -->
+      <div class="shop-shelves" data-results-suggested hidden>
+        <section class="shop-shelf" aria-labelledby="best-heading">
+          <div class="shop-shelf__head">
+            <h2 class="shop-shelf__title" id="best-heading">Best sellers</h2>
           </div>
-        </div>
+
+          <div class="ex-shelf">
+            <button
+              class="carousel__control carousel__control--prev ex-shelf__control"
+              type="button"
+              tabindex="-1"
+              aria-label="Previous products"
+              hidden
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M15 6l-6 6l6 6" />
+              </svg>
+            </button>
+
+            <div class="ex-shelf__row" data-results-shelf></div>
+
+            <button
+              class="carousel__control carousel__control--next ex-shelf__control"
+              type="button"
+              tabindex="-1"
+              aria-label="Next products"
+              hidden
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 6l6 6l-6 6" />
+              </svg>
+            </button>
+          </div>
+        </section>
       </div>
     </main>
 

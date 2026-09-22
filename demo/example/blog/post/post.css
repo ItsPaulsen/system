@@ -161,10 +161,15 @@
      Rounded top, runs flush into the footer at the bottom (same color), so
      there's no seam. */
   .article-band {
-    /* Intro down to the band: the same measure the shop's title and settings'
-       keep above theirs, rather than a flat 96 that only matched at the widest
-       of the three. */
-    margin-top: var(--ex-band-gap);
+    /* Prose, not a grid of cards: the first paragraph needs room off the band's
+       edge or it reads as pinned to it, so this is the one band that opens wider
+       than the scale and does not step. */
+    --ex-band-top: var(--space-64);
+
+    /* The lead image down to the band. Its own measure, not --ex-band-gap: that
+       one is a title clearing a surface, and this is a full-width picture, which
+       needs the room whatever the viewport. */
+    margin-top: var(--space-96);
     background: var(--background-primary);
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */

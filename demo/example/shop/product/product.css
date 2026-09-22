@@ -952,11 +952,11 @@
     color: var(--ex-ok);
   }
 
-  /* Quiet here, red in the list. The buy column is two lines about one shop, and
-     a red mark on one of them reads as an alarm about the product; down a column
-     of shops it is the thing being compared, so there it carries. */
+  /* Red, the same as the store list's and the listing cards'. One mark for no
+     wherever it is drawn: a reader who meets it on a card should meet it again
+     here rather than learn a second vocabulary one click in. */
   .pdp-avail__row[data-state="none"] .pdp-avail__glyph {
-    color: var(--ink-secondary);
+    color: var(--ex-no);
   }
 
   .pdp-avail__text {
@@ -1515,11 +1515,10 @@
     color: var(--ex-ok);
   }
 
-  /* --red straight, no local value beside the other two: red is the one of the
-     three that isn't darkened in light (it sits on its anchor in both themes),
-     so there is nothing to undo. */
+  /* The marks' own crimson, beside their green: --red is the price's, and a
+     shop being out is not a claim about what it costs. */
   .pdp-store-row[data-state="none"] .pdp-store-row__icon {
-    color: var(--red);
+    color: var(--ex-no);
   }
 
   /* ── Colour swatches ──────────────────────────────────────────────────────

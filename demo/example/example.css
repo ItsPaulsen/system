@@ -149,13 +149,20 @@
   :root[data-theme="dark"] .ex {
     --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
 
-    /* The same three hues lifted off the dark surface rather than swapped for
-       the tokens: the tokens are tuned for text on dark and would put a different
-       green and a yellow back beside an orange. Mixed toward white in oklab, so
-       the set keeps its relationship to itself and only its lightness moves. */
-    --ex-ok: color-mix(in oklab, #377d1f, white 26%);
-    --ex-caution: color-mix(in oklab, #dc6638, white 16%);
-    --ex-no: color-mix(in oklab, #c6264a, white 22%);
+    /* The same three hues on the dark surface, stated rather than mixed toward
+       white. Mixing lifts lightness and drains chroma with it, and the green
+       needed the largest mix because it starts darkest, so it arrived a third
+       greyer than the other two and read olive next to a saturated orange.
+
+       In oklch the two move separately: the hue is the light value's, the chroma
+       is held at it (capped where sRGB runs out, which is what trims the
+       crimson), and only lightness is lifted. The lift keeps the light set's
+       order, ok and no level with caution riding above, since an even one left
+       no as the faintest of the three when it is the one that has to be seen
+       before the sentence is read. Every mark clears 4.7:1 on the band. */
+    --ex-ok: oklch(68% 0.145 139deg);
+    --ex-caution: oklch(72% 0.16 41deg);
+    --ex-no: oklch(70% 0.188 15deg);
   }
 
   /* ── Listing rail and toolbar ─────────────────────────────────────────────

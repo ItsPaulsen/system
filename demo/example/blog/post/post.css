@@ -97,19 +97,24 @@
     margin: 0;
     color: var(--ink-primary);
 
-    /* Base (mobile): headline-small 38. Steps to headline-medium 48 at md. */
+    /* One step, at 768, the same as the listing heroes: headline-small 38 on a
+       phone, headline-large 60 above it. */
     font-size: var(--font-headline-small-size);
     line-height: var(--font-headline-small-lh);
     font-weight: var(--font-headline-small-weight);
   }
 
   .article-standfirst {
-    margin: var(--space-16) 0 0;
+    /* Held at body-large whatever the title did, so on a phone the line under it
+       came within two steps of the heading. It takes the same pair the heading
+       does, and the gap steps with them: 8 under a small title, 16 under a
+       large one. */
+    margin: var(--space-8) 0 0;
     max-width: 40rem;
     color: var(--ink-secondary);
-    font-size: var(--font-body-large-size);
-    line-height: var(--font-body-large-lh);
-    font-weight: var(--font-body-large-weight);
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
   }
 
   /* Byline: avatar + name/date. In the side-by-side layout (≥1024) a 2px rule
@@ -379,12 +384,17 @@
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
-    /* Title steps up with the rest of the page's type/spacing (headline-small
-       38 → headline-medium 48). */
     .article-title {
-      font-size: var(--font-headline-medium-size);
-      line-height: var(--font-headline-medium-lh);
-      font-weight: var(--font-headline-medium-weight);
+      font-size: var(--font-headline-large-size);
+      line-height: var(--font-headline-large-lh);
+      font-weight: var(--font-headline-large-weight);
+    }
+
+    .article-standfirst {
+      margin-top: var(--space-16);
+      font-size: var(--font-body-large-size);
+      line-height: var(--font-body-large-lh);
+      font-weight: var(--font-body-large-weight);
     }
 
     .article-kicker {

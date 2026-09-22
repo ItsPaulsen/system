@@ -57,14 +57,23 @@
     outline: none;
   }
 
-  /* The gray band's vertical scale, set once for every band on the mini-site:
-     the shop, the blog and its article, the product page, settings and the
-     front page's work band. Each of them used to decide this privately, which
-     gave four different top paddings stepping at two different breakpoints.
+  /* The mini-site's vertical scale, set once and read by every band on it: the
+     shop, the blog and its article, the product page, settings and the front
+     page's work band. Each used to decide this privately, which gave four
+     different top paddings stepping at two different breakpoints.
 
-     --ex-band-gap  title down to the band   48 / 64 / 96
-     --ex-band-top  band down to its content 24 / 40 / 56
-     --ex-band-end  content down to the footer  96 / 128
+     --ex-step      16 / 32 / 48    a surface opening on its content, a heading
+                                    clearing the line above it, one shelf to the
+                                    next
+     --ex-band-gap  24 / 40 / 56    type clearing a band edge, either side of it:
+                                    a title above one, a heading inside one. Type
+                                    has no padding of its own the way a card
+                                    does, so it needs the room the card is
+                                    already carrying
+     --ex-band-end  96 / 128 / 160  the last thing on the page down to the footer
+
+     Three measures, not one per place: the first two were separate names holding
+     the same numbers, which is two chances to change only one of them.
 
      On .ex-article as well as .ex, and in a rule of its own: the article's
      main carries its own class instead of .ex, and a custom property that
@@ -73,8 +82,8 @@
      .ex's padding, flex column and dot grid along with the measures. */
   .ex,
   .ex-article {
-    --ex-band-gap: 3rem;
-    --ex-band-top: 1.5rem;
+    --ex-step: 1rem;
+    --ex-band-gap: 1.5rem;
     --ex-band-end: 6rem;
   }
 
@@ -148,8 +157,8 @@
   @media (min-width: 768px) {
     .ex,
     .ex-article {
-      --ex-band-gap: 4rem;
-      --ex-band-top: 2.5rem;
+      --ex-step: 2rem;
+      --ex-band-gap: 2.5rem;
       --ex-band-end: 8rem;
     }
 
@@ -162,8 +171,9 @@
   @media (min-width: 1024px) {
     .ex,
     .ex-article {
-      --ex-band-gap: 6rem;
-      --ex-band-top: 3.5rem;
+      --ex-step: 3rem;
+      --ex-band-gap: 3.5rem;
+      --ex-band-end: 10rem;
     }
   }
 
@@ -1494,8 +1504,14 @@ The shelf holds the row's two measurements, because the arrows sit outside
 
   .ex-menu {
     /* Base (small phones): fullscreen, no radius. Becomes a floating 400px rounded
-     panel from sm up. */
-    width: 100vw;
+     panel from sm up.
+
+     100%, not 100vw: the sheet is anchored right (inset: 0 0 0 auto) and 100vw
+     counts the scrollbar, which a fixed element's containing block does not. On a
+     machine showing classic scrollbars that made the panel wider than the room it
+     had and hung the excess off the left edge, swallowing the scroll area's
+     gutter. 100% is the width that is actually there. */
+    width: 100%;
     max-width: none;
     border-radius: 0;
 
@@ -1687,7 +1703,7 @@ The shelf holds the row's two measurements, because the arrows sit outside
     /* Top padding is the gray gap down to the first (featured) card; bottom is the
        gray gap between the last cards and the footer (96 on mobile, 128 at md). */
 
-    padding-block: var(--ex-band-top) var(--ex-band-end);
+    padding-block: var(--ex-step) var(--ex-band-end);
   }
 
   .ex-work__inner {

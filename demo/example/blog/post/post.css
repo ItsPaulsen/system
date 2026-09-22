@@ -63,7 +63,7 @@
   }
 
   .article-intro__row {
-    margin-top: var(--space-48);
+    margin-top: var(--ex-step);
     display: flex;
     flex-direction: column;
     gap: var(--space-24);
@@ -170,7 +170,7 @@
     /* Prose, not a grid of cards: the first paragraph needs room off the band's
        edge or it reads as pinned to it, so this is the one band that opens wider
        than the scale and does not step. */
-    --ex-band-top: var(--space-64);
+    --ex-step: var(--space-64);
 
     /* The lead image down to the band. Its own measure, not --ex-band-gap: that
        one is a title clearing a surface, and this is a full-width picture, which
@@ -180,7 +180,7 @@
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-block: var(--ex-band-top) var(--ex-band-end);
+    padding-block: var(--ex-step) var(--ex-band-end);
   }
 
   /* ── Prose (the CMS block flow) ──────────────────────────────────────────

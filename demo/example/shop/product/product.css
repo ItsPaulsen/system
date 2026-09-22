@@ -62,7 +62,11 @@
     gap: var(--space-48);
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-block: var(--ex-band-top) var(--ex-band-end);
+
+    /* --ex-band-gap, not --ex-step: the band opens on "Goes well with", and a
+       heading has no padding of its own the way a card does. Same reason the
+       shop's shelves take it. */
+    padding-block: var(--ex-band-gap) var(--ex-band-end);
   }
 
   @media (min-width: 768px) {
@@ -90,7 +94,7 @@
        clipped by its viewport, and the gallery ran under the buy column. */
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--pdp-wrap-gap, var(--space-20));
+    gap: var(--pdp-wrap-gap, var(--space-16));
   }
 
   .pdp .pdp-wrap {
@@ -1709,8 +1713,8 @@
   /* ── Specs and related ────────────────────────────────────────────────────
      Section headings for the two blocks under the split. */
 
-  /* 24 up to 1024 and 28 above it, the same step the shop's shelf headings take:
-     the two are the same element, a few products under a name. */
+  /* 24 below 768 and 28 from there up, the same step the shop's shelf headings
+     take: the two are the same element, a few products under a name. */
   .pdp-heading {
     margin: 0;
     color: var(--ink-primary);
@@ -1719,7 +1723,7 @@
     font-weight: var(--font-title-small-weight);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .pdp-heading {
       font-size: var(--font-title-medium-size);
       line-height: var(--font-title-medium-lh);

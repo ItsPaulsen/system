@@ -35,7 +35,7 @@
 
   .shop-hero__title {
     /* 48 down from the breadcrumb, mirrors the settings hero. */
-    margin: var(--space-48) 0 0;
+    margin: var(--ex-step) 0 0;
 
     /* Base (mobile, < md): headline-small 38px, up to headline-medium 48 at md. */
     font-size: var(--font-headline-small-size);
@@ -81,7 +81,7 @@
 
     /* 24 top down to the toolbar (→ 48 from 1024), 96 bottom gray gap before
        the footer (→ 128 at md). */
-    padding-block: var(--ex-band-top) var(--ex-band-end);
+    padding-block: var(--ex-step) var(--ex-band-end);
   }
 
   .shop__inner {
@@ -1793,11 +1793,16 @@
 
     /* The room above the first shelf is the room between the shelves: the band
        opens on one the same way it carries on to the next. The same measure, not
-       the same number, so the two cannot drift when the scale moves. */
-    gap: var(--ex-band-top);
+       the same number, so the two cannot drift when the scale moves.
+
+       --ex-band-gap, not --ex-step: a shelf begins with a heading, and a heading
+       has no padding of its own the way a card does. Measured to the box the two
+       are equal and only the card looks inset, which on a phone left the word
+       sitting on the edge of the gray. */
+    gap: var(--ex-band-gap);
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-block: var(--ex-band-top) var(--ex-band-end);
+    padding-block: var(--ex-band-gap) var(--ex-band-end);
   }
 
   /* display beats the hidden attribute, so the other half has to be said: the
@@ -1856,7 +1861,7 @@
     color: var(--ink-primary);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .shop-shelf__title {
       font-size: var(--font-title-medium-size);
       line-height: var(--font-title-medium-lh);

@@ -1,6 +1,6 @@
 /* Settings › Privacy and security, three cards: Personalization (toggles),
    Your active logins (session list), Delete account (destructive). Page shell
-   (gray surface, sticky footer, hero, breadcrumb) comes from settings.css;
+   (gray surface, sticky footer, hero, back link) comes from settings.css;
    cards, switch, badge, tooltip and buttons are the shared components. */
 
 /* Layered so component CSS stays overridable by specificity, not by an

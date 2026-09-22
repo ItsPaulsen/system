@@ -1,6 +1,6 @@
 /* Settings › About you, one card that flips between a read view (definition
    list + edit button) and an edit form (inputs + Save/Cancel). Page shell
-   (gray surface, sticky footer, hero, breadcrumb rhythm) comes from
+   (gray surface, sticky footer, hero, back link rhythm) comes from
    settings.css; this file owns the card and its two modes only. Surface,
    inputs and buttons are the shared components, dark mode is a token swap. */
 

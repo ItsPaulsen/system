@@ -1,5 +1,5 @@
 /* Settings › Communication, one card per channel (E-mail, SMS), each a list of
-   toggle rows. Page shell (gray surface, sticky footer, hero, breadcrumb)
+   toggle rows. Page shell (gray surface, sticky footer, hero, back link)
    comes from settings.css; cards reuse the shared .card and switch visuals. */
 
 /* Layered so component CSS stays overridable by specificity, not by an

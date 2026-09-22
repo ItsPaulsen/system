@@ -1,4 +1,4 @@
-/* Settings landing, breadcrumb + left-aligned hero, then a row of section
+/* Settings landing, left-aligned hero, then a row of section
    cards on the .ex dotted band. Layout only; the surface, hover/active and
    focus states come from the shared .card component, and the icon badge reuses
    the secondary button's primary-soft recipe so dark mode is a token swap. */
@@ -23,7 +23,7 @@
     background-color: transparent;
     background-image: none;
 
-    /* 24 under the topbar to the breadcrumb, mirrors the article intro. */
+    /* 24 under the topbar to the hero, mirrors the article intro. */
     padding-top: var(--space-24);
 
     /* Gray gap above the footer: 96 on mobile, 128 from md (front-page parity). */
@@ -42,7 +42,7 @@
 
   /* ── Hero ─────────────────────────────────────────────────────────────────
      Shares the page's content column (content = --container-max, margins outside)
-     so the breadcrumb, title and cards all align to the same left edge. */
+     so the back link, title and cards all align to the same left edge. */
   .settings-hero {
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;
@@ -51,7 +51,7 @@
   }
 
   .settings-hero__title {
-    /* 48 down from the breadcrumb, mirrors the article intro row. */
+    /* 48 down from the hero's first line, mirrors the article intro row. */
     margin: var(--space-48) 0 0;
 
     /* Base (mobile, < md): headline-small 38px. Steps up with the page width. */
@@ -69,17 +69,19 @@
     }
   }
 
-  /* ── Back link (mobile) ─────────────────────────────────────────────────────
-     Sub-pages are one level under Settings, so on mobile they trade the full
-     breadcrumb for a single back link (chevron + parent), mirroring the article.
-     The breadcrumb returns from md up. Same recipe/alignment as .article-back. */
+  /* ── Back link ──────────────────────────────────────────────────────────────
+     Settings is three siblings in a set, not a descent, so there is no trail to
+     draw: a trail reading Home > Settings > Privacy describes a depth that isn't
+     there, and every page here has exactly one step out of it, which this is.
+     The same link at every width, since nothing about that changes with the
+     viewport. Same recipe/alignment as .article-back. */
   .settings-back {
     display: inline-flex;
     align-items: center;
     gap: var(--space-4);
 
     /* The hero already pads by --grid-margin, so only pull the chevron -4 to line
-       its glyph up with the content's left edge (breadcrumb/title). */
+       its glyph up with the content's left edge (title). */
     margin-inline-start: -4px;
     color: var(--ink-primary);
     text-decoration: none;
@@ -97,22 +99,6 @@
   @media (hover: hover) {
     .settings-back:hover {
       text-decoration: underline;
-    }
-  }
-
-  /* Where a back link is present (sub-pages), hide the breadcrumb on mobile. The
-     landing has no back link, so its breadcrumb is untouched. */
-  .settings-hero:has(.settings-back) .breadcrumb {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    .settings-back {
-      display: none;
-    }
-
-    .settings-hero:has(.settings-back) .breadcrumb {
-      display: block;
     }
   }
 

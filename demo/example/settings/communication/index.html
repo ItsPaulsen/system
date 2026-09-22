@@ -57,78 +57,101 @@
       <!-- Each card is a channel; each row is a toggle. The whole row is a
            <label>, so the row text names the switch and clicking anywhere on the
            row flips it. Switches are the base component (green on-state). -->
-      <section class="settings-column" aria-label="Communication preferences">
-        <div class="card settings-subcard">
-          <h2 class="settings-subcard__title">E-mail</h2>
-          <div class="comm-list">
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">Pause all</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check" type="checkbox" role="switch" class="switch__input" />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">Product updates</span>
-                <span class="comm-row__desc">News about releases and improvements</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-2" type="checkbox" role="switch" class="switch__input" />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">Reminder emails</span>
-                <span class="comm-row__desc">See notifications you may have missed</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-3" type="checkbox" role="switch" class="switch__input" checked />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">News emails</span>
-                <span class="comm-row__desc">Learn about new features</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-4" type="checkbox" role="switch" class="switch__input" checked />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
+      <!-- The gray band. A wrapper rather than a bleeding background on the
+           section itself: it runs the width of the viewport, so it can round its
+           own top corners, and the column inside keeps the page's measure. -->
+      <div class="settings-band">
+        <section class="settings-column" aria-label="Communication preferences">
+          <div class="card settings-subcard">
+            <h2 class="settings-subcard__title">E-mail</h2>
+            <div class="comm-list">
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">Pause all</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input name="check" type="checkbox" role="switch" class="switch__input" />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">Product updates</span>
+                  <span class="comm-row__desc">News about releases and improvements</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input name="check-2" type="checkbox" role="switch" class="switch__input" />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">Reminder emails</span>
+                  <span class="comm-row__desc">See notifications you may have missed</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input
+                    name="check-3"
+                    type="checkbox"
+                    role="switch"
+                    class="switch__input"
+                    checked
+                  />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">News emails</span>
+                  <span class="comm-row__desc">Learn about new features</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input
+                    name="check-4"
+                    type="checkbox"
+                    role="switch"
+                    class="switch__input"
+                    checked
+                  />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div class="card settings-subcard">
-          <h2 class="settings-subcard__title">SMS</h2>
-          <div class="comm-list">
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">Security alerts</span>
-                <span class="comm-row__desc">Get a text when a new device signs in</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-5" type="checkbox" role="switch" class="switch__input" checked />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
-            <label class="comm-row">
-              <span class="comm-row__text">
-                <span class="comm-row__label">Order updates</span>
-                <span class="comm-row__desc">Delivery and status messages</span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-6" type="checkbox" role="switch" class="switch__input" />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
+          <div class="card settings-subcard">
+            <h2 class="settings-subcard__title">SMS</h2>
+            <div class="comm-list">
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">Security alerts</span>
+                  <span class="comm-row__desc">Get a text when a new device signs in</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input
+                    name="check-5"
+                    type="checkbox"
+                    role="switch"
+                    class="switch__input"
+                    checked
+                  />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+              <label class="comm-row">
+                <span class="comm-row__text">
+                  <span class="comm-row__label">Order updates</span>
+                  <span class="comm-row__desc">Delivery and status messages</span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input name="check-6" type="checkbox" role="switch" class="switch__input" />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
 
     <div data-chrome="footer"></div>

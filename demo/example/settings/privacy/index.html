@@ -54,229 +54,234 @@
         <h1 class="settings-hero__title">Privacy and security</h1>
       </header>
 
-      <section class="settings-column" aria-label="Privacy and security">
-        <!-- Personalization, preference toggles (base switch, green on-state). -->
-        <div class="card settings-subcard">
-          <h2 class="settings-subcard__title">Personalization</h2>
-          <div class="priv-toggles">
-            <label class="priv-toggle">
-              <span class="priv-toggle__text">
-                <span class="priv-toggle__label">Personalized recommendations</span>
-                <span class="priv-toggle__desc">
-                  Use your activity to suggest content you might like. Turn this off to see the same
-                  content as everyone else.
+      <!-- The gray band. A wrapper rather than a bleeding background on the
+           section itself: it runs the width of the viewport, so it can round its
+           own top corners, and the column inside keeps the page's measure. -->
+      <div class="settings-band">
+        <section class="settings-column" aria-label="Privacy and security">
+          <!-- Personalization, preference toggles (base switch, green on-state). -->
+          <div class="card settings-subcard">
+            <h2 class="settings-subcard__title">Personalization</h2>
+            <div class="priv-toggles">
+              <label class="priv-toggle">
+                <span class="priv-toggle__text">
+                  <span class="priv-toggle__label">Personalized recommendations</span>
+                  <span class="priv-toggle__desc">
+                    Use your activity to suggest content you might like. Turn this off to see the
+                    same content as everyone else.
+                  </span>
                 </span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check" type="checkbox" role="switch" class="switch__input" checked />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
-            <label class="priv-toggle">
-              <span class="priv-toggle__text">
-                <span class="priv-toggle__label">Usage analytics</span>
-                <span class="priv-toggle__desc">
-                  Share anonymous usage data to help improve the product. This never includes your
-                  personal information.
+                <span class="switch__input-wrapper">
+                  <input name="check" type="checkbox" role="switch" class="switch__input" checked />
+                  <span class="switch__knob"></span>
                 </span>
-              </span>
-              <span class="switch__input-wrapper">
-                <input name="check-2" type="checkbox" role="switch" class="switch__input" />
-                <span class="switch__knob"></span>
-              </span>
-            </label>
+              </label>
+              <label class="priv-toggle">
+                <span class="priv-toggle__text">
+                  <span class="priv-toggle__label">Usage analytics</span>
+                  <span class="priv-toggle__desc">
+                    Share anonymous usage data to help improve the product. This never includes your
+                    personal information.
+                  </span>
+                </span>
+                <span class="switch__input-wrapper">
+                  <input name="check-2" type="checkbox" role="switch" class="switch__input" />
+                  <span class="switch__knob"></span>
+                </span>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <!-- Your active logins, one row per session, with a Log out action, the
-             current session flagged, and an IP tooltip on the location. -->
-        <div class="card settings-subcard">
-          <h2 class="settings-subcard__title">Your active logins</h2>
-          <p class="login-empty" hidden>No active logins.</p>
+          <!-- Your active logins, one row per session, with a Log out action, the
+               current session flagged, and an IP tooltip on the location. -->
+          <div class="card settings-subcard">
+            <h2 class="settings-subcard__title">Your active logins</h2>
+            <p class="login-empty" hidden>No active logins.</p>
 
-          <ul class="login-list">
-            <li class="login">
-              <div class="login__head">
-                <svg
-                  class="login__device"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14"
-                  />
-                  <path d="M11 4h2" />
-                  <path d="M12 17v.01" />
-                </svg>
-                <span class="login__name">iOS-app</span>
-                <span class="login__version">5.53.2</span>
-                <button
-                  class="button button--destructive login__logout"
-                  type="button"
-                  data-dialog-open="logout-dialog"
-                  data-logout-title="Log out of iOS-app?"
-                  data-logout-text="The app will ask you to sign in again before it can use this account."
-                >
-                  Log out
-                </button>
-              </div>
-              <span class="login__meta">iPhone 18,3</span>
-              <span class="login__meta login__loc">
-                Sandvika, Norway
-                <span class="tooltip" data-tooltip-side="top">
-                  <button class="login__help" type="button" aria-label="IP address">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                      <path d="M12 16v.01" />
-                      <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
-                    </svg>
+            <ul class="login-list">
+              <li class="login">
+                <div class="login__head">
+                  <svg
+                    class="login__device"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14"
+                    />
+                    <path d="M11 4h2" />
+                    <path d="M12 17v.01" />
+                  </svg>
+                  <span class="login__name">iOS-app</span>
+                  <span class="login__version">5.53.2</span>
+                  <button
+                    class="button button--destructive login__logout"
+                    type="button"
+                    data-dialog-open="logout-dialog"
+                    data-logout-title="Log out of iOS-app?"
+                    data-logout-text="The app will ask you to sign in again before it can use this account."
+                  >
+                    Log out
                   </button>
-                  <span class="tooltip__bubble" role="tooltip">88.67.23.245</span>
+                </div>
+                <span class="login__meta">iPhone 18,3</span>
+                <span class="login__meta login__loc">
+                  Sandvika, Norway
+                  <span class="tooltip" data-tooltip-side="top">
+                    <button class="login__help" type="button" aria-label="IP address">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                        <path d="M12 16v.01" />
+                        <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                      </svg>
+                    </button>
+                    <span class="tooltip__bubble" role="tooltip">88.67.23.245</span>
+                  </span>
                 </span>
-              </span>
-              <span class="login__meta">6 Jul 2026, 15:48</span>
-            </li>
+                <span class="login__meta">6 Jul 2026, 15:48</span>
+              </li>
 
-            <li class="login">
-              <div class="login__head">
-                <svg
-                  class="login__device"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 19l18 0" />
-                  <path
-                    d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -8"
-                  />
-                </svg>
-                <span class="login__name">Web</span>
-                <span class="badge badge--green">This device</span>
-                <button
-                  class="button button--destructive login__logout"
-                  type="button"
-                  data-dialog-open="logout-dialog"
-                  data-logout-title="Log out of this device?"
-                  data-logout-text="You'll be signed out here and sent back to the login page."
-                >
-                  Log out
-                </button>
-              </div>
-              <span class="login__meta">macOS 26.5.2</span>
-              <span class="login__meta login__loc">
-                Unknown location
-                <span class="tooltip" data-tooltip-side="top">
-                  <button class="login__help" type="button" aria-label="IP address">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                      <path d="M12 16v.01" />
-                      <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
-                    </svg>
+              <li class="login">
+                <div class="login__head">
+                  <svg
+                    class="login__device"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 19l18 0" />
+                    <path
+                      d="M5 7a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -8"
+                    />
+                  </svg>
+                  <span class="login__name">Web</span>
+                  <span class="badge badge--green">This device</span>
+                  <button
+                    class="button button--destructive login__logout"
+                    type="button"
+                    data-dialog-open="logout-dialog"
+                    data-logout-title="Log out of this device?"
+                    data-logout-text="You'll be signed out here and sent back to the login page."
+                  >
+                    Log out
                   </button>
-                  <span class="tooltip__bubble" role="tooltip">10.0.0.14</span>
+                </div>
+                <span class="login__meta">macOS 26.5.2</span>
+                <span class="login__meta login__loc">
+                  Unknown location
+                  <span class="tooltip" data-tooltip-side="top">
+                    <button class="login__help" type="button" aria-label="IP address">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                        <path d="M12 16v.01" />
+                        <path d="M12 13a2 2 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                      </svg>
+                    </button>
+                    <span class="tooltip__bubble" role="tooltip">10.0.0.14</span>
+                  </span>
                 </span>
-              </span>
-              <span class="login__meta">1 Aug 2026, 11:30</span>
-            </li>
-          </ul>
-        </div>
+                <span class="login__meta">1 Aug 2026, 11:30</span>
+              </li>
+            </ul>
+          </div>
 
-        <!-- Delete account, destructive action. -->
-        <div class="card settings-subcard settings-subcard--prose">
-          <h2 class="settings-subcard__title">Delete account</h2>
-          <p class="priv-delete__text">
-            Deleting your account is permanent. All your data, settings, and content will be removed
-            and can't be recovered.
-          </p>
-          <button
-            class="button button--destructive"
-            type="button"
-            data-dialog-open="delete-account-dialog"
-          >
-            Delete profile
-          </button>
-        </div>
+          <!-- Delete account, destructive action. -->
+          <div class="card settings-subcard settings-subcard--prose">
+            <h2 class="settings-subcard__title">Delete account</h2>
+            <p class="priv-delete__text">
+              Deleting your account is permanent. All your data, settings, and content will be
+              removed and can't be recovered.
+            </p>
+            <button
+              class="button button--destructive"
+              type="button"
+              data-dialog-open="delete-account-dialog"
+            >
+              Delete profile
+            </button>
+          </div>
 
-        <!-- Confirmation modal for the destructive action (shared .dialog; app.js
-             wires data-dialog-open/close, backdrop click and Esc). -->
-        <!-- Shared by both Log out buttons; privacy.js copies the pressed row's
-             own title and text in, so the copy lives in the markup beside the
-             session it describes rather than in the script. -->
-        <dialog class="dialog" id="logout-dialog">
-          <div class="dialog__inner" data-scroll-area>
-            <div class="scroll-area__viewport dialog__scroll">
-              <h2 class="dialog__title" data-logout-title-slot>Log out?</h2>
-              <p class="dialog__text" data-logout-text-slot></p>
-              <div class="dialog__actions">
-                <button class="button button--secondary" type="button" data-dialog-close>
-                  Cancel
-                </button>
-                <button
-                  class="button button--destructive"
-                  type="button"
-                  data-dialog-close
-                  data-logout-confirm
-                  data-toast="Logged out"
-                  data-toast-type="removed"
-                >
-                  Log out
-                </button>
+          <!-- Confirmation modal for the destructive action (shared .dialog; app.js
+               wires data-dialog-open/close, backdrop click and Esc). -->
+          <!-- Shared by both Log out buttons; privacy.js copies the pressed row's
+               own title and text in, so the copy lives in the markup beside the
+               session it describes rather than in the script. -->
+          <dialog class="dialog" id="logout-dialog">
+            <div class="dialog__inner" data-scroll-area>
+              <div class="scroll-area__viewport dialog__scroll">
+                <h2 class="dialog__title" data-logout-title-slot>Log out?</h2>
+                <p class="dialog__text" data-logout-text-slot></p>
+                <div class="dialog__actions">
+                  <button class="button button--secondary" type="button" data-dialog-close>
+                    Cancel
+                  </button>
+                  <button
+                    class="button button--destructive"
+                    type="button"
+                    data-dialog-close
+                    data-logout-confirm
+                    data-toast="Logged out"
+                    data-toast-type="removed"
+                  >
+                    Log out
+                  </button>
+                </div>
+              </div>
+              <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__thumb"></div>
               </div>
             </div>
-            <div class="scroll-area__bar" aria-hidden="true">
-              <div class="scroll-area__thumb"></div>
-            </div>
-          </div>
-        </dialog>
+          </dialog>
 
-        <dialog class="dialog" id="delete-account-dialog">
-          <div class="dialog__inner" data-scroll-area>
-            <div class="scroll-area__viewport dialog__scroll">
-              <h2 class="dialog__title">Delete your profile?</h2>
-              <p class="dialog__text">
-                This is permanent. All your data, settings, and content will be removed and can't be
-                recovered.
-              </p>
-              <div class="dialog__actions">
-                <button class="button button--secondary" type="button" data-dialog-close>
-                  Cancel
-                </button>
-                <button class="button button--destructive" type="button" data-dialog-close>
-                  Delete
-                </button>
+          <dialog class="dialog" id="delete-account-dialog">
+            <div class="dialog__inner" data-scroll-area>
+              <div class="scroll-area__viewport dialog__scroll">
+                <h2 class="dialog__title">Delete your profile?</h2>
+                <p class="dialog__text">
+                  This is permanent. All your data, settings, and content will be removed and can't
+                  be recovered.
+                </p>
+                <div class="dialog__actions">
+                  <button class="button button--secondary" type="button" data-dialog-close>
+                    Cancel
+                  </button>
+                  <button class="button button--destructive" type="button" data-dialog-close>
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <div class="scroll-area__bar" aria-hidden="true">
+                <div class="scroll-area__thumb"></div>
               </div>
             </div>
-            <div class="scroll-area__bar" aria-hidden="true">
-              <div class="scroll-area__thumb"></div>
-            </div>
-          </div>
-        </dialog>
-      </section>
+          </dialog>
+        </section>
+      </div>
     </main>
 
     <div data-chrome="footer"></div>

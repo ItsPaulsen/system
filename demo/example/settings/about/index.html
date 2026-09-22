@@ -60,143 +60,148 @@
            same fields as inputs + Save / Cancel. about.js flips [data-editing]
            and moves focus; nothing here is server-backed, so Save just returns
            to the view with whatever is typed. -->
-      <section class="settings-column" aria-label="Contact information">
-        <div class="card settings-subcard" data-about-card>
-          <div class="about-card__head">
-            <h2 class="settings-subcard__title about-card__title">Contact information</h2>
-            <div class="about-card__edit" data-size="sm">
-              <button
-                class="button button--secondary button--with-start-icon"
-                type="button"
-                data-about-edit
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
+      <!-- The gray band. A wrapper rather than a bleeding background on the
+           section itself: it runs the width of the viewport, so it can round its
+           own top corners, and the column inside keeps the page's measure. -->
+      <div class="settings-band">
+        <section class="settings-column" aria-label="Contact information">
+          <div class="card settings-subcard" data-about-card>
+            <div class="about-card__head">
+              <h2 class="settings-subcard__title about-card__title">Contact information</h2>
+              <div class="about-card__edit" data-size="sm">
+                <button
+                  class="button button--secondary button--with-start-icon"
+                  type="button"
+                  data-about-edit
                 >
-                  <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-                  <path d="M13.5 6.5l4 4" />
-                </svg>
-                Edit
-              </button>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+                    <path d="M13.5 6.5l4 4" />
+                  </svg>
+                  Edit
+                </button>
+              </div>
             </div>
+
+            <!-- View -->
+            <dl class="about-list" data-about-view>
+              <div class="about-field">
+                <dt class="about-field__label">First name</dt>
+                <dd class="about-field__value">John</dd>
+              </div>
+              <div class="about-field">
+                <dt class="about-field__label">Last name</dt>
+                <dd class="about-field__value">Doe</dd>
+              </div>
+              <div class="about-field">
+                <dt class="about-field__label">Email</dt>
+                <dd class="about-field__value">john.doe@gmail.com</dd>
+              </div>
+              <div class="about-field">
+                <dt class="about-field__label">Phone number</dt>
+                <dd class="about-field__value">99 88 77 66</dd>
+              </div>
+            </dl>
+
+            <!-- Edit -->
+            <form
+              class="about-form"
+              data-about-form
+              hidden
+              novalidate
+              tabindex="-1"
+              aria-label="Edit contact information"
+            >
+              <label class="input">
+                <span class="input__label">First name</span>
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="text"
+                    name="first-name"
+                    value="John"
+                    autocomplete="given-name"
+                  />
+                </span>
+              </label>
+              <label class="input">
+                <span class="input__label">Last name</span>
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="text"
+                    name="last-name"
+                    value="Doe"
+                    autocomplete="family-name"
+                  />
+                </span>
+              </label>
+              <label class="input">
+                <span class="input__label">Email</span>
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="email"
+                    name="email"
+                    value="john.doe@gmail.com"
+                    autocomplete="email"
+                    required
+                    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                    aria-describedby="about-email-error"
+                  />
+                </span>
+                <!-- Shown only once the browser reports the field invalid after the
+                     user has left it (:user-invalid, driven from about.css), never
+                     while first typing, and it clears live once the address is fixed. -->
+                <span class="input__error" id="about-email-error">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                    <path d="M12 8v4" />
+                    <path d="M12 16h.01" />
+                  </svg>
+                  Enter a valid email address.
+                </span>
+              </label>
+              <label class="input">
+                <span class="input__label">Phone number</span>
+                <span class="input__container">
+                  <input
+                    class="input__element"
+                    type="tel"
+                    name="phone"
+                    value="99 88 77 66"
+                    autocomplete="tel"
+                    inputmode="tel"
+                  />
+                </span>
+              </label>
+
+              <div class="about-form__actions">
+                <button class="button button--primary" type="submit">Save changes</button>
+                <button class="button button--secondary" type="button" data-about-cancel>
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
-
-          <!-- View -->
-          <dl class="about-list" data-about-view>
-            <div class="about-field">
-              <dt class="about-field__label">First name</dt>
-              <dd class="about-field__value">John</dd>
-            </div>
-            <div class="about-field">
-              <dt class="about-field__label">Last name</dt>
-              <dd class="about-field__value">Doe</dd>
-            </div>
-            <div class="about-field">
-              <dt class="about-field__label">Email</dt>
-              <dd class="about-field__value">john.doe@gmail.com</dd>
-            </div>
-            <div class="about-field">
-              <dt class="about-field__label">Phone number</dt>
-              <dd class="about-field__value">99 88 77 66</dd>
-            </div>
-          </dl>
-
-          <!-- Edit -->
-          <form
-            class="about-form"
-            data-about-form
-            hidden
-            novalidate
-            tabindex="-1"
-            aria-label="Edit contact information"
-          >
-            <label class="input">
-              <span class="input__label">First name</span>
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="text"
-                  name="first-name"
-                  value="John"
-                  autocomplete="given-name"
-                />
-              </span>
-            </label>
-            <label class="input">
-              <span class="input__label">Last name</span>
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="text"
-                  name="last-name"
-                  value="Doe"
-                  autocomplete="family-name"
-                />
-              </span>
-            </label>
-            <label class="input">
-              <span class="input__label">Email</span>
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="email"
-                  name="email"
-                  value="john.doe@gmail.com"
-                  autocomplete="email"
-                  required
-                  pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
-                  aria-describedby="about-email-error"
-                />
-              </span>
-              <!-- Shown only once the browser reports the field invalid after the
-                   user has left it (:user-invalid, driven from about.css), never
-                   while first typing, and it clears live once the address is fixed. -->
-              <span class="input__error" id="about-email-error">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                  <path d="M12 8v4" />
-                  <path d="M12 16h.01" />
-                </svg>
-                Enter a valid email address.
-              </span>
-            </label>
-            <label class="input">
-              <span class="input__label">Phone number</span>
-              <span class="input__container">
-                <input
-                  class="input__element"
-                  type="tel"
-                  name="phone"
-                  value="99 88 77 66"
-                  autocomplete="tel"
-                  inputmode="tel"
-                />
-              </span>
-            </label>
-
-            <div class="about-form__actions">
-              <button class="button button--primary" type="submit">Save changes</button>
-              <button class="button button--secondary" type="button" data-about-cancel>
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </section>
+        </section>
+      </div>
     </main>
 
     <div data-chrome="footer"></div>

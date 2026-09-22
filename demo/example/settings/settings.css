@@ -54,6 +54,11 @@
     width: 100%;
     margin-inline: auto;
     padding-inline: var(--grid-margin, 1rem);
+
+    /* Air under the title before the band starts. Closer than this and the seam
+       reads as a rule drawn under the heading rather than the top of the surface
+       below it. 48, then 64 from md. */
+    padding-bottom: var(--space-48);
   }
 
   /* The landing has no back link, so it holds the space one would take. The title
@@ -77,6 +82,10 @@
   }
 
   @media (min-width: 768px) {
+    .settings-hero {
+      padding-bottom: var(--space-64);
+    }
+
     .settings-hero__title {
       font-size: var(--font-headline-medium-size);
       line-height: var(--font-headline-medium-lh);
@@ -126,34 +135,34 @@
      Same content column as the hero. One column on mobile, two from md, three
      from lg (1024). */
 
-  /* The gray band, shared by the landing's card grid and the sub-pages' column.
-     It bleeds to the viewport on its own rather than through a wrapper: a spread
-     shadow paints the gray out past both edges, and the clip trims that back to
-     the band's own top and bottom while letting it through sideways. 100vmax so
-     it covers the widest viewport either way round.
+  /* The gray band the cards sit on, holding both the landing's grid and the
+     sub-pages' column. Full width with its top corners rounded, so it reads as a
+     surface the page rests into rather than a colour change across it; the
+     column inside keeps the page's measure.
 
      It grows, so a short page's gray reaches the footer instead of leaving the
      page's white under it. 32 above the first card (48 from md), then the run
      down to the footer: 96 on mobile, 128 from md, front-page parity. */
-  .settings-grid,
-  .settings-column {
+  .settings-band {
+    display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
-
-    /* Both of these are grids, and a grid that grows hands the extra height to
-       its rows: on a short page the cards would stretch to fill the band rather
-       than sit in it. The rows keep their own height and the slack stays gray. */
-    align-content: start;
     padding-block: var(--space-32) 6rem;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     background: var(--background-primary);
-    box-shadow: 0 0 0 100vmax var(--background-primary);
-    clip-path: inset(0 -100vmax);
   }
 
   @media (min-width: 768px) {
-    .settings-grid,
-    .settings-column {
+    .settings-band {
       padding-block: var(--space-48) 8rem;
     }
+  }
+
+  /* A grid that grows hands the extra height to its rows, so the cards would
+     stretch to fill a short page's band rather than sit in it. */
+  .settings-grid,
+  .settings-column {
+    align-content: start;
   }
 
   .settings-grid {

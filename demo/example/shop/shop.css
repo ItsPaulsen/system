@@ -1792,8 +1792,9 @@
     grid-template-columns: minmax(0, 1fr);
 
     /* The room above the first shelf is the room between the shelves: the band
-       opens on one the same way it carries on to the next. */
-    gap: var(--space-48);
+       opens on one the same way it carries on to the next. The same measure, not
+       the same number, so the two cannot drift when the scale moves. */
+    gap: var(--ex-band-top);
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     padding-block: var(--ex-band-top) var(--ex-band-end);
@@ -1808,7 +1809,6 @@
 
   @media (min-width: 768px) {
     .shop-shelves {
-      gap: 4rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
   }

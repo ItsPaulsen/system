@@ -161,7 +161,10 @@
      Rounded top, runs flush into the footer at the bottom (same color), so
      there's no seam. */
   .article-band {
-    margin-top: var(--space-96);
+    /* Intro down to the band: the same measure the shop's title and settings'
+       keep above theirs, rather than a flat 96 that only matched at the widest
+       of the three. */
+    margin-top: var(--ex-band-gap);
     background: var(--background-primary);
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */

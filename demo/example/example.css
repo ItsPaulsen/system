@@ -64,12 +64,12 @@
        gave four different top paddings stepping at two different breakpoints.
 
        --ex-band-gap  title down to the band   48 / 64 / 96
-       --ex-band-top  band down to its content 32 / 48 / 64
+       --ex-band-top  band down to its content 24 / 40 / 56
        --ex-band-end  content down to the footer  96 / 128
 
        A band that wants something else overrides it and says why. */
     --ex-band-gap: 3rem;
-    --ex-band-top: 2rem;
+    --ex-band-top: 1.5rem;
     --ex-band-end: 6rem;
 
     /* Dot-grid background so white (secondary) cards separate from the near-white
@@ -141,7 +141,7 @@
   @media (min-width: 768px) {
     .ex {
       --ex-band-gap: 4rem;
-      --ex-band-top: 3rem;
+      --ex-band-top: 2.5rem;
       --ex-band-end: 8rem;
 
       gap: 6rem; /* 96 (hero → slider) */
@@ -152,7 +152,7 @@
   @media (min-width: 1024px) {
     .ex {
       --ex-band-gap: 6rem;
-      --ex-band-top: 4rem;
+      --ex-band-top: 3.5rem;
     }
   }
 

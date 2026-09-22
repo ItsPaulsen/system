@@ -694,7 +694,10 @@
   }
 
   .ex-hero__intro {
-    margin: 1rem auto 0;
+    /* Title down to the line under it, stepping with the type it separates: 8 on
+       a phone, 12 from md, 16 from 1024. Flat 16 held the two apart hardest
+       exactly where both are smallest. */
+    margin: var(--space-8) auto 0;
     max-width: 36rem;
     color: var(--ink-secondary);
 
@@ -715,6 +718,7 @@
     }
 
     .ex-hero__intro {
+      margin-top: var(--space-12);
       font-size: var(--font-body-medium-size);
       line-height: var(--font-body-medium-lh);
       font-weight: var(--font-body-medium-weight);
@@ -725,6 +729,7 @@
      large). */
   @media (min-width: 1024px) {
     .ex-hero__intro {
+      margin-top: var(--space-16);
       font-size: var(--font-body-large-size);
       line-height: var(--font-body-large-lh);
       font-weight: var(--font-body-large-weight);

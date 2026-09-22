@@ -162,11 +162,11 @@
      there's no seam. */
   .article-band {
     margin-top: var(--space-96);
-    padding-block: var(--space-64) var(--space-96);
     background: var(--background-primary);
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   /* ── Prose (the CMS block flow) ──────────────────────────────────────────

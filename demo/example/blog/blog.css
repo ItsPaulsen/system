@@ -32,7 +32,7 @@
 
     /* Matches the front-page band: 24 top down to the items (→ 48 from 1024),
        96 bottom gray gap before the footer (→ 128 at md). */
-    padding-block: var(--space-24) 6rem;
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   .blog__inner {
@@ -191,7 +191,6 @@
      rounded top steps up from 24 to 32. */
   @media (min-width: 768px) {
     .blog {
-      padding-bottom: 8rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
   }
@@ -200,10 +199,6 @@
      sheet trigger replaces it), the top gap opens to 64, and the
      pagination moves from centre to the right. */
   @media (min-width: 1024px) {
-    .blog {
-      padding-top: var(--space-48);
-    }
-
     .blog__inner {
       /* 244 = 220 of usable option width, plus the rail's 6 + 24 of padding,
          less the 6 it borrows back with its negative start margin. */

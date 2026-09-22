@@ -58,6 +58,20 @@
   }
 
   .ex {
+    /* The gray band's vertical scale, set once for every band on the mini-site:
+       the shop, the blog and its article, the product page, settings and the
+       front page's work band. Each of them used to decide this privately, which
+       gave four different top paddings stepping at two different breakpoints.
+
+       --ex-band-gap  title down to the band   48 / 64 / 96
+       --ex-band-top  band down to its content 32 / 48 / 64
+       --ex-band-end  content down to the footer  96 / 128
+
+       A band that wants something else overrides it and says why. */
+    --ex-band-gap: 3rem;
+    --ex-band-top: 2rem;
+    --ex-band-end: 6rem;
+
     /* Dot-grid background so white (secondary) cards separate from the near-white
        surface on light theme. Dots derive from --ink-base, so they auto-invert in
        dark theme (light dots on dark). */
@@ -126,8 +140,19 @@
 
   @media (min-width: 768px) {
     .ex {
+      --ex-band-gap: 4rem;
+      --ex-band-top: 3rem;
+      --ex-band-end: 8rem;
+
       gap: 6rem; /* 96 (hero → slider) */
       padding-block: 8rem 0; /* 128 top, 0 bottom (footer follows the gray) */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ex {
+      --ex-band-gap: 6rem;
+      --ex-band-top: 4rem;
     }
   }
 
@@ -1647,7 +1672,8 @@ The shelf holds the row's two measurements, because the arrows sit outside
 
     /* Top padding is the gray gap down to the first (featured) card; bottom is the
        gray gap between the last cards and the footer (96 on mobile, 128 at md). */
-    padding-block: 2rem 6rem;
+
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   .ex-work__inner {
@@ -1754,7 +1780,7 @@ The shelf holds the row's two measurements, because the arrows sit outside
   /* md ≥768, 2-up and featured take their side-by-side form. */
   @media (min-width: 768px) {
     .ex-work {
-      padding-bottom: 8rem; /* 128 gray gap above the footer */
+      /* 128 gray gap above the footer */
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
@@ -1783,7 +1809,7 @@ The shelf holds the row's two measurements, because the arrows sit outside
      title steps up from title-small to title-large. */
   @media (min-width: 1024px) {
     .ex-work {
-      padding-top: 4rem; /* 64 gray gap down to the featured card */
+      /* 64 gray gap down to the featured card */
     }
 
     .ex-work__row--3 {

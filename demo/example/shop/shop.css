@@ -17,7 +17,7 @@
        title spans the whole thing and a deeper gap only pushes the products
        further off the fold, and the smaller the screen the more that costs. From
        1024 the rail moves in beside them and the page can afford the air. */
-    gap: 3rem;
+    gap: var(--ex-band-gap);
     padding-top: var(--space-24); /* topbar → breadcrumb, mirrors settings */
     background-image: none;
   }
@@ -81,7 +81,7 @@
 
     /* 24 top down to the toolbar (→ 48 from 1024), 96 bottom gray gap before
        the footer (→ 128 at md). */
-    padding-block: var(--space-24) 6rem;
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   .shop__inner {
@@ -1029,12 +1029,7 @@
   /* md ≥768, three products across, a deeper gray gap above the footer
      (front-page band parity), and the rounded top steps up from 24 to 32. */
   @media (min-width: 768px) {
-    .shop-page {
-      gap: 4rem;
-    }
-
     .shop {
-      padding-bottom: 8rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
@@ -1053,14 +1048,6 @@
      the row, so a fourth column here would be narrower than the three-up it
      replaced. */
   @media (min-width: 1024px) {
-    .shop-page {
-      gap: 6rem;
-    }
-
-    .shop {
-      padding-top: var(--space-48);
-    }
-
     .shop__inner {
       /* 244 = 220 of usable option width, plus the rail's 6 + 24 of padding,
          less the 6 it borrows back with its negative start margin. */
@@ -1809,7 +1796,7 @@
     gap: var(--space-48);
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding-block: var(--space-48) 6rem;
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   /* display beats the hidden attribute, so the other half has to be said: the
@@ -1822,7 +1809,6 @@
   @media (min-width: 768px) {
     .shop-shelves {
       gap: 4rem;
-      padding-block: 4rem 8rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
   }

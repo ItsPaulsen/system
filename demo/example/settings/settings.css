@@ -59,7 +59,7 @@
        reads as a rule drawn under the heading rather than the top of the surface
        below it. One step per breakpoint, the same as the shop's title to its own
        band: 48 on a phone, 64 from md, 96 from 1024. */
-    padding-bottom: var(--space-48);
+    padding-bottom: var(--ex-band-gap);
   }
 
   /* The landing has no back link, so it holds the space one would take. The title
@@ -83,10 +83,6 @@
   }
 
   @media (min-width: 768px) {
-    .settings-hero {
-      padding-bottom: var(--space-64);
-    }
-
     .settings-hero__title {
       font-size: var(--font-headline-medium-size);
       line-height: var(--font-headline-medium-lh);
@@ -148,15 +144,9 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    padding-block: var(--space-32) 6rem;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     background: var(--background-primary);
-  }
-
-  @media (min-width: 768px) {
-    .settings-band {
-      padding-block: var(--space-48) 8rem;
-    }
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   /* A grid that grows hands the extra height to its rows, so the cards would
@@ -182,10 +172,6 @@
   }
 
   @media (min-width: 1024px) {
-    .settings-hero {
-      padding-bottom: 6rem;
-    }
-
     .settings-grid {
       grid-template-columns: repeat(3, 1fr);
     }

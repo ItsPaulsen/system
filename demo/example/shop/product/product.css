@@ -60,15 +60,14 @@
        between sections, 48 up to 768 and 64 above it, so a shelf on this page and
        a shelf on the shop open the same way. */
     gap: var(--space-48);
-    padding-block: var(--space-48) 6rem;
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-block: var(--ex-band-top) var(--ex-band-end);
   }
 
   @media (min-width: 768px) {
     .pdp-band {
       gap: 4rem;
-      padding-block: 4rem 8rem;
     }
   }
 

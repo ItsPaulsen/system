@@ -15,29 +15,21 @@
     min-height: 100dvh;
   }
 
-  /* Flat gray page: drop the .ex dot-grid + top gradient + near-white fill so the
-     gray body (--background-primary) shows through and the white cards separate
-     on their own. Grow to fill and add a gray gap down to the footer. */
+  /* White down to the band, the way the front page runs: the hero sits on the
+     same surface every other hero here does, and the cards get the gray they
+     need to separate from. Keeps .ex's --background-secondary and drops only the
+     dot grid, the way the shop page does.
+
+     No gap and no bottom padding: the band owns the space above its first card
+     and the run down to the footer, so the gray starts directly under the title
+     rather than after a strip of white that would read as a third zone. */
   .settings-page {
     flex: 1 1 auto;
-    background-color: transparent;
     background-image: none;
+    gap: 0;
 
     /* 24 under the topbar to the hero, mirrors the article intro. */
     padding-top: var(--space-24);
-
-    /* Gray gap above the footer: 96 on mobile, 128 from md (front-page parity). */
-    padding-bottom: 6rem;
-
-    /* Title down to the cards: 32 on mobile, 48 from md. */
-    gap: var(--space-32);
-  }
-
-  @media (min-width: 768px) {
-    .settings-page {
-      padding-bottom: 8rem;
-      gap: var(--space-48);
-    }
   }
 
   /* ── Hero ─────────────────────────────────────────────────────────────────
@@ -133,6 +125,37 @@
   /* ── Section grid ───────────────────────────────────────────────────────────
      Same content column as the hero. One column on mobile, two from md, three
      from lg (1024). */
+
+  /* The gray band, shared by the landing's card grid and the sub-pages' column.
+     It bleeds to the viewport on its own rather than through a wrapper: a spread
+     shadow paints the gray out past both edges, and the clip trims that back to
+     the band's own top and bottom while letting it through sideways. 100vmax so
+     it covers the widest viewport either way round.
+
+     It grows, so a short page's gray reaches the footer instead of leaving the
+     page's white under it. 32 above the first card (48 from md), then the run
+     down to the footer: 96 on mobile, 128 from md, front-page parity. */
+  .settings-grid,
+  .settings-column {
+    flex: 1 1 auto;
+
+    /* Both of these are grids, and a grid that grows hands the extra height to
+       its rows: on a short page the cards would stretch to fill the band rather
+       than sit in it. The rows keep their own height and the slack stays gray. */
+    align-content: start;
+    padding-block: var(--space-32) 6rem;
+    background: var(--background-primary);
+    box-shadow: 0 0 0 100vmax var(--background-primary);
+    clip-path: inset(0 -100vmax);
+  }
+
+  @media (min-width: 768px) {
+    .settings-grid,
+    .settings-column {
+      padding-block: var(--space-48) 8rem;
+    }
+  }
+
   .settings-grid {
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;

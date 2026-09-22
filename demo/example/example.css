@@ -698,10 +698,13 @@
     max-width: 36rem;
     color: var(--ink-secondary);
 
-    /* Base (mobile): body-medium 18px. Bumps to body-large 20px at md. */
-    font-size: var(--font-body-medium-size);
-    line-height: var(--font-body-medium-lh);
-    font-weight: var(--font-body-medium-weight);
+    /* One step per breakpoint, the same ladder the title climbs beside it:
+       body-small 16 on a phone, medium 18 from md, large 20 from 1024. It used
+       to start at medium and stop at large, so on the narrowest screen the title
+       had stepped all the way down and the line under it had not moved. */
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    font-weight: var(--font-body-small-weight);
   }
 
   @media (min-width: 768px) {
@@ -712,14 +715,21 @@
     }
 
     .ex-hero__intro {
+      font-size: var(--font-body-medium-size);
+      line-height: var(--font-body-medium-lh);
+      font-weight: var(--font-body-medium-weight);
+    }
+  }
+
+  /* lg ≥1024: title and intro take their third step together (small → medium →
+     large). */
+  @media (min-width: 1024px) {
+    .ex-hero__intro {
       font-size: var(--font-body-large-size);
       line-height: var(--font-body-large-lh);
       font-weight: var(--font-body-large-weight);
     }
-  }
 
-  /* lg ≥1024: title steps up to headline-large (small → medium → large). */
-  @media (min-width: 1024px) {
     .ex-hero__title {
       font-size: var(--font-headline-large-size);
       line-height: var(--font-headline-large-lh);

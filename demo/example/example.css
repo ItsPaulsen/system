@@ -691,10 +691,12 @@
   .ex-hero__title {
     margin: 0;
 
-    /* Base (mobile, < md): headline-small 38px. Bumps to headline-medium 48px at md. */
-    font-size: var(--font-headline-small-size);
-    line-height: var(--font-headline-small-lh);
-    font-weight: var(--font-headline-small-weight);
+    /* headline-medium 48 below md, headline-large 60 above it. It holds one step
+       higher than the article's title, which drops to 38: a landing page is a
+       name and a line, and the name is most of what the screen is for. */
+    font-size: var(--font-headline-medium-size);
+    line-height: var(--font-headline-medium-lh);
+    font-weight: var(--font-headline-medium-weight);
     color: var(--ink-primary);
   }
 

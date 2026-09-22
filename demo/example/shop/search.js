@@ -105,11 +105,17 @@
     }
   };
 
-  // By link, so the same product reached from two shelves is one entry.
+  // By what the product is, not by where it goes: the same one reached from two
+  // shelves is one entry, but two different chairs are two, and on this demo most
+  // cards open the same page. Keyed on the link, clicking a second chair replaced
+  // the first instead of joining it.
+  const idOf = (p) => `${p.brand} ${p.name}`.trim().toLowerCase() || p.href;
+
   const rememberProduct = ({ href, brand, name, thumb }) => {
     if (!href) return;
-    const kept = readSeen().filter((p) => p.href !== href);
-    writeSeen([{ href, brand, name, thumb }, ...kept].slice(0, SEEN));
+    const entry = { href, brand, name, thumb };
+    const kept = readSeen().filter((p) => idOf(p) !== idOf(entry));
+    writeSeen([entry, ...kept].slice(0, SEEN));
   };
 
   // ── The pool ──────────────────────────────────────────────────────────────

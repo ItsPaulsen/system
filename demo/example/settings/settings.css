@@ -44,10 +44,23 @@
      Shares the page's content column (content = --container-max, margins outside)
      so the back link, title and cards all align to the same left edge. */
   .settings-hero {
+    /* The back link's own line box: 16 * 1.5. The 20 icon is shorter and rides
+       inside it, so the row is the text's height, not the glyph's. */
+    --settings-back-h: calc(var(--font-body-small-size) * var(--font-body-small-lh));
+
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;
     margin-inline: auto;
     padding-inline: var(--grid-margin, 1rem);
+  }
+
+  /* The landing has no back link, so it holds the space one would take. The title
+     and everything under it then start at the same height on every page in the
+     section, and moving between them doesn't shift the page under the reader. */
+  .settings-hero:not(:has(.settings-back))::before {
+    content: "";
+    display: block;
+    height: var(--settings-back-h);
   }
 
   .settings-hero__title {

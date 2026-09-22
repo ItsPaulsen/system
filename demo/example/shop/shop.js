@@ -169,11 +169,6 @@
     if (skip !== "color" && f.colors.size) {
       if (!tokens(card.dataset.color).some((c) => f.colors.has(c))) return false;
     }
-    // A product is on the shelf of every store in its list, so the facet is a
-    // membership test, not an equality one.
-    if (skip !== "store" && f.store && !tokens(card.dataset.stores).includes(f.store)) {
-      return false;
-    }
     const value = num(card, "price");
     if (skip !== "price" && (value < f.price.min || value > f.price.max)) return false;
     return true;
@@ -225,6 +220,27 @@
     const live = new Set(matches.slice(0, visible));
     cards.forEach((card) => {
       card.hidden = !live.has(card);
+    });
+
+    // Choosing a shop asks a question of every card rather than taking most of
+    // them away: the ones it stocks say so, the ones it doesn't say that too, and
+    // both stay on the page because either way the thing is still for sale. The
+    // facet is a lens, not a gate. Rebuilt from data-stores on every pass, so
+    // clearing it puts the counts back without stashing them.
+    const store = f.store ? storeClear() : null;
+    cards.forEach((card) => {
+      const line = card.querySelector("[data-shop-card-stores]");
+      if (!line) return;
+      const at = tokens(card.dataset.stores);
+      const n = at.length;
+      if (!store) {
+        line.dataset.state = n ? "in" : "none";
+        line.textContent = `Available in ${n} ${n === 1 ? "store" : "stores"}`;
+        return;
+      }
+      const here = at.includes(f.store);
+      line.dataset.state = here ? "in" : "none";
+      line.textContent = here ? `Available at ${store.label}` : `None available at ${store.label}`;
     });
 
     counts.forEach((c) => (c.textContent = String(matches.length)));
@@ -455,6 +471,11 @@
 // into, so picking a second replaces the first rather than widening the set, and
 // the selection lives in one place, data-store on the group, which is where
 // apply() reads it from.
+//
+// It asks that question of every card rather than taking most of them away: the
+// grid stays whole and each card answers for the shop, because what one shelf is
+// out of is still for sale online. The only facet that reads this way, and the
+// reason it can is that it is the only one with a second answer worth printing.
 //
 // Leaflet measures its container once, at init, and the group is a collapsed
 // <details> animating its own height: init on first open, not on load.

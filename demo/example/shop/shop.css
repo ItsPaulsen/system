@@ -886,33 +886,42 @@
     gap: var(--space-8);
   }
 
-  /* Nudged down to sit on the middle of the first line rather than centred on
-     the row, so a store count that wraps keeps its dot beside the sentence's
-     start: (20 line - 8 dot) / 2. */
+  /* One 16 box whatever the mark is, so a row of yeses and noes keeps its
+     sentences on one left edge. Nudged down onto the middle of the first line
+     rather than centred on the row, so a store line that wraps keeps its mark
+     beside the sentence's start: (20 line - 16 box) / 2. */
   .shop-card__avail-row::before {
     content: "";
     flex-shrink: 0;
-    width: 8px;
-    height: 8px;
-    margin-block-start: 6px;
-    border-radius: var(--radius-full);
+    width: 16px;
+    height: 16px;
+    margin-block-start: 2px;
     background: var(--ex-ok);
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Ccircle%20cx%3D%228%22%20cy%3D%228%22%20r%3D%224%22%2F%3E%3C%2Fsvg%3E")
+      center / contain no-repeat;
   }
 
   .shop-card__avail-row[data-state="order"]::before {
     background: var(--ex-caution);
   }
 
-  /* Quiet, not red: down a grid a red dot on one card reads as a warning about
-     the product rather than a fact about a shelf. The product page's store list
-     is where red belongs, because there the shops are being compared. */
+  /* No is the one that changes shape. A grey dot beside "None available at
+     Greenfield" leaves the sentence to do all the work and reads, down a grid,
+     as another card that has it; yes and no differ in kind, so they differ in
+     kind here, the way the product page's marks do. The product page's own
+     cross, so a reader who clicks through meets the same glyph.
+
+     Quiet rather than red: the shop is out, the product is not, and the line
+     under it says so. */
   .shop-card__avail-row[data-state="none"]::before {
-    background: var(--ink-tertiary);
+    background: var(--ink-secondary);
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-7.071%205.253a1%201%200%200%200%20-1.218%201.567l1.873%201.875l-1.873%201.875l-.083%20.094a1%201%200%200%200%201.497%201.32l1.875%20-1.873l1.875%201.873l.094%20.083a1%201%200%200%200%201.32%20-1.497l-1.873%20-1.875l1.873%20-1.875l.083%20-.094a1%201%200%200%200%20-1.497%20-1.32l-1.875%201.873l-1.875%20-1.873l-.094%20-.083z%22%2F%3E%3C%2Fsvg%3E");
   }
 
-  /* The dot is a background, which forced colours drop. It repeats what the
-     sentence beside it already says, so it is drawn in the forced text colour
-     and the states stop differing: the words still carry them. */
+  /* Forced colours take the fill, not the mask, so the shapes come through and
+     only the colours flatten: a tick-shaped no is still a no. The states that
+     differed only in colour stop differing, and the sentence beside them is what
+     carries those. */
   @media (forced-colors: active) {
     .shop-card__avail-row::before {
       background: CanvasText;

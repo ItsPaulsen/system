@@ -57,7 +57,8 @@
     outline: none;
   }
 
-  .ex {
+  .ex,
+  .ex-article {
     /* The gray band's vertical scale, set once for every band on the mini-site:
        the shop, the blog and its article, the product page, settings and the
        front page's work band. Each of them used to decide this privately, which
@@ -67,7 +68,10 @@
        --ex-band-top  band down to its content 24 / 40 / 56
        --ex-band-end  content down to the footer  96 / 128
 
-       A band that wants something else overrides it and says why. */
+       On .ex-article as well as .ex: the article's main carries its own class
+       instead, and a custom property that resolves nowhere takes the whole
+       padding-block down with it, which is how that page lost the space above
+       and below its band at once. */
     --ex-band-gap: 3rem;
     --ex-band-top: 1.5rem;
     --ex-band-end: 6rem;
@@ -139,7 +143,8 @@
   }
 
   @media (min-width: 768px) {
-    .ex {
+    .ex,
+    .ex-article {
       --ex-band-gap: 4rem;
       --ex-band-top: 2.5rem;
       --ex-band-end: 8rem;
@@ -150,7 +155,8 @@
   }
 
   @media (min-width: 1024px) {
-    .ex {
+    .ex,
+    .ex-article {
       --ex-band-gap: 6rem;
       --ex-band-top: 3.5rem;
     }

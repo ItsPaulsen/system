@@ -12,15 +12,13 @@
   /* Hero → band gap, and the flat hero surface: drop the .ex dot grid and its
      top gradient wash, keep the solid --background-secondary from .ex. */
   .shop-page {
-    gap: 5rem;
+    /* Title down to the band: 64 until the rail appears, 96 from 1024. The band
+       is the full width of the page below that, so the title sits over the whole
+       thing and a deeper gap only pushes the products off the fold; from 1024 the
+       rail is beside them and the page can afford the air. */
+    gap: 4rem;
     padding-top: var(--space-24); /* topbar → breadcrumb, mirrors settings */
     background-image: none;
-  }
-
-  @media (min-width: 768px) {
-    .shop-page {
-      gap: 6rem;
-    }
   }
 
   /* ── Hero ─────────────────────────────────────────────────────────────────
@@ -1050,6 +1048,10 @@
      the row, so a fourth column here would be narrower than the three-up it
      replaced. */
   @media (min-width: 1024px) {
+    .shop-page {
+      gap: 6rem;
+    }
+
     .shop {
       padding-top: var(--space-48);
     }

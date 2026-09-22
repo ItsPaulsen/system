@@ -1,10 +1,10 @@
 // The shop's search field and the panel under it.
 //
 // Two states, and they answer different questions. Empty, the panel is a way in
-// for a reader with nothing typed: what they looked for last, and what everyone
-// looks for. Typing, it is a shortcut: the words that would find something, then
-// the products themselves, with their shots, since a chair is recognised before
-// its name is read.
+// for a reader with nothing typed: what they opened last, what they looked for
+// last, and what everyone looks for. Typing, it is a shortcut: the words that
+// would find something, then the products themselves, with their shots, since a
+// chair is recognised before its name is read.
 //
 // The products are the cards already on the page, read out of the shelves rather
 // than kept in a list of their own: the landing shows what it shows, and the
@@ -37,7 +37,9 @@
   if (!input || !panel || !list) return;
 
   const KEY = "example-search";
+  const SEEN_KEY = "example-search-seen";
   const KEEP = 4; // how many recent searches are worth keeping, and showing
+  const SEEN = 4; // and how many opened products, which are kept apart from them
   const TERMS = 3; // word suggestions, above the products
   const HITS = 4; // products, which are the expensive rows to read
 
@@ -74,6 +76,40 @@
     if (!q) return;
     const kept = readRecent().filter((t) => t.toLowerCase() !== q.toLowerCase());
     writeRecent([q, ...kept].slice(0, KEEP));
+  };
+
+  // A word and a product are different answers to "what were you doing here", so
+  // they are kept apart rather than interleaved by time: four of each, and the
+  // panel shows the products first because a shot is recognised before a word is
+  // read. Stored whole, not as a link to look up later, since the pool is built
+  // from whatever pages happen to be loaded and a product opened last week may
+  // not be in it.
+  const readSeen = () => {
+    try {
+      const raw = JSON.parse(localStorage.getItem(SEEN_KEY));
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .filter((p) => p && typeof p.href === "string" && typeof p.name === "string")
+        .slice(0, SEEN);
+    } catch {
+      return [];
+    }
+  };
+
+  const writeSeen = (items) => {
+    try {
+      if (items.length) localStorage.setItem(SEEN_KEY, JSON.stringify(items));
+      else localStorage.removeItem(SEEN_KEY);
+    } catch {
+      // Same as the words: losing it leaves the panel on what it opens with.
+    }
+  };
+
+  // By link, so the same product reached from two shelves is one entry.
+  const rememberProduct = ({ href, brand, name, thumb }) => {
+    if (!href) return;
+    const kept = readSeen().filter((p) => p.href !== href);
+    writeSeen([{ href, brand, name, thumb }, ...kept].slice(0, SEEN));
   };
 
   // ── The pool ──────────────────────────────────────────────────────────────
@@ -240,6 +276,7 @@
 
   const productRow = (product) => {
     const li = row("product", () => {
+      rememberProduct(product);
       location.href = product.href;
     });
     const img = document.createElement("img");
@@ -272,16 +309,22 @@
     // magnifier beside it is something to search for, whether the reader typed it
     // last week or everyone types it, and a product is a product.
     const recent = readRecent();
+    const seen = readSeen();
 
-    // What the panel offers when it has nothing better: the reader's own
-    // searches, then the popular ones they have not already made, since the same
-    // word twice in one list is the list repeating itself.
+    // What the panel offers when it has nothing better: the products the reader
+    // opened, then their own searches, then the popular ones they have not
+    // already made, since the same word twice in one list is the list repeating
+    // itself.
     // `resting` is the panel opened on nothing, which is the only state these
     // rows are the whole offer in: there they carry weight, and where they are a
     // fallback under a search that found nothing they read as the quieter thing
     // they are.
     const suggest = (resting) => {
       const add = (term) => termRow(term, "", resting);
+      // Only on the resting panel. Under a search that found nothing these would
+      // be four shots of things the reader did not ask for, which reads as an
+      // answer rather than as the way out the fallback is meant to be.
+      if (resting) seen.forEach(productRow);
       recent.forEach(add);
       // The popular four stay four whatever the reader has looked for: they are
       // what the shop is asked for, not a list of things they have not tried, so
@@ -309,7 +352,7 @@
 
     // The label and its Clear belong to the history, so they are there only when
     // there is one, and only over the rows they name.
-    if (bar) bar.hidden = !suggesting || !recent.length;
+    if (bar) bar.hidden = !suggesting || !(recent.length + seen.length);
 
     mark();
     open(Boolean(list.children.length));
@@ -370,6 +413,7 @@
 
   clear?.addEventListener("click", () => {
     writeRecent([]);
+    writeSeen([]);
     input.focus();
     render();
   });

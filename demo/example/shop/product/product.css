@@ -881,27 +881,6 @@
      Every state's glyph sits in the markup and the row's data-state reveals one,
      so nothing is rebuilt when a colour or a store changes. */
 
-  /* The marks' own green and yellow. Not --green and --amber: those are darkened
-     6% so badge text clears AA on a soft fill, and at 16px as a solid disc that
-     only reads muddy. A mark that repeats what the sentence beside it already
-     says has no contrast floor of its own to meet, so it can be the colour the
-     state actually is.
-
-     Light only, because the darkening is: in dark both tokens sit on their
-     anchor untouched, and there is nothing to undo.
-
-     Raw, and only here: two marks are not a palette. If a second place wants
-     them, that is when they earn tokens and the ladders that come with one. */
-  :root {
-    --pdp-ok: #0f9d34;
-    --pdp-caution: #e0a000;
-  }
-
-  :root[data-theme="dark"] {
-    --pdp-ok: var(--green);
-    --pdp-caution: var(--amber);
-  }
-
   .pdp-avail {
     display: grid;
     gap: var(--space-4);
@@ -962,15 +941,15 @@
      the same as the tick; the disc is untouched, so the two line up down a
      column. */
   .pdp-avail__row[data-state="in"] .pdp-avail__glyph {
-    color: var(--pdp-ok);
+    color: var(--ex-ok);
   }
 
   .pdp-avail__row[data-state="order"] .pdp-avail__glyph {
-    color: var(--pdp-caution);
+    color: var(--ex-caution);
   }
 
   .pdp-avail__row[data-state="few"] .pdp-avail__glyph {
-    color: var(--pdp-ok);
+    color: var(--ex-ok);
   }
 
   /* Quiet here, red in the list. The buy column is two lines about one shop, and
@@ -1533,7 +1512,7 @@
 
   .pdp-store-row[data-state="in"] .pdp-store-row__icon,
   .pdp-store-row[data-state="few"] .pdp-store-row__icon {
-    color: var(--pdp-ok);
+    color: var(--ex-ok);
   }
 
   /* --red straight, no local value beside the other two: red is the one of the

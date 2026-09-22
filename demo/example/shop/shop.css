@@ -861,14 +861,62 @@
     color: var(--red);
   }
 
-  /* Stock is its own fact, not a footnote to the price, so it keeps the card's
-     ink and stands off from it. A margin rather than the block's gap: the
-     prior-price lines below the price want none. Off the scale at 6, because
-     the line above it is 16 and 8 opened a hole in a three-line stack. */
-  .shop-card__stores {
+  /* What the product page says about getting one, minus the dates. "3 stores"
+     answered half the question and never mentioned the warehouse; the two rows
+     say both, and a reader who wants to know how long either takes clicks the
+     card. That is the split: the listing teases, the product page promises.
+
+     A dot rather than the product page's filled tick. Same information, a step
+     quieter: a tick on every card in a grid of thirty reads as a claim being
+     made over and over, and the row is only setting the reader's expectation.
+
+     A margin rather than the block's gap: the prior-price lines above want none.
+     Off the scale at 6, because the line above is 16 and 8 opened a hole. */
+  .shop-card__avail {
+    display: flex;
+    flex-direction: column;
     margin-block-start: 6px;
     font-size: var(--font-caption-medium-size);
     line-height: 20px;
+  }
+
+  .shop-card__avail-row {
+    display: flex;
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  /* Nudged down to sit on the middle of the first line rather than centred on
+     the row, so a store count that wraps keeps its dot beside the sentence's
+     start: (20 line - 8 dot) / 2. */
+  .shop-card__avail-row::before {
+    content: "";
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin-block-start: 6px;
+    border-radius: var(--radius-full);
+    background: var(--ex-ok);
+  }
+
+  .shop-card__avail-row[data-state="order"]::before {
+    background: var(--ex-caution);
+  }
+
+  /* Quiet, not red: down a grid a red dot on one card reads as a warning about
+     the product rather than a fact about a shelf. The product page's store list
+     is where red belongs, because there the shops are being compared. */
+  .shop-card__avail-row[data-state="none"]::before {
+    background: var(--ink-tertiary);
+  }
+
+  /* The dot is a background, which forced colours drop. It repeats what the
+     sentence beside it already says, so it is drawn in the forced text colour
+     and the states stop differing: the words still carry them. */
+  @media (forced-colors: active) {
+    .shop-card__avail-row::before {
+      background: CanvasText;
+    }
   }
 
   /* ── Footer row ──────────────────────────────────────────────────────────

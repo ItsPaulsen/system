@@ -70,6 +70,21 @@
        needs theme-fixed colour too (see .shop-card__badge). */
     --ex-plate: white;
 
+    /* The availability marks' green and yellow. Not --green and --amber: those
+       are darkened 6% so badge text clears AA on a soft fill, and as a solid
+       disc that only reads muddy. A mark that repeats what the sentence beside
+       it already says has no contrast floor of its own to meet, so it can be the
+       colour the state actually is.
+
+       Light only, because the darkening is: in dark both tokens sit on their
+       anchor untouched, and there is nothing to undo.
+
+       Here rather than on the product page, which is where they started: the
+       listings mark availability too now, and two files with the same hex in
+       them is how a pair of colours drifts apart. */
+    --ex-ok: #0f9d34;
+    --ex-caution: #e0a000;
+
     /* Deep soft lift for the floating marquee cards. Follows the system's shadow
        logic: light tints with --neutral-black (~40 40 40); the --surface-rim
        prepend is transparent on light but a faint top-edge highlight on dark
@@ -129,6 +144,12 @@
      plus the top-rim highlight, the dark counterpart to a drop shadow's top edge. */
   :root[data-theme="dark"] .ex {
     --ex-shadow: var(--surface-rim), 0 16px 48px 0 rgb(0 0 0 / 0.3);
+
+    /* The marks sit on their anchors here: the 6% darkening the tokens carry in
+       light is what the raw values above undo, and in dark there is nothing to
+       undo. On .ex rather than :root, since that is where they are set. */
+    --ex-ok: var(--green);
+    --ex-caution: var(--amber);
   }
 
   /* ── Listing rail and toolbar ─────────────────────────────────────────────

@@ -6,7 +6,7 @@
 //
 // So this reads the copies back against the page they came from and fails if any
 // of them has fallen behind. What is compared is what a reader sees and what the
-// filters run on: the brand, the name, the price and its terms, the store count,
+// filters run on: the brand, the name, the price and its terms, the availability,
 // the badge, and the shot. Not the parts a copy is meant to differ in, the
 // `sizes` attribute and the data attributes a shelf has no filter for.
 import { readFileSync } from "node:fs";
@@ -34,11 +34,10 @@ const cards = (html) =>
         name: text(pick(/class="shop-card__variant"[^>]*>([\s\S]*?)<\/span\s*>/) || ""),
         price: text(pick(/class="shop-card__price">([\s\S]*?)<\/span\s*>/) || ""),
         terms: text(
-          pick(
-            /class="shop-card__terms">([\s\S]*?)<\/span\s*>\s*<span class="shop-card__stores"/
-          ) || ""
+          pick(/class="shop-card__terms">([\s\S]*?)<\/span\s*>\s*<span class="shop-card__avail"/) ||
+            ""
         ),
-        stores: text(pick(/class="shop-card__stores">([\s\S]*?)<\/span\s*>/) || ""),
+        avail: text(pick(/class="shop-card__avail">([\s\S]*?)<\/span>\s*<\/span>/) || ""),
         badge: text(pick(/class="badge shop-card__badge[^"]*">([\s\S]*?)<\/span\s*>/) || ""),
         // The stem, not the whole srcset: a copy serves the same photograph at a
         // width of its own choosing.
@@ -47,7 +46,7 @@ const cards = (html) =>
     });
 
 const source = cards(readFileSync(SOURCE, "utf8"));
-const FIELDS = ["brand", "name", "price", "terms", "stores", "badge", "shot"];
+const FIELDS = ["brand", "name", "price", "terms", "avail", "badge", "shot"];
 
 let failed = false;
 let checked = 0;

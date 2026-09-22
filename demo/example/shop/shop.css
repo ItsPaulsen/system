@@ -78,9 +78,6 @@
   .shop {
     background: var(--background-primary);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-
-    /* 24 top down to the toolbar (→ 48 from 1024), 96 bottom gray gap before
-       the footer (→ 128 at md). */
     padding-block: var(--ex-step) var(--ex-band-end);
   }
 

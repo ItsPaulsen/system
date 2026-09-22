@@ -3179,13 +3179,25 @@
     transition: color var(--motion-default);
   }
 
-  /* The base foreground, not the -hover variant: this link rests at --ink-primary,
-     so hover is the move to the brand colour itself. The -hover tokens are for
-     something already sitting at the brand, shifting from there. */
+  /* A link shifts from wherever it rests rather than changing hue under the
+     pointer: this one rests at --ink-primary and dims from there, and the CTA
+     below, which rests at the brand colour, dims from that. Moving to the brand
+     on hover made the same gesture mean two different things depending on which
+     variant you were pointing at, and read as the link becoming a different kind
+     of link rather than responding.
+
+     Pressed as well as hover, the same pair the back buttons use: these are
+     navigation a reader aims at and presses, and a control that acknowledges the
+     pointer but not the press feels half-finished on touch, where hover never
+     arrives at all. */
   @media (hover: hover) and (pointer: fine) {
     .link:hover {
-      color: var(--primary-foreground);
+      color: var(--ink-primary-hover);
     }
+  }
+
+  .link:active {
+    color: var(--ink-primary-active);
   }
 
   .link--cta {
@@ -3198,8 +3210,14 @@
   }
 
   /* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
-   fades in and the chevron slides on hover, so the arrow grows out of the text. */
+   fades in and the chevron slides on hover, so the arrow grows out of the text.
+   The colour shifts with it, off the brand rather than off the ink, since that is
+   where this variant rests. */
   @media (hover: hover) and (pointer: fine) {
+    .link--cta:hover {
+      color: var(--primary-foreground-hover);
+    }
+
     .link--cta:hover .link-arrow__line {
       opacity: 1;
     }
@@ -3207,6 +3225,10 @@
     .link--cta:hover .link-arrow__chevron {
       translate: 3px 0;
     }
+  }
+
+  .link--cta:active {
+    color: var(--primary-foreground-active);
   }
 
   /* ── Breadcrumb ───────────────────────────────────────────────────────────

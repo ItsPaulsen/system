@@ -1699,10 +1699,6 @@ The shelf holds the row's two measurements, because the arrows sit outside
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-
-    /* Top padding is the gray gap down to the first (featured) card; bottom is the
-       gray gap between the last cards and the footer (96 on mobile, 128 at md). */
-
     padding-block: var(--ex-step) var(--ex-band-end);
   }
 

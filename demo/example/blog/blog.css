@@ -29,9 +29,6 @@
 
     /* 24 rounded top on mobile, 32 from md up (see min-width: 768px below). */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-
-    /* Matches the front-page band: 24 top down to the items (→ 48 from 1024),
-       96 bottom gray gap before the footer (→ 128 at md). */
     padding-block: var(--ex-step) var(--ex-band-end);
   }
 

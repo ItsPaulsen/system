@@ -595,9 +595,10 @@
     font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
-  /* Field values rest at the brand colour and shift within it, the same three
-     states Back uses. .link's own hover moves from ink to brand, which is a
-     change of kind rather than feedback, and these already start there. */
+  /* Field values rest at the brand colour rather than the ink .link rests at, so
+     they carry their own shift within it: the component dims from where it rests,
+     and moving its rest colour without moving the pair would leave them dimming
+     toward the ink they never sat at. */
   .stores-detail__row .link {
     color: var(--primary-foreground);
   }

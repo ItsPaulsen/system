@@ -159,8 +159,7 @@
      column inside keeps the page's measure.
 
      It grows, so a short page's gray reaches the footer instead of leaving the
-     page's white under it. 32 above the first card (48 from md), then the run
-     down to the footer: 96 on mobile, 128 from md, front-page parity. */
+     page's white under it. The two measures are the shared ones (example.css). */
   .settings-band {
     display: flex;
     flex-direction: column;

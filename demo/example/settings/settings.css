@@ -48,6 +48,16 @@
        inside it, so the row is the text's height, not the glyph's. */
     --settings-back-h: calc(var(--font-body-small-size) * var(--font-body-small-lh));
 
+    /* A column, so the back link is a block in it rather than an inline box on a
+       line. Inline, it sat on a baseline and the line box added the strut's
+       descent under it, which is space the landing's reserved row has no way to
+       know about: the title ended up a few px lower on a sub-page than on the
+       landing however exactly the row was measured. As flex items both are their
+       own height and nothing else. Stretched, the default, so a title that runs
+       past the column wraps inside it rather than sizing to its own text and
+       running out; the link opts out on its own below. */
+    display: flex;
+    flex-direction: column;
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;
     margin-inline: auto;
@@ -90,7 +100,11 @@
      The same link at every width, since nothing about that changes with the
      viewport. Same recipe/alignment as .article-back. */
   .settings-back {
-    display: inline-flex;
+    display: flex;
+
+    /* Only as wide as it reads: stretched, its hover underline would run the
+       width of the column. */
+    align-self: start;
     align-items: center;
     gap: var(--space-4);
 

@@ -700,11 +700,13 @@
     max-width: 36rem;
     color: var(--ink-secondary);
 
-    /* body-small 16 on a phone, body-large 20 from md, in step with the title
-       above it. */
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
-    font-weight: var(--font-body-small-weight);
+    /* body-medium 18 on a phone, body-large 20 from md. It does not drop as far
+       as the title does: a heading has size to lose and still be a heading, and
+       a line of supporting copy at 16 stops reading as the thing that introduces
+       the page. */
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
   }
 
   /* One step, at 768. The hero is a title and one line under it, and stepping

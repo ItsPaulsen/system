@@ -105,16 +105,17 @@
   }
 
   .article-standfirst {
-    /* Held at body-large whatever the title did, so on a phone the line under it
-       came within two steps of the heading. It takes the same pair the heading
-       does, and the gap steps with them: 8 under a small title, 16 under a
-       large one. */
+    /* Held at body-large whatever the title did. body-medium 18 on a phone now,
+       body-large 20 from md, the same pair the listing heroes' intro takes: it
+       does not drop as far as the title, since supporting copy at 16 stops
+       reading as the line that introduces the piece. The gap steps with them:
+       8 under a small title, 16 under a large one. */
     margin: var(--space-8) 0 0;
     max-width: 40rem;
     color: var(--ink-secondary);
-    font-size: var(--font-body-small-size);
-    line-height: var(--font-body-small-lh);
-    font-weight: var(--font-body-small-weight);
+    font-size: var(--font-body-medium-size);
+    line-height: var(--font-body-medium-lh);
+    font-weight: var(--font-body-medium-weight);
   }
 
   /* Byline: avatar + name/date. In the side-by-side layout (≥1024) a 2px rule

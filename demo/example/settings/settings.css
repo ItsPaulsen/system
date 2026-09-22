@@ -83,12 +83,12 @@
     color: var(--ink-primary);
   }
 
-  /* The line under the title, same recipe as the shop listing's: 8 down from the
-     title on a phone, 12 from md, and one type step with it. The landing carries
+  /* The line under the title, same recipe as the shop listing's: 4 down from the
+     title on a phone, 8 from md, and one type step with it. The landing carries
      it; a sub-page's own title is the answer to the row that led there and needs
      nothing under it. */
   .settings-hero__intro {
-    margin: var(--space-8) 0 0;
+    margin: var(--space-4) 0 0;
     max-width: 36rem;
     color: var(--ink-secondary);
     font-size: var(--font-body-small-size);
@@ -104,7 +104,7 @@
     }
 
     .settings-hero__intro {
-      margin-top: var(--space-12);
+      margin-top: var(--space-8);
       font-size: var(--font-body-medium-size);
       line-height: var(--font-body-medium-lh);
       font-weight: var(--font-body-medium-weight);

@@ -57,25 +57,28 @@
     outline: none;
   }
 
+  /* The gray band's vertical scale, set once for every band on the mini-site:
+     the shop, the blog and its article, the product page, settings and the
+     front page's work band. Each of them used to decide this privately, which
+     gave four different top paddings stepping at two different breakpoints.
+
+     --ex-band-gap  title down to the band   48 / 64 / 96
+     --ex-band-top  band down to its content 24 / 40 / 56
+     --ex-band-end  content down to the footer  96 / 128
+
+     On .ex-article as well as .ex, and in a rule of its own: the article's
+     main carries its own class instead of .ex, and a custom property that
+     resolves nowhere takes the whole declaration using it down with it. Listing
+     that class beside .ex on the layout rule instead would hand the article
+     .ex's padding, flex column and dot grid along with the measures. */
   .ex,
   .ex-article {
-    /* The gray band's vertical scale, set once for every band on the mini-site:
-       the shop, the blog and its article, the product page, settings and the
-       front page's work band. Each of them used to decide this privately, which
-       gave four different top paddings stepping at two different breakpoints.
-
-       --ex-band-gap  title down to the band   48 / 64 / 96
-       --ex-band-top  band down to its content 24 / 40 / 56
-       --ex-band-end  content down to the footer  96 / 128
-
-       On .ex-article as well as .ex: the article's main carries its own class
-       instead, and a custom property that resolves nowhere takes the whole
-       padding-block down with it, which is how that page lost the space above
-       and below its band at once. */
     --ex-band-gap: 3rem;
     --ex-band-top: 1.5rem;
     --ex-band-end: 6rem;
+  }
 
+  .ex {
     /* Dot-grid background so white (secondary) cards separate from the near-white
        surface on light theme. Dots derive from --ink-base, so they auto-invert in
        dark theme (light dots on dark). */
@@ -148,7 +151,9 @@
       --ex-band-gap: 4rem;
       --ex-band-top: 2.5rem;
       --ex-band-end: 8rem;
+    }
 
+    .ex {
       gap: 6rem; /* 96 (hero → slider) */
       padding-block: 8rem 0; /* 128 top, 0 bottom (footer follows the gray) */
     }

@@ -694,51 +694,35 @@
   }
 
   .ex-hero__intro {
-    /* Title down to the line under it, stepping with the type it separates: 8 on
-       a phone, 12 from md, 16 from 1024. Flat 16 held the two apart hardest
-       exactly where both are smallest. */
+    /* Title down to the line under it, stepping with the type it separates:
+       8 on a phone, 16 from md. */
     margin: var(--space-8) auto 0;
     max-width: 36rem;
     color: var(--ink-secondary);
 
-    /* One step per breakpoint, the same ladder the title climbs beside it:
-       body-small 16 on a phone, medium 18 from md, large 20 from 1024. It used
-       to start at medium and stop at large, so on the narrowest screen the title
-       had stepped all the way down and the line under it had not moved. */
+    /* body-small 16 on a phone, body-large 20 from md, in step with the title
+       above it. */
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-weight);
   }
 
+  /* One step, at 768. The hero is a title and one line under it, and stepping
+     them twice meant a middle size that only ever showed between 768 and 1024
+     and read as neither: full size from 768 up, and the phone's own size below
+     it. */
   @media (min-width: 768px) {
     .ex-hero__title {
-      font-size: var(--font-headline-medium-size);
-      line-height: var(--font-headline-medium-lh);
-      font-weight: var(--font-headline-medium-weight);
+      font-size: var(--font-headline-large-size);
+      line-height: var(--font-headline-large-lh);
+      font-weight: var(--font-headline-large-weight);
     }
 
-    .ex-hero__intro {
-      margin-top: var(--space-12);
-      font-size: var(--font-body-medium-size);
-      line-height: var(--font-body-medium-lh);
-      font-weight: var(--font-body-medium-weight);
-    }
-  }
-
-  /* lg ≥1024: title and intro take their third step together (small → medium →
-     large). */
-  @media (min-width: 1024px) {
     .ex-hero__intro {
       margin-top: var(--space-16);
       font-size: var(--font-body-large-size);
       line-height: var(--font-body-large-lh);
       font-weight: var(--font-body-large-weight);
-    }
-
-    .ex-hero__title {
-      font-size: var(--font-headline-large-size);
-      line-height: var(--font-headline-large-lh);
-      font-weight: var(--font-headline-large-weight);
     }
   }
 

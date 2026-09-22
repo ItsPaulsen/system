@@ -71,5 +71,33 @@ for (const file of COPIES) {
   }
 }
 
+// The card's availability marks are the product page's two glyphs, carried into
+// shop.css as mask URLs because a card draws thirty of them and an <svg> apiece
+// is thirty copies of the same path. That makes them a copy like any other, and
+// this reads them back the same way: change the tick on the product page and the
+// listings keep drawing the old one, silently, on the one screen a reader
+// compares them from.
+const MARKS = "demo/example/shop/shop.css";
+const marks = readFileSync(MARKS, "utf8");
+const page = readFileSync("demo/example/shop/product/index.html", "utf8");
+
+for (const [icon, name] of [
+  ["check", "--shop-mark-yes"],
+  ["cross", "--shop-mark-no"]
+]) {
+  const path = (page.match(new RegExp(`data-icon="${icon}"[\\s\\S]*?<path\\s+d="([^"]+)"`)) ||
+    [])[1];
+  if (!path) {
+    console.error(`demo/example/shop/product/index.html: no ${icon} icon to compare against.`);
+    failed = true;
+    continue;
+  }
+  const value = (marks.match(new RegExp(`${name}: url\\("([^"]+)"\\)`)) || [])[1];
+  if (value && value.includes(encodeURIComponent(path))) continue;
+  console.error(`${MARKS}: ${name} has drifted from the product page's ${icon}.`);
+  console.error("    Rebuild it from that page's path rather than editing the URL.");
+  failed = true;
+}
+
 if (failed) process.exit(1);
-console.log(`${checked} copied cards match ${SOURCE}`);
+console.log(`${checked} copied cards match ${SOURCE}, and both marks match its glyphs`);

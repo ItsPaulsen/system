@@ -872,8 +872,16 @@
      thing this block cannot afford.
 
      A margin rather than the block's gap: the prior-price lines above want none.
-     Off the scale at 6, because the line above is 16 and 8 opened a hole. */
+     Off the scale at 6, because the line above is 16 and 8 opened a hole.
+
+     The product page's two glyphs are named at the top, so the rules that use
+     them read as rules. Copied out of its markup rather than drawn again, and
+     lint-shop-cards reads them back against it: a card that disagreed with the
+     page it opens is the one thing these marks cannot do. */
   .shop-card__avail {
+    --shop-mark-yes: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-1.293%205.953a1%201%200%200%200%20-1.32%20-.083l-.094%20.083l-3.293%203.292l-1.293%20-1.292l-.094%20-.083a1%201%200%200%200%20-1.403%201.403l.083%20.094l2%202l.094%20.083a1%201%200%200%200%201.226%200l.094%20-.083l4%20-4l.083%20-.094a1%201%200%200%200%20-.083%20-1.32z%22%2F%3E%3C%2Fsvg%3E");
+    --shop-mark-no: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-7.071%205.253a1%201%200%200%200%20-1.218%201.567l1.873%201.875l-1.873%201.875l-.083%20.094a1%201%200%200%200%201.497%201.32l1.875%20-1.873l1.875%201.873l.094%20.083a1%201%200%200%200%201.32%20-1.497l-1.873%20-1.875l1.873%20-1.875l.083%20-.094a1%201%200%200%200%20-1.497%20-1.32l-1.875%201.873l-1.875%20-1.873l-.094%20-.083z%22%2F%3E%3C%2Fsvg%3E");
+
     display: flex;
     flex-direction: column;
     margin-block-start: 6px;
@@ -898,26 +906,23 @@
     height: 16px;
     margin-block-start: 2px;
     background: var(--ex-ok);
-    mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-1.293%205.953a1%201%200%200%200%20-1.32%20-.083l-.094%20.083l-3.293%203.292l-1.293%20-1.292l-.094%20-.083a1%201%200%200%200%20-1.403%201.403l.083%20.094l2%202l.094%20.083a1%201%200%200%200%201.226%200l.094%20-.083l4%20-4l.083%20-.094a1%201%200%200%200%20-.083%20-1.32z%22%2F%3E%3C%2Fsvg%3E")
-      center / contain no-repeat;
+    mask: var(--shop-mark-yes) center / contain no-repeat;
   }
 
   .shop-card__avail-row[data-state="order"]::before {
     background: var(--ex-caution);
   }
 
-  /* No is the one that changes shape. A grey dot beside "None available at
-     Greenfield" leaves the sentence to do all the work and reads, down a grid,
-     as another card that has it; yes and no differ in kind, so they differ in
-     kind here, the way the product page's marks do. The product page's own
-     cross, so a reader who clicks through meets the same glyph.
+  /* No is the one that changes shape. Same colour in a different glyph would
+     leave the sentence doing all the work and read, down a grid, as another card
+     that has it; yes and no differ in kind, so they differ in kind here too.
 
      Red, the same as the store list's: no is the one state worth spotting before
-     the sentence is read, and it is the only mark that says anything the line
-     under it doesn't repeat. */
+     the sentence is read, and the only mark saying anything the line under it
+     doesn't already repeat. */
   .shop-card__avail-row[data-state="none"]::before {
     background: var(--ex-no);
-    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-7.071%205.253a1%201%200%200%200%20-1.218%201.567l1.873%201.875l-1.873%201.875l-.083%20.094a1%201%200%200%200%201.497%201.32l1.875%20-1.873l1.875%201.873l.094%20.083a1%201%200%200%200%201.32%20-1.497l-1.873%20-1.875l1.873%20-1.875l.083%20-.094a1%201%200%200%200%20-1.497%20-1.32l-1.875%201.873l-1.875%20-1.873l-.094%20-.083z%22%2F%3E%3C%2Fsvg%3E");
+    mask-image: var(--shop-mark-no);
   }
 
   /* Forced colours take the fill, not the mask, so the shapes come through and

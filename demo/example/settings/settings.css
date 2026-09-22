@@ -72,7 +72,8 @@
   /* ── Back link ──────────────────────────────────────────────────────────────
      Settings is three siblings in a set, not a descent, so there is no trail to
      draw: a trail reading Home > Settings > Privacy describes a depth that isn't
-     there, and every page here has exactly one step out of it, which this is.
+     there. What a sub-page needs is the one step back up to Settings, which is
+     this; the landing needs nothing, the topbar already holds the way home.
      The same link at every width, since nothing about that changes with the
      viewport. Same recipe/alignment as .article-back. */
   .settings-back {

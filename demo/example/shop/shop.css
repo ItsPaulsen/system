@@ -812,17 +812,24 @@
   /* The prior prices, named, the way the product page names them: what it used to
      cost, and where a product has been on offer inside the window, the lowest it
      actually went. 12, because a card is already three lines of text and these are
-     the smallest facts on it; secondary ink rather than tertiary, since they still
-     have to be read. */
+     the smallest facts on it. The card's own ink, not the secondary: they are what
+     the price means, and grey filed them under footnote. The size already says
+     they are the small print. */
   .shop-card__terms {
     display: flex;
     flex-direction: column;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-caption-small-size);
     line-height: 16px;
   }
 
-  .shop-card__term {
+  /* The label wraps, the figure never does. Nowrap on the whole line held while
+     the longest label was two words; a label naming the 30-day window is wider
+     than a column on the two-up grid, and an unbreakable line doesn't widen its
+     track, it runs out over the card beside it. Keeping the struck price and its
+     percentage whole is all the rule was ever for. */
+  .shop-card__term s,
+  .shop-card__off {
     white-space: nowrap;
   }
 

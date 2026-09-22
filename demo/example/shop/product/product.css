@@ -850,12 +850,19 @@
 
   /* The fine print under the price: what it was, what it is off, how long the
      offer runs. Caption small at every width, since at 14 it sits within a size
-     of the price it qualifies and stops reading as the smaller print. */
+     of the price it qualifies and stops reading as the smaller print. Leading
+     tuned in px rather than left on the token's 1.5 ratio, the way the card's
+     terms are: 16 over 18 draws the run of lines into one block under the price
+     instead of a list of separate facts. Font size stays on the token.
+
+     The card's ink, not the secondary: these lines are what the price means, and
+     grey filed them under footnote. Size already says they are the small print,
+     so colour does not have to say it twice. */
   .pdp-buy__term {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-caption-small-size);
-    line-height: var(--font-caption-small-lh);
+    line-height: 16px;
   }
 
   .pdp-buy__amount {

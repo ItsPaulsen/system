@@ -12,11 +12,12 @@
   /* Hero → band gap, and the flat hero surface: drop the .ex dot grid and its
      top gradient wash, keep the solid --background-secondary from .ex. */
   .shop-page {
-    /* Title down to the band: 64 until the rail appears, 96 from 1024. The band
-       is the full width of the page below that, so the title sits over the whole
-       thing and a deeper gap only pushes the products off the fold; from 1024 the
-       rail is beside them and the page can afford the air. */
-    gap: 4rem;
+    /* Title down to the band, one step per breakpoint: 48 on a phone, 64 from md,
+       96 from 1024. Below 1024 the band is the full width of the page, so the
+       title spans the whole thing and a deeper gap only pushes the products
+       further off the fold, and the smaller the screen the more that costs. From
+       1024 the rail moves in beside them and the page can afford the air. */
+    gap: 3rem;
     padding-top: var(--space-24); /* topbar → breadcrumb, mirrors settings */
     background-image: none;
   }
@@ -1028,6 +1029,10 @@
   /* md ≥768, three products across, a deeper gray gap above the footer
      (front-page band parity), and the rounded top steps up from 24 to 32. */
   @media (min-width: 768px) {
+    .shop-page {
+      gap: 4rem;
+    }
+
     .shop {
       padding-bottom: 8rem;
       border-radius: var(--radius-xl) var(--radius-xl) 0 0;

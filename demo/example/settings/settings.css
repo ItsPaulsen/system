@@ -90,7 +90,7 @@
   .settings-hero__intro {
     margin: var(--space-4) 0 0;
     max-width: 36rem;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-weight);
@@ -133,6 +133,9 @@
     color: var(--ink-primary);
     text-decoration: none;
     transition: color var(--motion-default);
+
+    /* Rounds the focus ring, the one place the box shows. */
+    border-radius: var(--radius-sm);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-weight);

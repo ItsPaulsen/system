@@ -194,141 +194,125 @@
           </form>
         </header>
 
-        <!-- A shot of the kind of thing beside each name, 3x the square it fills.
-             alt="": the name beside it says it. -->
+        <!-- A shot of the kind of thing over each name, 2x the square it fills.
+             alt="": the name under it says it. -->
         <nav class="shop-cats" aria-label="Categories">
-          <ul class="shop-cats__list">
-            <li class="shop-cats__item">
-              <a class="card shop-cat" href="/demo/example/shop/chairs/">
-                <span class="shop-cat__media">
-                  <img
-                    class="shop-cat__img"
-                    src="/assets/images/categories/chairs-120.webp"
-                    alt=""
-                    width="40"
-                    height="40"
-                  />
-                </span>
-                <span class="shop-cat__name">Chairs</span>
-                <span class="shop-cat__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-            <li class="shop-cats__item">
-              <a class="card shop-cat" href="/demo/example/shop/chairs/">
-                <span class="shop-cat__media">
-                  <img
-                    class="shop-cat__img"
-                    src="/assets/images/categories/tables-120.webp"
-                    alt=""
-                    width="40"
-                    height="40"
-                  />
-                </span>
-                <span class="shop-cat__name">Tables</span>
-                <span class="shop-cat__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-            <li class="shop-cats__item">
-              <a class="card shop-cat" href="/demo/example/shop/chairs/">
-                <span class="shop-cat__media">
-                  <img
-                    class="shop-cat__img"
-                    src="/assets/images/categories/couches-120.webp"
-                    alt=""
-                    width="40"
-                    height="40"
-                  />
-                </span>
-                <span class="shop-cat__name">Couches</span>
-                <span class="shop-cat__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-            <li class="shop-cats__item">
-              <a class="card shop-cat" href="/demo/example/shop/chairs/">
-                <span class="shop-cat__media">
-                  <img
-                    class="shop-cat__img"
-                    src="/assets/images/categories/storage-120.webp"
-                    alt=""
-                    width="40"
-                    height="40"
-                  />
-                </span>
-                <span class="shop-cat__name">Storage</span>
-                <span class="shop-cat__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-            <li class="shop-cats__item">
-              <a class="card shop-cat" href="/demo/example/shop/chairs/">
-                <span class="shop-cat__media">
-                  <img
-                    class="shop-cat__img"
-                    src="/assets/images/categories/carpets-120.webp"
-                    alt=""
-                    width="40"
-                    height="40"
-                  />
-                </span>
-                <span class="shop-cat__name">Carpets</span>
-                <span class="shop-cat__chevron" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M9 6l6 6l-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-          </ul>
+          <!-- A shelf, the same row the products scroll in: centred while every
+               category fits, sliding once they don't. -->
+          <div class="ex-shelf shop-cats__shelf">
+            <button
+              class="carousel__control carousel__control--prev ex-shelf__control shop-cats__control"
+              type="button"
+              tabindex="-1"
+              aria-label="Previous categories"
+              hidden
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M15 6l-6 6l6 6" />
+              </svg>
+            </button>
+
+            <ul class="ex-shelf__row shop-cats__list">
+              <li class="shop-cats__item">
+                <a class="card shop-cat" href="/demo/example/shop/chairs/">
+                  <span class="shop-cat__media">
+                    <img
+                      class="shop-cat__img"
+                      src="/assets/images/categories/chairs-120.webp"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <span class="shop-cat__name">Chairs</span>
+                </a>
+              </li>
+              <li class="shop-cats__item">
+                <a class="card shop-cat" href="/demo/example/shop/chairs/">
+                  <span class="shop-cat__media">
+                    <img
+                      class="shop-cat__img"
+                      src="/assets/images/categories/tables-120.webp"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <span class="shop-cat__name">Tables</span>
+                </a>
+              </li>
+              <li class="shop-cats__item">
+                <a class="card shop-cat" href="/demo/example/shop/chairs/">
+                  <span class="shop-cat__media">
+                    <img
+                      class="shop-cat__img"
+                      src="/assets/images/categories/couches-120.webp"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <span class="shop-cat__name">Couches</span>
+                </a>
+              </li>
+              <li class="shop-cats__item">
+                <a class="card shop-cat" href="/demo/example/shop/chairs/">
+                  <span class="shop-cat__media">
+                    <img
+                      class="shop-cat__img"
+                      src="/assets/images/categories/storage-120.webp"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <span class="shop-cat__name">Storage</span>
+                </a>
+              </li>
+              <li class="shop-cats__item">
+                <a class="card shop-cat" href="/demo/example/shop/chairs/">
+                  <span class="shop-cat__media">
+                    <img
+                      class="shop-cat__img"
+                      src="/assets/images/categories/carpets-120.webp"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <span class="shop-cat__name">Carpets</span>
+                </a>
+              </li>
+            </ul>
+
+            <button
+              class="carousel__control carousel__control--next ex-shelf__control shop-cats__control"
+              type="button"
+              tabindex="-1"
+              aria-label="Next categories"
+              hidden
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M9 6l6 6l-6 6" />
+              </svg>
+            </button>
+          </div>
         </nav>
       </div>
 

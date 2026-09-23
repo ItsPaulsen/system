@@ -48,7 +48,7 @@
     /* 4 down from the title on mobile, 8 from md (below). */
     margin: var(--space-4) 0 0;
     max-width: 36rem;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
 
     /* Base (mobile, < md): body-small 16px, body-medium 18 from md up. */
     font-size: var(--font-body-small-size);
@@ -1100,7 +1100,7 @@
      centred under a centred hero; this hero is left aligned. */
   .shop-search.shop-retry {
     margin: var(--space-24) 0 0;
-    max-width: 30rem;
+    max-width: 35rem;
   }
 
   /* One column: the results band holds a shelf and no rail when a search leaves
@@ -1152,6 +1152,12 @@
      rather than a page apart. */
   .shop-home__intro {
     display: grid;
+
+    /* minmax(0, 1fr), not the implicit auto track: an auto track takes its
+       minimum from its content, and the category shelf's content is every tile
+       in a row, so the column (and the page) grew to fit them all and the row
+       had nothing left to scroll. Same trap as .shop-shelves. */
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-48);
   }
 
@@ -1165,7 +1171,7 @@
      above it: a search field as wide as a paragraph reads as a form rather than
      as one thing to type in. */
   .shop-search {
-    margin: 1.75rem auto 0;
+    margin: var(--space-16) auto 0;
     max-width: 35rem;
   }
 
@@ -1258,12 +1264,18 @@
      A stated height, not the component's min-height: the Search button appears
      inside the field as soon as there is something to send, and anything that
      arrives in a min-height box can change it. The field is one line either way,
-     so it is 48 either way. */
+     so it is one height either way: 48, and 56 from md. */
   .shop-search .input__container {
     /* Also the frame the leading glyph is positioned against (see Motion below). */
     position: relative;
     width: 100%;
     height: 48px;
+  }
+
+  @media (min-width: 768px) {
+    .shop-search .input__container {
+      height: 56px;
+    }
   }
 
   /* The field and the way out sit on one line. Above 768 there is nothing beside
@@ -1710,63 +1722,68 @@
   }
 
   /* ── Categories ───────────────────────────────────────────────────────────
-     Two across on a phone, three from md, four from lg, all five in a row from
-     xl. A shot, a name and a chevron on a surface. */
+     Tiles of 160 on a shelf (example.css, driven by shelf.js): one row at any
+     count and any width, centred while it fits and sliding with the shelf's
+     arrows once it doesn't, the way the product rows below it do. */
   .shop-cats {
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;
+    min-width: 0;
     margin-inline: auto;
     padding-inline: var(--grid-margin, 1rem);
   }
 
-  .shop-cats__list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-8);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .shop-cats__shelf {
+    --ex-shelf-card: 160px;
+    --ex-shelf-gap: var(--space-8);
   }
 
   @media (min-width: 768px) {
-    .shop-cats__list {
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-12);
+    .shop-cats__shelf {
+      --ex-shelf-gap: var(--space-12);
     }
   }
 
-  @media (min-width: 1024px) {
-    .shop-cats__list {
-      grid-template-columns: repeat(4, 1fr);
-    }
+  /* safe, so a row that overflows starts at its first tile instead of centring
+     past the scroller's start, where the first ones could never be reached. */
+  .shop-cats__list {
+    justify-content: safe center;
+    list-style: none;
   }
 
-  @media (min-width: 1280px) {
-    .shop-cats__list {
-      grid-template-columns: repeat(5, 1fr);
-    }
+  .shop-cats__item {
+    display: flex;
   }
 
-  /* The Card component carries the surface and every state; this is the row
-     inside it. A rim, because these sit on a page that has the dot grid switched
-     off (see .shop-home), and a white card on the near-white surface without
-     either one is a card nobody can see. */
+  /* Centred on the tile: the shelf's own rule measures from a product's square
+     shot, and a tile is shorter than it is wide. */
+  .shop-cats__control {
+    top: 50%;
+  }
+
+  /* The Card component carries the surface and every state; this is the tile
+     inside it, the shot over the name. A rim, because these sit on a page that
+     has the dot grid switched off (see .shop-home), and a white card on the
+     near-white surface without either one is a card nobody can see. */
   .shop-cat {
     display: flex;
+    flex: 1;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-12);
-    padding: var(--space-12) var(--space-16) var(--space-12) var(--space-12);
+    gap: var(--space-8);
+    padding: var(--space-12);
     border: var(--border-width) solid var(--fill-tertiary);
+    text-align: center;
     text-decoration: none;
   }
 
-  /* 40 square on the product plate, the shot's own ground, so the chair sits
+  /* 56 square on the product plate, the shot's own ground, so the chair sits
      on what it sits on everywhere else in the shop. The plates carry their own
      margin, so the picture fills the square edge to edge. */
   .shop-cat__media {
     flex: none;
-    width: 40px;
-    height: 40px;
+    width: 56px;
+    height: 56px;
     overflow: hidden;
     border-radius: var(--radius-sm);
     background: var(--ex-plate);
@@ -1780,29 +1797,15 @@
   }
 
   .shop-cat__name {
-    flex: 1;
     font-size: var(--font-body-small-emphasized-size);
     line-height: var(--font-body-small-emphasized-lh);
     font-weight: var(--font-body-small-emphasized-weight);
   }
 
-  /* Quiet: the whole card is the target, and the glyph only says which way it
-     goes. Same tone the store rows give theirs. */
-  .shop-cat__chevron {
-    display: flex;
-    flex: none;
-    color: var(--ink-secondary);
-  }
-
-  .shop-cat__chevron svg {
-    width: 20px;
-    height: 20px;
-  }
-
   /* The surface holds still: under a shot on its white plate, the card's hover
      wash made the plate the one part that didn't move, a white square on a grey
-     card. The rim and the words answer instead: the rim steps up the fill
-     ladder, the words dim from where they rest the way a link does, and the
+     card. The rim and the name answer instead: the rim steps up the fill
+     ladder, the name dims from where it rests the way a link does, and the
      press goes one step further on both. */
   a.shop-cat {
     transition:
@@ -1816,10 +1819,6 @@
       background: var(--background-secondary);
       color: var(--ink-primary-hover);
     }
-
-    a.shop-cat:hover .shop-cat__chevron {
-      color: var(--ink-secondary-hover);
-    }
   }
 
   a.shop-cat:active {
@@ -1828,8 +1827,10 @@
     color: var(--ink-primary-active);
   }
 
-  a.shop-cat:active .shop-cat__chevron {
-    color: var(--ink-secondary-active);
+  /* The ring's converge animation starts outside the room the row reserves for
+     it, so its first frames were clipped. Same fix as the product shelf's. */
+  .shop-cats__list .shop-cat:focus-visible {
+    animation: none;
   }
 
   /* The band the shelves sit on: the listing's own surface and its rounded top
@@ -1949,6 +1950,9 @@
     color: var(--ink-primary);
     text-decoration: none;
     transition: color var(--motion-default);
+
+    /* Rounds the focus ring, the one place the box shows. */
+    border-radius: var(--radius-sm);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-weight);

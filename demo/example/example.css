@@ -692,6 +692,10 @@
   /* ── Hero ─────────────────────────────────────────────────────────────── */
 
   .ex-hero {
+    /* width, not only the cap: as a grid item with auto margins the hero shrank
+       to its own text, and a short intro took the search field under it down
+       with it. */
+    width: 100%;
     max-width: 48rem;
     margin-inline: auto;
     padding-inline: var(--grid-margin, 1rem);
@@ -715,7 +719,7 @@
        8 on a phone, 16 from md. */
     margin: var(--space-8) auto 0;
     max-width: 36rem;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
 
     /* body-medium 18 on a phone, body-large 20 from md. It does not drop as far
        as the title does: a heading has size to lose and still be a heading, and

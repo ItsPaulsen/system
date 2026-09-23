@@ -1772,12 +1772,6 @@
     background: var(--ex-plate);
   }
 
-  /* No shot yet: white on the white card would leave a hole the size of one,
-     so the empty plate takes a quiet fill and reads as a place for a picture. */
-  .shop-cat__media:empty {
-    background: var(--fill-quaternary);
-  }
-
   .shop-cat__img {
     display: block;
     width: 100%;

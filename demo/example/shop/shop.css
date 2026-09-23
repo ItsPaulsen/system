@@ -1805,6 +1805,39 @@
     height: 20px;
   }
 
+  /* The surface holds still: under a shot on its white plate, the card's hover
+     wash made the plate the one part that didn't move, a white square on a grey
+     card. The rim and the words answer instead: the rim steps up the fill
+     ladder, the words dim from where they rest the way a link does, and the
+     press goes one step further on both. */
+  a.shop-cat {
+    transition:
+      color var(--motion-default),
+      border-color var(--motion-default);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    a.shop-cat:hover {
+      border-color: var(--fill-secondary);
+      background: var(--background-secondary);
+      color: var(--ink-primary-hover);
+    }
+
+    a.shop-cat:hover .shop-cat__chevron {
+      color: var(--ink-secondary-hover);
+    }
+  }
+
+  a.shop-cat:active {
+    border-color: var(--fill-primary);
+    background: var(--background-secondary);
+    color: var(--ink-primary-active);
+  }
+
+  a.shop-cat:active .shop-cat__chevron {
+    color: var(--ink-secondary-active);
+  }
+
   /* The band the shelves sit on: the listing's own surface and its rounded top
      corners, so the products are on the same ground here as they are one level
      down. Every measurement is that band's, not this page's: 24 top down to the

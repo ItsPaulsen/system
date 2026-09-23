@@ -160,7 +160,7 @@
   });
 
   const passes = (card, f, skip) => {
-    if (skip !== "category" && f.categories.size && !f.categories.has(card.dataset.category)) {
+    if (skip !== "category" && f.categories.size && !f.categories.has(card.dataset.type)) {
       return false;
     }
     if (skip !== "brand" && f.brands.size && !f.brands.has(brandOf(card))) return false;
@@ -177,7 +177,7 @@
   // What a single option covers, per group: category and brand match a card on
   // the same value apply() filters by, a colour on its whole family.
   const OPTION_MATCH = {
-    category: (card, input) => card.dataset.category === labelOf(input).toLowerCase(),
+    category: (card, input) => card.dataset.type === labelOf(input).toLowerCase(),
     brand: (card, input) => brandOf(card) === labelOf(input).toLowerCase(),
     color: (card, input) => {
       const family = new Set(tokens(input.dataset.colors));

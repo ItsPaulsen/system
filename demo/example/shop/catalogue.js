@@ -32,9 +32,10 @@ window.exampleCatalogue = (function () {
   const match = (text, q) => words(q).every((word) => at(text, word) >= 0);
 
   // What a card is searchable by: the words on it, the colours it is tagged with,
-  // the families those colours belong to, and its category. The families are why
-  // "red" finds a chair tagged falu, and reading them off the Colour facet's own
-  // markup is why typing red finds what ticking Red finds.
+  // the families those colours belong to, its category and its kind. The families
+  // are why "red" finds a chair tagged falu, and reading them off the Colour
+  // facet's own markup is why typing red finds what ticking Red finds. The kind is
+  // why "lounge" finds a Mama Bear, whose name never says so.
   const textOf = (card, families) =>
     [
       card.querySelector(".shop-card__brand")?.textContent || "",
@@ -43,7 +44,8 @@ window.exampleCatalogue = (function () {
       tokens(card.dataset.color)
         .flatMap((colour) => families.get(colour) || [])
         .join(" "),
-      card.dataset.category || ""
+      card.dataset.category || "",
+      card.dataset.type || ""
     ]
       .join(" ")
       .toLowerCase()

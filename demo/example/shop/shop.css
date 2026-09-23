@@ -1166,7 +1166,7 @@
      as one thing to type in. */
   .shop-search {
     margin: 1.75rem auto 0;
-    max-width: 30rem;
+    max-width: 35rem;
   }
 
   /* Over the page, which is dimmed behind it: the form lifts as a whole so the
@@ -1710,7 +1710,7 @@
   }
 
   /* ── Categories ───────────────────────────────────────────────────────────
-     Two across on a phone, three from md, all six in a row from lg. A name and a
+     Two across on a phone, three from md, all five in a row from lg. A name and a
      chevron on a surface: the shot on a category card is a promise about what is
      behind it, and there is only one category with products to keep it. */
   .shop-cats {
@@ -1738,7 +1738,7 @@
 
   @media (min-width: 1024px) {
     .shop-cats__list {
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 

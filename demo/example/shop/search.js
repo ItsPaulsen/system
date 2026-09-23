@@ -173,8 +173,8 @@
         name,
         colour,
         thumb: card.querySelector(".shop-card__img")?.getAttribute("src") || "",
-        // Colour, the families that colour belongs to, and the category, as well
-        // as the words on the card: the same text the results page matches ?q=
+        // Colour, the families that colour belongs to, the category and the
+        // kind, as well as the words on the card: the same text the results page matches ?q=
         // against, so the panel and the page it leads to agree about what "red"
         // finds.
         text: [
@@ -184,22 +184,25 @@
           tokens(colour)
             .flatMap((c) => families.get(c) || [])
             .join(" "),
-          card.dataset.category || ""
+          card.dataset.category || "",
+          card.dataset.type || ""
         ]
           .join(" ")
           .toLowerCase()
           .replace(/\s+/g, " ")
       });
 
-      // A brand, a product's family, and every colour it comes in: "bro" should
-      // offer Brown the way it offers a brand, because colour is how half of
-      // these are asked for. Single words off the card's own data, capitalised
-      // for the row the way the brand and the family already are.
+      // A brand, a product's family, its kind, and every colour it comes in:
+      // "bro" should offer Brown the way it offers a brand, because colour is
+      // how half of these are asked for, and "din" Dining chairs. Off the
+      // card's own data, capitalised for the row the way the brand and the
+      // family already are.
       const title = (word) => word.charAt(0).toUpperCase() + word.slice(1);
       const colours = tokens(colour);
       [
         brand,
         name.split(",")[0].trim(),
+        title(card.dataset.type || ""),
         ...colours.map(title),
         ...colours.flatMap((c) => families.get(c) || [])
       ].forEach((term) => {

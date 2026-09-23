@@ -97,6 +97,73 @@
                    so it costs the page nothing until a keyboard needs it. -->
               <a class="ex-filter__skip" href="#shop-results">Skip to results</a>
 
+              <!-- Category: what kind of chair, the broadest cut, so it comes first.
+                   Matched on a card's data-type, not data-category: that one names
+                   the listing ("chairs") for search and the shelves. Only the kinds
+                   the listing has; a new one joins with its first product. -->
+              <details class="ex-filter__group" name="shop-filter">
+                <summary class="ex-filter__head">Category</summary>
+                <div class="ex-filter__body" data-filter="category">
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-type-dining" type="checkbox" class="checkbox__input" />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Dining chairs</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-type-lounge" type="checkbox" class="checkbox__input" />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Lounge chairs</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                  <label class="checkbox">
+                    <span class="checkbox__box">
+                      <input name="shop-type-armchairs" type="checkbox" class="checkbox__input" />
+                      <svg
+                        class="checkbox__check"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M5 12l5 5l10 -10" pathLength="1" />
+                      </svg>
+                    </span>
+                    <span class="checkbox__label">Armchairs</span>
+                    <span class="shop-count" data-shop-option-count></span>
+                  </label>
+                </div>
+              </details>
+
               <!-- Store. The one facet that isn't a checkbox list: pick a store on
                    the map and the grid drops to what that store stocks. Single
                    select, since "in stock at" is a question about one shop you
@@ -889,6 +956,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="walnut natural"
                 data-stores="midtown harbour eastgate parkside elmwood northgate lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="50974"
@@ -932,6 +1000,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="armchairs"
                 data-color="oak"
                 data-stores="old-town harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="5249"
@@ -975,6 +1044,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak natural"
                 data-stores="old-town midtown eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="10420"
@@ -1024,6 +1094,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="yellow natural"
                 data-stores="old-town midtown harbour parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="8116"
@@ -1067,6 +1138,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="oak natural"
                 data-stores="old-town midtown harbour eastgate elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="44601"
@@ -1110,6 +1182,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak"
                 data-stores="old-town midtown harbour eastgate parkside northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="13375"
@@ -1153,6 +1226,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak beige"
                 data-stores="old-town midtown harbour eastgate parkside elmwood hillcrest"
                 data-price="9792"
@@ -1202,6 +1276,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=black-leather"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="black"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="5879"
@@ -1257,6 +1332,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="seaweed natural"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="7639"
@@ -1301,6 +1377,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=black"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="black"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="4236"
@@ -1350,6 +1427,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="brown oak"
                 data-stores="old-town"
                 data-price="55913"
@@ -1393,6 +1471,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="oak beige"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview stonebridge westfield riverside greenfield"
                 data-price="27906"
@@ -1446,6 +1525,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="terracotta natural"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank westfield riverside greenfield"
                 data-price="7639"
@@ -1489,6 +1569,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="oak eggshell"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest"
                 data-price="47310"
@@ -1534,6 +1615,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="beech natural"
                 data-stores="old-town midtown harbour eastgate parkside northgate hillcrest lakeview southbank stonebridge westfield greenfield"
                 data-price="7321"
@@ -1577,6 +1659,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="armchairs"
                 data-color="oak cognac"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside"
                 data-price="7449"
@@ -1620,6 +1703,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=oak"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="5295"
@@ -1663,6 +1747,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="oak beige"
                 data-stores="midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="31378"
@@ -1706,6 +1791,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="white natural"
                 data-stores="old-town harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="7639"
@@ -1749,6 +1835,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="slate natural"
                 data-stores="old-town midtown eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="8595"
@@ -1792,6 +1879,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="falu natural"
                 data-stores="old-town midtown harbour parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="7639"
@@ -1835,6 +1923,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=cognac"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak cognac"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="7349"
@@ -1880,6 +1969,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=dark-beige"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="beige"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside"
                 data-price="5295"
@@ -1923,6 +2013,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="armchairs"
                 data-color="black"
                 data-stores="old-town midtown harbour eastgate elmwood"
                 data-price="5249"
@@ -1966,6 +2057,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="walnut brown"
                 data-stores="old-town midtown harbour eastgate parkside northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="19907"
@@ -2009,6 +2101,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="barley natural"
                 data-stores="old-town midtown harbour eastgate parkside elmwood hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="7639"
@@ -2052,6 +2145,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="oak natural"
                 data-stores="old-town midtown harbour eastgate"
                 data-price="8405"
@@ -2101,6 +2195,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="northsea natural"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest southbank stonebridge westfield riverside greenfield"
                 data-price="8116"
@@ -2145,6 +2240,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="armchairs"
                 data-color="black"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview stonebridge westfield riverside greenfield"
                 data-price="7449"
@@ -2188,6 +2284,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="black oak natural"
                 data-stores="old-town midtown harbour parkside elmwood northgate hillcrest lakeview southbank westfield riverside greenfield"
                 data-price="12419"
@@ -2233,6 +2330,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=dark-brown"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="brown"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside"
                 data-price="5295"
@@ -2276,6 +2374,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/"
                 data-category="chairs"
+                data-type="lounge chairs"
                 data-color="oak natural"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge riverside greenfield"
                 data-price="42848"
@@ -2319,6 +2418,7 @@
                 class="shop-card"
                 href="/demo/example/shop/product/?color=green"
                 data-category="chairs"
+                data-type="dining chairs"
                 data-color="green"
                 data-stores="old-town midtown harbour eastgate parkside elmwood northgate hillcrest lakeview southbank stonebridge westfield riverside greenfield"
                 data-price="5295"

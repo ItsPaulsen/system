@@ -45,6 +45,7 @@
     gap: var(--space-4);
     color: var(--ink-primary);
     text-decoration: none;
+    transition: color var(--motion-default);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
     font-weight: var(--font-body-small-weight);
@@ -56,10 +57,17 @@
     height: 20px;
   }
 
-  @media (hover: hover) {
+  /* Dims from where it rests, the same as .link, and underlines: at rest it
+     carries no underline to say it is a link. */
+  @media (hover: hover) and (pointer: fine) {
     .article-back:hover {
+      color: var(--ink-primary-hover);
       text-decoration: underline;
     }
+  }
+
+  .article-back:active {
+    color: var(--ink-primary-active);
   }
 
   .article-intro__row {

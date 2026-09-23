@@ -1158,13 +1158,10 @@
        in a row, so the column (and the page) grew to fit them all and the row
        had nothing left to scroll. Same trap as .shop-shelves. */
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-48);
-  }
 
-  @media (min-width: 768px) {
-    .shop-home__intro {
-      gap: 4rem;
-    }
+    /* The shelves' own step (24, 40 from md, 56 from 1024), so the search to the
+       categories is the same distance as one shelf to the next. */
+    gap: var(--ex-band-gap);
   }
 
   /* Under the intro like the hero's own action row, and narrower than the prose
@@ -1722,7 +1719,7 @@
   }
 
   /* ── Categories ───────────────────────────────────────────────────────────
-     Tiles of 160 on a shelf (example.css, driven by shelf.js): one row at any
+     Tiles of 144 on a shelf (example.css, driven by shelf.js): one row at any
      count and any width, centred while it fits and sliding with the shelf's
      arrows once it doesn't, the way the product rows below it do. */
   .shop-cats {
@@ -1734,7 +1731,7 @@
   }
 
   .shop-cats__shelf {
-    --ex-shelf-card: 160px;
+    --ex-shelf-card: 144px;
     --ex-shelf-gap: var(--space-8);
   }
 
@@ -1770,7 +1767,7 @@
     flex: 1;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-8);
+    gap: var(--space-4);
     padding: var(--space-12);
     border: var(--border-width) solid var(--fill-tertiary);
     text-align: center;

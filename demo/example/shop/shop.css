@@ -1710,9 +1710,8 @@
   }
 
   /* ── Categories ───────────────────────────────────────────────────────────
-     Two across on a phone, three from md, all five in a row from lg. A name and a
-     chevron on a surface: the shot on a category card is a promise about what is
-     behind it, and there is only one category with products to keep it. */
+     Two across on a phone, three from md, four from lg, all five in a row from
+     xl. A shot, a name and a chevron on a surface. */
   .shop-cats {
     max-width: calc(var(--container-max) + 2 * var(--grid-margin));
     width: 100%;
@@ -1738,6 +1737,12 @@
 
   @media (min-width: 1024px) {
     .shop-cats__list {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .shop-cats__list {
       grid-template-columns: repeat(5, 1fr);
     }
   }
@@ -1749,15 +1754,39 @@
   .shop-cat {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-8);
-    min-height: 64px;
-    padding: var(--space-16);
+    gap: var(--space-12);
+    padding: var(--space-12) var(--space-16) var(--space-12) var(--space-12);
     border: var(--border-width) solid var(--fill-tertiary);
     text-decoration: none;
   }
 
+  /* 40 square on the product plate, the shot's own ground, so the chair sits
+     on what it sits on everywhere else in the shop. The plates carry their own
+     margin, so the picture fills the square edge to edge. */
+  .shop-cat__media {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--ex-plate);
+  }
+
+  /* No shot yet: white on the white card would leave a hole the size of one,
+     so the empty plate takes a quiet fill and reads as a place for a picture. */
+  .shop-cat__media:empty {
+    background: var(--fill-quaternary);
+  }
+
+  .shop-cat__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .shop-cat__name {
+    flex: 1;
     font-size: var(--font-body-small-emphasized-size);
     line-height: var(--font-body-small-emphasized-lh);
     font-weight: var(--font-body-small-emphasized-weight);

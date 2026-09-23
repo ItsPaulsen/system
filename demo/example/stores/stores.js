@@ -298,10 +298,6 @@
   let backMode = "regions"; // mode to restore when the detail view is closed
   let opened = null; // store whose detail was last open, re-centred on the way back
 
-  // The detail's one action: the listing, narrowed to the shop whose page it was
-  // pressed on.
-  const toShop = detail.querySelector("[data-detail-shop]");
-
   const fill = (selector, text) => {
     const el = detail.querySelector(selector);
     if (el) el.textContent = text;
@@ -368,7 +364,6 @@
     // and narrows itself to it for the visit. Written per store rather than
     // left in the markup, since the link is only ever pressed from a store that
     // is open. Without JS it stays the plain listing it is in the markup.
-    if (toShop) toShop.href = `/demo/example/shop/chairs/?store=${encodeURIComponent(d.store)}`;
 
     backMode = panel.dataset.mode;
     panel.dataset.mode = "detail";

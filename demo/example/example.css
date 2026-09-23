@@ -716,8 +716,9 @@
 
   .ex-hero__intro {
     /* Title down to the line under it, stepping with the type it separates:
-       8 on a phone, 16 from md. */
-    margin: var(--space-8) auto 0;
+       12 on a phone, 16 from md. 12, not 8: a title that wraps to two lines on
+       a phone sets them close, and 8 under that read as a third line of it. */
+    margin: var(--space-12) auto 0;
     max-width: 36rem;
     color: var(--ink-primary);
 

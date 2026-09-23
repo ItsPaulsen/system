@@ -1100,7 +1100,13 @@
      centred under a centred hero; this hero is left aligned. */
   .shop-search.shop-retry {
     margin: var(--space-24) 0 0;
-    max-width: 35rem;
+    max-width: 30rem;
+  }
+
+  @media (min-width: 768px) {
+    .shop-search.shop-retry {
+      max-width: 35rem;
+    }
   }
 
   /* One column: the results band holds a shelf and no rail when a search leaves
@@ -1148,6 +1154,13 @@
     }
   }
 
+  /* A line rather than a word, so it is set a touch tighter than the hero's
+     one-word titles elsewhere: at 48 and 60 the default spacing opens gaps a
+     sentence doesn't need. A page one-off, not a token. */
+  .shop-home__title {
+    letter-spacing: -0.02em;
+  }
+
   /* Inside that block the two belong together, so they sit a section apart
      rather than a page apart. */
   .shop-home__intro {
@@ -1169,7 +1182,14 @@
      as one thing to type in. */
   .shop-search {
     margin: var(--space-16) auto 0;
-    max-width: 35rem;
+    max-width: 30rem;
+  }
+
+  /* 480 up to md, 560 from it. */
+  @media (min-width: 768px) {
+    .shop-search {
+      max-width: 35rem;
+    }
   }
 
   /* Over the page, which is dimmed behind it: the form lifts as a whole so the

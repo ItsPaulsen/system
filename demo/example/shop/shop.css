@@ -843,18 +843,14 @@
     flex-direction: column;
   }
 
+  /* In ink even when reduced: the badge is the card's one loud sign of an offer,
+     and the struck figure and red % under the price already say how much. The
+     product page's price is red because its buy box has no badge. */
   .shop-card__price {
     font-size: var(--font-body-small-emphasized-size);
     font-weight: var(--font-body-small-emphasized-weight);
     line-height: 20px;
     white-space: nowrap;
-  }
-
-  /* Red where there is a prior price to compare it with, so a reduced card reads
-     as one from across the grid rather than only on its badge. :has, so nothing
-     in the markup has to say twice that the product is on offer. */
-  .shop-card__meta:has(.shop-card__terms) .shop-card__price {
-    color: var(--red);
   }
 
   /* What the product page says about getting one, minus the dates. "3 stores"
@@ -873,10 +869,15 @@
      The product page's two glyphs are named at the top, so the rules that use
      them read as rules. Copied out of its markup rather than drawn again, and
      lint-shop-cards reads them back against it: a card that disagreed with the
-     page it opens is the one thing these marks cannot do. */
+     page it opens is the one thing these marks cannot do.
+
+     Drawn for this size rather than taken from the icon set: at 12 the stock
+     tick and cross were specks, so both are the set's own lines scaled about
+     the centre (tick 1.25x, cross to a 4px span) with a 1.25px stroke,
+     knocked out with evenodd. */
   .shop-card__avail {
-    --shop-mark-yes: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-1.293%205.953a1%201%200%200%200%20-1.32%20-.083l-.094%20.083l-3.293%203.292l-1.293%20-1.292l-.094%20-.083a1%201%200%200%200%20-1.403%201.403l.083%20.094l2%202l.094%20.083a1%201%200%200%200%201.226%200l.094%20-.083l4%20-4l.083%20-.094a1%201%200%200%200%20-.083%20-1.32z%22%2F%3E%3C%2Fsvg%3E");
-    --shop-mark-no: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M17%203.34a10%2010%200%201%201%20-14.995%208.984l-.005%20-.324l.005%20-.324a10%2010%200%200%201%2014.995%20-8.336zm-7.071%205.253a1%201%200%200%200%20-1.218%201.567l1.873%201.875l-1.873%201.875l-.083%20.094a1%201%200%200%200%201.497%201.32l1.875%20-1.873l1.875%201.873l.094%20.083a1%201%200%200%200%201.32%20-1.497l-1.873%20-1.875l1.873%20-1.875l.083%20-.094a1%201%200%200%200%20-1.497%20-1.32l-1.875%201.873l-1.875%20-1.873l-.094%20-.083z%22%2F%3E%3C%2Fsvg%3E");
+    --shop-mark-yes: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%222%202%2020%2020%22%3E%3Cpath%20d%3D%22M2%2012a10%2010%200%201%200%2020%200a10%2010%200%201%200%20-20%200zM7.513%2012.737l2.5%202.5a1.042%201.042%200%200%200%201.473%200l5%20-5a1.042%201.042%200%200%200%20-1.473%20-1.473l-4.263%204.263l-1.763%20-1.763a1.042%201.042%200%200%200%20-1.473%201.473z%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
+    --shop-mark-no: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%222%202%2020%2020%22%3E%3Cpath%20d%3D%22M2%2012a10%2010%200%201%200%2020%200a10%2010%200%201%200%20-20%200zM12%2010.527l2.597%20-2.597a1.042%201.042%200%200%201%201.473%201.473l-2.597%202.597l2.597%202.597a1.042%201.042%200%200%201%20-1.473%201.473l-2.597%20-2.597l-2.597%202.597a1.042%201.042%200%200%201%20-1.473%20-1.473l2.597%20-2.597l-2.597%20-2.597a1.042%201.042%200%200%201%201.473%20-1.473z%22%20fill-rule%3D%22evenodd%22%2F%3E%3C%2Fsvg%3E");
 
     display: flex;
     flex-direction: column;
@@ -888,19 +889,21 @@
   .shop-card__avail-row {
     display: flex;
     align-items: start;
-    gap: var(--space-8);
+    gap: 6px;
   }
 
-  /* One 16 box whatever the mark is, so a row of yeses and noes keeps its
-     sentences on one left edge. Nudged down onto the middle of the first line
-     rather than centred on the row, so a store line that wraps keeps its mark
-     beside the sentence's start: (20 line - 16 box) / 2. */
+  /* One 12 box whatever the mark is, so a row of yeses and noes keeps its
+     sentences on one left edge. The marks' viewBox is cropped to the circle
+     (2 2 20 20), so the box is the circle: no icon padding to measure around.
+     Nudged down onto the middle of the first line rather than centred on the
+     row, so a store line that wraps keeps its mark beside the sentence's start:
+     (20 line - 12 box) / 2. */
   .shop-card__avail-row::before {
     content: "";
     flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    margin-block-start: 2px;
+    width: 12px;
+    height: 12px;
+    margin-block-start: 4px;
     background: var(--ex-ok);
     mask: var(--shop-mark-yes) center / contain no-repeat;
   }

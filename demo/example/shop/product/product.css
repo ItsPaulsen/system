@@ -886,7 +886,6 @@
 
   .pdp-avail {
     display: grid;
-    gap: var(--space-4);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -895,26 +894,28 @@
   .pdp-avail__row {
     display: flex;
     align-items: start;
-    gap: var(--space-8);
+    gap: 6px;
     font-size: var(--font-caption-medium-size);
     line-height: var(--font-caption-medium-lh);
     color: var(--ink-primary);
   }
 
   /* Sized and centred on the first line of text, so a row that wraps keeps its
-     glyph beside the sentence's start rather than floating to the middle. */
+     glyph beside the sentence's start rather than floating to the middle. 12
+     wide, the mark's own width: its viewBox is cropped to the circle, the same
+     as the cards' marks, so the gap is the whole distance to the words. */
   .pdp-avail__glyph {
     display: grid;
     flex-shrink: 0;
     place-items: center;
-    width: 20px;
+    width: 12px;
     height: calc(var(--font-caption-medium-size) * var(--font-caption-medium-lh));
   }
 
   .pdp-avail__icon {
     display: none;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
   }
 
   /* State to mark. The glyph answers one question, can this be had, so in stock
@@ -1484,7 +1485,7 @@
   .pdp-store-row__stock {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: 6px;
 
     /* Ink, not the shared status line's secondary: what the shelf holds is the
        reason to pick this shop, so it reads at the strength of the name above it
@@ -1500,8 +1501,8 @@
   .pdp-store-row__icon {
     display: none;
     flex-shrink: 0;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
   }
 
   /* Two marks, not three: the number beside it is what says how many, so the

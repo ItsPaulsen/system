@@ -235,7 +235,10 @@
       const n = at.length;
       if (!store) {
         line.dataset.state = n ? "in" : "none";
-        line.textContent = `Available in ${n} ${n === 1 ? "store" : "stores"}`;
+        // Capped at nine: past that the exact figure tells a reader nothing the
+        // plus doesn't, and a column of 12s and 13s reads as noise.
+        const count = n > 9 ? "9+" : n;
+        line.textContent = `${count} ${n === 1 ? "store" : "stores"}`;
         return;
       }
       const here = at.includes(f.store);

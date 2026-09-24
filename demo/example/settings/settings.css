@@ -58,7 +58,7 @@
     /* Air under the title before the band starts. Closer than this and the seam
        reads as a rule drawn under the heading rather than the top of the surface
        below it. One step per breakpoint, the same as the shop's title to its own
-       band: 48 on a phone, 64 from md, 96 from 1024. */
+       band: 24 on a phone, 40 from md, 56 from 1024. */
     padding-bottom: var(--ex-band-gap);
   }
 

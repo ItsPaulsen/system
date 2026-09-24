@@ -12,8 +12,8 @@
   /* Hero → band gap, and the flat hero surface: drop the .ex dot grid and its
      top gradient wash, keep the solid --background-secondary from .ex. */
   .shop-page {
-    /* Title down to the band, one step per breakpoint: 48 on a phone, 64 from md,
-       96 from 1024. Below 1024 the band is the full width of the page, so the
+    /* Title down to the band, one step per breakpoint: 24 on a phone, 40 from md,
+       56 from 1024. Below 1024 the band is the full width of the page, so the
        title spans the whole thing and a deeper gap only pushes the products
        further off the fold, and the smaller the screen the more that costs. From
        1024 the rail moves in beside them and the page can afford the air. */

@@ -159,13 +159,26 @@
     terms = [];
     const seen = new Set();
     const known = new Set();
+    const keyOf = (card) =>
+      [
+        card.getAttribute("href"),
+        card.querySelector(".shop-card__brand")?.textContent.trim() || "",
+        card.querySelector(".shop-card__variant")?.textContent.trim() || ""
+      ].join(" ");
+    // The landing's copies carry no kind, and they come first, so the listing's
+    // copy that does would be dropped as a duplicate. Its kind is read from there.
+    const kinds = new Map();
+    cards.forEach((card) => {
+      if (card.dataset.type) kinds.set(keyOf(card), card.dataset.type);
+    });
     cards.forEach((card) => {
       const href = card.getAttribute("href");
       const brand = card.querySelector(".shop-card__brand")?.textContent.trim() || "";
       const name = card.querySelector(".shop-card__variant")?.textContent.trim() || "";
-      const key = `${href} ${brand} ${name}`;
+      const key = keyOf(card);
       if (!href || seen.has(key)) return;
       seen.add(key);
+      const type = kinds.get(key) || "";
       const colour = card.dataset.color || "";
       products.push({
         href,
@@ -185,7 +198,7 @@
             .flatMap((c) => families.get(c) || [])
             .join(" "),
           card.dataset.category || "",
-          card.dataset.type || ""
+          type
         ]
           .join(" ")
           .toLowerCase()
@@ -202,7 +215,7 @@
       [
         brand,
         name.split(",")[0].trim(),
-        title(card.dataset.type || ""),
+        title(type),
         ...colours.map(title),
         ...colours.flatMap((c) => families.get(c) || [])
       ].forEach((term) => {

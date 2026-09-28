@@ -1679,7 +1679,7 @@
     /* On the body, under the footer, not on main: main's bottom band sits flush
        on the footer, and padding there would open a gap between the two. */
     body:has(.pdp-sticky) {
-      padding-bottom: calc(56px + max(var(--space-16), env(safe-area-inset-bottom, 0px)));
+      padding-bottom: 72px;
     }
 
     .pdp-sticky {
@@ -1688,11 +1688,10 @@
       inset: auto 0 0;
       display: flex;
 
-      /* The larger of 16 and the home-indicator strip, not the sum: Safari
-         reports the strip once its bottom toolbar hides, and adding it to the
-         16 lifted the button a whole strip higher than it needs to sit. */
-      padding: var(--space-16) var(--space-16)
-        max(var(--space-16), env(safe-area-inset-bottom, 0px));
+      /* A flat 16 at the bottom too, ignoring the home-indicator inset: the
+         button reaches into that strip once Safari's toolbar hides, the way the
+         big shops set it, rather than floating a strip above the edge. */
+      padding: var(--space-16);
       background: var(--background-secondary);
       translate: 0 100%;
       visibility: hidden;

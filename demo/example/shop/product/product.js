@@ -256,6 +256,53 @@
     });
   }
 
+  // The sticky bar's button is a copy of the real one, and a press on it is a
+  // press on the real one, so there's one press and one set of states. The
+  // copy follows the original's classes and label, which is where every state
+  // lives (loading, added, the count), so it can't drift from it.
+  const sticky = document.querySelector("[data-pdp-sticky]");
+  if (add && sticky) {
+    const copy = add.cloneNode(true);
+    copy.removeAttribute("data-pdp-add");
+    copy.querySelector("[data-pdp-add-label]")?.removeAttribute("data-pdp-add-label");
+    sticky.append(copy);
+    copy.addEventListener("click", () => add.click());
+
+    const mirror = () => {
+      copy.className = add.className;
+      ["aria-busy", "aria-disabled"].forEach((a) => {
+        if (add.hasAttribute(a)) copy.setAttribute(a, add.getAttribute(a));
+        else copy.removeAttribute(a);
+      });
+      const text = copy.querySelector(".button__label");
+      if (text && addLabel) text.textContent = addLabel.textContent;
+    };
+    new MutationObserver(mirror).observe(add, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+    mirror();
+
+    // Up while the real button is off screen, above or below. Phone widths
+    // only: from md the buy column is beside the gallery, and the button is
+    // never far.
+    const phone = matchMedia("(max-width: 767.98px)");
+    let away = false;
+    const show = () => {
+      const on = phone.matches && away;
+      // Down, the bar is visibility: hidden (product.css), which takes the
+      // button out of the tab order and the accessibility tree as well.
+      sticky.classList.toggle("is-shown", on);
+    };
+    new IntersectionObserver(([entry]) => {
+      away = !entry.isIntersecting;
+      show();
+    }).observe(add);
+    phone.addEventListener("change", show);
+  }
+
   // The care suggestion under Materials and care. The same press, so the two
   // buttons on this page answer the same way: a small secondary one in a section
   // that has to be opened, and the column's primary one, both saying what they

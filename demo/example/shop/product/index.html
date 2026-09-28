@@ -227,13 +227,6 @@
               </div>
 
               <div class="pdp-gallery__stage">
-                <!-- The card's sale badge, on the plate's corner. product.js writes
-                     the colourway's percentage and hides it off offer. -->
-                <span
-                  class="badge shop-card__badge shop-card__badge--sale pdp-gallery__badge"
-                  data-pdp-badge
-                  hidden
-                ></span>
                 <button
                   class="carousel__control carousel__control--prev pdp-gallery__control"
                   type="button"
@@ -429,12 +422,16 @@
                 <div class="pdp-buy__pricing">
                   <!-- The prior price sits beside the price, struck, the way the
                        cards show it; "Was" is for screen readers only, since <s>
-                       isn't announced. The percentage is on the gallery badge. -->
+                       isn't announced. Then the cards' sale badge with the
+                       percentage, in the theme-following red since it sits on the
+                       buy column rather than the white plate; product.js writes it
+                       and hides it off offer. -->
                   <p class="pdp-buy__price">
                     <strong class="pdp-buy__amount" data-pdp-price>5 295 kr</strong>
                     <span class="pdp-buy__was" data-pdp-was hidden
                       ><span class="sr-only">Was: </span><s data-pdp-regular></s
                     ></span>
+                    <span class="badge badge--red pdp-buy__badge" data-pdp-badge hidden></span>
                   </p>
 
                   <!-- The rest of the offer's small print, and it goes with the

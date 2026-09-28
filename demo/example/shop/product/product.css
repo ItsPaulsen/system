@@ -208,17 +208,6 @@
     min-width: 0;
   }
 
-  /* The card's sale badge, top-left of the plate where the cards carry it. The
-     arrows sit mid-height at the sides and the zoom bottom-right, so the corner
-     is free. It passes clicks through to the photograph, which opens the zoom. */
-  .pdp-gallery__badge {
-    pointer-events: none;
-  }
-
-  .pdp-gallery__badge[hidden] {
-    display: none;
-  }
-
   /* Containing block for the overlaid controls.
 
      The rail comes first in the DOM, because at lg it sits left of the image and
@@ -830,7 +819,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: var(--space-8) var(--space-12);
+    gap: var(--space-8);
     margin: 0;
   }
 
@@ -847,7 +836,8 @@
     font-weight: var(--font-body-medium-weight);
   }
 
-  .pdp-buy__was[hidden] {
+  .pdp-buy__was[hidden],
+  .pdp-buy__badge[hidden] {
     display: none;
   }
 

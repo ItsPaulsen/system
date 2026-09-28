@@ -615,8 +615,7 @@
      products rather than a set of them, and leaves a gap of nothing under the
      short names. Nothing is reserved either way: a card with a one-line title is
      simply shorter than the one beside it. */
-  .shop-card,
-  .pdp-gallery__stage {
+  .shop-card {
     /* The media tile is a fixed white plate in BOTH themes (--ex-plate, shared
        with the product page's gallery). That makes the plate a light-theme
        island, and anything drawn on it needs theme-fixed colour too, hence the
@@ -630,18 +629,13 @@
        card's own ink on a wash of it. It marks a shelf date, a fact and not a
        claim, and with a red badge in the same corner of the next card along,
        colour on both left the grid arguing with itself. Red is the only one that
-       says anything about the price.
-
-       The product page's gallery stage declares them too, since it carries the
-       same sale badge on the same white plate. */
+       says anything about the price. */
     --shop-plate: var(--ex-plate);
     --shop-plate-neutral: rgb(var(--anchor-neutral));
     --shop-plate-red: 185 28 28;
     --shop-plate-tint: color-mix(in oklab, var(--shop-plate-neutral), white 20%);
     --shop-plate-tint-red: color-mix(in oklab, rgb(var(--shop-plate-red)), white 20%);
-  }
 
-  .shop-card {
     position: relative; /* containing block for the badge */
     display: grid;
     align-content: start;

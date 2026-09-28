@@ -27,6 +27,7 @@
   const sort = document.querySelector(".ex-sort");
   const more = document.querySelector("[data-shop-more]");
   const chips = document.querySelector(".shop__chips");
+  const campaign = document.querySelector(".shop-campaign");
   const sheetClear = document.querySelector("[data-ex-filter-clear]");
   const priceSlider = document.querySelector(".shop-price__slider");
   const priceFields = [...document.querySelectorAll("[data-shop-price-field]")];
@@ -208,6 +209,19 @@
     });
   };
 
+  // CSS draws the campaign in row 3; this moves it in the DOM to the same spot
+  // (after two rows of visible cards) so reading order matches what's on screen.
+  // Column count is read off the grid, so it can't drift from the CSS.
+  const placeCampaign = () => {
+    if (!campaign || campaign.hidden) return;
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    const visible = [...grid.children].filter((el) => el !== campaign && !el.hidden);
+    grid.insertBefore(campaign, visible[cols * 2] || null);
+  };
+  ["(min-width: 768px)", "(min-width: 1280px)"].forEach((q) =>
+    matchMedia(q).addEventListener("change", placeCampaign)
+  );
+
   const apply = () => {
     const f = facets();
     const matches = cards.filter((card) => passes(card, f));
@@ -258,6 +272,11 @@
     if (totalEl) totalEl.textContent = String(matches.length);
 
     renderChips();
+
+    // The campaign speaks to the whole range, so it steps out once a filter
+    // narrows it (the chip row is the one record of "something is filtered").
+    if (campaign) campaign.hidden = Boolean(chips && !chips.hidden);
+    placeCampaign();
 
     const isEmpty = matches.length === 0;
     empty.hidden = !isEmpty;
@@ -386,16 +405,38 @@
   // is the same string apply() compares against, so there's no table to keep in
   // step. Its group opens too, so the filter says where the narrowing came from,
   // and apply() below picks it up like any other checked box.
-  const wanted = new URLSearchParams(location.search).get("brand")?.toLowerCase();
-  if (wanted) {
-    const box = [...filter.querySelectorAll('[data-filter="brand"] input[type="checkbox"]')].find(
-      (b) => labelOf(b).toLowerCase() === wanted
+  // ?category=<label> does the same for the Category group (the campaign tile
+  // links there).
+  const optionIn = (group, label) =>
+    [...filter.querySelectorAll(`[data-filter="${group}"] input[type="checkbox"]`)].find(
+      (b) => labelOf(b).toLowerCase() === label
     );
-    if (box) {
-      box.checked = true;
-      box.closest("details")?.setAttribute("open", "");
-    }
-  }
+  const tick = (box) => {
+    box.checked = true;
+    box.closest("details")?.setAttribute("open", "");
+  };
+  const params = new URLSearchParams(location.search);
+  ["brand", "category"].forEach((group) => {
+    const box = optionIn(group, params.get(group)?.toLowerCase());
+    if (box) tick(box);
+  });
+
+  // On the page itself the campaign link skips the reload: it ticks the option
+  // and reports it like a click would, so the grid and chips follow through the
+  // one change path.
+  campaign?.querySelector("[data-shop-category]")?.addEventListener("click", (e) => {
+    const box = optionIn("category", e.currentTarget.dataset.shopCategory.toLowerCase());
+    if (!box) return;
+    e.preventDefault();
+    tick(box);
+    box.dispatchEvent(new Event("change", { bubbles: true }));
+    // The tile sits in row 3 and the grid just shrank under it, so bring the
+    // top of the results into view, the same landing the filter sheet uses.
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document
+      .querySelector(".ex-listing__toolbar")
+      ?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
 
   apply();
 })();

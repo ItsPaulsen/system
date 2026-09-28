@@ -648,10 +648,113 @@
      no-op without these: restore display:none when shop.js hides a card, the
      whole grid, or the footer. */
   .shop-card[hidden],
+  .shop-campaign[hidden],
   .shop__grid[hidden],
   .shop__foot[hidden],
   .shop__more[hidden] {
     display: none;
+  }
+
+  /* Campaign tile: two columns wide in the third row at every column count
+     (full width on the two-up grid). Explicit placement, so the cards flow
+     around it and sorting can't shift it. It stretches to the row's height.
+
+     Full-bleed photo with the copy bottom-left over a bottom-up black scrim, the
+     same recipe as the image boxes on the grid reference page. The scrim makes
+     it a dark island in both themes, so the ink is fixed white (a page one-off);
+     the CTA link is held to the same white.
+
+     The whole tile is the link's target: the link's ::after stretches over it,
+     and hovering anywhere plays the link's own hover. `isolation` keeps the
+     photo and scrim on negative layers inside the tile, so the copy paints
+     above them without being positioned itself (a positioned link would trap
+     the stretched ::after inside its own box). */
+  .shop-campaign {
+    position: relative;
+    isolation: isolate;
+    grid-row: 3;
+    grid-column: 1 / span 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: var(--space-16);
+    min-height: 320px;
+    padding: var(--space-32);
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--background-secondary);
+    color: white;
+  }
+
+  /* Out of the flex flow, or the empty <picture> takes a gap above the title. */
+  .shop-campaign__media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .shop-campaign__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shop-campaign::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, #000 0%, #0000 64%);
+    opacity: 0.8;
+  }
+
+  .shop-campaign__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 32rem;
+  }
+
+  .shop-campaign__title {
+    margin: 0;
+    font-size: var(--font-title-medium-size);
+    line-height: var(--font-title-medium-lh);
+    font-weight: var(--font-title-medium-weight);
+  }
+
+  .shop-campaign__body {
+    margin: 0;
+    font-size: var(--font-body-small-size);
+    line-height: var(--font-body-small-lh);
+    color: rgb(from white r g b / 0.8);
+  }
+
+  /* The CTA link held to the tile's white in every state: hover and press only
+     play the arrow, so the link's own brand-colour shifts are pinned back to
+     white (they outrank the bare class). */
+  .shop-campaign__cta,
+  .shop-campaign__cta:hover,
+  .shop-campaign__cta:active {
+    color: white;
+  }
+
+  .shop-campaign__cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shop-campaign:hover .link-arrow__line {
+      opacity: 1;
+    }
+
+    .shop-campaign:hover .link-arrow__chevron {
+      translate: 3px 0;
+    }
   }
 
   /* The plate's own radius: the ring traces the card, and the roundest thing in
@@ -1036,6 +1139,17 @@
     .shop__grid {
       grid-template-columns: repeat(3, 1fr);
       column-gap: var(--space-20);
+    }
+
+    .shop-campaign__title {
+      font-size: var(--font-title-large-size);
+      line-height: var(--font-title-large-lh);
+      font-weight: var(--font-title-large-weight);
+    }
+
+    .shop-campaign__body {
+      font-size: var(--font-body-medium-size);
+      line-height: var(--font-body-medium-lh);
     }
 
     .shop__foot {

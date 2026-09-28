@@ -952,6 +952,63 @@
             <div class="shop__chips" data-size="sm" hidden></div>
 
             <div class="shop__grid">
+              <!-- Campaign tile: CSS draws it in row 3; shop.js moves it to the matching
+                   spot in the DOM for reading order, and hides it while a filter is on. -->
+              <section class="shop-campaign" aria-labelledby="shop-campaign-title">
+                <picture class="shop-campaign__media">
+                  <source
+                    type="image/webp"
+                    srcset="
+                      /assets/images/campaign-dining-640.webp   640w,
+                      /assets/images/campaign-dining-1044.webp 1044w
+                    "
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                  <img
+                    class="shop-campaign__img"
+                    src="/assets/images/campaign-dining-800.jpg"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+                <div class="shop-campaign__text">
+                  <h2 class="shop-campaign__title" id="shop-campaign-title">
+                    Gather round the table
+                  </h2>
+                  <p class="shop-campaign__body">
+                    Sturdy frames and woven seats made for long dinners. Our dining chairs are ready
+                    to try in store.
+                  </p>
+                </div>
+                <a
+                  class="link link--cta shop-campaign__cta"
+                  href="?category=dining%20chairs"
+                  data-shop-category="Dining chairs"
+                >
+                  See dining chairs
+                  <svg class="link-arrow" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                    <path
+                      class="link-arrow__line"
+                      d="M1.5 6h8"
+                      stroke="currentColor"
+                      stroke-width="1.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <g class="link-arrow__chevron">
+                      <path
+                        d="M3.5 2l4 4-4 4"
+                        stroke="currentColor"
+                        stroke-width="1.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
+                  </svg>
+                </a>
+              </section>
+
               <a
                 class="shop-card"
                 href="/demo/example/shop/product/"

@@ -747,6 +747,18 @@
     inset: 0;
   }
 
+  /* The ring moves from the link to the tile, since the tile is what the link
+     covers: same width, offset and converge as the product cards' ring. */
+  .shop-campaign__cta:focus-visible {
+    outline: none;
+  }
+
+  .shop-campaign:has(.shop-campaign__cta:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    animation: focus-ring-converge var(--motion-default);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     .shop-campaign:hover .link-arrow__line {
       opacity: 1;

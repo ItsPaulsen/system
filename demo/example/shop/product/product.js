@@ -287,7 +287,7 @@
 
     // Up once the real button has scrolled away above the viewport, and not
     // while it's still ahead: on the way in it's coming, so a second one would
-    // only get ahead of it. The root reaches 80px past the top, so the button is
+    // only get ahead of it. The root reaches 104px past the top, so the button is
     // well gone first; Safari's toolbar keeps it in sight a little after it
     // clears the top. Phone widths only: from md the buy column is beside the
     // gallery, and the button is never far.
@@ -304,7 +304,7 @@
         away = !entry.isIntersecting && entry.boundingClientRect.top < 0;
         show();
       },
-      { rootMargin: "80px 0px 0px 0px" }
+      { rootMargin: "104px 0px 0px 0px" }
     ).observe(add);
     phone.addEventListener("change", show);
   }

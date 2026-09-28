@@ -208,6 +208,17 @@
     min-width: 0;
   }
 
+  /* The card's sale badge, top-left of the plate where the cards carry it. The
+     arrows sit mid-height at the sides and the zoom bottom-right, so the corner
+     is free. It passes clicks through to the photograph, which opens the zoom. */
+  .pdp-gallery__badge {
+    pointer-events: none;
+  }
+
+  .pdp-gallery__badge[hidden] {
+    display: none;
+  }
+
   /* Containing block for the overlaid controls.
 
      The rail comes first in the DOM, because at lg it sits left of the image and
@@ -727,14 +738,15 @@
      at the button's own 48 it out-weighed the title it's meant to sit quietly
      next to.
 
-     Nothing but the heart at rest, so the name is what the block is; the surface
-     is the hover, and it's the neutral one because the buy column already sits on
-     the secondary surface. Flat's own accent ink and accent-soft fill would make
-     a heart at rest read as a state it isn't in. */
+     Nothing but the heart at rest, in the title's ink, so it reads as a control
+     and not a disabled one; the surface is the hover, and it's the neutral one
+     because the buy column already sits on the secondary surface. Flat's own
+     accent ink and accent-soft fill would make a heart at rest read as a state
+     it isn't in. */
   .pdp-buy__save {
     --button-size: 40px;
 
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -747,14 +759,9 @@
     background: var(--background-secondary-active);
   }
 
-  /* Favorited: the heart fills and comes up to the title's ink. A filled shape is
-     the state, so it survives a palette that can't tell two greys apart, and it
-     needs no colour the page doesn't already use. The attribute beats the SVG's
-     own fill="none", which is a presentation attribute. */
-  .pdp-buy__save[aria-pressed="true"] {
-    color: var(--ink-primary);
-  }
-
+  /* Favorited: the heart fills. The filled shape is the whole state, so it
+     survives a palette that can't tell two greys apart. The attribute beats the
+     SVG's own fill="none", which is a presentation attribute. */
   .pdp-buy__save[aria-pressed="true"] .pdp-buy__heart {
     fill: currentcolor;
   }
@@ -817,8 +824,8 @@
     display: grid;
   }
 
-  /* The price and what it was on one baseline: the struck figure is a note on
-     the first, not a second price, so it sits beside it rather than under it. */
+  /* The price and what it was on one baseline, the way the cards set it: the
+     struck figure a step down in size and weight, in the same ink. */
   .pdp-buy__price {
     display: flex;
     flex-wrap: wrap;
@@ -834,15 +841,18 @@
     display: none;
   }
 
-  /* A reduced price is red, the way the reductions under it are: the figure is
-     the offer, and leaving it in ink made the small print the only sign of one. */
-  .pdp-buy__amount.is-reduced {
-    color: var(--red);
+  .pdp-buy__was {
+    color: var(--ink-primary);
+    font-size: var(--font-body-medium-size);
+    font-weight: var(--font-body-medium-weight);
   }
 
-  /* The reduction each struck figure stands for, in red: it is the one word in
-     the small print anyone is scanning for, and against a line of grey it has to
-     find the eye on its own. */
+  .pdp-buy__was[hidden] {
+    display: none;
+  }
+
+  /* The lowest recent price's reduction (the parked two-line case), in red: the
+     one word in the small print anyone is scanning for. */
   .pdp-buy__off {
     color: var(--red);
   }
@@ -1566,6 +1576,59 @@
     flex-wrap: wrap;
     gap: var(--space-8);
     margin: var(--space-8) 0 0;
+  }
+
+  /* Capped to one row by product.js, which hides what doesn't fit. */
+  .pdp-color__list.is-capped {
+    flex-wrap: nowrap;
+  }
+
+  /* Not squeezed either: the fit is counted in whole tiles. */
+  .pdp-color__list.is-capped > * {
+    flex-shrink: 0;
+  }
+
+  /* .pdp-tile's display: block beats [hidden]; product.js hides the swatches
+     behind the "+N" tile, and the tile itself until it's needed. */
+  .pdp-swatch[hidden] {
+    display: none;
+  }
+
+  /* The "+N" tile: the next colour's shot with the count on it as a badge,
+     centred. A swatch's size and ring room, and the button reset the tile
+     doesn't carry. The badge is theme-fixed like the zoom button, since the
+     plate under it is white in both themes: black with white text, and no
+     hover or pressed skin, since the tile goes the moment it's pressed. */
+  .pdp-color__more {
+    position: relative;
+    font: inherit;
+  }
+
+  /* The swatches' ring: no converge around a photograph. */
+  .pdp-color__more:focus-visible {
+    outline: var(--focus-ring-width) solid var(--focus);
+    outline-offset: var(--focus-ring-offset);
+    animation: none;
+  }
+
+  /* Blurred so the shot reads as "more colours" rather than one you could pick.
+     clip-path applies after the filter, so it trims the blur's soft edge back
+     to the tile's rounded corner instead of letting it bleed past it. */
+  .pdp-color__more-shot {
+    filter: blur(1px);
+    clip-path: inset(0 round var(--radius-sm));
+  }
+
+  .pdp-color__more-count {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    background: var(--neutral-black);
+    color: var(--neutral-white);
+
+    /* A step up from the badge's 400: light text on black renders thinner. */
+    font-weight: var(--font-caption-medium-emphasized-weight);
   }
 
   /* Add to cart and Save on one row. Both grow, and both can wrap to their own

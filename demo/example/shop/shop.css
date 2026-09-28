@@ -615,7 +615,8 @@
      products rather than a set of them, and leaves a gap of nothing under the
      short names. Nothing is reserved either way: a card with a one-line title is
      simply shorter than the one beside it. */
-  .shop-card {
+  .shop-card,
+  .pdp-gallery__stage {
     /* The media tile is a fixed white plate in BOTH themes (--ex-plate, shared
        with the product page's gallery). That makes the plate a light-theme
        island, and anything drawn on it needs theme-fixed colour too, hence the
@@ -629,13 +630,18 @@
        card's own ink on a wash of it. It marks a shelf date, a fact and not a
        claim, and with a red badge in the same corner of the next card along,
        colour on both left the grid arguing with itself. Red is the only one that
-       says anything about the price. */
+       says anything about the price.
+
+       The product page's gallery stage declares them too, since it carries the
+       same sale badge on the same white plate. */
     --shop-plate: var(--ex-plate);
     --shop-plate-neutral: rgb(var(--anchor-neutral));
     --shop-plate-red: 185 28 28;
     --shop-plate-tint: color-mix(in oklab, var(--shop-plate-neutral), white 20%);
     --shop-plate-tint-red: color-mix(in oklab, rgb(var(--shop-plate-red)), white 20%);
+  }
 
+  .shop-card {
     position: relative; /* containing block for the badge */
     display: grid;
     align-content: start;
@@ -916,11 +922,10 @@
      and it should read as one from across the grid. The plate is a fixed white in
      both themes, so the ink is too.
 
-     It says Offer and not a percentage. A reduction may only be advertised
-     against the prior price, so a chair that has been on offer once already can
-     honestly claim -5% and nothing louder, which reads as less of an offer than
-     it is. The word makes no claim about size, and the lines under the price
-     carry each percentage against its own base. */
+     It carries the reduction against the struck price beside the card's price, so
+     the one loud mark is also the number. (Honest only while offers are spaced
+     past the 30-day window: a second run inside it would owe the percentage
+     against the lowest recent price instead.) */
   .shop-card__badge--sale {
     background-image: linear-gradient(
       rgb(from var(--shop-plate-tint-red) r g b / 0.12),
@@ -929,46 +934,37 @@
     color: rgb(var(--shop-plate-red));
   }
 
-  /* The prior prices, named, the way the product page names them: what it used to
-     cost, and where a product has been on offer inside the window, the lowest it
-     actually went. 12, because a card is already three lines of text and these are
-     the smallest facts on it. The card's own ink, not the secondary: they are what
-     the price means, and grey filed them under footnote. The size already says
-     they are the small print. */
+  /* The prior price, struck, beside the price: a step smaller (14 to its 16),
+     regular weight, in the card's ink: size and weight already set it back
+     behind the one that applies. Same 20 line box, so the two share a baseline. */
   .shop-card__terms {
     display: flex;
     flex-direction: column;
     color: var(--ink-primary);
-    font-size: var(--font-caption-small-size);
-    line-height: 16px;
+    font-size: var(--font-caption-medium-size);
+    line-height: 20px;
   }
 
-  /* The label wraps, the figure never does. Nowrap on the whole line held while
-     the longest label was two words; a label naming the 30-day window is wider
-     than a column on the two-up grid, and an unbreakable line doesn't widen its
-     track, it runs out over the card beside it. Keeping the struck price and its
-     percentage whole is all the rule was ever for. */
-  .shop-card__term s,
-  .shop-card__off {
+  /* The label wraps, the figure never does: an unbreakable line doesn't widen
+     its track on the two-up grid, it runs out over the card beside it. */
+  .shop-card__term s {
     white-space: nowrap;
   }
 
-  /* The reduction each struck figure stands for. Red, the one thing in the line
-     anyone is scanning for. */
-  .shop-card__off {
-    color: var(--red);
-  }
-
-  /* The price and whatever names it (its prior prices, then where it's in
-     stock) as one block. The 12 above it belongs to the block, not to the price
-     alone. */
+  /* The price and whatever names it as one block: the struck prior price on
+     the price's own line, after it, so a reduced card is no taller than a
+     regular one and a row's prices stay level. It wraps under the price only
+     where the column is too narrow for both, and the store rows below always
+     take a line of their own. The 12 above belongs to the block. */
   .shop-card__meta {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-8);
   }
 
-  /* In ink even when reduced: the badge is the card's one loud sign of an offer,
-     and the struck figure and red % under the price already say how much. The
+  /* In ink even when reduced: the badge is the card's one loud sign of an offer
+     and carries the percentage; the struck figure beside it says what it was. The
      product page's price is red because its buy box has no badge. */
   .shop-card__price {
     font-size: var(--font-body-small-emphasized-size);
@@ -1005,6 +1001,7 @@
 
     display: flex;
     flex-direction: column;
+    flex-basis: 100%; /* its own line under the price row */
     margin-block-start: 6px;
     font-size: var(--font-caption-medium-size);
     line-height: 20px;

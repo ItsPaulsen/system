@@ -16,9 +16,9 @@
     care: document.querySelector("[data-pdp-care]"),
 
     terms: document.querySelector("[data-pdp-terms]"),
-    regularLabel: document.querySelector("[data-pdp-regular-label]"),
+    was: document.querySelector("[data-pdp-was]"),
     regular: document.querySelector("[data-pdp-regular]"),
-    regularOff: document.querySelector("[data-pdp-regular-off]"),
+    badge: document.querySelector("[data-pdp-badge]"),
     lowestLine: document.querySelector("[data-pdp-lowest-line]"),
     lowest: document.querySelector("[data-pdp-lowest]"),
     lowestOff: document.querySelector("[data-pdp-lowest-off]"),
@@ -59,27 +59,20 @@
     // the same string capitalised.
     set(out.variant, `, ${d.color}`);
     set(out.price, d.price);
-    // What it was, struck through, for the colourways on offer. Hidden rather
-    // than emptied, or the price row would keep its gap for a word that isn't
-    // there.
-    // Labelled, not just struck: the rule wants the prior price identifiable as
-    // one, and a bare crossed-out number leaves the reader to guess what it is.
-    if (d.regular) {
-      // Normal price alone, Original beside a lower one: on its own it is what
-      // the thing usually costs, and above a lowest recent price it is where the
-      // run of offers started rather than what anyone was charged last.
-      set(out.regularLabel, d.lowest ? "Original" : "Normal price");
-      set(out.regular, d.regular);
-      set(out.regularOff, d.regularOff);
-    }
-    // A regular price is what marks a colourway as reduced: it is the figure the
-    // current price is being compared with, so there is no offer without one.
+    // What it was, struck beside the price, and the reduction on the gallery
+    // badge, the way a card shows both. A regular price is what marks a colourway
+    // as reduced: there is no offer without a figure to compare with. Hidden
+    // rather than emptied, so nothing keeps a gap for a figure that isn't there.
     const reduced = d.regular !== undefined;
+    if (reduced) set(out.regular, d.regular);
+    // The badge claims the reduction against the prior price, which is the
+    // lowest recent one where the colourway has been on offer inside the window.
+    if (reduced) set(out.badge, d.lowestOff || d.regularOff);
+    if (out.was) out.was.hidden = !reduced;
+    if (out.badge) out.badge.hidden = !reduced;
     if (out.terms) out.terms.hidden = !reduced;
-    // The price itself carries the offer, not just the small print under it.
-    if (out.price) out.price.classList.toggle("is-reduced", reduced);
-    // And the second line only where the colourway has been on offer inside the
-    // window, which is what makes its prior price lower than its regular one.
+    // The parked two-line case: the lowest recent price on its own line under
+    // the price, which is only owed where it differs from the regular one.
     if (out.lowestLine) out.lowestLine.hidden = d.lowest === undefined;
     if (d.lowest) {
       set(out.lowest, d.lowest);
@@ -1064,4 +1057,97 @@
     linked = Boolean(asked);
     select(start, { remember: false });
   } else renderAll();
+})();
+
+// Colour swatches keep to one row. When they would wrap, the last tile that fits
+// becomes a button with a "+N" badge on its own shot (N = every colour it
+// stands in for, its own included), and the rest wait behind it; pressing it shows every colour, wrapping as
+// it needs to.
+// A colourway already chosen off the row (a deep link) opens the row outright,
+// so the checked swatch is never the one hidden. Without JS the row just wraps.
+(function () {
+  const list = document.querySelector(".pdp-color__list");
+  const swatches = [...(list?.querySelectorAll(".pdp-swatch") || [])];
+  if (swatches.length < 2) return;
+
+  const more = document.createElement("button");
+  more.type = "button";
+  more.className = "pdp-tile pdp-swatch pdp-color__more";
+  more.hidden = true;
+  const shot = document.createElement("img");
+  shot.className = "pdp-tile__img pdp-color__more-shot";
+  shot.alt = "";
+  const count = document.createElement("span");
+  count.className = "badge pdp-color__more-count";
+  count.setAttribute("aria-hidden", "true");
+  more.append(shot, count);
+
+  let open = false;
+  let firstHidden = 0;
+
+  // The fit is worked out from the widths rather than by showing every swatch
+  // and seeing which wrap: that briefly laid the row out on two lines, and the
+  // page under it jumped for a frame. While the row is capped it doesn't wrap
+  // at all (.is-capped), so there's no second line to catch either.
+  let tile = 0;
+  const fitting = () => {
+    // Cached: the first swatch hides too when only the button fits.
+    tile = swatches[0].offsetWidth || tile;
+    const gap = parseFloat(getComputedStyle(list).columnGap) || 0;
+    return Math.max(1, Math.floor((list.clientWidth + gap) / (tile + gap)));
+  };
+
+  const reveal = () => {
+    swatches.forEach((s) => (s.hidden = false));
+    more.hidden = true;
+  };
+
+  const layout = () => {
+    if (open) {
+      list.classList.remove("is-capped");
+      reveal();
+      return;
+    }
+    list.classList.add("is-capped");
+    const fit = Math.min(fitting(), swatches.length);
+    if (fit === swatches.length) {
+      reveal();
+      return;
+    }
+    // The fit-th tile turns into the button, so fit - 1 stay as swatches.
+    firstHidden = fit - 1;
+    const checked = swatches.findIndex((s) => s.querySelector("input")?.checked);
+    if (checked >= firstHidden) {
+      open = true;
+      layout();
+      return;
+    }
+    const cover = swatches[firstHidden];
+    shot.src = cover.querySelector("img")?.currentSrc || cover.querySelector("img")?.src || "";
+    // Counted with the colour under the badge: it can't be picked until the row
+    // opens, so it's as hidden as the rest. Never less than +2 as a result.
+    const hidden = swatches.length - firstHidden;
+    count.textContent = `+${hidden}`;
+    more.setAttribute("aria-label", `Show ${hidden} more colors`);
+    swatches.forEach((s, i) => (s.hidden = i >= firstHidden));
+    cover.before(more);
+    more.hidden = false;
+  };
+
+  more.addEventListener("click", () => {
+    open = true;
+    layout();
+    // Focus lands on the first colour the button was standing in for, so the
+    // keyboard carries on from where it was.
+    swatches[firstHidden]?.querySelector("input")?.focus();
+  });
+
+  // Width is what decides the fit, so only a change in it re-runs the count.
+  let width = 0;
+  new ResizeObserver(([entry]) => {
+    const w = Math.round(entry.contentRect.width);
+    if (w === width) return;
+    width = w;
+    layout();
+  }).observe(list.parentElement);
 })();

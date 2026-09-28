@@ -6,7 +6,6 @@
 // injected dialog, select, footer, and grid overlay on DOMContentLoaded.
 (function () {
   const TOPBAR = `
-    <div class="ex-safe-top" aria-hidden="true"></div>
     <header class="ex-topbar">
       <a class="ex-topbar__brand" href="/demo/example/">Demo</a>
       <nav class="nav-menu ex-topbar__nav" aria-label="Primary">

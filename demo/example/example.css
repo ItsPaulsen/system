@@ -1394,20 +1394,6 @@ The shelf holds the row's two measurements, because the arrows sit outside
      mid-page and 64 of a phone's viewport held back on every article is a real
      price for it. */
 
-  /* A strip fixed over the status-bar area, in the header's surface. iOS
-     Safari colours its top bar from a fixed or sticky element at the top (it no
-     longer reads theme-color), and falls back to the page background, which is
-     the gray one. The header scrolls with the page, so this stands in for it.
-     At least 1px so there is an element to sample on devices with no inset. */
-  .ex-safe-top {
-    position: fixed;
-    z-index: 30;
-    inset: 0 0 auto;
-    height: max(1px, env(safe-area-inset-top, 0px));
-    background: var(--background-secondary);
-    pointer-events: none;
-  }
-
   /* Base = mobile: compact flex header, nav hidden (hamburger). Builds up to the
      full grid header at lg. */
 

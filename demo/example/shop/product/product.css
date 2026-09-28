@@ -31,7 +31,7 @@
     --pdp-thumb-max: 96px;
 
     gap: 4rem;
-    padding-block: var(--space-16) 0;
+    padding-block: var(--space-8) 0;
     background-image: none;
   }
 

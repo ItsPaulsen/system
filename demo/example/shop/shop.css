@@ -18,7 +18,7 @@
        further off the fold, and the smaller the screen the more that costs. From
        1024 the rail moves in beside them and the page can afford the air. */
     gap: var(--ex-band-gap);
-    padding-top: var(--space-16); /* topbar → breadcrumb, mirrors settings */
+    padding-top: var(--space-8); /* topbar → breadcrumb */
     background-image: none;
   }
 

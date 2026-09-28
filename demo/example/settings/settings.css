@@ -28,8 +28,8 @@
     background-image: none;
     gap: 0;
 
-    /* 16 under the topbar to the back link, mirrors the article intro. */
-    padding-top: var(--space-16);
+    /* 8 under the topbar to the back link, mirrors the article intro. */
+    padding-top: var(--space-8);
   }
 
   /* ── Hero ─────────────────────────────────────────────────────────────────

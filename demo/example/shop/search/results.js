@@ -139,6 +139,8 @@
     into?.querySelectorAll(".shop-card").forEach((card) => {
       if (!keep.has(card.getAttribute("href") + card.textContent)) card.remove();
     });
+    // The listing's campaign speaks to the whole range, not to an answer.
+    into?.querySelector(".shop-campaign")?.remove();
     prune(band, hits);
 
     placeholder.replaceWith(document.importNode(band, true));

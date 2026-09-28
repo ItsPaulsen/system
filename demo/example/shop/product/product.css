@@ -702,6 +702,15 @@
     min-width: 0;
   }
 
+  /* The free-delivery threshold, as small print under the stock rows: the
+     details are in Shipping and returns just below. */
+  .pdp-buy__delivery {
+    margin: 0;
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-small-size);
+    line-height: var(--font-caption-small-lh);
+  }
+
   .pdp-buy__intro {
     display: grid;
     gap: var(--space-20);
@@ -1759,9 +1768,25 @@
     line-height: var(--font-body-small-emphasized-lh);
   }
 
+  /* Primary ink rather than the component's secondary: here the sections are
+     the product's own information, read in full, not supporting notes. */
   .pdp-detail .accordion__body {
     padding-inline: 0;
     padding-bottom: var(--space-20);
+    color: var(--ink-primary);
+  }
+
+  /* The key points as a plain bulleted list ahead of the prose. */
+  .pdp-detail__list {
+    padding-inline-start: 1.25em;
+    list-style: disc;
+  }
+
+  /* The article number, last and quiet: looked up, not read. */
+  .pdp-detail__sku {
+    color: var(--ink-secondary);
+    font-size: var(--font-caption-medium-size);
+    line-height: var(--font-caption-medium-lh);
   }
 
   /* ── Specs and related ────────────────────────────────────────────────────
@@ -1903,7 +1928,7 @@
 
   .pdp-specs dd {
     margin: 0;
-    color: var(--ink-secondary);
+    color: var(--ink-primary);
     font-size: var(--font-body-small-size);
     line-height: var(--font-body-small-lh);
   }

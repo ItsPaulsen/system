@@ -28,7 +28,7 @@
      Back-link, then the title + standfirst row (byline beside the text from
      1024, stacked under it below that), then the full-width cover. */
   .article-intro {
-    padding-block: var(--space-24) 0;
+    padding-block: var(--space-16) 0;
   }
 
   /* Back-link up to the section home (chevron + "Blog"). Sits outside the

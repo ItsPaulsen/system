@@ -692,6 +692,15 @@
     position: absolute;
     inset: 0;
     z-index: -2;
+
+    /* The product tiles' drift: 1% over 300ms ease-out, inside the tile's clip. */
+    transition: scale 300ms var(--motion-ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .shop-campaign:hover .shop-campaign__media {
+      scale: 1.01;
+    }
   }
 
   .shop-campaign__img {

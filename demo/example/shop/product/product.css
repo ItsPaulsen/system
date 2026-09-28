@@ -1691,7 +1691,7 @@
       /* A flat 16 at the bottom too, ignoring the home-indicator inset: the
          button reaches into that strip once Safari's toolbar hides, the way the
          big shops set it, rather than floating a strip above the edge. */
-      padding: var(--space-16);
+      padding: var(--space-16) var(--space-24);
       background: var(--background-secondary);
       translate: 0 100%;
       visibility: hidden;

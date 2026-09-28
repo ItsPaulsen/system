@@ -285,9 +285,12 @@
     });
     mirror();
 
-    // Up while the real button is off screen, above or below. Phone widths
-    // only: from md the buy column is beside the gallery, and the button is
-    // never far.
+    // Up once the real button has scrolled away above the viewport, and not
+    // while it's still ahead: on the way in it's coming, so a second one would
+    // only get ahead of it. The root reaches 80px past the top, so the button is
+    // well gone first; Safari's toolbar keeps it in sight a little after it
+    // clears the top. Phone widths only: from md the buy column is beside the
+    // gallery, and the button is never far.
     const phone = matchMedia("(max-width: 767.98px)");
     let away = false;
     const show = () => {
@@ -296,10 +299,13 @@
       // button out of the tab order and the accessibility tree as well.
       sticky.classList.toggle("is-shown", on);
     };
-    new IntersectionObserver(([entry]) => {
-      away = !entry.isIntersecting;
-      show();
-    }).observe(add);
+    new IntersectionObserver(
+      ([entry]) => {
+        away = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        show();
+      },
+      { rootMargin: "80px 0px 0px 0px" }
+    ).observe(add);
     phone.addEventListener("change", show);
   }
 

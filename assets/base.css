@@ -1452,24 +1452,8 @@
     border-radius: var(--radius-sm);
   }
 
-  /* Two-part chevron: horizontal stem fades in, ">" tip slides right. Same
-   easing as the UngSex button arrow it's borrowed from. */
-  .link-arrow {
-    width: 12px;
-    height: 12px;
-    overflow: visible;
-    flex-shrink: 0;
-  }
-
-  .link-arrow__line {
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  .link-arrow__chevron {
-    transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
+  /* Intro link list reuses the two-part .link-arrow (styled in components.css):
+   stem fades in, ">" tip slides right on hover. */
   @media (hover: hover) {
     .link-list a:hover .link-arrow__line {
       opacity: 1;

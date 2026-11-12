@@ -3209,10 +3209,27 @@
     text-decoration: none;
   }
 
-  /* Reuses the intro's two-part arrow (.link-arrow, styled in base.css): the stem
-   fades in and the chevron slides on hover, so the arrow grows out of the text.
-   The colour shifts with it, off the brand rather than off the ink, since that is
-   where this variant rests. */
+  /* Two-part arrow: the stem fades in and the chevron slides on hover, so the
+   arrow grows out of the text. Lives here, not in the docs chrome, so the CTA
+   works from components.css alone. */
+  .link-arrow {
+    width: 12px;
+    height: 12px;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
+  .link-arrow__line {
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .link-arrow__chevron {
+    transition: translate 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  /* The colour shifts with the arrow, off the brand rather than off the ink,
+   since that is where this variant rests. */
   @media (hover: hover) and (pointer: fine) {
     .link--cta:hover {
       color: var(--primary-foreground-hover);
